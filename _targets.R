@@ -11,7 +11,7 @@ pacman::p_load(targets,tarchetypes)
 # Set target options:
 tar_option_set(
   packages = c("terra", "dplyr", "sf", "purrr","tmap","randomForest","VSURF",
-               "modelr","maxnet","pROC","DT"), # packages that your targets need to run
+               "modelr","maxnet","pROC","DT", "readr"), # packages that your targets need to run
   format = "rds" # default storage format
   # Set other options as needed.
 )
@@ -31,7 +31,7 @@ tar_source()
 list(
   # input data processing ---------------------------------------------------
   # global objects 
-  
+  c(globalTargets)
 
   # environment setup -------------------------------------------------------
   # generate file directories for species 
