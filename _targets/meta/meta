@@ -4,8 +4,16 @@ bioNames|stem|e2e1743b55547686|b9308d8a1865535a|159712abaddd4a95|-1199354850||t1
 bioNames_file|stem|a91b198ae16d4c60|891960423607c797|ef46db3751d8e999|-626719682|data/geospatial_datasets/bioclim_layers/variableNames.csv|t19424.9731944444s|cdb33e522b2abf64|2463|file|local|vector|||4.08||
 biovars|stem|5d2e346842353d7a|63ca3467de41e948|72f1bc1450be2369|-1101289350||t19425.012962963s|da9cf4001e4b0669|1096727123|rds|local|vector|||70.41||
 bufferDist|object|0814f9181efb801d|||||||||||||||
-globalTargets|object|a6758beb16598c53|||||||||||||||
+counties|stem|c4d045b312b33017|1ca28f8f7ee16de9|68bee863b54275f7|-710560319||t19432.759537037s|95a0ba1fb26ae73b|1911082|rds|local|vector|||0.18||
+counties_file|stem|2ef3fcea758e2469|ded1c5df63077cb3|ef46db3751d8e999|1175312886|data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg|t19432.7580555556s|ebd9c42a84962578|5398528|file|local|vector|||4.92||
+countries|stem|650d8bab4e5d803a|71207025141173a2|fb8c1821e568266b|-1719789746||t19432.7509953704s|096419be2a52edd3|4795992|rds|local|vector|||0.12||
+countries_file|stem|2e12520beaf9016a|055b6cf80e947059|ef46db3751d8e999|481707418|data/geospatial_datasets/countries/ne_10m_admin_0_countries.gpkg|t19431.7256712963s|3d9d537c7550481a|9338880|file|local|vector|||4.97||
+ecoregions|stem|831f36976fc1bc31|15b7a9bf2cb684ad|867972e6f403f046|1384595621||t19432.7520601852s|c1fbe4459b4696db|54065051|rds|local|vector|||0.61||
+ecoregions_file|stem|82f218fd53041e3f|deb8971a0555ad60|ef46db3751d8e999|-2021680235|data/geospatial_datasets/ecoregions/tnc_terr_ecoregions.gpkg|t19431.7263194444s|c16f0a43925bd98a|67469312|file|local|vector|||4.02||
+globalTargets|object|6fe7e1c7dc8cf036|||||||||||||||
 numPoint|object|758147688a24b6e0|||||||||||||||
 processBioClim|function|c0fc256ffd5507b8|||||||||||||||
 rasterRDS|stem|8b8a29b43e91046d|5084b7dffc1c0aa7|ef46db3751d8e999|-121630693|data/geospatial_datasets/bioclim_layers/bioclim_2.5arcsec_terra.RDS|t19424.9713888889s|757921831cef3ac8|1096727080|file|local|vector|||4.18||
 rasterRDS_file|stem|8b8a29b43e91046d|5084b7dffc1c0aa7|ef46db3751d8e999|-672171367|data/geospatial_datasets/bioclim_layers/bioclim_2.5arcsec_terra.RDS|t19424.9713888889s|757921831cef3ac8|1096727080|file|local|vector|||4.15||
+states|stem|4f38f8672671df5a|ec1fe2ca697b5d62|082a79e0a0ca32be|1083582180||t19432.7595601852s|9da155701272507e|15006534|rds|local|vector|||0.64||
+states_file|stem|5050bf33fb691c2e|206390d93ae63c30|ef46db3751d8e999|276584623|data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg|t19432.7575s|83a286729c8a139c|28233728|file|local|vector|||0||
