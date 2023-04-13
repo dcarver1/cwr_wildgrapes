@@ -6,12 +6,12 @@
 
 
 # Load packages required to define the pipeline:
-pacman::p_load(targets,tarchetypes)
+pacman::p_load(targets,tarchetypes, dplyr)
 
 # Set target options:
 tar_option_set(
   packages = c("terra", "dplyr", "sf", "purrr","tmap","randomForest","VSURF",
-               "modelr","maxnet","pROC","DT", "readr", "vroom"), # packages that your targets need to run
+               "modelr","maxnet","pROC","DT", "readr", "vroom", "readr"), # packages that your targets need to run
   format = "rds" # default storage format
   # Set other options as needed.
 )
@@ -21,32 +21,43 @@ future::plan(future.callr::callr)
 
 # Run the R scripts in the R/ folder with your custom functions:
 lapply(
-  list.files(
-    path = "R",
+  # need to ensure functions are grabbed first
+  # this sources some object twice but oh well
+  c(list.files(
+    path = "R/functions",
     pattern = ".R",
     full.names = TRUE,
     recursive = TRUE
-  ),
+    ), list.files(
+    path = "R/",
+    pattern = ".R",
+    full.names = TRUE,
+    recursive = TRUE
+    )),
   targets::tar_source
 )
-
-files <- list.files(
-  path = "R",
-  pattern = ".R",
-  full.names = TRUE,
-  recursive = TRUE
-)
-
 
 # Replace the target list below with your own:
 list(
   # input data processing ---------------------------------------------------
   # global objects 
   c(globalTargets),
+  
+  ## define input occurance data 
+  ### outside of the globalTargets features because this is unique to the model run. 
+  ### input datasets needs to have the following structure
+  
+  ##! better to have some preprocessing script to structure the input datasets 
+  ##! with specific names / column types etc
+  tar_file_read(name = occuranceData,
+                "data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv",
+                read = read_csv(!!.x)
+                ),
+  
 
   # environment setup -------------------------------------------------------
   # generate file directories for species 
-  ## this will be limited as we're using targets for intemediate steps  
+  ## this will be limited as we're using targets for intermediate steps  
   c(environmentalSetup),
   
 

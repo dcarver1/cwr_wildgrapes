@@ -5,14 +5,16 @@
 ###
 
 dataProcessing <- list(
-  # tar_target(
-  #   speciesPoints, 
-  #   subsetSpecies(occuranceData, speciesList),
-  #   pattern = map(speciesList)
-  # ),
-  tar_map(
-    values = speciesList,
-    subsetSpecies(occuranceData, species = speciesList)
+  tar_target(
+    speciesPoints,
+    subsetSpecies(occuranceData = occuranceData, species = speciesList),
+    pattern = map(speciesList)
+    ),
+  
+  tar_target(
+    counts,
+    generateCounts(speciesData = speciesPoints),
+    pattern = map(speciesPoints)
   )
 )
 

@@ -5,7 +5,8 @@
 ###
 
 environmentalSetup <- list(
+  
   #grap species list
-  tar_target(speciesList, command = unique(occuranceData$Taxon))
+  tar_target(speciesList, command = unique(occuranceData$taxon))
 )
 
