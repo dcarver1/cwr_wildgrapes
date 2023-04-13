@@ -11,7 +11,7 @@ pacman::p_load(targets,tarchetypes)
 # Set target options:
 tar_option_set(
   packages = c("terra", "dplyr", "sf", "purrr","tmap","randomForest","VSURF",
-               "modelr","maxnet","pROC","DT", "readr"), # packages that your targets need to run
+               "modelr","maxnet","pROC","DT", "readr", "vroom"), # packages that your targets need to run
   format = "rds" # default storage format
   # Set other options as needed.
 )
@@ -20,25 +20,39 @@ tar_option_set(
 future::plan(future.callr::callr)
 
 # Run the R scripts in the R/ folder with your custom functions:
-tar_source()
-# source("other_functions.R") # Source other scripts as needed. # nolint
+lapply(
+  list.files(
+    path = "R",
+    pattern = ".R",
+    full.names = TRUE,
+    recursive = TRUE
+  ),
+  targets::tar_source
+)
 
-
-
+files <- list.files(
+  path = "R",
+  pattern = ".R",
+  full.names = TRUE,
+  recursive = TRUE
+)
 
 
 # Replace the target list below with your own:
 list(
   # input data processing ---------------------------------------------------
   # global objects 
-  c(globalTargets)
+  c(globalTargets),
 
   # environment setup -------------------------------------------------------
   # generate file directories for species 
   ## this will be limited as we're using targets for intemediate steps  
-
+  c(environmentalSetup),
   
+
+  # data processing ---------------------------------------------------------
   # individual species 
+  c(dataProcessing)
   ## filter raw data to species of interest 
   ## generate counts dataset for summary stats 
     ### used as a filtering process for what records are used in the model/SRS assessment 
