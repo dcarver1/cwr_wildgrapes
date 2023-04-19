@@ -62,18 +62,21 @@ list(
   
 
   # data processing ---------------------------------------------------------
-  # individual species 
-  c(dataProcessing)
-  ## filter raw data to species of interest 
-  ## generate counts dataset for summary stats 
-    ### used as a filtering process for what records are used in the model/SRS assessment 
-  ## create spatial point object 
+  c(dataProcessing),
   ## County filter -- observations only found in specific counties of interest 
-  ## duplication filter -- points with exact lat long
 
+  ### outcome --- I want to filter out any species that do not have valid lat long
+  ### values at this point. Might require redefining the speciesList object for
+  ### the next step. Really I'm just not so sure how targets is going to work with 
+  ### empty object or elements that are difference data types??? 
+  
+  
   # running the model  ------------------------------------------------------
+  c(runModels) 
   ## subsample based on geography 
+  
   ## generates a native area extent file 
+  
   ## generate g50 buffer object 
   ## associate observations with bioclim data
   ## perform variable selection 

@@ -50,3 +50,53 @@ generateCounts <- function(speciesData){
 }
 
 
+#' createSF_Objects
+#'
+#' @param speciesData : all species occurance data
+#' @param species : species list with full taxon name
+#'
+#' @return : dataframe of species data with valid lat long values  
+createSF_Objects <- function(speciesData, species){
+  # select all  rows with valid lat long
+  speciesData <- speciesData[speciesData$taxon == species, ]
+  
+  latLong <- speciesData %>%
+    mutate(latitude = as.numeric(as.character(latitude)),
+           longitude = as.numeric(as.character(longitude)))%>%
+    dplyr::filter(!is.na(latitude) | !is.na(longitude))
+  
+  if(nrow(latLong)>0){
+    coord <- latLong %>% 
+      sf::st_as_sf(coords = c("longitude","latitude"), crs = 4326)
+
+  }else{
+    print("there are no coodinate pairs for this species")
+    coord <- "no data available"
+  }
+  return(coord)
+}
+
+
+
+countryCheck <- function(sf_points, speciesList, countryLists){
+  # I don't have a great list of contries for dacaus so this is an optional element now 
+  # makes me think we might 
+}
+
+#' removeDuplicates
+#'
+#' @param sf_points : point objects for individual species
+#' @param species : speciesList object
+#'
+#' @return : a thinned version on the observations data were any feature with 
+#' type == h and the same coordinates as another obervation has been removed. 
+removeDuplicates <- function(sf_points, species){
+  sf_points <- sf_points[sf_points$taxon == species,]
+  
+  sf_points <- sf_points %>%
+    filter(!duplicated(geometry) & type =="H")
+  return(sf_points)
+}
+
+
+
