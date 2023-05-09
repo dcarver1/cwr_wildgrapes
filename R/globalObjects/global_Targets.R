@@ -18,6 +18,9 @@ globalTargets <- list(
   ## process data
   tar_target(name = biovars, command = processBioClim(rasters = rasterRDS,
                                                       names = bioNames)),
+  ## template raster 
+  tar_target(name = rastTemplate, command = terra::unwrap(biovars)[[1]]),
+  
   # read in additional spatial data objects
   # countries
   tar_file_read(

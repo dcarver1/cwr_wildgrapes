@@ -18,6 +18,7 @@ runModels <- list(
   )
   
   ## generate g50 buffer object 
+  
   ## associate observations with bioclim data
   ## perform variable selection 
   ## perform maxent model 

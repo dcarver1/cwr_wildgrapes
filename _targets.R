@@ -16,6 +16,11 @@ tar_option_set(
   # Set other options as needed.
 )
 
+# local testing 
+ pacman::p_load("terra", "dplyr", "sf", "purrr","tmap","randomForest","VSURF",
+                "modelr","maxnet","pROC","DT", "readr", "vroom", "readr")
+
+
 # tar_make_future() configuration (okay to leave alone):
 future::plan(future.callr::callr)
 
