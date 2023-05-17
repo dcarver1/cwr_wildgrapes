@@ -62,6 +62,10 @@ states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_pro
 # primary loop ------------------------------------------------------------
 genera <- unique(speciesData$genus)
 species <- unique(speciesData$taxon)
+
+#testing
+i <- genera[1]
+j <- species[1]
 for(i in genera){
   #create folder
   dir1 <- paste0("data/",genera) 
@@ -101,8 +105,11 @@ for(i in genera){
                              bufferDist = bufferDist,templateRast = templateRast)
   
   ## generate modeling data
-  
+  m_data <- generateModelData(speciesPoints = sp1, natArea = natArea,bioVars = bioVars)
 
+  v_data <- varaibleSelection(modelData = m_data)
+  
+  
   # Writing out data  -------------------------------------------------------
   ## rather then write out inside of functions I'll try to run everything at the end 
   ### raw species data 
@@ -133,6 +140,7 @@ for(i in genera){
     terra::writeRaster(x = g_buffer, file = ga50Path)
   }
   
+
 
   }# end of species loop 
 }
