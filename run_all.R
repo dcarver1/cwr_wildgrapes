@@ -91,23 +91,52 @@ for(i in genera){
   c1 <- generateCounts(speciesData = sd1)
 
   ## spatial object
-  sp1 <- createSF_Objects(speciesData = sd1)%>%
+  sp1 <- createSF_Objects(speciesData = sd1) %>%
     removeDuplicates()
   
-  #srsex 
+  #srsex
   srsex <- srs_exsitu(sp_counts = c1)
   
   ## define natural area based on ecoregions
-  natArea <- nat_area_shp(speciesPoints = sp1, ecoregions = ecoregions)
+  natArea <-nat_area_shp(speciesPoints = sp1, ecoregions = ecoregions)
   
-  ## generate GA50 objects 
-  g_buffer <- create_buffers(speciesPoints = sp1,natArea = natArea,
-                             bufferDist = bufferDist,templateRast = templateRast)
+  ## define number of background points 
+  b_Number <- numberBackground(natArea = natArea)
   
-  ## generate modeling data
-  m_data <- generateModelData(speciesPoints = sp1, natArea = natArea,bioVars = bioVars)
-
+  ## generate GA50 objects
+  g_buffer <- create_buffers(
+    speciesPoints = sp1,
+    natArea = natArea,
+    bufferDist = bufferDist,
+    templateRast = templateRast
+  )
+  
+  ## associate observations with bioclim data
+  m_data <- generateModelData(speciesPoints = sp1,
+                      natArea = natArea,
+                      bioVars = bioVars,
+                      b_Number = b_Number)
+  ## perform variable selection
   v_data <- varaibleSelection(modelData = m_data)
+  
+  ## prepare data for maxent model 
+  rasterInputs <- cropRasters(
+    natArea = natArea,
+    bioVars = bioVars,
+    selectVars = v_data
+  )
+  
+  ## perform maxent model 
+  sdm_results <- runMaxnet(selectVars = v_data, rasterData = rasterInputs)
+  
+  ## export raster images 
+  writeProjections(sdm_result = sdm_results,
+                   directory = dirs[3])
+  
+  ## evaluate outputs of the modeling process
+  
+  ## generate a mess map 
+  ## generate a kernal density map 
   
   
   # Writing out data  -------------------------------------------------------
@@ -131,16 +160,16 @@ for(i in genera){
   ### natural area 
   natAreaPath <- paste0(dirs[3], "/naturalArea.gpkg")
   if(!file.exists(natAreaPath)){
-    sf::write_sf(x = natArea, file = natAreaPath)
+    sf::write_sf(obj = natArea, dsn = natAreaPath)
   }
   
   ### natural area 
   ga50Path <- paste0(dirs[3], "/ga50.tif")
-  if(!file.exists(ga50Path)){
+  if(!file.exists(ga50Path) & class(g_buffer) == "SpatRaster" ){
     terra::writeRaster(x = g_buffer, file = ga50Path)
   }
   
-
+  
 
   }# end of species loop 
 }
