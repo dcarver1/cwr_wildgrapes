@@ -1,0 +1,386 @@
+taxonomy_species_id,name,country_code,state,adm1_abbrev,geography_status_code
+101059,Vitis acerifolia,USA,Colorado,CO,n
+101059,Vitis acerifolia,USA,Kansas,KS,n
+101059,Vitis acerifolia,USA,New Mexico,NM,n
+101059,Vitis acerifolia,USA,Oklahoma,OK,n
+101059,Vitis acerifolia,USA,Texas,TX,n
+311851,Vitis aestivalis,CAN,Ontario,ONT,n
+311851,Vitis aestivalis,USA,Alabama,AL,n
+311851,Vitis aestivalis,USA,Arkansas,AR,n
+311851,Vitis aestivalis,USA,Connecticut,CT,n
+311851,Vitis aestivalis,USA,Delaware,DE,n
+311851,Vitis aestivalis,USA,Florida,FL,n
+311851,Vitis aestivalis,USA,Georgia,GA,n
+311851,Vitis aestivalis,USA,Illinois,IL,n
+311851,Vitis aestivalis,USA,Indiana,IN,n
+311851,Vitis aestivalis,USA,Iowa,IA,n
+311851,Vitis aestivalis,USA,Kansas,KS,n
+311851,Vitis aestivalis,USA,Kentucky,KY,n
+311851,Vitis aestivalis,USA,Louisiana,LA,n
+311851,Vitis aestivalis,USA,Maryland,MD,n
+311851,Vitis aestivalis,USA,Massachusetts,MA,n
+311851,Vitis aestivalis,USA,Michigan,MI,n
+311851,Vitis aestivalis,USA,Minnesota,MN,n
+311851,Vitis aestivalis,USA,Mississippi,MS,n
+311851,Vitis aestivalis,USA,Missouri,MO,n
+311851,Vitis aestivalis,USA,Nebraska,NE,n
+311851,Vitis aestivalis,USA,New Hampshire,NH,n
+311851,Vitis aestivalis,USA,New Jersey,NJ,n
+311851,Vitis aestivalis,USA,New York,NY,n
+311851,Vitis aestivalis,USA,North Carolina,NC,n
+311851,Vitis aestivalis,USA,Ohio,OH,n
+311851,Vitis aestivalis,USA,Oklahoma,OK,n
+311851,Vitis aestivalis,USA,Pennsylvania,PA,n
+311851,Vitis aestivalis,USA,Rhode Island,RI,n
+311851,Vitis aestivalis,USA,South Carolina,SC,n
+311851,Vitis aestivalis,USA,Tennessee,TN,n
+311851,Vitis aestivalis,USA,Texas,TX,n
+311851,Vitis aestivalis,USA,Vermont,VT,n
+311851,Vitis aestivalis,USA,Virginia,VA,n
+311851,Vitis aestivalis,USA,West Virginia,WV,n
+311851,Vitis aestivalis,USA,Wisconsin,WI,n
+41846,Vitis aestivalis var. aestivalis,USA,Alabama,AL,n
+41846,Vitis aestivalis var. aestivalis,USA,Arkansas,AR,n
+41846,Vitis aestivalis var. aestivalis,USA,Connecticut,CT,n
+41846,Vitis aestivalis var. aestivalis,USA,Delaware,DE,n
+41846,Vitis aestivalis var. aestivalis,USA,Florida,FL,n
+41846,Vitis aestivalis var. aestivalis,USA,Georgia,GA,n
+41846,Vitis aestivalis var. aestivalis,USA,Illinois,IL,n
+41846,Vitis aestivalis var. aestivalis,USA,Indiana,IN,n
+41846,Vitis aestivalis var. aestivalis,USA,Kansas,KS,n
+41846,Vitis aestivalis var. aestivalis,USA,Kentucky,KY,n
+41846,Vitis aestivalis var. aestivalis,USA,Louisiana,LA,n
+41846,Vitis aestivalis var. aestivalis,USA,Maryland,MD,n
+41846,Vitis aestivalis var. aestivalis,USA,Massachusetts,MA,n
+41846,Vitis aestivalis var. aestivalis,USA,Mississippi,MS,n
+41846,Vitis aestivalis var. aestivalis,USA,Missouri,MO,n
+41846,Vitis aestivalis var. aestivalis,USA,New Hampshire,NH,n
+41846,Vitis aestivalis var. aestivalis,USA,New Jersey,NJ,n
+41846,Vitis aestivalis var. aestivalis,USA,New York,NY,n
+41846,Vitis aestivalis var. aestivalis,USA,North Carolina,NC,n
+41846,Vitis aestivalis var. aestivalis,USA,Ohio,OH,n
+41846,Vitis aestivalis var. aestivalis,USA,Oklahoma,OK,n
+41846,Vitis aestivalis var. aestivalis,USA,Pennsylvania,PA,n
+41846,Vitis aestivalis var. aestivalis,USA,Rhode Island,RI,n
+41846,Vitis aestivalis var. aestivalis,USA,South Carolina,SC,n
+41846,Vitis aestivalis var. aestivalis,USA,Tennessee,TN,n
+41846,Vitis aestivalis var. aestivalis,USA,Texas,TX,n
+41846,Vitis aestivalis var. aestivalis,USA,Vermont,VT,n
+41846,Vitis aestivalis var. aestivalis,USA,Virginia,VA,n
+41846,Vitis aestivalis var. aestivalis,USA,West Virginia,WV,n
+316285,Vitis aestivalis var. bicolor,CAN,Ontario,ONT,n
+316285,Vitis aestivalis var. bicolor,USA,Alabama,AL,n
+316285,Vitis aestivalis var. bicolor,USA,Connecticut,CT,n
+316285,Vitis aestivalis var. bicolor,USA,Georgia,GA,n
+316285,Vitis aestivalis var. bicolor,USA,Illinois,IL,n
+316285,Vitis aestivalis var. bicolor,USA,Indiana,IN,n
+316285,Vitis aestivalis var. bicolor,USA,Iowa,IA,n
+316285,Vitis aestivalis var. bicolor,USA,Kentucky,KY,n
+316285,Vitis aestivalis var. bicolor,USA,Maryland,MD,n
+316285,Vitis aestivalis var. bicolor,USA,Massachusetts,MA,n
+316285,Vitis aestivalis var. bicolor,USA,Michigan,MI,n
+316285,Vitis aestivalis var. bicolor,USA,Minnesota,MN,n
+316285,Vitis aestivalis var. bicolor,USA,Missouri,MO,n
+316285,Vitis aestivalis var. bicolor,USA,New Hampshire,NH,n
+316285,Vitis aestivalis var. bicolor,USA,New York,NY,n
+316285,Vitis aestivalis var. bicolor,USA,North Carolina,NC,n
+316285,Vitis aestivalis var. bicolor,USA,Ohio,OH,n
+316285,Vitis aestivalis var. bicolor,USA,Pennsylvania,PA,n
+316285,Vitis aestivalis var. bicolor,USA,Rhode Island,RI,n
+316285,Vitis aestivalis var. bicolor,USA,South Carolina,SC,n
+316285,Vitis aestivalis var. bicolor,USA,Tennessee,TN,n
+316285,Vitis aestivalis var. bicolor,USA,Vermont,VT,n
+316285,Vitis aestivalis var. bicolor,USA,Virginia,VA,n
+316285,Vitis aestivalis var. bicolor,USA,West Virginia,WV,n
+316285,Vitis aestivalis var. bicolor,USA,Wisconsin,WI,n
+313283,Vitis aestivalis var. linsecomii,USA,Louisiana,LA,n
+313283,Vitis aestivalis var. linsecomii,USA,Texas,TX,n
+41848,Vitis arizonica,MEX,Sonora,SON,n
+41848,Vitis arizonica,MEX,Tamaulipas,TAM,n
+41848,Vitis arizonica,USA,Arizona,AZ,n
+41848,Vitis arizonica,USA,New Mexico,NM,n
+41848,Vitis arizonica,USA,Texas,TX,n
+41848,Vitis arizonica,USA,Utah,UT,n
+41856,Vitis californica,USA,California,CA,n
+41856,Vitis californica,USA,Oregon,OR,n
+41863,Vitis cinerea,USA,Alabama,AL,n
+41863,Vitis cinerea,USA,Arkansas,AR,n
+41863,Vitis cinerea,USA,Florida,FL,n
+41863,Vitis cinerea,USA,Georgia,GA,n
+41863,Vitis cinerea,USA,Illinois,IL,n
+41863,Vitis cinerea,USA,Indiana,IN,n
+41863,Vitis cinerea,USA,Iowa,IA,n
+41863,Vitis cinerea,USA,Kansas,KS,n
+41863,Vitis cinerea,USA,Kentucky,KY,n
+41863,Vitis cinerea,USA,Louisiana,LA,n
+41863,Vitis cinerea,USA,Maryland,MD,n
+41863,Vitis cinerea,USA,Mississippi,MS,n
+41863,Vitis cinerea,USA,Missouri,MO,n
+41863,Vitis cinerea,USA,North Carolina,NC,n
+41863,Vitis cinerea,USA,Ohio,OH,n
+41863,Vitis cinerea,USA,Oklahoma,OK,n
+41863,Vitis cinerea,USA,Pennsylvania,PA,n
+41863,Vitis cinerea,USA,South Carolina,SC,n
+41863,Vitis cinerea,USA,Tennessee,TN,n
+41863,Vitis cinerea,USA,Texas,TX,n
+41863,Vitis cinerea,USA,Virginia,VA,n
+41863,Vitis cinerea,USA,West Virginia,WV,n
+316287,Vitis cinerea var. baileyana,USA,Alabama,AL,n
+316287,Vitis cinerea var. baileyana,USA,Georgia,GA,n
+316287,Vitis cinerea var. baileyana,USA,Indiana,IN,n
+316287,Vitis cinerea var. baileyana,USA,Kentucky,KY,n
+316287,Vitis cinerea var. baileyana,USA,North Carolina,NC,n
+316287,Vitis cinerea var. baileyana,USA,Ohio,OH,n
+316287,Vitis cinerea var. baileyana,USA,Pennsylvania,PA,n
+316287,Vitis cinerea var. baileyana,USA,South Carolina,SC,n
+316287,Vitis cinerea var. baileyana,USA,Tennessee,TN,n
+316287,Vitis cinerea var. baileyana,USA,Virginia,VA,n
+316287,Vitis cinerea var. baileyana,USA,West Virginia,WV,n
+313285,Vitis cinerea var. cinerea,USA,Alabama,AL,n
+313285,Vitis cinerea var. cinerea,USA,Arkansas,AR,n
+313285,Vitis cinerea var. cinerea,USA,Florida,FL,n
+313285,Vitis cinerea var. cinerea,USA,Illinois,IL,n
+313285,Vitis cinerea var. cinerea,USA,Indiana,IN,n
+313285,Vitis cinerea var. cinerea,USA,Iowa,IA,n
+313285,Vitis cinerea var. cinerea,USA,Kansas,KS,n
+313285,Vitis cinerea var. cinerea,USA,Kentucky,KY,n
+313285,Vitis cinerea var. cinerea,USA,Louisiana,LA,n
+313285,Vitis cinerea var. cinerea,USA,Mississippi,MS,n
+313285,Vitis cinerea var. cinerea,USA,Missouri,MO,n
+313285,Vitis cinerea var. cinerea,USA,Oklahoma,OK,n
+313285,Vitis cinerea var. cinerea,USA,Tennessee,TN,n
+313285,Vitis cinerea var. cinerea,USA,Texas,TX,n
+313284,Vitis cinerea var. floridana,USA,Alabama,AL,n
+313284,Vitis cinerea var. floridana,USA,Florida,FL,n
+313284,Vitis cinerea var. floridana,USA,Georgia,GA,n
+313284,Vitis cinerea var. floridana,USA,Mississippi,MS,n
+313284,Vitis cinerea var. floridana,USA,North Carolina,NC,n
+313284,Vitis cinerea var. floridana,USA,South Carolina,SC,n
+313284,Vitis cinerea var. floridana,USA,Virginia,VA,n
+316288,Vitis cinerea var. helleri,USA,Texas,TX,n
+468495,Vitis cinerea var. tomentosa,MEX,Coahuila de Zaragoza,COA,n
+468495,Vitis cinerea var. tomentosa,MEX,Nuevo León,NLE,n
+468495,Vitis cinerea var. tomentosa,MEX,Tamaulipas,TAM,n
+468495,Vitis cinerea var. tomentosa,USA,Texas,TX,n
+311848,Vitis girdiana,MEX,Baja,BC,n
+311848,Vitis girdiana,USA,Arizona,AZ,n
+311848,Vitis girdiana,USA,California,CA,n
+311848,Vitis girdiana,USA,Nevada,NV,n
+311848,Vitis girdiana,USA,Utah,UT,n
+41879,Vitis labrusca,USA,Alabama,AL,n
+41879,Vitis labrusca,USA,Arkansas,AR,n
+41879,Vitis labrusca,USA,Connecticut,CT,n
+41879,Vitis labrusca,USA,Delaware,DE,n
+41879,Vitis labrusca,USA,Georgia,GA,n
+41879,Vitis labrusca,USA,Illinois,IL,n
+41879,Vitis labrusca,USA,Indiana,IN,n
+41879,Vitis labrusca,USA,Kentucky,KY,n
+41879,Vitis labrusca,USA,Maine,ME,n
+41879,Vitis labrusca,USA,Maryland,MD,n
+41879,Vitis labrusca,USA,Massachusetts,MA,n
+41879,Vitis labrusca,USA,Michigan,MI,n
+41879,Vitis labrusca,USA,Mississippi,MS,n
+41879,Vitis labrusca,USA,Missouri,MO,n
+41879,Vitis labrusca,USA,New Hampshire,NH,n
+41879,Vitis labrusca,USA,New Jersey,NJ,n
+41879,Vitis labrusca,USA,New York,NY,n
+41879,Vitis labrusca,USA,North Carolina,NC,n
+41879,Vitis labrusca,USA,Ohio,OH,n
+41879,Vitis labrusca,USA,Pennsylvania,PA,n
+41879,Vitis labrusca,USA,Rhode Island,RI,n
+41879,Vitis labrusca,USA,South Carolina,SC,n
+41879,Vitis labrusca,USA,Tennessee,TN,n
+41879,Vitis labrusca,USA,Vermont,VT,n
+41879,Vitis labrusca,USA,Virginia,VA,n
+41879,Vitis labrusca,USA,West Virginia,WV,n
+311846,Vitis monticola,USA,Texas,TX,n
+316282,Vitis mustangensis,USA,Alabama,AL,n
+316282,Vitis mustangensis,USA,Louisiana,LA,n
+316282,Vitis mustangensis,USA,Oklahoma,OK,n
+316282,Vitis mustangensis,USA,Texas,TX,n
+316290,Vitis palmata,USA,Alabama,AL,n
+316290,Vitis palmata,USA,Arkansas,AR,n
+316290,Vitis palmata,USA,Florida,FL,n
+316290,Vitis palmata,USA,Illinois,IL,n
+316290,Vitis palmata,USA,Indiana,IN,n
+316290,Vitis palmata,USA,Kentucky,KY,n
+316290,Vitis palmata,USA,Louisiana,LA,n
+316290,Vitis palmata,USA,Mississippi,MS,n
+316290,Vitis palmata,USA,Missouri,MO,n
+316290,Vitis palmata,USA,Oklahoma,OK,n
+316290,Vitis palmata,USA,Tennessee,TN,n
+316290,Vitis palmata,USA,Texas,TX,n
+41893,Vitis riparia,CAN,Manitoba,MAN,n
+41893,Vitis riparia,CAN,New Brunswick,NB,n
+41893,Vitis riparia,CAN,Nova Scotia,NS,n
+41893,Vitis riparia,CAN,Ontario,ONT,n
+41893,Vitis riparia,CAN,Québec,QUE,n
+41893,Vitis riparia,CAN,Saskatchewan,SAS,n
+41893,Vitis riparia,USA,Alabama,AL,n
+41893,Vitis riparia,USA,Arkansas,AR,n
+41893,Vitis riparia,USA,Connecticut,CT,n
+41893,Vitis riparia,USA,Delaware,DE,n
+41893,Vitis riparia,USA,Illinois,IL,n
+41893,Vitis riparia,USA,Indiana,IN,n
+41893,Vitis riparia,USA,Iowa,IA,n
+41893,Vitis riparia,USA,Kansas,KS,n
+41893,Vitis riparia,USA,Kentucky,KY,n
+41893,Vitis riparia,USA,Louisiana,LA,n
+41893,Vitis riparia,USA,Maine,ME,n
+41893,Vitis riparia,USA,Maryland,MD,n
+41893,Vitis riparia,USA,Massachusetts,MA,n
+41893,Vitis riparia,USA,Michigan,MI,n
+41893,Vitis riparia,USA,Minnesota,MN,n
+41893,Vitis riparia,USA,Mississippi,MS,n
+41893,Vitis riparia,USA,Missouri,MO,n
+41893,Vitis riparia,USA,Nebraska,NE,n
+41893,Vitis riparia,USA,New Hampshire,NH,n
+41893,Vitis riparia,USA,New Jersey,NJ,n
+41893,Vitis riparia,USA,New York,NY,n
+41893,Vitis riparia,USA,North Dakota,ND,n
+41893,Vitis riparia,USA,Ohio,OH,n
+41893,Vitis riparia,USA,Oklahoma,OK,n
+41893,Vitis riparia,USA,Pennsylvania,PA,n
+41893,Vitis riparia,USA,Rhode Island,RI,n
+41893,Vitis riparia,USA,South Dakota,SD,n
+41893,Vitis riparia,USA,Tennessee,TN,n
+41893,Vitis riparia,USA,Texas,TX,n
+41893,Vitis riparia,USA,Vermont,VT,n
+41893,Vitis riparia,USA,Virginia,VA,n
+41893,Vitis riparia,USA,West Virginia,WV,n
+41893,Vitis riparia,USA,Wisconsin,WI,n
+41895,Vitis rotundifolia,USA,Alabama,AL,n
+41895,Vitis rotundifolia,USA,Arkansas,AR,n
+41895,Vitis rotundifolia,USA,Delaware,DE,n
+41895,Vitis rotundifolia,USA,Florida,FL,n
+41895,Vitis rotundifolia,USA,Georgia,GA,n
+41895,Vitis rotundifolia,USA,Indiana,IN,n
+41895,Vitis rotundifolia,USA,Kentucky,KY,n
+41895,Vitis rotundifolia,USA,Louisiana,LA,n
+41895,Vitis rotundifolia,USA,Maryland,MD,n
+41895,Vitis rotundifolia,USA,Mississippi,MS,n
+41895,Vitis rotundifolia,USA,Missouri,MO,n
+41895,Vitis rotundifolia,USA,North Carolina,NC,n
+41895,Vitis rotundifolia,USA,Oklahoma,OK,n
+41895,Vitis rotundifolia,USA,South Carolina,SC,n
+41895,Vitis rotundifolia,USA,Tennessee,TN,n
+41895,Vitis rotundifolia,USA,Texas,TX,n
+41895,Vitis rotundifolia,USA,Virginia,VA,n
+41895,Vitis rotundifolia,USA,West Virginia,WV,n
+316284,Vitis rotundifolia var. munsoniana,USA,Alabama,AL,n
+316284,Vitis rotundifolia var. munsoniana,USA,Florida,FL,n
+316284,Vitis rotundifolia var. munsoniana,USA,Georgia,GA,n
+316283,Vitis rotundifolia var. rotundifolia,USA,Alabama,AL,n
+316283,Vitis rotundifolia var. rotundifolia,USA,Arkansas,AR,n
+316283,Vitis rotundifolia var. rotundifolia,USA,Delaware,DE,n
+316283,Vitis rotundifolia var. rotundifolia,USA,Florida,FL,n
+316283,Vitis rotundifolia var. rotundifolia,USA,Georgia,GA,n
+316283,Vitis rotundifolia var. rotundifolia,USA,Indiana,IN,n
+316283,Vitis rotundifolia var. rotundifolia,USA,Kentucky,KY,n
+316283,Vitis rotundifolia var. rotundifolia,USA,Louisiana,LA,n
+316283,Vitis rotundifolia var. rotundifolia,USA,Maryland,MD,n
+316283,Vitis rotundifolia var. rotundifolia,USA,Mississippi,MS,n
+316283,Vitis rotundifolia var. rotundifolia,USA,Missouri,MO,n
+316283,Vitis rotundifolia var. rotundifolia,USA,North Carolina,NC,n
+316283,Vitis rotundifolia var. rotundifolia,USA,Oklahoma,OK,n
+316283,Vitis rotundifolia var. rotundifolia,USA,South Carolina,SC,n
+316283,Vitis rotundifolia var. rotundifolia,USA,Tennessee,TN,n
+316283,Vitis rotundifolia var. rotundifolia,USA,Texas,TX,n
+316283,Vitis rotundifolia var. rotundifolia,USA,Virginia,VA,n
+316283,Vitis rotundifolia var. rotundifolia,USA,West Virginia,WV,n
+41896,Vitis rupestris,USA,Arkansas,AR,n
+41896,Vitis rupestris,USA,Indiana,IN,n
+41896,Vitis rupestris,USA,Kentucky,KY,n
+41896,Vitis rupestris,USA,Maryland,MD,n
+41896,Vitis rupestris,USA,Missouri,MO,n
+41896,Vitis rupestris,USA,Oklahoma,OK,n
+41896,Vitis rupestris,USA,Pennsylvania,PA,n
+41896,Vitis rupestris,USA,Tennessee,TN,n
+41896,Vitis rupestris,USA,Texas,TX,n
+41896,Vitis rupestris,USA,West Virginia,WV,n
+311854,Vitis shuttleworthii,USA,Florida,FL,n
+41902,Vitis tiliifolia,BLZ,,,n
+41902,Vitis tiliifolia,COL,,,n
+41902,Vitis tiliifolia,CRI,,,n
+41902,Vitis tiliifolia,CUB,,,n
+41902,Vitis tiliifolia,DOM,,,n
+41902,Vitis tiliifolia,ECU,,,n
+41902,Vitis tiliifolia,GLP,,,n
+41902,Vitis tiliifolia,GTM,,,n
+41902,Vitis tiliifolia,HND,,,n
+41902,Vitis tiliifolia,HTI,,,n
+41902,Vitis tiliifolia,JAM,,,n
+41902,Vitis tiliifolia,MEX,Baja California Sur,BCS,n
+41902,Vitis tiliifolia,MEX,Campeche,CAM,n
+41902,Vitis tiliifolia,MEX,Chiapas,CHP,n
+41902,Vitis tiliifolia,MEX,Colima,COL,n
+41902,Vitis tiliifolia,MEX,Durango,DUR,n
+41902,Vitis tiliifolia,MEX,Guanajuato,GUA,n
+41902,Vitis tiliifolia,MEX,Guerrero,GUE,n
+41902,Vitis tiliifolia,MEX,Hidalgo,HID,n
+41902,Vitis tiliifolia,MEX,Jalisco,JAL,n
+41902,Vitis tiliifolia,MEX,México,MEX,n
+41902,Vitis tiliifolia,MEX,Michoacán de Ocampo,MIC,n
+41902,Vitis tiliifolia,MEX,Morelos,MOR,n
+41902,Vitis tiliifolia,MEX,Nayarit,NAY,n
+41902,Vitis tiliifolia,MEX,Oaxaca,OAX,n
+41902,Vitis tiliifolia,MEX,Puebla,PUE,n
+41902,Vitis tiliifolia,MEX,Querétaro,QUE,n
+41902,Vitis tiliifolia,MEX,Quintana Roo,QR,n
+41902,Vitis tiliifolia,MEX,San Luis Potosí,SLP,n
+41902,Vitis tiliifolia,MEX,Sinaloa,SIN,n
+41902,Vitis tiliifolia,MEX,Tabasco,TAB,n
+41902,Vitis tiliifolia,MEX,Veracruz de Ignacio de la Llave,VER,n
+41902,Vitis tiliifolia,MEX,Yucatán,YUC,n
+41902,Vitis tiliifolia,NIC,,,n
+41902,Vitis tiliifolia,PAN,,,n
+41902,Vitis tiliifolia,SLV,,,n
+41902,Vitis tiliifolia,USA,Puerto Rico,,n
+41902,Vitis tiliifolia,USA,"Virgin Islands, U.S.",,n
+311847,Vitis treleasei,USA,Arizona,AZ,n
+311847,Vitis treleasei,USA,New Mexico,NM,n
+311847,Vitis treleasei,USA,Texas,TX,n
+41907,Vitis vulpina,USA,Alabama,AL,n
+41907,Vitis vulpina,USA,Arkansas,AR,n
+41907,Vitis vulpina,USA,Delaware,DE,n
+41907,Vitis vulpina,USA,Florida,FL,n
+41907,Vitis vulpina,USA,Georgia,GA,n
+41907,Vitis vulpina,USA,Illinois,IL,n
+41907,Vitis vulpina,USA,Indiana,IN,n
+41907,Vitis vulpina,USA,Iowa,IA,n
+41907,Vitis vulpina,USA,Kansas,KS,n
+41907,Vitis vulpina,USA,Kentucky,KY,n
+41907,Vitis vulpina,USA,Louisiana,LA,n
+41907,Vitis vulpina,USA,Maryland,MD,n
+41907,Vitis vulpina,USA,Massachusetts,MA,n
+41907,Vitis vulpina,USA,Michigan,MI,n
+41907,Vitis vulpina,USA,Mississippi,MS,n
+41907,Vitis vulpina,USA,Missouri,MO,n
+41907,Vitis vulpina,USA,Nebraska,NE,n
+41907,Vitis vulpina,USA,New Jersey,NJ,n
+41907,Vitis vulpina,USA,New York,NY,n
+41907,Vitis vulpina,USA,North Carolina,NC,n
+41907,Vitis vulpina,USA,Ohio,OH,n
+41907,Vitis vulpina,USA,Oklahoma,OK,n
+41907,Vitis vulpina,USA,Pennsylvania,PA,n
+41907,Vitis vulpina,USA,South Carolina,SC,n
+41907,Vitis vulpina,USA,South Dakota,SD,n
+41907,Vitis vulpina,USA,Tennessee,TN,n
+41907,Vitis vulpina,USA,Texas,TX,n
+41907,Vitis vulpina,USA,Virginia,VA,n
+41907,Vitis vulpina,USA,West Virginia,WV,n
+41907,Vitis vulpina,USA,Wisconsin,WI,n
+41862,Vitis x champinii,USA,Texas,TX,n
+311849,Vitis x doaniana,USA,Colorado,CO,n
+311849,Vitis x doaniana,USA,Oklahoma,OK,n
+311849,Vitis x doaniana,USA,Texas,TX,n
+311855,Vitis x novae-angliae,USA,Connecticut,CT,n
+311855,Vitis x novae-angliae,USA,Maine,ME,n
+311855,Vitis x novae-angliae,USA,Massachusetts,MA,n
+311855,Vitis x novae-angliae,USA,New Hampshire,NH,n
+311855,Vitis x novae-angliae,USA,New Jersey,NJ,n
+311855,Vitis x novae-angliae,USA,New York,NY,n
+311855,Vitis x novae-angliae,USA,Pennsylvania,PA,n
+311855,Vitis x novae-angliae,USA,Rhode Island,RI,n
+311855,Vitis x novae-angliae,USA,Vermont,VT,n
+311850,Vitis x slavinii,USA,New York,NY,n
