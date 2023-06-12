@@ -7,7 +7,7 @@
 
 # local testing 
 pacman::p_load("terra", "dplyr", "sf", "purrr","tmap","randomForest","VSURF",
-               "modelr","maxnet","pROC","DT", "readr", "vroom", "readr")
+               "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo")
 
 #source functions
 lapply(
@@ -32,6 +32,9 @@ set.seed(1234)
 # set run version 
 runVersion <- "test1"
 
+## overwrite Parameter 
+### used to determine if you want to write over existing content. 
+overwrite <- FALSE
 
 # input datasets ----------------------------------------------------------
 ## species observations 
@@ -61,18 +64,24 @@ states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_pro
 
 # primary loop ------------------------------------------------------------
 genera <- unique(speciesData$genus)
-species <- unique(speciesData$taxon)
+species <- sort(unique(speciesData$taxon))
+# species subset
+species <- species[5:length(species)]
+
 
 #testing
 i <- genera[1]
-j <- species[1]
+j <- species[3]
+
 for(i in genera){
+  print(i)
   #create folder
   dir1 <- paste0("data/",genera) 
   if(!dir.exists(dir1)){dir.create(dir1)}
   
   # loop over species  ------------------------------------------------------
   for(j in species){
+    print(j)
     dir2 <- paste0(dir1,"/",j)
     if(!dir.exists(dir2)){dir.create(dir2)}
     dirs <- paste0(
@@ -100,77 +109,84 @@ for(i in genera){
   ## define natural area based on ecoregions
   natArea <-nat_area_shp(speciesPoints = sp1, ecoregions = ecoregions)
   
-  ## define number of background points 
-  b_Number <- numberBackground(natArea = natArea)
   
-  ## generate GA50 objects
-  g_buffer <- create_buffers(
-    speciesPoints = sp1,
-    natArea = natArea,
-    bufferDist = bufferDist,
-    templateRast = templateRast
-  )
+  ## at some point we're going to need to filter this out. I don't know if this
+  ## is the right time or not. 
   
-  ## associate observations with bioclim data
-  m_data <- generateModelData(speciesPoints = sp1,
-                      natArea = natArea,
-                      bioVars = bioVars,
-                      b_Number = b_Number)
-  ## perform variable selection
-  v_data <- varaibleSelection(modelData = m_data)
-  
-  ## prepare data for maxent model 
-  rasterInputs <- cropRasters(
-    natArea = natArea,
-    bioVars = bioVars,
-    selectVars = v_data
-  )
-  
-  ## perform maxent model 
-  sdm_results <- runMaxnet(selectVars = v_data, rasterData = rasterInputs)
-  
-  ## export raster images 
-  writeProjections(sdm_result = sdm_results,
-                   directory = dirs[3])
-  
-  ## evaluate outputs of the modeling process
-  
-  ## generate a mess map 
-  ## generate a kernal density map 
-  
-  
-  # Writing out data  -------------------------------------------------------
-  ## rather then write out inside of functions I'll try to run everything at the end 
-  ### raw species data 
-  ### counts data 
-  countsPath <- paste0(dirs[2], "/counts.csv")
-  if(!file.exists(countsPath)){
-    write_csv(x = c1, file = countsPath)
+  if(nrow(sp1) >=5 ){
+    ## define number of background points 
+    b_Number <- numberBackground(natArea = natArea)
+    
+    ## generate GA50 objects
+    g_buffer <- create_buffers(
+      speciesPoints = sp1,
+      natArea = natArea,
+      bufferDist = bufferDist,
+      templateRast = templateRast
+    )
+    
+    ## associate observations with bioclim data
+    m_data <- generateModelData(speciesPoints = sp1,
+                                natArea = natArea,
+                                bioVars = bioVars,
+                                b_Number = b_Number)
+    ## perform variable selection
+    v_data <- varaibleSelection(modelData = m_data)
+    
+    ## prepare data for maxent model 
+    rasterInputs <- cropRasters(
+      natArea = natArea,
+      bioVars = bioVars,
+      selectVars = v_data
+    )
+    
+    ## perform maxent model 
+    sdm_results <- runMaxnet(selectVars = v_data,
+                             rasterData = rasterInputs)
+    
+    ## generatre summary raster images  
+    projectsResults <- rasterResults(sdm_result)
+    
+    ## generate evaluationTable 
+    evalTable <- evaluateTable(sdm_result = sdm_results)
+    
+    ## generate threshold rasters 
+    thres <- generateThresholdModel(evalTable = evalTable,
+                                    rasterResults = projectsResults)
+    ## generate a mess map 
+    ## generate a kernal density map 
+    
+    # Gap Analysis Methods  ---------------------------------------------------
+    # insitu 
+    ## srsin
+    ## ersin 
+    ## grsin 
+    ## fcsin 
+    
+    #exsitu 
+    ##ersex  
+    ##grsex 
+    ##fcsex
+    
+    # Export the data ---------------------------------------------------------
+    writeData(overwrite = overwrite,
+              dirs = dirs,
+              c1 = c1,
+              sp1 = sp1,
+              srsex = srsex,
+              natArea = natArea,
+              g_buffer = g_buffer,
+              rasterResults = projectsResults,
+              evalTable = evalTable,
+              thres = thres)
+    
+    # remove all reused variables ---------------------------------------------
+    rm(c1,sp1,srsex,natArea,g_buffer, projectsResults,evalTable,thres)
+    
   }
-  ### sp object 
-  spPath <- paste0(dirs[2], "/spatialData.csv")
-  if(!file.exists(spPath)){
-    write_csv(x = sp1, file = spPath)
-  }
-  ### srsex 
-  srsExPath <- paste0(dirs[1], "/srs_ex.csv")
-  if(!file.exists(srsExPath)){
-    write_csv(x = srsex, file = srsExPath)
-  }
-  ### natural area 
-  natAreaPath <- paste0(dirs[3], "/naturalArea.gpkg")
-  if(!file.exists(natAreaPath)){
-    sf::write_sf(obj = natArea, dsn = natAreaPath)
-  }
-  
-  ### natural area 
-  ga50Path <- paste0(dirs[3], "/ga50.tif")
-  if(!file.exists(ga50Path) & class(g_buffer) == "SpatRaster" ){
-    terra::writeRaster(x = g_buffer, file = ga50Path)
-  }
   
   
-
+  
   }# end of species loop 
 }
 
