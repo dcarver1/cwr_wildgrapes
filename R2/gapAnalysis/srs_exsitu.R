@@ -1,5 +1,10 @@
-srs_exsitu <- function(sp_counts) {
-
+#' SRS Exsitu 
+#'
+#' @param sp_counts 
+#'
+#' @return Dataframe that summarizes the srs exist content. 
+srs_exsitu <- function(sp_counts){
+  
   # caluse for no g points
   if(sp_counts$totalGRecords >= 1 & sp_counts$totalHRecords == 0){
     srs <-100

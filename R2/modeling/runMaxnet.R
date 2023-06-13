@@ -257,37 +257,6 @@ runMaxnet <- function(selectVars,rasterData){
                                                            .z = evaluation_train) , function(.x, .y, .z) {
                                                              cat(">>> Proyecting MAXNET model", .y, "to a raster object \n")
                                                              r <-raster::predict(raster::stack(rasters), .x, type = "logistic", progress = 'text')
-                                                             # writeRaster(
-                                                             #   r,
-                                                             #   paste0(
-                                                             #     sp_dir,
-                                                             #     "/modeling/replicates/",
-                                                             #     species,
-                                                             #     "_prj_rep-",
-                                                             #     .y,
-                                                             #     ".tif"
-                                                             #   ),
-                                                             #   format = "GTiff",
-                                                             #   overwrite = TRUE
-                                                             # )
-                                                             #thresholding raster
-                                                             # if(!validation){
-                                                             #   r[which(r[] < .z$threshold)] <- NA
-                                                             # }
-                                                             # writeRaster(
-                                                             #   r,
-                                                             #   paste(
-                                                             #     sp_dir,
-                                                             #     "/modeling/replicates/",
-                                                             #     species,
-                                                             #     "_prj_th_rep-",
-                                                             #     .y,
-                                                             #     ".tif",
-                                                             #     sep = ""
-                                                             #   ),
-                                                             #   format = "GTiff",
-                                                             #   overwrite = TRUE
-                                                             # )
                                                              return(r)
                                                            })
                       
@@ -306,13 +275,7 @@ runMaxnet <- function(selectVars,rasterData){
         sdm_results <- modelsteps()
       )# end try
     }# end while loop
-    # #save all results in an .rds file
-    # cat("Process Done... Saving results as .rds file in the path", paste0(sp_dir, "/sdm.rds"), " \n")
-    # saveRDS(sdm_results, paste0(sp_dir, "/sdm.rds"));gc()
-    # 
-    # cat(" ","\n")
-    # cat("Maxent model finished and saved","\n")
-    # cat(" ","\n")
+
     return(sdm_results)
   }
   # ... but if an error occurs, tell me what happened:

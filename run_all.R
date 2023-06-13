@@ -10,16 +10,16 @@ pacman::p_load("terra", "dplyr", "sf", "purrr","tmap","randomForest","VSURF",
                "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo")
 
 #source functions
-lapply(
-  # need to ensure functions are grabbed first
-  list.files(
-    path = "R2",
-    pattern = ".R",
-    full.names = TRUE,
-    recursive = TRUE
-  ),
-  source
-)
+for(i in list.files(
+  path = "R2",
+  pattern = ".R",
+  full.names = TRUE,
+  recursive = TRUE
+)){
+  print(i)
+  source(i)
+}
+
 
 # source global objects 
 ## maximun number of points used in model (use in subSampleCountry.R)
@@ -66,7 +66,7 @@ states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_pro
 genera <- unique(speciesData$genus)
 species <- sort(unique(speciesData$taxon))
 # species subset
-species <- species[21:length(species)]
+# species <- species[21:length(species)]
 
 #issues 
 ## [1] "Daucus_carota_subsp._fontanesii" : `k` must be a single integer.Error in h(simpleError(msg, call)) : 
@@ -76,8 +76,8 @@ species <- species[21:length(species)]
 
 #testing
 i <- genera[1]
-j <- species[3]
-
+j <- species[1]
+# Daucus_aureus is species[1] is a reasonable one for troubleshooting
 for(i in genera){
   print(i)
   #create folder
@@ -161,6 +161,9 @@ for(i in genera){
     ## generate a mess map 
     ## generate a kernal density map 
     
+    ## crop GA50 to threshold area 
+    g_bufferCrop <- cropG_Buffer(ga50 = g_buffer, thres = thres)
+    
     # Gap Analysis Methods  ---------------------------------------------------
     # insitu 
     ## srsin
@@ -170,10 +173,15 @@ for(i in genera){
     
     #exsitu 
     ##ersex  
+    ersex <- ers_exsitu(speciesData = sd1, thres = thres, natArea = natArea,
+                        ga50 = g_bufferCrop)
     ##grsex 
+    grsex <- grs_exsitu(speciesData = sd1, ga50 = g_bufferCrop, thres = thres)
     ##fcsex
-    
+    fcsex <- fcs_exsitu(srsex = srsex,grsex = grsex,ersex = ersex)
     # Export the data ---------------------------------------------------------
+    ## add to the export 
+    ## - GRSex, g_bufferCrop, ERSex, FCSex
     writeData(overwrite = overwrite,
               dirs = dirs,
               c1 = c1,
@@ -183,7 +191,11 @@ for(i in genera){
               g_buffer = g_buffer,
               rasterResults = projectsResults,
               evalTable = evalTable,
-              thres = thres)
+              thres = thres,
+              g_bufferMask = g_bufferCrop,
+              grsex = grsex,
+              ersex = ersex,
+              fcsex = fcsex)
     
     # remove all reused variables ---------------------------------------------
     rm(c1,sp1,srsex,natArea,g_buffer, projectsResults,evalTable,thres)
