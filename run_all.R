@@ -66,7 +66,12 @@ states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_pro
 genera <- unique(speciesData$genus)
 species <- sort(unique(speciesData$taxon))
 # species subset
-species <- species[5:length(species)]
+species <- species[21:length(species)]
+
+#issues 
+## [1] "Daucus_carota_subsp._fontanesii" : `k` must be a single integer.Error in h(simpleError(msg, call)) : 
+## [1] "Daucus_carota_subsp._rupestris" :  `k` must be a single integer.Error in h(simpleError(msg, call)) : 
+
 
 
 #testing
