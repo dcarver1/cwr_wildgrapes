@@ -67,12 +67,20 @@ states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_pro
 genera <- unique(speciesData$genus)
 species <- sort(unique(speciesData$taxon))
 # species subset
-# species <- species[21:length(species)]
+species <- species[c(14,8)]
+# test species
+# D. syrticus,
+# D. sahariensis,
+# D. carota susbp. gummifer, 
+# D. carota subsp. capillifolius 
+# D. carota subsp. fontanesii
+
+
+
 
 #issues 
 ## [1] "Daucus_carota_subsp._fontanesii" : `k` must be a single integer.Error in h(simpleError(msg, call)) : 
 ## [1] "Daucus_carota_subsp._rupestris" :  `k` must be a single integer.Error in h(simpleError(msg, call)) : 
-
 
 
 #testing
@@ -180,6 +188,12 @@ for(i in genera){
     grsex <- grs_exsitu(speciesData = sd1, ga50 = g_bufferCrop, thres = thres)
     ##fcsex
     fcsex <- fcs_exsitu(srsex = srsex,grsex = grsex,ersex = ersex)
+    
+    
+    ## basic summary maps 
+    basicMap(thres = thres, occurances = sp1)
+    
+    
     # Export the data ---------------------------------------------------------
     ## add to the export 
     ## - GRSex, g_bufferCrop, ERSex, FCSex

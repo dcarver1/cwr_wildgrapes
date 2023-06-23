@@ -19,9 +19,9 @@ writeData <- function(overwrite,
   }
   
   ### sp object 
-  spPath <- paste0(dirs[2], "/spatialData.csv")
+  spPath <- paste0(dirs[2], "/spatialData.gpkg")
   if(!file.exists(spPath)| isTRUE(overwrite)){
-    write_csv(x = sp1, file = spPath)
+    sf::write_sf(x = sp1, file = spPath)
   }
   
   ### srsex 
