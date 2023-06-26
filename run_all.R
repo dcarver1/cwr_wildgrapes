@@ -8,7 +8,8 @@
 
 # local testing 
 pacman::p_load("terra", "dplyr", "sf", "purrr","tmap","randomForest","VSURF",
-               "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo")
+               "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo",
+               "leaflet")
 
 #source functions
 for(i in list.files(
@@ -54,7 +55,7 @@ ecoregions <- sf::st_read("data/geospatial_datasets/ecoregions/tnc_terr_ecoregio
 ## north America
 northAmerica <- sf::st_read("data/geospatial_datasets/northAmerica/northAmericaArea.gpkg")
 ## protect lands 
-### come back to this one requires some more processing 
+protectedAreas <- terra::rast("data/geospatial_datasets/protectedLands/wdpa_rasterized_all.tif")
 ## states 
 states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")
 
@@ -67,7 +68,7 @@ states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_pro
 genera <- unique(speciesData$genus)
 species <- sort(unique(speciesData$taxon))
 # species subset
-species <- species[c(14,8)]
+# species <- species[c(14,8)]
 # test species
 # D. syrticus,
 # D. sahariensis,
@@ -176,9 +177,23 @@ for(i in genera){
     # Gap Analysis Methods  ---------------------------------------------------
     # insitu 
     ## srsin
+    srsin <- srs_insitu(occuranceData = sp1, 
+                        thres = thres,
+                        protectedArea =protectedAreas )
     ## ersin 
+    ersin <- ers_insitu(occuranceData = sp1,
+                        nativeArea = natArea,
+                        protectedArea = protectedAreas,
+                        thres = thres)
     ## grsin 
+    grsin <- grs_insitu(occuranceData = sp1,
+                        protectedArea = protectedAreas,
+                        thres = thres)
     ## fcsin 
+    fcsin <- fcs_insitu(srsin = srsin,
+                        grsin = grsin,
+                        ersin = ersin)
+    
     
     #exsitu 
     ##ersex  
@@ -189,14 +204,19 @@ for(i in genera){
     ##fcsex
     fcsex <- fcs_exsitu(srsex = srsex,grsex = grsex,ersex = ersex)
     
+    #combined measure 
+    fcsCombined <- fcs_combine(fcsin = fcsin,fcsex = fcsex)
+    
     
     ## basic summary maps 
     basicMap(thres = thres, occurances = sp1)
     
+    # block here for testing. I want variable in local enviroment and don't want them written out. 
+    stop()
     
     # Export the data ---------------------------------------------------------
     ## add to the export 
-    ## - GRSex, g_bufferCrop, ERSex, FCSex
+    ## - grsin, ersin, srsin, fcsin, fcscombined 
     writeData(overwrite = overwrite,
               dirs = dirs,
               c1 = c1,
