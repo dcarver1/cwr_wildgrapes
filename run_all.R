@@ -7,16 +7,17 @@
 
 
 # local testing 
-pacman::p_load("terra", "dplyr", "sf", "purrr","tmap","randomForest","VSURF",
+pacman::p_load("terra", "dplyr", "sf", "purrr","randomForest","VSURF",
                "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo",
-               "leaflet")
+               "leaflet", "tidyterra", "rmarkdown")
 
 #source functions
 for(i in list.files(
   path = "R2",
-  pattern = ".R",
+  pattern = "\\.R$", # \\ensure file extension. $ensures ends with. Avoids .Rmd
   full.names = TRUE,
-  recursive = TRUE
+  recursive = TRUE,
+  
 )){
   print(i)
   source(i)
@@ -168,6 +169,7 @@ for(i in genera){
     ## generate threshold rasters 
     thres <- generateThresholdModel(evalTable = evalTable,
                                     rasterResults = projectsResults)
+    
     ## generate a mess map 
     ## generate a kernal density map 
     
@@ -181,6 +183,8 @@ for(i in genera){
                         thres = thres,
                         protectedArea =protectedAreas )
     ## ersin 
+    ### very slow at the moment. Lots of check against individual points. 
+    ### Maybe test ecoregions individually from nat area-- extract values from sdm. 
     ersin <- ers_insitu(occuranceData = sp1,
                         nativeArea = natArea,
                         protectedArea = protectedAreas,
@@ -207,11 +211,33 @@ for(i in genera){
     #combined measure 
     fcsCombined <- fcs_combine(fcsin = fcsin,fcsex = fcsex)
     
-    
+    #gather features for RMD 
+    ## just a helper function to reduce the number of input for the RMD
+    reportData <- grabData(fscCombined = fcsCombined,
+                           fcsex = fcsex,
+                           fcsin = fcsin,
+                           evalTable = evalTable,
+                           g_bufferCrop = g_bufferCrop,
+                           thres = thres,
+                           projectsResults = projectsResults,
+                           occuranceData = sp1,
+                           v_data = v_data,
+                           g_buffer = g_buffer,
+                           natArea = natArea,
+                           protectedAreas = protectedAreas)
     ## basic summary maps 
     basicMap(thres = thres, occurances = sp1)
     
-    # block here for testing. I want variable in local enviroment and don't want them written out. 
+    ##
+    render(input = "R2/summarize/singleSpeciesSummary.Rmd",
+           # output_file = paste0(~dirs[3],"/",sp1$taxon[1],"_summary_",Sys.Date(),".html"),
+           params = list(
+             data = reportData),
+           envir = new.env()
+           )
+    
+    
+    # block here for testing. I want variable in local environment and don't want them written out. 
     stop()
     
     # Export the data ---------------------------------------------------------

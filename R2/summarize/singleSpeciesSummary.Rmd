@@ -1,0 +1,135 @@
+---
+title: Taxon level modeling, preliminary threat assessment, and conservation gap analysis summary
+author: Daniel P. Carver and Colin K. Khoury 
+output:
+  html_document:
+      css: style.css
+highlight: tango
+theme: yeti
+toc: no
+toc_depth: 4
+toc_float:
+  collapsed: yes
+smooth_scroll: yes
+date: "Report generated on `r Sys.Date()`"
+params:
+  data : "dataset"
+   
+---
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pacman::p_load("leaflet","data.table", "tidyr", "dplyr","plotly")
+```
+
+# Conservation Summary 
+
+Plot of the FCS exsitu and FCS insitu data 
+
+```{r  echo=FALSE, message=FALSE, warning=FALSE}
+# transform data
+d2 <- rbind(params$data$fcsex, params$data$fcsin) %>%
+  mutate(Category = c("Exsitu", "Insitu"))
+
+d3 <- d2 %>% 
+  pivot_longer(cols = c("SRS","GRS","ERS","FCS"), names_to = "Metric")
+
+d3$Metric <- factor(d3$Metric, levels = c("SRS","ERS","GRS","FCS"))
+
+
+plot_ly(d3, 
+         x = ~Metric,
+         y = ~value,
+         color = ~Category)%>% 
+  layout(xaxis = list(title = "", tickangle = 0),
+         yaxis = list(title = ""),
+         margin = list(b = 100),
+         barmode = 'group',
+         title = "Exsitu and Insitu Summary Scores")
+```
+# Map of Species Data 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+# point data 
+occData <- params$data$occuranceData %>%
+  dplyr::mutate(popup=paste0("<b>Source:</b> ", databaseSource, 
+                          "<br/><b>Collector Code:</b> ", institute  ,
+                          "<br/><b>Collection Type:</b> ", type))
+pointColor <- colorFactor(palette = c("#1184D4","#6300F0"), domain = occData$type)
+gBuf <- params$data$g_bufferCrop
+
+
+# predicted presence map 
+threshold <- params$data$binaryMap
+thresColor <- colorNumeric(palette = c( "#FFFFFF","#45B320"), domain = values(threshold), na.color = "transparent")
+
+# protected area 
+protectedArea <- params$data$protectedArea
+protectColor <- colorNumeric(palette = "#B7B648", domain = values(protectedArea), na.color = "transparent")
+
+#buffered G area 
+gBuf <- params$data$g_bufferCrop
+bufColor <- colorNumeric(palette = "#6300F0", domain = values(gBuf),na.color = "transparent")
+
+#ecoregions 
+ecoReg <- params$data$naturalArea
+ecoColor <- colorFactor(palette = "Set1",domain = ecoReg$ECO_ID_U)
+# leaflet Map 
+## need to got to documentation for specifics on functions https://github.com/Leaflet/Leaflet.markercluster
+m1 <- leaflet(width = "100%")%>%
+  addTiles()%>%
+  addCircleMarkers(data = occData,
+             color = ~pointColor(type),
+             opacity = 1,
+             radius = 1,
+             group = "Observations",
+             stroke = 1,
+             popup = ~popup,
+             clusterOptions = markerClusterOptions(
+               zoomToBoundsOnClick = FALSE,
+               disableClusteringAtZoom = 6,
+                showCoverageOnHover = TRUE,
+                  spiderLegPolylineOptions = list(weight = 1.5, color = "#08FE62", opacity = 0.5)))%>%
+  addLegend(position = "bottomright",
+            color = c("#1184D4","#6300F0"),
+            labels = c("Herberium", "Germplasm"),
+            title = "Observation Type",
+            group = "Observations")
+#raster elements 
+m2 <-m1 %>%
+  addRasterImage(x = raster(threshold), colors = thresColor, group = "Expected Habitat", method = "ngb")%>%
+  addLegend(position = "bottomright",
+            color = c( "#FFFFFF","#45B320"),
+            labels = c("Native Area", "Expected Habitat"),
+            title = "Modeled Habitat",
+            group = "Expected Habitat")%>%
+  addRasterImage(x = raster(protectedArea), colors = protectColor, group = "Protected Area", method = "ngb")%>%
+     addLegend(position = "bottomright",
+               color = "#B7B648",
+            labels = "Protected Area",
+            group = "Protected Area")%>%
+  addRasterImage(x = raster(gBuf), colors = bufColor, group = "Buffer Germplasm Collections", method = "ngb")%>%
+  addLegend(position = "bottomright",
+            color = "#6300F0",
+            labels = "Buffer Germplasm Collections",
+            group = "Buffer Germplasm Collections")
+
+
+# add polygons 
+m3 <- m2 %>%
+  addPolygons(
+    data = ecoReg,
+    color = ~ecoColor(ECO_ID_U),
+    popup = ~ECO_NAME ,
+    group = "Ecoregions")
+
+# add control groups 
+m3 %>%
+  addLayersControl(
+    overlayGroups = c("Expected Habitat","Observations","Protected Area",
+                      "Buffer Germplasm Collections", "Ecoregions")
+  )%>% hideGroup(c("Protected Area","Buffer Germplasm Collections", "Ecoregions"))
+
+
+```
