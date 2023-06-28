@@ -10,12 +10,28 @@ pacman::p_load("vroom", "tidyr", "dplyr", "countrycode")
 lapply(X = list.files("preprocessing/functions", pattern = ".R", full.names = TRUE),
        FUN = source)
 
-# processing check 
-## synonym test 
-## valid lat long 
-## filter on iso3 for (USA,CAN,MEX)
+# processing check --- performed across all sources 
+## standardize species names (var subsp " " or  _ )
 
-# data sources 
-gbif <- processGBIF(path = "E:/mbg/wild grapes/data/gbif.csv")
+## synonym test 
+### reassign names based on accecpted sysn
+
+## filter on iso3 for (USA,CAN,MEX)
+## valid lat long 
+### remove all lat long outside of North America 
+## assign state level classification
+### probably lat long
+
+
+# render input datasets ---------------------------------------------------
+## gbif 
+gbif <- processGBIF(path = "data/source_data/gbif.csv")
+write_csv(x = gbif, file = "data/processed_occurance/tempOccurances_gbifOnly.csv")
+## grin
+
+## midwest herberium
+
+
+# compile into single dataset ---------------------------------------------
 
 

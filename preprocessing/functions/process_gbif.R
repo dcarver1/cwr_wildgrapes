@@ -1,4 +1,4 @@
-#path <- "E:/mbg/wild grapes/data/gbif.csv"
+# path <- "E:/mbg/wild grapes/data/source_data/gbif.csv"
 
 processGBIF <- function(path){
   
@@ -11,17 +11,17 @@ processGBIF <- function(path){
       genus = "genus",
       species,
       infraspecificEpithet, 
-      stateProvince,
       locality,
       latitude = "decimalLatitude",
       longitude = "decimalLongitude",
-      year = "year",
+      yearRecorded = "year",
       institutionCode = "institutionCode", # need to determine the 
       finalOriginStat =  "establishmentMeans",
       sampleCategory = "basisOfRecord",
       countryCode,
-      stateProvince, 
-      taxonRank
+      state = "stateProvince", 
+      taxonRank,
+      coordinateUncertainty = "coordinateUncertaintyInMeters"
     )%>%
     dplyr::mutate(databaseSource = "GBIF",
                   collectionSource = NA,
@@ -29,7 +29,7 @@ processGBIF <- function(path){
     # remove fossil records 
     filter(sampleCategory != "FOSSIL_SPECIMEN")%>%
     # assign location value  and drop original 
-    dplyr::mutate(localityInformation = paste0(stateProvince, " -- ",locality ))%>%
+    dplyr::mutate(localityInformation = paste0(state, " -- ",locality ))%>%
     dplyr::filter(is.na(latitude) | latitude > 10,
                   is.na(longitude) | longitude < -50)
   
@@ -64,8 +64,13 @@ processGBIF <- function(path){
   d1$iso3 <- countrycode(sourcevar = d1$countryCode,
                          origin = "iso2c",
                          destination = "iso3c")
-  
-  d1 <- d1 %>% dplyr::select(taxon,
+  # add elements not define in data and select for correct order 
+  d1 <- d1%>% mutate(
+      county = NA,
+      countyFIPS = NA,
+      stateFIPS  = NA
+    )%>% dplyr::select(
+    taxon,
     genus,
     species,
     latitude,
@@ -80,8 +85,14 @@ processGBIF <- function(path){
     localityInformation,
     biologicalStatus, 
     collectionSource,
-    finalOriginStat
+    finalOriginStat,
+    yearRecorded,
+    county,
+    countyFIPS,
+    state,
+    stateFIPS,
+    coordinateUncertainty
   )
   
-  
+  return(d1)
 }
