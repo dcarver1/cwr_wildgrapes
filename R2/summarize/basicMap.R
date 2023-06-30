@@ -39,7 +39,8 @@ basicMap <- function(thres,occurances ){
                      popup = ~popup,
                      opacity = 1
                      )%>%
-    addLegend(pal = pal, values = values(thres),
+    addLegend(pal = pal, 
+              values = values(thres),
               title = "Probability of suitable habitat")%>%
     addControl(speciesName, position = "bottomleft")
   

@@ -51,6 +51,7 @@ for(i in seq_along(speciesList$plant_symbol)){
     "<br/> <b> Location Description: </b>", localityInformation))
   # generate color palette for points 
   pointsPalette <- colorBin(palette = "YlGnBu", domain = points$yearRecorded,
+                            bins = 5, reverse = TRUE,
                                 na.color = "transparent")
   #icon attempt one -- pretty bad 
   # icons <- awesomeIcons(icon = points$fromINaturalist,
