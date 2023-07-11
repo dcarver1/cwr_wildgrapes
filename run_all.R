@@ -69,7 +69,7 @@ states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_pro
 genera <- unique(speciesData$genus)
 species <- sort(unique(speciesData$taxon))
 # species subset
-# species <- species[c(14,8)]
+species <- species[c(12:length(species))]
 # test species
 # D. syrticus,
 # D. sahariensis,
@@ -169,110 +169,112 @@ for(i in genera){
     
     ## perform maxent model 
     sdm_results <- writeRDS(path = allPaths$sdmResults,
-                            overwrite = overwrite, 
+                            overwrite = TRUE, 
                             function1 = runMaxnet(selectVars = v_data,
                                                   rasterData = rasterInputs))
     
-    ## generatre summary raster images  
-    ### probably want to write this out as individual layers. 
-    projectsResults <- writeRDS(path = allPaths$modeledRasters,
+    ## condition to test if model was suscessfull produced.
+    if(!is.null(sdm_results)){
+      projectsResults <- writeRDS(path = allPaths$modeledRasters,
+                                  overwrite = overwrite,
+                                  function1 = rasterResults(sdm_result))
+      
+      ## generate evaluationTable 
+      evalTable <- writeCSV(path = allPaths$evalTablePath,
+                            overwrite = overwrite, 
+                            function1 = evaluateTable(sdm_result = sdm_results))
+      
+      ## generate threshold rasters 
+      thres <- writeRast(path =  allPaths$thresPath,
+                         overwrite = overwrite,
+                         function1 = generateThresholdModel(evalTable = evalTable,
+                                                            rasterResults = projectsResults))
+      
+      ## generate a mess map 
+      ## generate a kernal density map 
+      
+      ## crop GA50 to threshold area 
+      g_bufferCrop <- writeRast(path = allPaths$g50_bufferPath, 
                                 overwrite = overwrite,
-                                function1 = rasterResults(sdm_result))
-    
-    ## generate evaluationTable 
-    evalTable <- writeCSV(path = allPaths$evalTablePath,
-                          overwrite = overwrite, 
-                          function1 = evaluateTable(sdm_result = sdm_results))
-    
-    ## generate threshold rasters 
-    thres <- writeRast(path =  allPaths$thresPath,
-                       overwrite = overwrite,
-                       function1 = generateThresholdModel(evalTable = evalTable,
-                                    rasterResults = projectsResults))
-    
-    ## generate a mess map 
-    ## generate a kernal density map 
-    
-    ## crop GA50 to threshold area 
-    g_bufferCrop <- writeRast(path = allPaths$g50_bufferPath, 
+                                function1 = cropG_Buffer(ga50 = g_buffer,
+                                                         thres = thres))
+      
+      # Gap Analysis Methods  ---------------------------------------------------
+      # insitu 
+      ## srsin
+      srsin <- writeCSV(path = allPaths$srsinPath,
+                        overwrite = overwrite,
+                        function1 = srs_insitu(occuranceData = sp1, 
+                                               thres = thres,
+                                               protectedArea =protectedAreas ))
+      ## ersin 
+      ### very slow at the moment. Lots of check against individual points. 
+      ### Maybe test ecoregions individually from nat area-- extract values from sdm. 
+      ersin <- writeCSV(path = allPaths$ersinPath,
+                        overwrite = overwrite,
+                        function1 = ers_insitu(occuranceData = sp1,
+                                               nativeArea = natArea,
+                                               protectedArea = protectedAreas,
+                                               thres = thres)) 
+      ## grsin 
+      grsin <-  writeCSV(path = allPaths$grsinPath,
+                         overwrite = overwrite,
+                         function1 = grs_insitu(occuranceData = sp1,
+                                                protectedArea = protectedAreas,
+                                                thres = thres))
+      ## fcsin 
+      fcsin <- writeCSV(path = allPaths$fcsinPath,
+                        overwrite = overwrite,
+                        function1 = fcs_insitu(srsin = srsin,
+                                               grsin = grsin,
+                                               ersin = ersin))
+      
+      
+      #exsitu 
+      ##ersex  
+      ersex <- writeCSV(path = allPaths$ersexPath,
+                        overwrite = overwrite,
+                        function1 = ers_exsitu(speciesData = sd1,
+                                               thres = thres,
+                                               natArea = natArea,
+                                               ga50 = g_bufferCrop))
+      ##grsex 
+      grsex <- writeCSV(path = allPaths$grsexPath,
+                        overwrite = overwrite,
+                        function1 = grs_exsitu(speciesData = sd1,
+                                               ga50 = g_bufferCrop,
+                                               thres = thres))
+      ##fcsex
+      fcsex <- writeCSV(path = allPaths$fcsexPath,
+                        overwrite = overwrite,
+                        function1 = fcs_exsitu(srsex = srsex,
+                                               grsex = grsex,
+                                               ersex = ersex))
+      
+      #combined measure 
+      fcsCombined <- writeCSV(path = allPaths$fcsCombinedPath,
                               overwrite = overwrite,
-                              function1 = cropG_Buffer(ga50 = g_buffer,
-                                                       thres = thres))
-    
-    # Gap Analysis Methods  ---------------------------------------------------
-    # insitu 
-    ## srsin
-    srsin <- writeCSV(path = allPaths$srsinPath,
-                      overwrite = overwrite,
-                      function1 = srs_insitu(occuranceData = sp1, 
-                        thres = thres,
-                        protectedArea =protectedAreas ))
-    ## ersin 
-    ### very slow at the moment. Lots of check against individual points. 
-    ### Maybe test ecoregions individually from nat area-- extract values from sdm. 
-    ersin <- writeCSV(path = allPaths$ersinPath,
-                      overwrite = overwrite,
-                      function1 = ers_insitu(occuranceData = sp1,
-                        nativeArea = natArea,
-                        protectedArea = protectedAreas,
-                        thres = thres)) 
-    ## grsin 
-    grsin <-  writeCSV(path = allPaths$grsinPath,
-                       overwrite = overwrite,
-                       function1 = grs_insitu(occuranceData = sp1,
-                        protectedArea = protectedAreas,
-                        thres = thres))
-    ## fcsin 
-    fcsin <- writeCSV(path = allPaths$fcsinPath,
-                      overwrite = overwrite,
-                      function1 = fcs_insitu(srsin = srsin,
-                        grsin = grsin,
-                        ersin = ersin))
-    
-    
-    #exsitu 
-    ##ersex  
-    ersex <- writeCSV(path = allPaths$ersexPath,
-                      overwrite = overwrite,
-                      function1 = ers_exsitu(speciesData = sd1,
-                                             thres = thres,
-                                             natArea = natArea,
-                                             ga50 = g_bufferCrop))
-    ##grsex 
-    grsex <- writeCSV(path = allPaths$grsexPath,
-                      overwrite = overwrite,
-                      function1 = grs_exsitu(speciesData = sd1,
-                                             ga50 = g_bufferCrop,
-                                             thres = thres))
-    ##fcsex
-    fcsex <- writeCSV(path = allPaths$fcsexPath,
-                      overwrite = overwrite,
-                      function1 = fcs_exsitu(srsex = srsex,
-                                             grsex = grsex,
-                                             ersex = ersex))
-    
-    #combined measure 
-    fcsCombined <- writeCSV(path = allPaths$fcsCombinedPath,
-                            overwrite = overwrite,
-                            function1 = fcs_combine(fcsin = fcsin,
-                                                    fcsex = fcsex))
-    
-    #gather features for RMD 
-    ## just a helper function to reduce the number of input for the RMD
-    reportData <- writeRDS(path = allPaths$summaryDataPath,
-                           overwrite = overwrite,
-                           function1 = grabData(fscCombined = fcsCombined,
-                           fcsex = fcsex,
-                           fcsin = fcsin,
-                           evalTable = evalTable,
-                           g_bufferCrop = g_bufferCrop,
-                           thres = thres,
-                           projectsResults = projectsResults,
-                           occuranceData = sp1,
-                           v_data = v_data,
-                           g_buffer = g_buffer,
-                           natArea = natArea,
-                           protectedAreas = protectedAreas))
+                              function1 = fcs_combine(fcsin = fcsin,
+                                                      fcsex = fcsex))
+      
+      #gather features for RMD 
+      ## just a helper function to reduce the number of input for the RMD
+      reportData <- writeRDS(path = allPaths$summaryDataPath,
+                             overwrite = overwrite,
+                             function1 = grabData(fscCombined = fcsCombined,
+                                                  fcsex = fcsex,
+                                                  fcsin = fcsin,
+                                                  evalTable = evalTable,
+                                                  g_bufferCrop = g_bufferCrop,
+                                                  thres = thres,
+                                                  projectsResults = projectsResults,
+                                                  occuranceData = sp1,
+                                                  v_data = v_data,
+                                                  g_buffer = g_buffer,
+                                                  natArea = natArea,
+                                                  protectedAreas = protectedAreas))
+    }
+   
     
     ## basic summary maps --- this is being phased out
     # basicMap(thres = thres, occurances = sp1)
@@ -287,14 +289,12 @@ for(i in genera){
     
     
     # block here for testing. I want variable in local environment and don't want them written out. 
-    stop()
+    # stop()
     
     # remove all reused variables ---------------------------------------------
     rm(c1,sp1,srsex,natArea,g_buffer, projectsResults,evalTable,thres)
     
   }
-  
-  
   
   }# end of species loop 
 }

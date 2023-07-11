@@ -11,6 +11,8 @@ numberBackground <- function(natArea){
   ### n right now is total area in meters square, convert sq km
   n <- as.numeric(sum(sf::st_area(natArea))) * 0.000001
   
+  ### 10 times the number of presence 
+  
   if( n >= 5000){
     n <- 5000
   }else{

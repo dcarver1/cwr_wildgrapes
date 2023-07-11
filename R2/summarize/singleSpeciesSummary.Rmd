@@ -13,8 +13,7 @@ toc_float:
 smooth_scroll: yes
 date: "Report generated on `r Sys.Date()`"
 params:
-  data : "dataset"
-   
+  path: "NA" 
 ---
 
 

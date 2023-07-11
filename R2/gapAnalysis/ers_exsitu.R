@@ -15,23 +15,26 @@
 #' @return Data frames with ERS score details. 
 ers_exsitu <- function(speciesData,thres,natArea,ga50) {
 
+  # convert natural area object in a vect feature
+  n1 <- natArea %>% 
+    dplyr::select(ECO_ID_U)%>% 
+    vect()
+  
+  
+  v1 <- terra::zonal(x = thres,z = n1,fun="sum",na.rm=TRUE)
+  v1$ECO_ID_U <- n1$ECO_ID_U
+  
+  # Number of ecoregions considered. 
+  nEco <- v1 %>% 
+    filter(Threshold > 0)%>%
+    nrow()
+  
+  
   if(class(ga50)[[1]] != "SpatRaster"){
     ers <- 0
     gEco <- NA
   }else{
-    # convert natural area object in a vect feature
-    n1 <- natArea %>% 
-      dplyr::select(ECO_ID_U)%>% 
-      vect()
-    
-    
-    v1 <- terra::zonal(x = thres,z = n1,fun="sum",na.rm=TRUE)
-    v1$ECO_ID_U <- n1$ECO_ID_U
-    
-    # Number of ecoregions considered. 
-    nEco <- v1 %>% 
-      filter(Threshold > 0)%>%
-      nrow()
+
     
     # determine ecoregions in ga50 area 
     v2 <- terra::zonal(x = ga50,z = n1,fun="sum",na.rm=TRUE)
@@ -41,7 +44,9 @@ ers_exsitu <- function(speciesData,thres,natArea,ga50) {
     
     # ERs calculation 
     ers <- min(c(100, (gEco/nEco)*100))
+
   }
+  
   # generate dataframe
   out_df <- data.frame(ID=speciesData$taxon[1],
                        SPP_N_ECO=nEco,
