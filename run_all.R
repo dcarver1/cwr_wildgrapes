@@ -12,17 +12,9 @@ pacman::p_load("terra", "dplyr", "sf", "purrr","randomForest","VSURF",
                "leaflet", "tidyterra", "rmarkdown")
 
 #source functions
-for(i in list.files(
-  path = "R2",
-  pattern = "\\.R$", # \\ensure file extension. $ensures ends with. Avoids .Rmd
-  full.names = TRUE,
-  recursive = TRUE,
-  
-)){
-  print(i)
-  source(i)
-}
-
+source("R2/helperFunctions.R")
+## using the helper function to help with edits. Save changes then run sourceFiles to console
+sourceFiles()
 
 # source global objects 
 ## maximun number of points used in model (use in subSampleCountry.R)
@@ -69,7 +61,7 @@ states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_pro
 genera <- unique(speciesData$genus)
 species <- sort(unique(speciesData$taxon))
 # species subset
-species <- species[c(12:length(species))]
+# species <- species[c(12:length(species))]
 # test species
 # D. syrticus,
 # D. sahariensis,
@@ -169,16 +161,16 @@ for(i in genera){
     
     ## perform maxent model 
     sdm_results <- writeRDS(path = allPaths$sdmResults,
-                            overwrite = TRUE, 
+                            overwrite = overwrite, 
                             function1 = runMaxnet(selectVars = v_data,
                                                   rasterData = rasterInputs))
     
     ## condition to test if model was suscessfull produced.
     if(!is.null(sdm_results)){
       projectsResults <- writeRDS(path = allPaths$modeledRasters,
-                                  overwrite = overwrite,
+                                  overwrite = TRUE,
                                   function1 = rasterResults(sdm_result))
-      
+
       ## generate evaluationTable 
       evalTable <- writeCSV(path = allPaths$evalTablePath,
                             overwrite = overwrite, 
@@ -260,7 +252,7 @@ for(i in genera){
       #gather features for RMD 
       ## just a helper function to reduce the number of input for the RMD
       reportData <- writeRDS(path = allPaths$summaryDataPath,
-                             overwrite = overwrite,
+                             overwrite = TRUE,
                              function1 = grabData(fscCombined = fcsCombined,
                                                   fcsex = fcsex,
                                                   fcsin = fcsin,
@@ -272,7 +264,8 @@ for(i in genera){
                                                   v_data = v_data,
                                                   g_buffer = g_buffer,
                                                   natArea = natArea,
-                                                  protectedAreas = protectedAreas))
+                                                  protectedAreas = protectedAreas,
+                                                  countsData = c1))
     }
    
     
@@ -280,13 +273,22 @@ for(i in genera){
     # basicMap(thres = thres, occurances = sp1)
     
     ## need some work on this 
-    # render(input = "R2/summarize/singleSpeciesSummary.Rmd",
-    #        # output_file = paste0(~dirs[3],"/",sp1$taxon[1],"_summary_",Sys.Date(),".html"),
-    #        params = list(
-    #          data = reportData),
-    #        envir = new.env()
-    #        )
-    
+    ### there is need for conditional statements to determine if specific values
+    ### should be used or not. 
+    if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
+      try(
+        rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
+                          output_format = "html_document",
+                          output_dir = file.path(allPaths$result),
+                          output_file = paste0(j,".html"),
+                          params = list(
+                            dataPath = reportData),
+                          envir = new.env(parent = globalenv())
+                          # clean = F,
+                          # encoding = "utf-8"
+        )
+      )
+    }
     
     # block here for testing. I want variable in local environment and don't want them written out. 
     # stop()
@@ -295,7 +297,6 @@ for(i in genera){
     rm(c1,sp1,srsex,natArea,g_buffer, projectsResults,evalTable,thres)
     
   }
-  
   }# end of species loop 
 }
 

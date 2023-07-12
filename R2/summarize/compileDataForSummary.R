@@ -3,7 +3,7 @@
 #' @return RDS file with a nested list of all required file inputs 
 grabData <- function(fscCombined, fcsex, fcsin,evalTable,g_bufferCrop,thres, 
                      projectsResults, v_data, g_buffer,natArea,protectedAreas,
-                     occuranceData){
+                     occuranceData, countsData){
   # crop protected areas 
   # mask protected areas layer 
   p2 <- thres
@@ -12,6 +12,8 @@ grabData <- function(fscCombined, fcsex, fcsin,evalTable,g_bufferCrop,thres,
   p1 <- terra::crop(x = protectedAreas, y = p2)
   # multiple to create mask 
   p1 <- p1 * p2
+  
+  
   
   
   
@@ -27,7 +29,8 @@ grabData <- function(fscCombined, fcsex, fcsin,evalTable,g_bufferCrop,thres,
     modelEvaluation = evalTable,
     fcsCombined = fcsCombined,
     fcsex= fcsex,
-    fcsin = fcsin
+    fcsin = fcsin,
+    countsData = countsData
   ) 
   return(reportData)
 }

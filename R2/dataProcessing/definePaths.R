@@ -48,8 +48,10 @@ definePaths <- function(dir1, j, runVersion){
   thresPath=paste0(paths$results,"/prj_threshold.tif"),
   # ga50 raster
   g50_bufferPath=paste0(paths$results, "/ga50_masked.tif"),
-  # data for summary html 
+  # data for summary data 
   summaryDataPath = paste0(paths$results, "/",j,"_Summary.RDS"), 
+  # summary html path
+  summaryHTMLPath = paste0(paths$results, "/",j,"_Summary.html"),
   # third level -- occurrences -----------------------------------------------
   # counts data 
   countsPaths = paste0(paths$occurances, "/counts.csv"),

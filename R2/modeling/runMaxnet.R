@@ -19,7 +19,7 @@ runMaxnet <- function(selectVars,rasterData){
       filter(presence == 1) %>% 
       nrow()
     # predefine to capture feautes with 3 or less
-    k <- NA
+    kfold <- NA
     if(nPresence <= 8 & nPresence >3){
       kfold <- 3
       feat <- "lp"
@@ -45,7 +45,7 @@ runMaxnet <- function(selectVars,rasterData){
     #   dplyr::mutate(presence = bioValues$presence,
     #                 latitude = bioValues$latitude,
     #                 longitude = bioValues$longitude)
-    if(is.na(k)){
+    if(is.na(kfold)){
       sdm_results <- NULL
       return(sdm_results)
       stop()

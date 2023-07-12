@@ -56,7 +56,8 @@ writeRast <- function(path, overwrite, function1){
   }
 }
 
-
+### the terra objects inside of the list are not being contained well. 
+### need to figure out a way to wrap things before exporting (look to targets workflow)
 writeRDS <- function(path, overwrite, function1){
   if(!file.exists(path) | isTRUE(overwrite)){
     result <- function1
