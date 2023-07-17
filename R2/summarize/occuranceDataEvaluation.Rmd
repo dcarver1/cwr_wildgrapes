@@ -1,0 +1,295 @@
+---
+title: Taxon level assessment of occurance data
+author: Daniel P. Carver and Anne Frances 
+output:
+  html_document:
+      css: style.css
+date: "Report generated on `r Sys.Date()`"
+params:
+  speciesName: NA
+---
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pacman::p_load("leaflet","data.table", "tidyr", "dplyr","plotly","DT","readr","sf")
+
+### function for control number of character after the decimal place 
+sigfig <- function(vec, n=3){ 
+### function to round values to N significant digits
+# input:   vec       vector of numeric
+#          n         integer is the required sigfig  
+# output:  outvec    vector of numeric rounded to N sigfig
+
+formatC(signif(vec,digits=n), digits=n,format="fg", flag="#") 
+
+} 
+speciesName <- params$speciesName
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# reading input datasets --------------------------------------------------
+plantsData <- read_csv(file = "~/Documents/cwr_wildgrapes/data/source_data/usda_plants/completeVitis.csv")
+namedFeatures <- read_csv(file = "~/Documents/cwr_wildgrapes/data/source_data/nameList.csv")
+speciesNames <- read_csv(file = "~/Documents/cwr_wildgrapes/data/source_data/taxonomy20230628.csv")
+# we will want this normalized across all input sources... Just using gbif for now 
+observationData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurance/tempOccurances_gbifOnly.csv")
+#spatial data 
+countySHP <- read_sf("~/Documents/cwr_wildgrapes/data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
+stateSHP <- read_sf("~/Documents/cwr_wildgrapes/data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")%>%
+  dplyr::filter(adm0_a3 == "USA")
+
+speciesList <- dplyr::left_join(x = plantsData, y = namedFeatures, by = c("plant_symbol" =  "Accepted Symbol"))%>%
+  dplyr::select( "plant_symbol","Scientific Name")%>%
+  distinct()
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+species <- speciesList[speciesList$`Scientific Name` == speciesName, ]
+
+occData <- observationData[observationData$taxon == species$`Scientific Name`, ] %>%
+  dplyr::mutate(type = case_when(
+    sampleCategory  == "HUMAN_OBSERVATION" ~ "O",
+    TRUE ~ type
+  ))
+
+speciesPlantsData <- plantsData[plantsData$plant_symbol == species$plant_symbol,]
+
+### select states of interset 
+# spatial object 
+sp1 <- occData %>% 
+  dplyr::filter(!is.na(latitude))%>%
+  sf::st_as_sf(coords = c("longitude","latitude"), crs = sf::st_crs(stateSHP))
+# select all states from classified data and lat long 
+state1 <- unique(occData$state)
+state2 <- sf::st_intersection(x = stateSHP,y = sp1)%>%
+  st_drop_geometry()%>%
+  dplyr::filter(gu_a3 == "USA")%>%
+  dplyr::select(name)%>%
+  dplyr::distinct()%>%
+  dplyr::pull()
+state_usdaPlants <- speciesPlantsData %>%
+  dplyr::select(state)%>%
+  dplyr::distinct()%>%
+  dplyr::pull()
+
+all_states <- stateSHP %>% 
+    dplyr::filter(gu_a3 == "USA")%>%
+  dplyr::filter(name %in% unique(c(state1, state2,state_usdaPlants)))
+  
+
+```
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+countyState <- countySHP %>% 
+  dplyr::filter(REGION %in% all_states$postal)%>%
+  dplyr::select(NAME, FIPS, REGION)%>% 
+  mutate(
+    inPlants = case_when(
+      FIPS %in% speciesPlantsData$geoid ~ 1,
+      TRUE ~ 0
+    )
+  )
+
+# filter spatial data based on year recorded 
+sp2 <- sp1 %>% 
+  dplyr::filter(is.na(yearRecorded) | yearRecorded >= 1970)
+older <- sp1 %>% 
+  dplyr::filter(yearRecorded < 1970)
+
+
+for(i in c("O","H","G")){
+  sp3 <- sp2[sp2$type == i, ]
+  
+  
+  
+  # intersect the county and point data
+  df2 <- countyState[unlist(sf::st_intersects(sp3, countyState)), "FIPS"]%>%
+    st_drop_geometry()%>%
+    group_by(FIPS)%>%
+    dplyr::summarise(count = n())
+  
+  names(df2) <- c("FIPS", as.character(i))
+  # join to county feature 
+  countyState <- left_join(x = countyState, y = df2, by = "FIPS")
+}
+
+# append the older data count 
+df2 <- countyState[unlist(sf::st_intersects(older, countyState)), "FIPS"]%>%
+    st_drop_geometry()%>%
+    group_by(FIPS)%>%
+    dplyr::summarise(pre1970 = n())
+  # join to county feature 
+  countyState <- left_join(x = countyState, y = df2, by = "FIPS")
+  
+# add any record column
+countyState <- countyState %>%
+  rowwise() %>%
+  mutate(anyRecord = sum(inPlants,O,H,G,pre1970, na.rm = T))
+
+
+```
+## Map of Species Occurances
+The map below summarizes all occurance data at the county level. All counties within a state where are observation was described has been included. It is possible that some of the counties, even though they may not have know occurances, should be considered to represent habitat for a given taxon. 
+Selecting a county will provide the name and summary of the observations within. 
+
+**purple** color counties are of low priority for review for one of the following reasons 
+- Germplasma sample has been collected from the county from after 1970 
+- Two herberium samples have been collected form the county from after 1970
+- The county was identified by USDA Plants and contains at least one herberium record. 
+
+**orange** color counties are of high priority for review for one of the following reasons. 
+- All observations were made before 1970
+- A single herberium record was noted afer 1970
+- Only observational data has been noted within the county. 
+- Only defeined by USDA Plants
+
+
+All occurance data with latitude and longitude values can be displayed on the map. 
+
+**gold** color points represent observational data, such as iNaturalist reports. 
+
+**blue** colored points represent herbarium data
+
+**purple** colored points represents gremplasm sample. 
+
+
+*Probably want something more here to link to 
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+countyClass <- countyState %>% 
+  dplyr::mutate(reviewCounty = case_when(
+    G > 0 ~ FALSE, 
+    H >= 2 ~ FALSE,
+    inPlants == 1 & H ==1 ~ FALSE,
+    anyRecord == 0 ~ FALSE, 
+    TRUE ~ TRUE
+  ), color = case_when(
+      anyRecord >0 & reviewCounty  == TRUE  ~ "#F59C1F",
+      anyRecord >0 & reviewCounty == FALSE ~ "#54278f",
+      anyRecord == 0 ~ NA
+    ),
+  popup = paste0(
+      "<b>County Name: </b>", NAME,
+      "<br/> <b>State: </b>", REGION,
+      "<br/> <b> Listed in USDA Plants: </b>", inPlants,
+      "<br/> <b> Number of Observations Only Records: </b>", O,
+      "<br/> <b> Number of Herberium Records: </b>", H,
+      "<br/> <b> Number of Germplasm Records: </b>", G,
+      "<br/> <b> Number of Records before 1970: </b>",pre1970  
+    )
+)
+
+points <- sp1 %>%
+  dplyr::mutate(
+     popup =paste0( "<b>Data Source: </b>", databaseSource,
+    "<br/> <b> Record ID: </b>", sourceUniqueID,
+    "<br/> <b> Type: </b>", type,
+    "<br/> <b> Year: </b>", yearRecorded,
+    "<br/> <b> Location Description: </b>", localityInformation),
+    color = case_when(
+      type == "O" ~ "#DECE59",
+      type == "H" ~ "#1184D4",
+      type == "G" ~ "#6300F0"
+    ))
+
+
+#excludeNoRecords <- countyClass[countyClass$anyRecord !=0, ]
+
+# Map 
+## county SHP 
+## all observations 
+
+ 
+m1 <- leaflet(width = "100%")%>%
+    addTiles()%>%
+    addMapPane("counties", zIndex = 415) %>%
+    addMapPane("observations", zIndex = 420)%>%
+    addPolygons(data = countyClass,
+                color = ~color,
+                popup = ~popup,
+                weight = 2,
+                group = "counties",
+                  options = pathOptions(pane = "counties")
+                # highlightOptions = highlightOptions(
+                #   color = "white",
+                #   weight = 2,
+                #   bringToFront = TRUE)
+                )%>%
+    addCircleMarkers(data = points,
+             color = ~color,
+             opacity = 1,
+             radius = 2,
+             stroke = 1,
+             popup = ~popup,
+             group = "observations",
+             options = pathOptions(pane = "observations")
+               )%>%
+    addLegend(position = "bottomright",
+            color = c("#DECE59", "#1184D4","#6300F0"),
+            labels = c("Observation Only","Herberium", "Germplasm"),
+            title = "Observation Type",
+            group = "observations")%>%
+    addLayersControl(
+      overlayGroups = c("counties","observations"),
+      options = layersControlOptions(collapsed = FALSE)
+    )%>% hideGroup(c("observations"))
+                                                            
+m1
+
+
+```
+
+
+## Summary Table of County Data 
+
+The table below display additional attribute data for all the counties with know observation on the the selected taxon. All columns can be filtered and sorted. 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+df <- countyClass %>%
+  st_drop_geometry()%>%
+  dplyr::filter(anyRecord !=0)%>%
+  dplyr::select(-color, -popup, -anyRecord)%>%
+  dplyr::mutate(inPlants = case_when(
+    inPlants == 1 ~ TRUE,
+    TRUE ~ FALSE
+  ))%>%
+  dplyr::arrange(REGION)%>%
+  rename(
+    "County Name" = NAME,
+    "GEOID" = "FIPS", 
+    "State Abbrevation" = "REGION",
+    "USDA Plants" = "inPlants",
+    "Obersevation Only Records" = O,
+    "Heberium Records" = H,
+    "Germplasm Records" = G,
+    "Pre 1970 Records" = pre1970,
+    "Recommend Review" = reviewCounty) 
+
+DT::datatable(df,
+              rownames = FALSE,
+              filter = c("top"),
+              options = list(pageLength = 25)
+              )
+
+```
+
+## Summary of Occurrance Data 
+This table includes all records not just those with valid latitude and longitude information. 
+
+**Ideally I think we want to link out to this where individual can comment (google doc)** still maybe it make sense to show it all here. 
+
+Not sure what all we want to show here so I'm not adjust the column names etc... 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+DT::datatable(occData,
+              rownames = FALSE,
+              width = "100%",
+              filter = c("top"),
+              options = list(pageLength = 25)
+              )
+
+```
+

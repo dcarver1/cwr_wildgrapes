@@ -31,7 +31,7 @@ data <- params$dataPath
 species <- data$occuranceData$taxon[1]
 ```
 
-# Conservation Summary 
+# Conservation Summary of `r species`
 
 Plot of the FCS exsitu and FCS insitu data 
 
@@ -82,7 +82,8 @@ DT::datatable(c1,
 
 # point data
 occData <- data$occuranceData %>%
-  dplyr::mutate(popup=paste0("<b>Source:</b> ", databaseSource,
+  dplyr::mutate(popup=paste0("<br/><b>Taxon:</b> ", taxon,
+                             "<br/><b>Source:</b> ", databaseSource,
                           "<br/><b>Collector Code:</b> ", institute  ,
                           "<br/><b>Collection Type:</b> ", type))
 pointColor <- colorFactor(palette = c("#1184D4","#6300F0"), domain = occData$type)
@@ -209,7 +210,7 @@ m3 <- m2 %>%
 
 # add control groups
 m3 %>%
-  addLayersControl(
+  addLayersControl(position = "topleft",
     overlayGroups = c("Expected Habitat","Observations","Protected Area",
                       "Buffer Germplasm Collections", "Ecoregions","Mean Distribution Model",
                       "Median Distribution Model","SD of Distribution Model")
