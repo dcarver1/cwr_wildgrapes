@@ -4,7 +4,7 @@
 # 20230608
 ### 
 
-pacman::p_load("vroom", "tidyr", "dplyr", "countrycode")
+pacman::p_load("vroom", "tidyr", "dplyr", "countrycode", "stringr")
 
 
 lapply(X = list.files("preprocessing/functions", pattern = ".R", full.names = TRUE),
@@ -22,14 +22,27 @@ lapply(X = list.files("preprocessing/functions", pattern = ".R", full.names = TR
 ## assign state level classification
 ### probably lat long
 
+standardColumnNames <- c(
+  "taxon","genus","species","latitude","longitude","databaseSource",       
+  "institutionCode","type","sourceUniqueID","sampleCategory","country","iso3",                 
+  "localityInformation","biologicalStatus","collectionSource","finalOriginStat","yearRecorded","county",               
+  "countyFIPS","state","stateFIPS","coordinateUncertainty"
+)
+
 
 # render input datasets ---------------------------------------------------
 ## gbif 
-gbif <- processGBIF(path = "data/source_data/gbif.csv")
-write_csv(x = gbif, file = "data/processed_occurance/tempOccurances_gbifOnly.csv")
-## grin
+gbif <- processGBIF(path = "data/source_data/gbif.csv")%>%
+  dplyr::select(all_of(standardColumnNames))
 
-## midwest herberium
+write_csv(x = gbif, file = "data/processed_occurance/tempOccurances_gbifOnly.csv")
+
+## grin
+grin <- processGRIN(path = "data/source_data/grin.csv")%>%
+  dplyr::select(all_of(standardColumnNames))
+write_csv(grin, file = "data/processed_occurance/grin.csv")
+
+## Midwest herberium
 
 
 # compile into single dataset ---------------------------------------------
