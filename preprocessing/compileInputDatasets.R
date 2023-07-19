@@ -33,18 +33,38 @@ standardColumnNames <- c(
 # render input datasets ---------------------------------------------------
 ## gbif 
 gbif <- processGBIF(path = "data/source_data/gbif.csv")%>%
-  dplyr::select(all_of(standardColumnNames))
+  dplyr::select(all_of(standardColumnNames))%>%
+  mutate(across(everything(), as.character))
 
 write_csv(x = gbif, file = "data/processed_occurance/tempOccurances_gbifOnly.csv")
 
 ## grin
 grin <- processGRIN(path = "data/source_data/grin.csv")%>%
-  dplyr::select(all_of(standardColumnNames))
+  dplyr::select(all_of(standardColumnNames))%>%
+  mutate(across(everything(), as.character))
 write_csv(grin, file = "data/processed_occurance/grin.csv")
 
 ## Midwest herberium
+mwh <- processMidwestHerberium(path = "data/source_data/midwestherberium.csv")%>%
+  dplyr::select(all_of(standardColumnNames))%>%
+  mutate(across(everything(), as.character))
+write_csv(mwh, file = "data/processed_occurance/midwestHerberium.csv")
 
+## WEIWS 
+wiews <- processWIEWS(path = "data/source_data/wiews.csv")%>%
+  dplyr::select(all_of(standardColumnNames))%>%
+  mutate(across(everything(), as.character))
+
+## GENESYS
+genesys <- processGenesys(path = "data/source_data/genesys.csv")%>%
+  dplyr::select(all_of(standardColumnNames))%>%
+  mutate(across(everything(), as.character))
 
 # compile into single dataset ---------------------------------------------
+d2 <- bind_rows(gbif, grin)
 
+d3 <- bind_rows(d2, mwh)
+d4 <- bind_rows(d3, wiews)
+d5 <- bind_rows(d4, genesys)
 
+View(d5)
