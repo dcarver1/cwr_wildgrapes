@@ -35,5 +35,7 @@
 /home/rstudio/Documents/cwr_wildgrapes/preprocessing/functions/process_genesys.R="2691C9CF"
 /home/rstudio/Documents/cwr_wildgrapes/preprocessing/functions/process_grin.R="86FC609D"
 /home/rstudio/Documents/cwr_wildgrapes/preprocessing/functions/process_midwestHerberium.R="89ED9F4A"
+/home/rstudio/Documents/cwr_wildgrapes/preprocessing/functions/speciesStandardization.R="213190D6"
+/home/rstudio/Documents/cwr_wildgrapes/preprocessing/functions/standardizeNames.R="34B487BC"
 /home/rstudio/Documents/cwr_wildgrapes/preprocessing/grabSheetsFromDrive.R="4017D900"
 /home/rstudio/Documents/cwr_wildgrapes/run_all.R="E11520E7"

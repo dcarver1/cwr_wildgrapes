@@ -45,3 +45,9 @@ g_all <- g1 %>%
 
 write_csv(x = g_all, file = "data/source_data/genesys.csv")
 
+
+# synonym datasets 
+syn1 <- read_sheet(as_id("https://docs.google.com/spreadsheets/d/19e6wNr4Luc53NfBQJgl4AWGovZMp24P9yyDqmW9-h3Y/edit#gid=137674278"))
+write_csv(x = syn1, file = "data/vitis/synonymList.csv")
+
+

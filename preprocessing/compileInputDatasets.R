@@ -69,6 +69,25 @@ d5 <- bind_rows(d4, genesys)
 
 View(d5)
 
+# Summary 
+d5 %>% 
+  group_by(taxon,type)%>%
+  summarise(count = n()) %>%
+  View()
+
+
+
+# Standardize names ( genus, species)  ------------------------------------
+
+
+d5 <- standardizeNames(d5)
+
+
+
+# species filter and synonym check  ---------------------------------------
+
+
+
 
 # processing check --- performed across all sources 
 ## reassign column types as needed 
@@ -256,10 +275,11 @@ for(i in c("USA","CAN", "MEX")){
 write_csv(validSpatialData, file = "data/processed_occurance/validSpatialData.csv")
 write_csv(excludedObservations, file = "data/processed_occurance/excludedObservations.csv")
 
-### probably lat long
+summary1 <- validSpatialData %>% 
+  st_drop_geometry()%>%
+  group_by(taxon, type)%>%
+  summarize(count = n())
 
 
-
-
-
+View(summary1)
 
