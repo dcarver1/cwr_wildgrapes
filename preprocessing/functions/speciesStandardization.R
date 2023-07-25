@@ -3,6 +3,7 @@
 synonymList <- read_csv("data/vitis/synonymList.csv")
 
 View(synonymList)
+data <- d5
 
 speciesCheck <- function(data, synonymList){
   # create empty df to hold matched datasets 
@@ -15,7 +16,8 @@ speciesCheck <- function(data, synonymList){
     species <- synonymList$`Taxon Name`[i]
     # taxon match 
     df2 <- data[data$taxon == species, ]
-    
+    # redefine data to remove any element that was added to new df 
+    data <- data[!data$index %in% df2$index, ]
     # synonym match 
     if(!is.na(synonymList$Synonyms[i])){
       synonyms <- synonymList$Synonyms[i] %>%
@@ -23,6 +25,9 @@ speciesCheck <- function(data, synonymList){
         unlist()
       df3 <- data[data$taxon %in% synonyms, ] %>%
         dplyr::mutate(taxon = synonymList$`Taxon Name`[i])
+      
+      # redefine data to remove any element that was added to new df 
+      data <- data[!data$index %in% df3$index, ]
       
       df1 <- df1 %>%
         bind_rows(df2)%>%
@@ -32,18 +37,9 @@ speciesCheck <- function(data, synonymList){
         bind_rows(df2)
     }
   rm(df2, df3)
-  
-  
 
   }
-  #### 20230724: something not lining up here. Either values area being pulled across species, 
-  ### I think it has to do with specuf 
-  # exclude the data that has been assigned 
-  df1a <- data[!data$index %in% df1$index, ]
-  
-  df1a <- anti_join(data,df1)
-  
-  df1b <- data[data$sourceUniqueID %in% df1$sourceUniqueID, ]
+
   
   # check for each species on Taxon  
   ## pull exact matched names 

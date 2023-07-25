@@ -99,7 +99,7 @@ d6 <- d5 %>%
     coordinateUncertainty = as.numeric(coordinateUncertainty)
   )
 
-
+data <- d6
 ## standardize species names (var subsp " " or  _ )
 
 ## synonym test 
