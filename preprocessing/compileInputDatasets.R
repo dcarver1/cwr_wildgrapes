@@ -54,11 +54,14 @@ write_csv(mwh, file = "data/processed_occurance/midwestHerberium.csv")
 wiews <- processWIEWS(path = "data/source_data/wiews.csv")%>%
   dplyr::select(all_of(standardColumnNames))%>%
   mutate(across(everything(), as.character))
+write_csv(wiews, file = "data/processed_occurance/wiews.csv")
+
 
 ## GENESYS
 genesys <- processGenesys(path = "data/source_data/genesys.csv")%>%
   dplyr::select(all_of(standardColumnNames))%>%
   mutate(across(everything(), as.character))
+write_csv(genesys, file = "data/processed_occurance/genesys.csv")
 
 # compile into single dataset ---------------------------------------------
 d2 <- bind_rows(gbif, grin)
@@ -78,64 +81,26 @@ d5 %>%
 
 
 # Standardize names ( genus, species)  ------------------------------------
-
-
 d5 <- standardizeNames(d5)
 
-
-
 # species filter and synonym check  ---------------------------------------
+synonymList <- read_csv("data/vitis/synonymList.csv")
+datasets <- speciesCheck(data = d5, synonymList = synonymList)
+write_csv(x = datasets$excludedData, file = "data/processed_occurance/excludedOnTaxonomy.csv")
+
+d5a <- datasets$includedData
 
 
 
-
-# processing check --- performed across all sources 
-## reassign column types as needed 
-d6 <- d5 %>% 
-  dplyr::mutate(
-    latitude = as.numeric(latitude),
-    longitude = as.numeric(longitude),
-    yearRecorded = as.numeric(yearRecorded),
-    coordinateUncertainty = as.numeric(coordinateUncertainty)
-  )
-
-data <- d6
-## standardize species names (var subsp " " or  _ )
-
-## synonym test 
-### reassign names based on accecpted sysn
-
-## assign iso3 based on country 
-## filter on iso3 for (USA,CAN,MEX)
-d7 <- d6 %>% 
-  dplyr::mutate(
-    temp = countrycode(sourcevar = country, origin = "country.name", destination = "iso3c" ),
-    iso3 = case_when(
-    is.na(iso3) ~ temp,
-    TRUE ~ iso3
-  ))%>%
-  dplyr::filter(iso3 %in% c("USA","CAN","MEX",NA))%>%
-  select(-temp)
-
-## valid lat long 
-### remove all lat long outside of North America 
-d8 <- d7 %>% 
-  dplyr::mutate(
-    validLatLong = case_when(
-      longitude <= -50 & longitude >= -180 & latitude >= 14 ~ TRUE,
-      is.na(longitude) | is.na(latitude) ~ NA,
-      longitude > -50 & latitude < 14 ~ FALSE
-    )
-  )
+# Lat long based quality checks  ------------------------------------------
+d6 <- checksOnLatLong(d5a)
 
 
-# Spilting valid lat long and not points  ---------------------------------
-noLatLong <- d8[d8$validLatLong != TRUE, ]
-excludedObservations <- noLatLong %>% 
-  mutate(excludedBecause = "Invalid Lat Long Pair")
+# Spatial base data checks ------------------------------------------------
+
+d7 <- spatialChecks(d6)
 
 
-d9 <- d8[d8$validLatLong == TRUE & !is.na(d8$validLatLong), ]
 sp1 <- st_as_sf(x = d9, coords = c("longitude", "latitude"), crs = 4326,remove = FALSE)
 
 ### spatial reference tests 

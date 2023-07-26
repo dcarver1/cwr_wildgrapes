@@ -1,10 +1,5 @@
 
 
-synonymList <- read_csv("data/vitis/synonymList.csv")
-
-View(synonymList)
-data <- d5
-
 speciesCheck <- function(data, synonymList){
   # create empty df to hold matched datasets 
   data$index <- 1:nrow(data)
@@ -39,10 +34,8 @@ speciesCheck <- function(data, synonymList){
   rm(df2, df3)
 
   }
-
-  
-  # check for each species on Taxon  
-  ## pull exact matched names 
-  ## pull synonyms and rename 
-  
+  return(list(
+    excludedData = data,
+    includedData = df1
+  ))
 }
