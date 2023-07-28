@@ -120,7 +120,7 @@ write_csv(x = noCountyMatch, file = "data/processed_occurance/evaluatenoCountyMa
 df2 <- df%>% filter(
   countryMatch == TRUE,
   stateMatch != FALSE,
-  iso3 == "USA" & countryMatch != FALSE
+  countryMatch != FALSE
 )%>%
   select(names(sp2))
   return(df2 )

@@ -4,7 +4,7 @@
 # 20230608
 ### 
 
-pacman::p_load("vroom", "tidyr", "dplyr", "countrycode", "stringr")
+pacman::p_load("vroom", "tidyr", "dplyr", "countrycode", "stringr", "tigris")
 
 
 lapply(X = list.files("preprocessing/functions", pattern = ".R", full.names = TRUE),
@@ -105,5 +105,5 @@ d7 <- spatialChecks(d6,
 
 
 # assign FIPS codes -------------------------------------------------------
-d8 <- assignFIPS 
+d8 <- assignFIPS(d7)
 

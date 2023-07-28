@@ -30,6 +30,7 @@
 /home/rstudio/Documents/cwr_wildgrapes/moveFilesToWebsite.R="BB394695"
 /home/rstudio/Documents/cwr_wildgrapes/preprocessing/basicCountyMaps.R="FD68A6D2"
 /home/rstudio/Documents/cwr_wildgrapes/preprocessing/compileInputDatasets.R="7BD1548B"
+/home/rstudio/Documents/cwr_wildgrapes/preprocessing/functions/assignFIPS.R="EED685F1"
 /home/rstudio/Documents/cwr_wildgrapes/preprocessing/functions/checksOnLatLong.R="76B39E33"
 /home/rstudio/Documents/cwr_wildgrapes/preprocessing/functions/generateCountyMaps.R="D6DC0766"
 /home/rstudio/Documents/cwr_wildgrapes/preprocessing/functions/processWiews.R="CA1A4DFD"
