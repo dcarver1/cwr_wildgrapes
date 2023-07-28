@@ -1,5 +1,5 @@
 
-data <- d6
+# data <- d6
 
 spatialChecks <- function(data, countries,states,counties){
   # create a spatial object 
@@ -59,14 +59,14 @@ sp3 <- sp2 %>%
   ))
 
 
-# just a temp object for condition statement later on. 
-excludedObservations <- exclude1[0,] 
 
-
-spCounty <-st_intersection(sp2, states)%>%
+spCounty <-st_intersection(sp3, states)%>%
   select(names(sp2), name, adm0_a3 )
 
 countriesNames <- c("USA","CAN", "MEX")
+# just a temp object for condition statement later on. 
+excludedObservations <- exclude1[0,] 
+
 for(i in seq_along(countriesNames)){
   if(i == 1){
     df <- spCounty[0,]%>%
@@ -89,16 +89,40 @@ for(i in seq_along(countriesNames)){
     c2 <- st_intersection(c1, counties)%>%
       dplyr::mutate(
         countyMatch = county == NAME
-      )%>%
+      )
+    
+    c2$county[is.na(c2$county)] <- c2$NAME[is.na(c2$county)]
+    c2 <- c2 %>%
       dplyr::select(names(c1))
+    
     df <- bind_rows(df,c2)
   }else{
     df <- bind_rows(df,c1)  
   }
 }
 
-### assign NA values to County, State, and County when Possible. 
+### assign NA values to State, and County when Possible. 
+df$state[is.na(df$state)] <- df$name[is.na(df$state)]
+
+## unfiltered spatial data 
+write_csv(x = df, file = "data/processed_occurance/reference_AllLatLonValues.csv")
+
 ### organized missed matched data for review 
+noCountryMatch <- df %>% filter(countryMatch == FALSE)
+noStateMatch <- df %>% filter(stateMatch == FALSE)
+noCountyMatch <- df %>% filter(iso3 == "USA" & countyMatch ==FALSE)
+
+write_csv(x = noCountryMatch, file = "data/processed_occurance/evaluateNocountryMatch.csv")
+write_csv(x = noStateMatch, file = "data/processed_occurance/evaluatenoStateMatch.csv")
+write_csv(x = noCountyMatch, file = "data/processed_occurance/evaluatenoCountyMatch.csv")
+
 ### return matched data 
+df2 <- df%>% filter(
+  countryMatch == TRUE,
+  stateMatch != FALSE,
+  iso3 == "USA" & countryMatch != FALSE
+)%>%
+  select(names(sp2))
+  return(df2 )
 }
 
