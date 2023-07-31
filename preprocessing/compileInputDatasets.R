@@ -63,21 +63,27 @@ genesys <- processGenesys(path = "data/source_data/genesys.csv")%>%
   mutate(across(everything(), as.character))
 write_csv(genesys, file = "data/processed_occurance/genesys.csv")
 
+## botanical garden Survey 
+bgSurvey <- processBG(path = "data/source_data/bg_survey.csv")%>%
+  dplyr::select(all_of(standardColumnNames))%>%
+  mutate(across(everything(), as.character))
+write_csv(bgSurvey, file = "data/processed_occurance/bgSurvey.csv")
+
 # compile into single dataset ---------------------------------------------
 d2 <- bind_rows(gbif, grin)
 
 d3 <- bind_rows(d2, mwh)
 d4 <- bind_rows(d3, wiews)
-d5 <- bind_rows(d4, genesys)
+d4a <- bind_rows(d4, genesys)
+d5 <- bind_rows(d4a,bgSurvey)
 
 View(d5)
 
 # Summary 
-d5 %>% 
+d5_summary <- d5 %>% 
   group_by(taxon,type)%>%
-  summarise(count = n()) %>%
-  View()
-
+  summarise(count = n())
+write_csv(d5_summary, file = "data/processed_occurance/unfilterDataSummary.csv")
 
 
 # Standardize names ( genus, species)  ------------------------------------
@@ -106,4 +112,13 @@ d7 <- spatialChecks(d6,
 
 # assign FIPS codes -------------------------------------------------------
 d8 <- assignFIPS(d7)
+
+write_csv(x = d8, file = "data/processed_occurance/draft_model_data.csv")
+
+
+d8a <- d8 %>%
+  st_drop_geometry()%>%
+  group_by(taxon, type)%>%
+  summarize(count = n())
+write_csv(d8a, file = "data/processed_occurance/filteredDataSummary.csv")
 

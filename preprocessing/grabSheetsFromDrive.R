@@ -45,6 +45,11 @@ g_all <- g1 %>%
 
 write_csv(x = g_all, file = "data/source_data/genesys.csv")
 
+# botanical Data
+bg1 <- read_sheet(as_id("https://docs.google.com/spreadsheets/d/16CUDkksq2cX4syHKdTeIPgmZ6CIxaFnbcwezbSv6eZ4/edit?usp=sharing"))
+write_csv(x = bg1, file = "data/source_data/bg_survey.csv")
+
+
 
 # synonym datasets 
 syn1 <- read_sheet(as_id("https://docs.google.com/spreadsheets/d/19e6wNr4Luc53NfBQJgl4AWGovZMp24P9yyDqmW9-h3Y/edit#gid=137674278"))
