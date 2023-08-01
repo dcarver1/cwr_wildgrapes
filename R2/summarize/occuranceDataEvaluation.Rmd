@@ -9,7 +9,8 @@ params:
   speciesName: NA
 ---
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-pacman::p_load("leaflet","data.table", "tidyr", "dplyr","plotly","DT","readr","sf")
+pacman::p_load("leaflet","data.table", "tidyr", "dplyr","plotly","DT","readr","sf", "tmap")
+tmap_mode("view")
 
 ### function for control number of character after the decimal place 
 sigfig <- function(vec, n=3){ 
@@ -31,7 +32,7 @@ plantsData <- read_csv(file = "~/Documents/cwr_wildgrapes/data/source_data/usda_
 namedFeatures <- read_csv(file = "~/Documents/cwr_wildgrapes/data/source_data/nameList.csv")
 speciesNames <- read_csv(file = "~/Documents/cwr_wildgrapes/data/source_data/taxonomy20230628.csv")
 # we will want this normalized across all input sources... Just using gbif for now 
-observationData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurance/tempOccurances_gbifOnly.csv")
+observationData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurance/draft_model_data.csv")
 #spatial data 
 countySHP <- read_sf("~/Documents/cwr_wildgrapes/data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
 stateSHP <- read_sf("~/Documents/cwr_wildgrapes/data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")%>%
@@ -58,14 +59,17 @@ speciesPlantsData <- plantsData[plantsData$plant_symbol == species$plant_symbol,
 sp1 <- occData %>% 
   dplyr::filter(!is.na(latitude))%>%
   sf::st_as_sf(coords = c("longitude","latitude"), crs = sf::st_crs(stateSHP))
+
 # select all states from classified data and lat long 
 state1 <- unique(occData$state)
+
 state2 <- sf::st_intersection(x = stateSHP,y = sp1)%>%
   st_drop_geometry()%>%
   dplyr::filter(gu_a3 == "USA")%>%
   dplyr::select(name)%>%
   dplyr::distinct()%>%
   dplyr::pull()
+
 state_usdaPlants <- speciesPlantsData %>%
   dplyr::select(state)%>%
   dplyr::distinct()%>%
@@ -74,7 +78,6 @@ state_usdaPlants <- speciesPlantsData %>%
 all_states <- stateSHP %>% 
     dplyr::filter(gu_a3 == "USA")%>%
   dplyr::filter(name %in% unique(c(state1, state2,state_usdaPlants)))
-  
 
 ```
 
@@ -130,28 +133,30 @@ countyState <- countyState %>%
 
 ```
 ## Map of Species Occurances
-The map below summarizes all occurance data at the county level. All counties within a state where are observation was described has been included. It is possible that some of the counties, even though they may not have know occurances, should be considered to represent habitat for a given taxon. 
+The map below summarizes all occurrence data at the county level. All counties within a state where are observation was described has been included. It is possible that some of the counties, even though they may not have know occurrences, should be considered to represent habitat for a given taxon. 
 Selecting a county will provide the name and summary of the observations within. 
 
-**purple** color counties are of low priority for review for one of the following reasons 
+**Blue** color counties are of low priority for review for one of the following reasons 
 - Germplasma sample has been collected from the county from after 1970 
 - Two herberium samples have been collected form the county from after 1970
 - The county was identified by USDA Plants and contains at least one herberium record. 
 
-**orange** color counties are of high priority for review for one of the following reasons. 
+**Orange** color counties are of high priority for review for one of the following reasons. 
 - All observations were made before 1970
 - A single herberium record was noted afer 1970
 - Only observational data has been noted within the county. 
 - Only defeined by USDA Plants
 
+**Grey** color counties are locations where no observations have been noted but an observation has been recorded in the state. This is mostly here soo individuals can identify counties worth of inclusion dispite the lack of observational data. 
+
 
 All occurance data with latitude and longitude values can be displayed on the map. 
 
-**gold** color points represent observational data, such as iNaturalist reports. 
+**Orange** color points represent observational data, such as iNaturalist reports. 
 
-**blue** colored points represent herbarium data
+**Blue** colored points represent herbarium data
 
-**purple** colored points represents gremplasm sample. 
+**Green** colored points represents gremplasm sample. Most species do not have any germplasm records.  
 
 
 *Probably want something more here to link to 
@@ -166,9 +171,9 @@ countyClass <- countyState %>%
     anyRecord == 0 ~ FALSE, 
     TRUE ~ TRUE
   ), color = case_when(
-      anyRecord >0 & reviewCounty  == TRUE  ~ "#F59C1F",
-      anyRecord >0 & reviewCounty == FALSE ~ "#54278f",
-      anyRecord == 0 ~ NA
+      anyRecord >0 & reviewCounty  == TRUE  ~ "#fdae61",
+      anyRecord >0 & reviewCounty == FALSE ~ "#74add1",
+      anyRecord == 0 ~ "#bdbdbd"
     ),
   popup = paste0(
       "<b>County Name: </b>", NAME,
@@ -189,10 +194,12 @@ points <- sp1 %>%
     "<br/> <b> Year: </b>", yearRecorded,
     "<br/> <b> Location Description: </b>", localityInformation),
     color = case_when(
-      type == "O" ~ "#DECE59",
-      type == "H" ~ "#1184D4",
-      type == "G" ~ "#6300F0"
+      type == "O" ~ "#fc8d62",
+      type == "H" ~ "#8da0cd",
+      type == "G" ~ "#66c2a5"
     ))
+
+p1 <- points[points$type =="O", ]
 
 
 #excludeNoRecords <- countyClass[countyClass$anyRecord !=0, ]
@@ -205,38 +212,54 @@ points <- sp1 %>%
 m1 <- leaflet(width = "100%")%>%
     addTiles()%>%
     addMapPane("counties", zIndex = 415) %>%
-    addMapPane("observations", zIndex = 420)%>%
+    addMapPane("points", zIndex = 420)%>%
     addPolygons(data = countyClass,
-                color = ~color,
+                color = "white",
+                fillColor =~color,
                 popup = ~popup,
-                weight = 2,
+                weight = 0.8,
+                fillOpacity = 0.6,
+                opacity = 0.4,
                 group = "counties",
-                  options = pathOptions(pane = "counties")
-                # highlightOptions = highlightOptions(
-                #   color = "white",
-                #   weight = 2,
-                #   bringToFront = TRUE)
-                )%>%
-    addCircleMarkers(data = points,
+                options = pathOptions(pane = "counties"))%>%
+    addCircleMarkers(data = p1,
              color = ~color,
              opacity = 1,
              radius = 2,
              stroke = 1,
              popup = ~popup,
-             group = "observations",
-             options = pathOptions(pane = "observations")
+             group = "observation",
+             options = pathOptions(pane = "points"))%>%
+    addCircleMarkers(data = points %>% filter(type =="H"),
+             color = ~color,
+             opacity = 1,
+             radius = 2,
+             stroke = 1,
+             popup = ~popup,
+             group = "herberium",
+             options = pathOptions(pane = "points")
                )%>%
-    addLegend(position = "bottomright",
-            color = c("#DECE59", "#1184D4","#6300F0"),
-            labels = c("Observation Only","Herberium", "Germplasm"),
-            title = "Observation Type",
-            group = "observations")%>%
-    addLayersControl(
-      overlayGroups = c("counties","observations"),
+    addCircleMarkers(data = points[points$type =="G",],
+             color = ~color,
+             opacity = 1,
+             radius = 2,
+             stroke = 1,
+             popup = ~popup,
+             group = "germplasma",
+             options = pathOptions(pane = "points")
+               )%>%
+    addLegend(colors = c("#74add1","#fdae61","#bdbdbd"),
+              labels = c("Acceptable County","Review County", "Unknown"),
+              group = "counties",
+              position = "bottomleft") %>%
+  addLayersControl(
+      overlayGroups = c("counties","observation", "herberium", "germplasma"),
       options = layersControlOptions(collapsed = FALSE)
-    )%>% hideGroup(c("observations"))
-                                                            
+    )%>%
+  hideGroup(c("observation","herberium","germplasma"))
+
 m1
+
 
 
 ```
@@ -269,8 +292,7 @@ df <- countyClass %>%
 
 DT::datatable(df,
               rownames = FALSE,
-              filter = c("top"),
-              options = list(pageLength = 25)
+              filter = c("top")
               )
 
 ```
@@ -287,8 +309,7 @@ Not sure what all we want to show here so I'm not adjust the column names etc...
 DT::datatable(occData,
               rownames = FALSE,
               width = "100%",
-              filter = c("top"),
-              options = list(pageLength = 25)
+              filter = c("top")
               )
 
 ```
