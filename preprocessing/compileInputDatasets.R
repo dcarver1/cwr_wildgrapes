@@ -23,12 +23,12 @@ counties <-st_read("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gp
 
 
 standardColumnNames <- c(
-  "taxon","genus","species","latitude","longitude","databaseSource",       
+  "taxon","originalTaxon","genus","species","latitude","longitude","databaseSource",       
   "institutionCode","type","sourceUniqueID","sampleCategory","country","iso3",                 
   "localityInformation","biologicalStatus","collectionSource","finalOriginStat","yearRecorded","county",               
   "countyFIPS","state","stateFIPS","coordinateUncertainty"
 )
-
+  
 
 # render input datasets ---------------------------------------------------
 ## gbif 
@@ -36,7 +36,7 @@ gbif <- processGBIF(path = "data/source_data/gbif.csv")%>%
   dplyr::select(all_of(standardColumnNames))%>%
   mutate(across(everything(), as.character))
 
-write_csv(x = gbif, file = "data/processed_occurance/tempOccurances_gbifOnly.csv")
+write_csv(x = gbif, file = "data/processed_occurance/gbif.csv")
 
 ## grin
 grin <- processGRIN(path = "data/source_data/grin.csv")%>%
@@ -55,7 +55,6 @@ wiews <- processWIEWS(path = "data/source_data/wiews.csv")%>%
   dplyr::select(all_of(standardColumnNames))%>%
   mutate(across(everything(), as.character))
 write_csv(wiews, file = "data/processed_occurance/wiews.csv")
-
 
 ## GENESYS
 genesys <- processGenesys(path = "data/source_data/genesys.csv")%>%
@@ -100,11 +99,12 @@ d5a <- datasets$includedData
 
 # Lat long based quality checks  ------------------------------------------
 d6 <- checksOnLatLong(d5a)
-
+valLatLon <- d6$validLatLon
+countyEval <- d6$countycheck
 
 # Spatial base data checks ------------------------------------------------
 
-d7 <- spatialChecks(d6, 
+  d7 <- spatialChecks(d6, 
                     countries = countries, 
                     states = states, 
                     counties = counties)

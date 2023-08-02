@@ -1,12 +1,18 @@
 # https://github.com/dcarver1/CWR-of-the-USA-Gap-Analysis/blob/master/dataPrep/dataBaseTransform/midwestHerbTransform.R
 # use this is a reference for the column headers 
 
+# path <- "data/source_data/midwestherberium.csv"
+
 processMidwestHerberium <- function(path){
   d1 <- read_csv(path)
   
   d2 <- d1 %>% 
+    mutate(
+      originalTaxon = paste0(scientificName, " ", scientificNameAuthorship)
+    )%>%
     dplyr::select(
-      taxon = scientificName, 
+      taxon = scientificName,
+      originalTaxon,
       genus = genus,
       latitude =decimalLatitude,
       longitude = decimalLongitude,

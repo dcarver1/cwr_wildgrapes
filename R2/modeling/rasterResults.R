@@ -17,10 +17,10 @@ rasterResults <- function(sdm_result){
   
   # list of modeled outputs 
   rasters <- list(
-    all = prj_stk,
-    mean = mean(prj_stk),
-    median = median(prj_stk),
-    stdev = terra::stdev(prj_stk)
+    all = raster(prj_stk),
+    mean = raster(terra::mean(prj_stk)),
+    median = raster(median(prj_stk)),
+    stdev = raster(terra::stdev(prj_stk))
   )
   return(rasters)
 }

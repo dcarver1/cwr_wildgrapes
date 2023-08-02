@@ -1,4 +1,6 @@
 
+# path <- "data/processed_occurance/grin.csv"
+
 processGRIN <- function(path){
 # define and generate specific features  
   d1 <- read.csv(path)
@@ -6,6 +8,7 @@ processGRIN <- function(path){
   d2 <- d1 %>% 
     dplyr::select(
       taxon = taxon, 
+      originalTaxon = taxon, 
       latitude =latitude,
       longitude = longitude,
       institutionCode = site_short_name,

@@ -6,7 +6,7 @@
 #' @param fuction1 : the function that is being applied 
 #'
 #' @return Dataframe of sort. 
-writeCSV <-function(path, overwrite, function1){
+write_CSV <-function(path, overwrite, function1){
   if(!file.exists(path) | isTRUE(overwrite)){
     result <- function1
     write_csv(x = result, file = path)
@@ -25,7 +25,7 @@ writeCSV <-function(path, overwrite, function1){
 #' @param function1 : function to generate output
 #'
 #' @return : write and read the products of the function 
-writeGPKG <- function(path, overwrite, function1){
+write_GPKG <- function(path, overwrite, function1){
   if(!file.exists(path) | isTRUE(overwrite)){
     result <- function1
     sf::write_sf(obj = result, dsn = path)
@@ -42,7 +42,7 @@ writeGPKG <- function(path, overwrite, function1){
 #' @param function1 
 #'
 #' @return
-writeRast <- function(path, overwrite, function1){
+write_Rast <- function(path, overwrite, function1){
   if(!file.exists(path)| isTRUE(overwrite)){
     result <- function1
     if(class(result)=="SpatRaster"){
@@ -58,13 +58,13 @@ writeRast <- function(path, overwrite, function1){
 
 ### the terra objects inside of the list are not being contained well. 
 ### need to figure out a way to wrap things before exporting (look to targets workflow)
-writeRDS <- function(path, overwrite, function1){
+write_RDS <- function(path, overwrite, function1){
   if(!file.exists(path) | isTRUE(overwrite)){
     result <- function1
     write_rds(x = result, file = path)
     return(result)
   }else{
-    return(read_rds(path))
+    return(readRDS(path))
   }
 }
 

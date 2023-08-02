@@ -3,11 +3,9 @@
 ### something with the lat long column is preventing it from being read in? 
 processBG <- function(path){
   
-  d1 <- read_csv(path)
-  
-  %>%
+  d1 <- read_csv(path)%>%
     select(
-      taxon = `Taxon Full Name`,
+      originalTaxon = `Taxon Full Name`,
       genus = `Generic Epithet`,
       species = `Specific Epithet`,
       latitude = `Latitude of Wild-Collection Site`,  
@@ -23,6 +21,8 @@ processBG <- function(path){
       state = `State/Province of Wild-Collection Site`
     )%>%
     mutate(
+      taxon = paste0(genus," ",species)%>%
+        stringr::str_replace(pattern = " NA", replacement = ""), 
       databaseSource = "bg_survey", 
       type = "G",
       institutionCode = NA,
@@ -32,9 +32,6 @@ processBG <- function(path){
       stateFIPS = NA ,
       coordinateUncertainty = NA
     )
-    
-      
   return(d1)     
-  
   
 }

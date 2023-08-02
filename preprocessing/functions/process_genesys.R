@@ -1,4 +1,4 @@
-
+#path <- "data/source_data/genesys.csv"
 
 processGenesys <- function(path){
   d1 <- read_csv(path)
@@ -30,8 +30,12 @@ processGenesys <- function(path){
     
   
   d3 <- d2 %>% 
+    dplyr::mutate(
+      taxon = paste0(genus," ",species)
+      )%>%
     dplyr::select(
-      taxon = fullTaxa,
+      taxon,
+      originalTaxon = fullTaxa,
       genus = genus,
       latitude =latitude,
       longitude = longitude,

@@ -6,7 +6,7 @@ output:
       css: style.css
 date: "Report generated on `r Sys.Date()`"
 params:
-  dataPath: NA
+  reportData: NA
 ---
 
 

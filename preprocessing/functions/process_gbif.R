@@ -1,4 +1,4 @@
-# path <- "E:/mbg/wild grapes/data/source_data/gbif.csv"
+# path <- "data/source_data/gbif.csv"
 
 processGBIF <- function(path){
   
@@ -7,6 +7,7 @@ processGBIF <- function(path){
   # grab and rename all features from gbif
   d1 <- d1a %>% 
     dplyr::select(
+      originalTaxon = "scientificName",
       sourceUniqueID = "occurrenceID",
       genus = "genus",
       species,
@@ -71,6 +72,7 @@ processGBIF <- function(path){
       stateFIPS  = NA
     )%>% dplyr::select(
     taxon,
+    originalTaxon,
     genus,
     species,
     latitude,

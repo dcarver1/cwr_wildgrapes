@@ -1,4 +1,5 @@
 
+# path <- "data/source_data/wiews.csv"
 
 processWIEWS <- function(path){
   d1 <- read_csv(path)
@@ -6,6 +7,7 @@ processWIEWS <- function(path){
   d2 <- d1 %>% 
     dplyr::select(
       taxon = Taxon, 
+      originalTaxon = Taxon,
       genus = Genus,
       species = Species,
       latitude =`Latitude of collecting site (decimal degrees format)`,
