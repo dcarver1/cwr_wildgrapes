@@ -1,5 +1,5 @@
 
-# path <- "data/processed_occurance/grin.csv"
+ # path <- "data/processed_occurance/grin.csv"
 
 processGRIN <- function(path){
 # define and generate specific features  
@@ -45,5 +45,6 @@ processGRIN <- function(path){
   d3$genus <- d4[,1]
   d3$species <- d4[,2]
 
+  
   return(d3)
 }

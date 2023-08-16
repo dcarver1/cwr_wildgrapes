@@ -25,8 +25,17 @@ checksOnLatLong <- function(data){
   
   write_csv(x = export1, file = "data/processed_occurance/excludeOnIso3.csv")
   
+  # reassign longitude to negitive value based on country ISO3 
+  df2a <- df2 %>%
+    filter(iso3 %in% c("USA","CAN","MEX"),
+           longitude > 0)%>%
+    mutate(longitude =  -1 * longitude)
+  
+  df2[df2$index %in% df2a$index, "longitude"] <- df2a$longitude
+  
+  
   # Start gathering county specific datasets  -------------------------------
-  df3 <-df2 %>% 
+  df3 <- df2 %>% 
     # Test the lat long values based on generalized bounding box. 
     dplyr::mutate(
       validLat = case_when(
@@ -49,14 +58,17 @@ checksOnLatLong <- function(data){
     
   export2 <- df3 %>% 
     dplyr::filter(validLatLon == FALSE)
+  
   write_csv(x = export2, file = "data/processed_occurance/excludedOnLatLonBoundingBox.csv")
   
   export3 <- df3 %>% 
     filter(is.na(validLatLon))
+  
   write_csv(x = export3, file = "data/processed_occurance/considerNoLatLonProvided.csv")
   
   df4 <- df3 %>% 
     filter(validLatLon == TRUE)
+  
   return(list(validLatLon = df4,
               countycheck = bind_rows(export2, export3)))
 }

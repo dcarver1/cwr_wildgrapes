@@ -284,7 +284,7 @@ for(i in genera){
                           output_dir = file.path(allPaths$result),
                           output_file = paste0(j,".html"),
                           params = list(
-                            dataPath = reportData),
+                            dataPath = - reportData),
                           envir = new.env(parent = globalenv())
                           # clean = F,
                           # encoding = "utf-8"

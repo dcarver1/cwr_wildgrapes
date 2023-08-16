@@ -32,5 +32,8 @@ processWIEWS <- function(path){
       coordinateUncertainty = NA
     )
   
+  # adding condition to apply 
+  
+  
   return(d2)
 }

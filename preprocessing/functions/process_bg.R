@@ -1,5 +1,5 @@
 
-# path <- "data/source_data/bg_survey.csv"
+path <- "data/source_data/bg_survey.csv"
 ### something with the lat long column is preventing it from being read in? 
 processBG <- function(path){
   
