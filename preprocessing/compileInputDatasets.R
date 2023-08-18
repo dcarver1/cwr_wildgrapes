@@ -77,6 +77,11 @@ bgSurvey <- processBG(path = "data/source_data/bg_survey.csv")%>%
 
 # write_csv(bgSurvey, file = "data/processed_occurance/bgSurvey.csv")
 
+## UC Davis datasets 
+ucdavis <- processDavis(path = "data/source_data/ucDavis.csv")%>%
+  orderNames(names = standardColumnNames)
+write_csv(ucdavis, file = "data/processed_occurance/UCDavis.csv" )
+
 ## IUNC county level data 
 iunc <- processIUNC(path <- "data/source_data/iuncData.gdb")%>%
   orderNames(names = standardColumnNames)
@@ -89,9 +94,9 @@ d2 <- bind_rows(gbif, grin)
 d3 <- bind_rows(d2, mwh)
 d4 <- bind_rows(d3, wiews)
 d4a <- bind_rows(d4, genesys)
-d5 <- bind_rows(d4a, bgSurvey)
+d5 <- bind_rows(d4a, bgSurvey)%>%
+  bind_rows(ucdavis)
 
-View(d5)
 
 # Summary 
 d5_summary <- d5 %>% 
@@ -122,6 +127,7 @@ valLatLon <- d6$validLatLon
 countyEval <- d6$countycheck
 
 # Spatial base data checks ------------------------------------------------
+### Davis data is being dropped here. Probably due to to matching state/county attribute data 
 d7 <- spatialChecks(data = valLatLon, 
                     countries = countries, 
                     states = states, 

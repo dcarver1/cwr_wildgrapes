@@ -56,3 +56,12 @@ syn1 <- read_sheet(as_id("https://docs.google.com/spreadsheets/d/19e6wNr4Luc53Nf
 write_csv(x = syn1, file = "data/vitis/synonymList.csv")
 
 
+# uc davis 
+davis <- read_sheet(as_id("https://docs.google.com/spreadsheets/d/1AYMp9SLFdpDwHar7nvxEELltopGxBZfXfgRu-YR5BIU/edit?usp=sharing"))%>%
+  filter(!is.na(id))%>%
+  mutate(lon = as.numeric(lon))
+write_csv(x = davis, file = "data/source_data/ucDavis.csv")
+
+
+    
+
