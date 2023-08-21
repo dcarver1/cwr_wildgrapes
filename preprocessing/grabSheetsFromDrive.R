@@ -62,6 +62,17 @@ davis <- read_sheet(as_id("https://docs.google.com/spreadsheets/d/1AYMp9SLFdpDwH
   mutate(lon = as.numeric(lon))
 write_csv(x = davis, file = "data/source_data/ucDavis.csv")
 
+## uc davis -- new dataset from Claire 
+davis2 <- read_sheet(as_id("https://docs.google.com/spreadsheets/d/1Ozx8m8iEk5-6zKCKF1KykMHRbhG_5VabNJn4UQnL3sY/edit?usp=sharing"))%>%
+  mutate(across(everything(), as.character),
+         `Lat (DD)`= as.numeric(`Lat (DD)`),
+         `Long (DD)`= as.numeric(`Long (DD)`))
+write_csv(x = davis2, file = "data/source_data/ucDavis2.csv")
 
     
-
+### 2020 PNAS paper 
+pnas <- read_sheet(as_id("https://docs.google.com/spreadsheets/d/13D4SAcJwQDG_aVVQDJFuP8-vO0Lep8QoqbnKRaV00lw/edit?usp=sharing"))%>%
+  mutate(across(everything(), as.character),
+         latitude = as.numeric(latitude),
+         longitude = as.numeric(longitude ))
+write_csv(x = pnas, file = "data/source_data/pnas2020.csv")

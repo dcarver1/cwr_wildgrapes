@@ -4,7 +4,8 @@
 # 20230608
 ### 
 
-pacman::p_load("vroom", "tidyr", "dplyr", "countrycode", "stringr", "tigris")
+pacman::p_load("vroom", "tidyr", "dplyr", "countrycode", "stringr", "tigris",
+               "sf")
 
 
 lapply(X = list.files("preprocessing/functions", pattern = ".R", full.names = TRUE),
@@ -80,21 +81,21 @@ bgSurvey <- processBG(path = "data/source_data/bg_survey.csv")%>%
 ## UC Davis datasets 
 ucdavis <- processDavis(path = "data/source_data/ucDavis.csv")%>%
   orderNames(names = standardColumnNames)
-write_csv(ucdavis, file = "data/processed_occurance/UCDavis.csv" )
+# write_csv(ucdavis, file = "data/processed_occurance/UCDavis.csv" )
 
 ## IUNC county level data 
-iunc <- processIUNC(path <- "data/source_data/iuncData.gdb")%>%
+iunc <- processIUNC(path  = "data/source_data/iuncData.gdb")%>%
   orderNames(names = standardColumnNames)
-### I'm going to keep this 
-
 # write_csv(iunc, file = "data/processed_occurance/iunc.csv")
 
-# compile into single dataset ---------------------------------------------
-d2 <- bind_rows(gbif, grin)
-d3 <- bind_rows(d2, mwh)
-d4 <- bind_rows(d3, wiews)
-d4a <- bind_rows(d4, genesys)
-d5 <- bind_rows(d4a, bgSurvey)%>%
+## Data from the PNAS paper 
+pnas2020 <- processPNAS(path = "data/source_data/pnas2020.csv")%>%
+  orderNames(names = standardColumnNames)
+
+# compile web sourced data into single dataset ---------------------------------------------
+d2 <- bind_rows(gbif, grin,mwh, wiews,genesys,bgSurvey,pnas2020)
+  
+d5 <- d2 %>%
   bind_rows(ucdavis)
 
 
