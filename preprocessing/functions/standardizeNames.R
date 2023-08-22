@@ -20,7 +20,9 @@ standardizeNames <- function(data){
     # make all lower case 
     mutate(species = str_to_lower(species))%>%
     # capitalize the gensus name 
-    mutate(genus = str_to_title(genus))
+    mutate(genus = str_to_title(genus))%>%
+    # improve the taxon case 
+    mutate(taxon = str_to_sentence(taxon))
   
 
   return(d1)

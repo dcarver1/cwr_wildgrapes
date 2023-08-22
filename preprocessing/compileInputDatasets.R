@@ -24,6 +24,14 @@ orderNames <- function(data, names){
   return(d1)
 }
 
+summarizeBySource <- function(data){
+  d1 <- data %>% 
+    group_by(databaseSource)%>%
+    summarise(count = n())
+  View(d1)
+  return(d1)
+}
+
 # Spatail reference files  ------------------------------------------------
 countries <- st_read("data/geospatial_datasets/countries/ne_10m_admin_0_countries.gpkg")
 states <- st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")
@@ -31,6 +39,7 @@ counties <-st_read("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gp
 
  
 
+synonymList <- read_csv("data/vitis/synonymList.csv")
 
 
 standardColumnNames <- c(
@@ -79,7 +88,8 @@ bgSurvey <- processBG(path = "data/source_data/bg_survey.csv")%>%
 # write_csv(bgSurvey, file = "data/processed_occurance/bgSurvey.csv")
 
 ## UC Davis datasets 
-ucdavis <- processDavis(path = "data/source_data/ucDavis.csv")%>%
+ucdavis <- processDavis(path = "data/source_data/ucDavis.csv",
+                        path2 = "data/source_data/ucDavis2.csv")%>%
   orderNames(names = standardColumnNames)
 # write_csv(ucdavis, file = "data/processed_occurance/UCDavis.csv" )
 
@@ -93,14 +103,12 @@ pnas2020 <- processPNAS(path = "data/source_data/pnas2020.csv")%>%
   orderNames(names = standardColumnNames)
 
 # compile web sourced data into single dataset ---------------------------------------------
-d2 <- bind_rows(gbif, grin,mwh, wiews,genesys,bgSurvey,pnas2020)
+d2 <- bind_rows(gbif, grin,mwh, wiews,genesys,bgSurvey,pnas2020, ucdavis)
   
-d5 <- d2 %>%
-  bind_rows(ucdavis)
+d2_sum <- summarizeBySource(d2)
 
-
-# Summary 
-d5_summary <- d5 %>% 
+# Summary of counts on taxon
+d5_summary <- d2 %>% 
   group_by(taxon,type)%>%
   summarise(count = n())
 
@@ -108,34 +116,43 @@ d5_summary <- d5 %>%
 
 
 # Standardize names ( genus, species)  ------------------------------------
-d5 <- standardizeNames(d5)
+## does not filter out data 
+d5 <- standardizeNames(d2)
 
 # species filter and synonym check  ---------------------------------------
-synonymList <- read_csv("data/vitis/synonymList.csv")
-
 datasets <- speciesCheck(data = d5, synonymList = synonymList)
-write_csv(x = datasets$excludedData, file = "data/processed_occurance/excludedOnTaxonomy.csv")
+View(datasets$excludedData)
+# write_csv(x = datasets$excludedData, file = "data/processed_occurance/excludedOnTaxonomy.csv")
 
 d5a <- datasets$includedData
-
+d5a_sum <- summarizeBySource(d5a)
 
 
 # Lat long based quality checks  ------------------------------------------
 d6 <- checksOnLatLong(d5a)
+d6_sum <- summarizeBySource(d6$validLatLon)
+
 ### has lat lon so can be used in both county and modeling products 
 valLatLon <- d6$validLatLon
+
 ### need to evaluate if these records can be used in the county level maps.  
 countyEval <- d6$countycheck
 
 # Spatial base data checks ------------------------------------------------
-### Davis data is being dropped here. Probably due to to matching state/county attribute data 
+### Davis data is being dropped here. Probably due to to matching state/county attribute data
 d7 <- spatialChecks(data = valLatLon, 
                     countries = countries, 
                     states = states, 
                     counties = counties)
 
+
+d7_sum <- summarizeBySource(d7$validLatLon)
+
 valLatLon2 <- d7$validLatLon
-# adding to the datasets that need to be evaluated
+
+
+
+# adding to the IUNC datasets that need to be evaluated as a county level input
 temp1 <- countyEval %>% select(names(iunc)) %>% sapply(class) 
 colToChange <- temp1[temp1 == "numeric"]
 
@@ -149,6 +166,12 @@ iunc2 <- iunc %>%
 
 countyEval <- bind_rows(countyEval, d7$countycheck, iunc2)
 write_csv(x = countyEval,  file = "data/processed_occurance/checkForIncludingInCountyMaps.csv")
+
+
+# evaluate the county level maps ------------------------------------------
+c1 <- read_csv(file = "data/processed_occurance/checkForIncludingInCountyMaps.csv")
+
+
 
 # assign FIPS codes -------------------------------------------------------
 d8 <- assignFIPS(valLatLon2)
@@ -166,10 +189,6 @@ d8a <- d8 %>%
   group_by(taxon, type)%>%
   summarize(count = n())
 write_csv(d8a, file = "data/processed_occurance/filteredDataSummary.csv")
-
-
-
-# evaluate the county level maps ------------------------------------------
 
 
 

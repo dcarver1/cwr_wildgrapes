@@ -36,6 +36,7 @@
 /home/rstudio/Documents/cwr_wildgrapes/preprocessing/compileInputDatasets.R="7BD1548B"
 /home/rstudio/Documents/cwr_wildgrapes/preprocessing/functions/assignFIPS.R="EED685F1"
 /home/rstudio/Documents/cwr_wildgrapes/preprocessing/functions/checksOnLatLong.R="76B39E33"
+/home/rstudio/Documents/cwr_wildgrapes/preprocessing/functions/processDavis.R="9E7CD26F"
 /home/rstudio/Documents/cwr_wildgrapes/preprocessing/functions/processIUNC.R="CADFA6DE"
 /home/rstudio/Documents/cwr_wildgrapes/preprocessing/functions/processPNAS.R="0EC2BF1E"
 /home/rstudio/Documents/cwr_wildgrapes/preprocessing/functions/processWiews.R="CA1A4DFD"

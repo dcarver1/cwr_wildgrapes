@@ -18,23 +18,13 @@ spatialChecks <- function(data, countries, states, counties){
   exclude1 <-  sp1[!sp1$countryCheck %in% c(1),] %>%
     select(-countryCheck)%>%
     as.data.frame()
+  
+  # recorded that have a lat long value outside of a 1km buffer of the country boundary, primarily coastal point that might be able to be utilized
   write_csv(x = exclude1, file = "data/processed_occurance/excludeOutsideOfCountries.csv")
   
+  ## grab the data that is within the countries of interest
   sp2 <- sp1[!sp1$index %in% exclude1$index, ] %>%
     select(-countryCheck)
-  
-
-
-### run1 
-# dim(validSpatiaData) [1] 13859    25
-# dim(sp2) [1] 55895    24
-# dim(excludedObservations) [1] 5051   25
-# mexico
-# sp2: 2838
-# valid : 1823
-# excluded : 936
-### 
-
 
   # deal with NA in ISO3 coulumn
   sp2a <- sp2 %>% 
@@ -56,8 +46,24 @@ spatialChecks <- function(data, countries, states, counties){
       country =="U.S.A." ~ "United States of America",
       country == "MEXICO" ~ "Mexico",
       TRUE ~ country
-    ))
-
+    ))%>%
+    mutate(iso3 = case_when(
+        country == "CAN" ~ "CAN",
+        country == "Canada" ~ "CAN",
+        country == "Mexico" ~ "MEX",
+        country == "México" ~ "MEX",
+        country == "MEX" ~ "MEX",
+        country == "U.S.A." ~ "USA",
+        country == "United States" ~ "USA",
+        country == "UNITED STATES" ~ "USA",
+        country == "United States of America" ~ "USA",
+        country == "usa" ~ "USA",
+        country == "USA" ~ "USA",
+        TRUE ~ iso3
+      )
+    )
+  
+  # direct intesect with country -- no buffer 
   spCounty <-st_intersection(sp3, states)%>%
     select(names(sp2), name, adm0_a3 )
   
@@ -65,6 +71,7 @@ spatialChecks <- function(data, countries, states, counties){
   # just a temp object for condition statement later on. 
   excludedObservations <- exclude1[0,] 
   
+  # test for the interestion between country, state, county
   for(i in seq_along(countriesNames)){
     if(i == 1){
       df <- spCounty[0,]%>%
@@ -88,7 +95,7 @@ spatialChecks <- function(data, countries, states, counties){
         dplyr::mutate(
           countyMatch = county == NAME
         )
-      
+    
       c2$county[is.na(c2$county)] <- c2$NAME[is.na(c2$county)]
       c2 <- c2 %>%
         dplyr::select(names(c1))
@@ -100,7 +107,12 @@ spatialChecks <- function(data, countries, states, counties){
   }
   
   ### assign NA values to State, and County when Possible. 
+  # state
   df$state[is.na(df$state)] <- df$name[is.na(df$state)]
+  
+  
+  
+  
   
   ## unfiltered spatial data 
   write_csv(x = df, file = "data/processed_occurance/reference_AllLatLonValues.csv")
