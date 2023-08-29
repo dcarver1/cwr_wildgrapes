@@ -5,7 +5,7 @@
 ### 
 
 pacman::p_load("vroom", "tidyr", "dplyr", "countrycode", "stringr", "tigris",
-               "sf")
+               "sf","readr")
 
 
 lapply(X = list.files("preprocessing/functions", pattern = ".R", full.names = TRUE),
@@ -93,7 +93,8 @@ ucdavis <- processDavis(path = "data/source_data/ucDavis.csv",
   orderNames(names = standardColumnNames)
 # write_csv(ucdavis, file = "data/processed_occurance/UCDavis.csv" )
 
-## IUNC county level data 
+## natural heritage county level data 
+### potential to get lat lon, but be selective 
 iunc <- processIUNC(path  = "data/source_data/iuncData.gdb")%>%
   orderNames(names = standardColumnNames)
 # write_csv(iunc, file = "data/processed_occurance/iunc.csv")
