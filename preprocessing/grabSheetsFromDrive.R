@@ -76,3 +76,10 @@ pnas <- read_sheet(as_id("https://docs.google.com/spreadsheets/d/13D4SAcJwQDG_aV
          latitude = as.numeric(latitude),
          longitude = as.numeric(longitude ))
 write_csv(x = pnas, file = "data/source_data/pnas2020.csv")
+
+
+### bonap Data
+bonap <- read_sheet(as_id("https://docs.google.com/spreadsheets/d/1agwJm4rpFfY13UlwN8A6Vtb5p5MEUsWo-LaSXiFnvqM/edit?usp=sharing"))%>%
+  mutate(across(everything(), as.character))
+write_csv(x = bonap, file = "data/source_data/bonap.csv")
+

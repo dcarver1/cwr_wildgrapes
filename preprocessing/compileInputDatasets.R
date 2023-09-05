@@ -97,7 +97,13 @@ ucdavis <- processDavis(path = "data/source_data/ucDavis.csv",
 ### potential to get lat lon, but be selective 
 iunc <- processIUNC(path  = "data/source_data/iuncData.gdb")%>%
   orderNames(names = standardColumnNames)
-# write_csv(iunc, file = "data/processed_occurance/iunc.csv")
+# write_csv(iunc, file = "data/processed_occurance/natureServe.csv")
+
+## BONAP
+bonap <- processBonap(path = "data/source_data/bonap.csv")%>%
+  orderNames(names = standardColumnNames)
+# write_csv(bonap, file = "data/processed_occurance/bonap.csv")
+
 
 ## Data from the PNAS paper 
 pnas2020 <- processPNAS(path = "data/source_data/pnas2020.csv")%>%
@@ -165,8 +171,18 @@ iunc2 <- iunc %>%
     coordinateUncertainty = is.numeric(coordinateUncertainty)
   )
 
-countyEval <- bind_rows(countyEval, d7$countycheck, iunc2)
-write_csv(x = countyEval,  file = "data/processed_occurance/checkForIncludingInCountyMaps.csv")
+bonap2 <- bonap %>%
+  mutate(
+    latitude = is.numeric(latitude),
+    longitude = is.numeric(longitude),
+    yearRecorded = is.numeric(yearRecorded),
+    coordinateUncertainty = is.numeric(coordinateUncertainty)
+  )
+
+countyEval <- bind_rows(countyEval, d7$countycheck, iunc2, bonap)
+
+
+# write_csv(x = countyEval,  file = "data/processed_occurance/checkForIncludingInCountyMaps.csv")
 
 
 # evaluate the county level maps ------------------------------------------
@@ -184,6 +200,10 @@ d8 <- assignFIPS(valLatLon2)
 
 write_csv(x = d8, file = "data/processed_occurance/draft_model_data.csv")
 
+### Temp feature for testing new county maps 
+temp1 <- read_csv("data/processed_occurance/draft_model_data.csv")%>%
+  bind_rows(iunc2, bonap2)
+write_csv(temp1, file = "data/processed_occurance/testFor0905CountyMaps.csv")
 
 d8a <- d8 %>%
   st_drop_geometry()%>%
