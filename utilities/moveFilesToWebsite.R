@@ -8,7 +8,7 @@
 
 
 
-# adjustable parameters ---------------------------------------------------
+# Daucus ---------------------------------------------------
 ## specific reference to file paths 
 genus <- "daucus" 
 modelRun <- "test1"
@@ -36,5 +36,16 @@ for(i in splist){
     print(paste0(i, " moved"))
   }
 }
-# move the files 
 
+
+# vitis specific moves ----------------------------------------------------
+folder <- "~/Documents/GeospatialCentroid.github.io/vitis"
+files <- list.files("data/countyMaps",pattern = "Evaluation.html",full.names = TRUE)
+print(files)
+# Find the files 
+for(i in seq_along(files)){
+  if(length(files)>0){
+    file.copy(files[i], folder,overwrite = TRUE)
+    print(paste0(i, " moved"))
+  }
+}

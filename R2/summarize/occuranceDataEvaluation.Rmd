@@ -1,5 +1,5 @@
 ---
-title: Taxon level assessment of occurance data
+title: Taxon level assessment of occurrence  data
 author: Daniel P. Carver and Anne Frances 
 output:
   html_document:
@@ -10,7 +10,7 @@ params:
 ---
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 pacman::p_load("leaflet","data.table", "tidyr", "dplyr","plotly","DT","readr","sf", "tmap",
-               "viridis")
+               "viridis","stringr")
 tmap_mode("view")
 
 ### function for control number of character after the decimal place 
@@ -38,9 +38,9 @@ namedFeatures <- read_csv(file = "~/Documents/cwr_wildgrapes/data/source_data/na
 ## county level reference data
 plantsData <- read_csv(file = "~/Documents/cwr_wildgrapes/data/source_data/usda_plants/completeVitis.csv")
 bonapData <- read_csv("~/Documents/cwr_wildgrapes/data/source_data/bonap.csv")
-natureSeverData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurance/natureServe.csv")
+natureSeverData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/natureServe.csv")
 # valid lat long datasets 
-observationData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurance/testFor0905CountyMaps.csv")
+observationData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/testFor0905CountyMaps.csv")
 
 #spatial data 
 countySHP <- read_sf("~/Documents/cwr_wildgrapes/data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
@@ -58,9 +58,9 @@ speciesList <- dplyr::left_join(x = plantsData, y = namedFeatures, by = c("plant
   # select county data for species 
   speciesSym <- speciesList %>% filter(`Scientific Name` == speciesName)
 
-  plantsData <- usdaPlants %>% filter(plant_symbol %in% speciesSym$plant_symbol)%>%
-    mutate(usdaPlants = str_sub(geoid, start = 3, end = 7))%>%
-    select(usdaPlants)
+  plantsData <- plantsData %>% filter(plant_symbol %in% speciesSym$plant_symbol)%>%
+    mutate(plantsData = str_sub(geoid, start = 3, end = 7))%>%
+    select(plantsData)
   bonap <- bonapData %>% filter(`Scientific Name` == speciesName)%>%
     select(bonap = FIPS)
   natureServe <- natureSeverData[natureSeverData$taxon == speciesName,] |>
@@ -71,7 +71,7 @@ speciesList <- dplyr::left_join(x = plantsData, y = namedFeatures, by = c("plant
     select("NAME","NAME_ALT","CODE_LOCAL","REGION")%>%
     mutate(
       plants = case_when(
-        CODE_LOCAL %in% plantsData$usdaPlants ~ "USDA_Plants"),
+        CODE_LOCAL %in% plantsData$plantsData ~ "USDA_Plants"),
       bonap = case_when(
         CODE_LOCAL %in% bonap$bonap ~ "bonap"),
       natureServe = case_when(
@@ -162,30 +162,30 @@ countyState <- countyState %>%
 
 ```
 ## Map of Species Occurrences
-The map below summarizes all occurrence data at the county level. All counties within a state where are observation was described has been included. It is possible that some of the counties, even though they may not have know occurrences, should be considered to represent habitat for a given taxon. 
+The map below summarizes all occurrence data at the county level. All counties within a state where are observation was described have been included. It is possible that some of the counties, even though they may not have known occurrences, should be considered habitat for a given taxon. 
 Selecting a county will provide the name and summary of the observations within. 
 
-**Blue** color counties are of low priority for review for one of the following reasons 
-- Germplasm sample has been collected from the county from after 1970 
-- Two herbarium samples have been collected form the county from after 1970
+**Blue** color counties are of low priority for review for one of the following reasons: 
+- germplasm  sample has been collected from the county after 1970 
+- Two herbarium samples have been collected from the county after 1970
 - The county was identified by USDA Plants and contains at least one herbarium record. 
 
 **Orange** color counties are of high priority for review for one of the following reasons. 
 - All observations were made before 1970
-- A single herbarium record was noted afer 1970
+- A single herbarium record was noted after 1970
 - Only observational data has been noted within the county. 
-- Only defeined by USDA Plants
+- Only defined by USDA Plants
 
-**Grey** color counties are locations where no observations have been noted but an observation has been recorded in the state. This is mostly here soo individuals can identify counties worth of inclusion dispite the lack of observational data. 
+**Grey** color counties are locations where no observations have been noted but an observation has been recorded in the state. This is mostly here so individuals can identify counties worth of inclusion despite the lack of observational data. 
 
 
-All occurance data with latitude and longitude values can be displayed on the map. 
+All occurrence  data with latitude and longitude values can be displayed on the map. 
 
 **Orange** color points represent observational data, such as iNaturalist reports. 
 
 **Blue** colored points represent herbarium data
 
-**Green** colored points represents gremplasm sample. Most species do not have any germplasm records.  
+**Green** colored points represents gremplasm sample. Most species do not have any germplasm   records.  
 
 
 *Probably want something more here to link to 
@@ -221,7 +221,7 @@ countyClass <- countyState %>%
       "<br/> <b> Listed in County Source Data: </b>", inCountyData,
       "<br/> <b> Number of Observations Only Records: </b>", O,
       "<br/> <b> Number of herbarium Records: </b>", H,
-      "<br/> <b> Number of Germplasm Records: </b>", G,
+      "<br/> <b> Number of germplasm  Records: </b>", G,
       "<br/> <b> Number of Records before 1970: </b>",pre1970  
     )
 )
@@ -286,7 +286,7 @@ m1 <- leaflet(width = "100%")%>%
              radius = 2,
              stroke = 1,
              popup = ~popup,
-             group = "Germplasm",
+             group = "germplasm ",
              options = pathOptions(pane = "points")
                )%>%
     addLegend(colors = c("#74add1","#fdae61","#bdbdbd"),
@@ -298,10 +298,10 @@ m1 <- leaflet(width = "100%")%>%
               group = "County_Reference",
               title = "County Reference Data")%>%
   addLayersControl(
-      overlayGroups = c("County_Reference","counties","observation", "herbarium", "Germplasm"),
+      overlayGroups = c("County_Reference","counties","observation", "herbarium", "germplasm "),
       options = layersControlOptions(collapsed = FALSE)
     )%>%
-  hideGroup(c("observation","herbarium","Germplasm"))
+  hideGroup(c("observation","herbarium","germplasm "))
 
 m1
 
@@ -331,7 +331,7 @@ df <- countyClass %>%
     "County Reference" = "inCountyData",
     "Obersevation Only Records" = O,
     "Heberium Records" = H,
-    "Germplasm Records" = G,
+    "germplasm  Records" = G,
     "Pre 1970 Records" = pre1970,
     "Recommend Review" = reviewCounty) 
 
