@@ -125,8 +125,9 @@ nat_area_shp <- function(speciesPoints, ecoregions) {
     dplyr::select("ECO_ID_U")%>%
     dplyr::distinct()%>%
     pull()
+  natArea <- ecoregions[ecoregions$ECO_ID_U %in% ids, ]%>%
+    sf::st_make_valid()
   
-  natArea <- ecoregions[ecoregions$ECO_ID_U %in% ids, ]
   return(natArea)
 }
 

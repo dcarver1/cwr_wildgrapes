@@ -27,7 +27,7 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 
 
 # transform data
-data <- params$dataPath
+data <- params$reportData
 species <- data$occuranceData$taxon[1]
 ```
 

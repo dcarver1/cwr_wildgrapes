@@ -28,4 +28,5 @@ generateOccurnaceRMD <- function(speciesList){
   }
 }
 
-generateOccurnaceRMD(speciesList = speciesList)
+## needs to be commented out unless running 
+# generateOccurnaceRMD(speciesList = speciesList)

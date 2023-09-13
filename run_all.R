@@ -80,6 +80,10 @@ species <- sort(unique(speciesData$taxon))
 #testing
 i <- genera[1]
 j <- species[1]
+
+erroredSpecies <- list(lessThenFive = c(),
+                       noSDM = c(),
+                       noHTML = c())
 # Daucus_aureus is species[1] is a reasonable one for troubleshooting
 for(i in genera){
   print(i)
@@ -119,7 +123,7 @@ for(i in genera){
   
   ## define natural area based on ecoregions
   natArea <- write_GPKG(path = allPaths$natAreaPath,
-                       overwrite = overwrite,
+                       overwrite = TRUE,
                        function1 = nat_area_shp(speciesPoints = sp1,
                                                 ecoregions = ecoregions))
   
@@ -268,6 +272,10 @@ for(i in genera){
                                                   natArea = natArea,
                                                   protectedAreas = protectedAreas,
                                                   countsData = c1))
+    }else{ # no sdm results 
+      if(!file.exists(allPaths$sdmResults)){
+        erroredSpecies$noSDM <- c(erroredSpecies$noSDM, j)  
+      }
     }
    
     
@@ -282,22 +290,28 @@ for(i in genera){
         rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
                           output_format = "html_document",
                           output_dir = file.path(allPaths$result),
-                          output_file = paste0(j,".html"),
+                          output_file = paste0(j,"_Summary.html"),
                           params = list(
-                            dataPath = - reportData),
+                            reportData = reportData),
                           envir = new.env(parent = globalenv())
                           # clean = F,
                           # encoding = "utf-8"
         )
       )
+    }else{
+      if(!file.exists(allPaths$summaryHTMLPath)){
+        erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
+        
+      }
     }
-    
     # block here for testing. I want variable in local environment and don't want them written out. 
     # stop()
     
     # remove all reused variables ---------------------------------------------
     rm(c1,sp1,srsex,natArea,g_buffer, projectsResults,evalTable,thres)
     
+  }else{# sp1 >= 5 condition 
+    erroredSpecies$lessThenFive <- c(erroredSpecies$lessThenFive, j)
   }
   }# end of species loop 
 }

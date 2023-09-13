@@ -11,3 +11,6 @@ sourceFiles <- function(){
   }
 }
 
+
+# find all successful runs 
+
