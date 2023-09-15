@@ -21,9 +21,10 @@ checksOnLatLong <- function(data){
   # Export the localities that are not in the countries of interest 
   df2 <- df1 %>%
     dplyr::filter(iso3 %in% c("USA","CAN","MEX",NA))
+  
   export1 <- df1[!df1$index %in% df2$index, ]
   
-  write_csv(x = export1, file = "data/processed_occurance/excludeOnIso3.csv")
+  write_csv(x = export1, file = "data/processed_occurrence/excludeOnIso3.csv")
   
   # reassign longitude to negitive value based on country ISO3 
   df2a <- df2 %>%
@@ -59,12 +60,12 @@ checksOnLatLong <- function(data){
   export2 <- df3 %>% 
     dplyr::filter(validLatLon == FALSE)
   
-  write_csv(x = export2, file = "data/processed_occurance/excludedOnLatLonBoundingBox.csv")
+  write_csv(x = export2, file = "data/processed_occurrence/excludedOnLatLonBoundingBox.csv")
   
   export3 <- df3 %>% 
     filter(is.na(validLatLon))
   
-  write_csv(x = export3, file = "data/processed_occurance/considerNoLatLonProvided.csv")
+  write_csv(x = export3, file = "data/processed_occurrence/considerNoLatLonProvided.csv")
   
   df4 <- df3 %>% 
     filter(validLatLon == TRUE)

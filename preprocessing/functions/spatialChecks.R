@@ -20,7 +20,7 @@ spatialChecks <- function(data, countries, states, counties){
     as.data.frame()
   
   # recorded that have a lat long value outside of a 1km buffer of the country boundary, primarily coastal point that might be able to be utilized
-  write_csv(x = exclude1, file = "data/processed_occurance/excludeOutsideOfCountries.csv")
+  write_csv(x = exclude1, file = "data/processed_occurrence/excludeOutsideOfCountries.csv")
   
   ## grab the data that is within the countries of interest
   sp2 <- sp1[!sp1$index %in% exclude1$index, ] %>%
@@ -63,7 +63,7 @@ spatialChecks <- function(data, countries, states, counties){
       )
     )
   
-  # direct intesect with country -- no buffer 
+  # direct intersect with country -- no buffer 
   spCounty <-st_intersection(sp3, states)%>%
     select(names(sp2), name, adm0_a3 )
   
@@ -79,7 +79,7 @@ spatialChecks <- function(data, countries, states, counties){
                        stateMatch = NA,
                        countyMatch = NA)
     }
-    
+    # country level matching 
     iso3 <- countriesNames[i]
     
     c1 <- spCounty[spCounty$adm0_a3 == iso3, ]   %>%
@@ -89,6 +89,7 @@ spatialChecks <- function(data, countries, states, counties){
         countyMatch = NA
       )
    
+    # state level matching 
     
     if(iso3 == "USA"){
       c2 <- st_intersection(c1, counties)%>%
@@ -115,25 +116,26 @@ spatialChecks <- function(data, countries, states, counties){
   
   
   ## unfiltered spatial data 
-  write_csv(x = df, file = "data/processed_occurance/reference_AllLatLonValues.csv")
+  write_csv(x = df, file = "data/processed_occurrence/reference_AllLatLonValues.csv")
   
   ### organized missed matched data for review 
   noCountryMatch <- df %>% filter(countryMatch == FALSE)
   noStateMatch <- df %>% filter(stateMatch == FALSE)
   noCountyMatch <- df %>% filter(iso3 == "USA" & countyMatch ==FALSE)
   
-  write_csv(x = noCountryMatch, file = "data/processed_occurance/evaluateNocountryMatch.csv")
-  write_csv(x = noStateMatch, file = "data/processed_occurance/evaluatenoStateMatch.csv")
-  write_csv(x = noCountyMatch, file = "data/processed_occurance/evaluatenoCountyMatch.csv")
+  write_csv(x = noCountryMatch, file = "data/processed_occurrence/evaluateNocountryMatch.csv")
+  write_csv(x = noStateMatch, file = "data/processed_occurrence/evaluatenoStateMatch.csv")
+  write_csv(x = noCountyMatch, file = "data/processed_occurrence/evaluatenoCountyMatch.csv")
   
   ### return matched data 
-  df2 <- df%>% filter(
-    countryMatch == TRUE,
-    stateMatch != FALSE,
-    countryMatch != FALSE
+  df2 <- df %>% filter(
+    !index %in% noCountryMatch$index,
+    !index %in% noStateMatch$index,
+    !index %in% noCountyMatch$index,
   )%>%
     select(names(sp2))
-    return(list(validLatLon = df2,
+  # export 
+  return(list(validLatLon = df2,
                 countycheck = bind_rows(exclude1, noCountryMatch, noStateMatch,noCountyMatch)) )
 }
 
