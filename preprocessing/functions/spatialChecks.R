@@ -2,6 +2,15 @@
 # data <- d6
 
 spatialChecks <- function(data, countries, states, counties){
+  sf_use_s2(FALSE)
+  # filter states to the countries of interest 
+  states <- states |> 
+    filter(adm0_a3 %in% c("USA","CAN", "MEX"))|>
+    st_make_valid()
+  countries <- countries |> 
+    filter(ISO_A3 %in% c("USA","CAN","MEX"))|>
+    st_make_valid()
+  
   # create a spatial object 
   sp1 <- st_as_sf(x = data, coords = c("longitude", "latitude"), crs = 4326,remove = FALSE)%>%
     select(-validLat,-validLon,-validLatLon)
@@ -12,6 +21,7 @@ spatialChecks <- function(data, countries, states, counties){
     st_union()%>%
     st_crop(xmin = -180, ymin = 5, xmax = -50, ymax = 90)%>%
     st_buffer(dist = 0.01 )# buffer by ~1km to capture the coast line issue
+  
   # intersect the features to exclude objects not present based on current lat long
   sp1$countryCheck <- sf::st_intersects(x = sp1, y = selectCountries)
   
@@ -63,9 +73,10 @@ spatialChecks <- function(data, countries, states, counties){
       )
     )
   
-  # direct intersect with country -- no buffer 
+  # direct intersect with state layer to grab country and state names  -- no buffer 
+  ### slow for some reason. change to   sf_use_s2(FALSE)
   spCounty <-st_intersection(sp3, states)%>%
-    select(names(sp2), name, adm0_a3 )
+    select(names(sp2), name, adm0_a3 ) 
   
   countriesNames <- c("USA","CAN", "MEX")
   # just a temp object for condition statement later on. 

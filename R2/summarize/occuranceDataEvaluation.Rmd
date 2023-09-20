@@ -23,7 +23,9 @@ sigfig <- function(vec, n=3){
 formatC(signif(vec,digits=n), digits=n,format="fg", flag="#") 
 
 } 
-speciesName <- params$speciesName
+# for testing 
+speciesName <- "Vitis aestivalis"
+# speciesName <- params$speciesName
 ```
 
 
@@ -40,7 +42,7 @@ plantsData <- read_csv(file = "~/Documents/cwr_wildgrapes/data/source_data/usda_
 bonapData <- read_csv("~/Documents/cwr_wildgrapes/data/source_data/bonap.csv")
 natureSeverData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/natureServe.csv")
 # valid lat long datasets 
-observationData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/testFor0905CountyMaps.csv")
+observationData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/tempDataForCountyMaps_20230920.csv")
 
 #spatial data 
 countySHP <- read_sf("~/Documents/cwr_wildgrapes/data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
@@ -161,7 +163,7 @@ countyState <- countyState %>%
 
 
 ```
-## Map of Species Occurrences
+## Map of Species Occurrences for `r speciesName`
 The map below summarizes all occurrence data at the county level. All counties within a state where are observation was described have been included. It is possible that some of the counties, even though they may not have known occurrences, should be considered habitat for a given taxon. 
 Selecting a county will provide the name and summary of the observations within. 
 

@@ -7,6 +7,8 @@
 pacman::p_load("vroom", "tidyr", "dplyr", "countrycode", "stringr", "tigris",
                "sf","readr")
 
+# helps with the intersection processing time 
+sf_use_s2(FALSE)
 
 lapply(X = list.files("preprocessing/functions", pattern = ".R", full.names = TRUE),
        FUN = source)
@@ -163,21 +165,29 @@ colToChange <- temp1[temp1 == "numeric"]
 
 iunc2 <- iunc %>%
   mutate(
-    latitude = is.numeric(latitude),
-    longitude = is.numeric(longitude),
+    latitude = 0,
+    longitude = 0,
     yearRecorded = is.numeric(yearRecorded),
     coordinateUncertainty = is.numeric(coordinateUncertainty)
-  )
+  )%>%
+mutate(
+  latitude = case_when(latitude == 0 ~ NA),
+  longitude = case_when(longitude == 0 ~NA)
+)
 
 bonap2 <- bonap %>%
   mutate(
-    latitude = is.numeric(latitude),
-    longitude = is.numeric(longitude),
+    latitude = 0,
+    longitude = 0,
     yearRecorded = is.numeric(yearRecorded),
     coordinateUncertainty = is.numeric(coordinateUncertainty)
+  )%>%
+  mutate(
+    latitude = case_when(latitude == 0 ~ NA),
+    longitude = case_when(longitude == 0 ~NA)
   )
 
-countyEval <- bind_rows(countyEval, d7$countycheck, iunc2, bonap)
+countyEval <- bind_rows(countyEval, d7$countycheck, iunc2, bonap2)
 
 
 # write_csv(x = countyEval,  file = "data/processed_occurrence/checkForIncludingInCountyMaps.csv")
@@ -186,7 +196,17 @@ countyEval <- bind_rows(countyEval, d7$countycheck, iunc2, bonap)
 # evaluate the county level maps ------------------------------------------
 c1 <- read_csv(file = "data/processed_occurrence/checkForIncludingInCountyMaps.csv")
 
+c2 <- checkCounties(countyCheckData = c1, states = states, counties = counties)
 
+write_csv(x = c2$exclude, file = "data/processed_occurrence/countyCheck_Exclude.csv")
+write_csv(x = c2$include, file = "data/processed_occurrence/countyCheck_Include.csv")
+
+# duplicate check for county data 
+c3 <- bind_rows(c2$include, valLatLon2) |>
+  st_drop_geometry() |>
+  select(-validLat, -validLon,-validLatLon, -index)
+
+write_csv(x = c3, file = "data/processed_occurrence/tempDataForCountyMaps_20230920.csv")
 
 # assign FIPS codes -------------------------------------------------------
 d8 <- assignFIPS(valLatLon2)
