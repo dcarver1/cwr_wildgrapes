@@ -24,8 +24,8 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 
 } 
 # for testing 
-speciesName <- "Vitis aestivalis"
-# speciesName <- params$speciesName
+#speciesName <- "Vitis shuttleworthii"
+speciesName <- params$speciesName
 ```
 
 
@@ -42,7 +42,8 @@ plantsData <- read_csv(file = "~/Documents/cwr_wildgrapes/data/source_data/usda_
 bonapData <- read_csv("~/Documents/cwr_wildgrapes/data/source_data/bonap.csv")
 natureSeverData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/natureServe.csv")
 # valid lat long datasets 
-observationData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/tempDataForCountyMaps_20230920.csv")
+observationData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/tempDataForCountyMaps_20230920.csv") |> 
+  filter(!is.na(taxon))
 
 #spatial data 
 countySHP <- read_sf("~/Documents/cwr_wildgrapes/data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
@@ -84,12 +85,14 @@ speciesList <- dplyr::left_join(x = plantsData, y = namedFeatures, by = c("plant
     filter(allCountySources != "  ")
   
   # render occ data
-  occData <- observationData[observationData$taxon == species$`Scientific Name`, ] %>%
+  occData <- observationData |>
+    dplyr::filter(taxon == speciesName) |>
     dplyr::mutate(type = case_when(
       sampleCategory  == "HUMAN_OBSERVATION" ~ "O",
       TRUE ~ type
     ))
 
+  
 ### select states of interset 
 # spatial object 
 sp1 <- occData %>% 
@@ -110,11 +113,19 @@ state_CountyData <- stateSHP %>%
 all_states <- stateSHP %>% 
   dplyr::filter(name %in% state_CountyData | code_local %in% state1)
 
+### select all counties of interest 
+
+countyCounts <- occData |> 
+  dplyr::group_by(type, countyFIPS)|>
+  dplyr::summarise(count = n())
+  
+
 ```
 
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
+# select all the counties from the states of interest
 countyState <- countySHP %>% 
   dplyr::filter(REGION %in% all_states$postal)%>%
   dplyr::select(NAME, FIPS, REGION)%>%
@@ -124,6 +135,7 @@ countyState <- countySHP %>%
       TRUE ~ 0
     )
   )
+countyState$fips2 <- str_remove_all(string = countyState$FIPS, pattern = "US")
 
 # filter spatial data based on year recorded 
 sp2 <- sp1 %>% 
@@ -133,19 +145,26 @@ older <- sp1 %>%
 
 
 for(i in c("O","H","G")){
-  sp3 <- sp2[sp2$type == i, ]
+  c2 <- countyCounts |> 
+    dplyr::filter(type == i)
+  type <- i
+  
+  c2 <- c2[,2:3]
+  names(c2) <- c("fips2", type)
+  countyState <- left_join(countyState, c2, by = "fips2")
   
   
+    
   
-  # intersect the county and point data
-  df2 <- countyState[unlist(sf::st_intersects(sp3, countyState)), "FIPS"]%>%
-    st_drop_geometry()%>%
-    group_by(FIPS)%>%
-    dplyr::summarise(count = n())
-  
-  names(df2) <- c("FIPS", as.character(i))
-  # join to county feature 
-  countyState <- left_join(x = countyState, y = df2, by = "FIPS")
+  # # intersect the county and point data
+  # df2 <- countyState[unlist(sf::st_intersects(sp3, countyState)), "FIPS"]%>%
+  #   st_drop_geometry()%>%
+  #   group_by(FIPS)%>%
+  #   dplyr::summarise(count = n())
+  # 
+  # names(df2) <- c("FIPS", as.character(i))
+  # # join to county feature 
+  # countyState <- left_join(x = countyState, y = df2, by = "FIPS")
 }
 
 # append the older data count 

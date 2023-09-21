@@ -5,7 +5,10 @@
 ###
 pacman::p_load(furrr)
 # set the parallel processing structure 
-plan(strategy = multisession, workers = 12) # multisessoin is in parallel works on windows
+plan(strategy = sequential) 
+# plan(strategy = multisession, workers = 8) 
+
+# multisessoin is in parallel works on windows -- sequential runs withour parallel
 # multicore is faster because there is less overhead, but it can not be ran on windows or thourgh R studio
 # 
 speciesList <-c("Vitis aestivalis",
