@@ -9,7 +9,7 @@
 # local testing 
 pacman::p_load("terra", "dplyr", "sf", "purrr","randomForest","VSURF",
                "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo",
-               "leaflet", "tidyterra", "rmarkdown")
+               "leaflet", "tidyterra", "rmarkdown", "furrr")
 
 #source functions
 source("R2/helperFunctions.R")
@@ -29,7 +29,7 @@ runVersion <- "test1"
 
 ## overwrite Parameter 
 ### used to determine if you want to write over existing content. 
-overwrite <- FALSE
+overwrite <- TRUE
 
 # input datasets ----------------------------------------------------------
 ## species observations 
@@ -61,7 +61,7 @@ states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_pro
 genera <- unique(speciesData$genus)
 species <- sort(unique(speciesData$taxon))
 # species subset
-# species <- species[c(12:length(species))]
+species <- species[c(30:length(species))]
 # test species
 # D. syrticus,
 # D. sahariensis,
@@ -78,12 +78,16 @@ species <- sort(unique(speciesData$taxon))
 
 
 #testing
-i <- genera[1]
-j <- species[1]
+# i <- genera[1]
+# j <- species[1]
 
 erroredSpecies <- list(lessThenFive = c(),
                        noSDM = c(),
                        noHTML = c())
+# 
+plan(strategy = "multisession", workers =4)
+
+
 # Daucus_aureus is species[1] is a reasonable one for troubleshooting
 for(i in genera){
   print(i)
@@ -91,9 +95,19 @@ for(i in genera){
   dir1 <- paste0("data/",genera) 
   if(!dir.exists(dir1)){dir.create(dir1)}
   
-  # loop over species  ------------------------------------------------------
-  for(j in species){
+  
+  
 
+  # furrr itoration ---------------------------------------------------------
+  
+#  furrr::future_map(species, primaryWorkflow, dir1 = dir1)
+  
+  
+  # loop over species  ------------------------------------------------------
+  ### this is probably the placee for a Furrr map function. Just the species being altered
+  ### need to think about how to structure the code based from this part to best organize the process.
+  for(j in species){
+    
   #generate paths for exporting data 
   allPaths <- definePaths(dir1 = dir1,
                           j = j,
@@ -123,7 +137,7 @@ for(i in genera){
   
   ## define natural area based on ecoregions
   natArea <- write_GPKG(path = allPaths$natAreaPath,
-                       overwrite = TRUE,
+                       overwrite = overwrite,
                        function1 = nat_area_shp(speciesPoints = sp1,
                                                 ecoregions = ecoregions))
   
@@ -285,7 +299,7 @@ for(i in genera){
     ## need some work on this 
     ### there is need for conditional statements to determine if specific values
     ### should be used or not. 
-    if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
+    # if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
       try(
         rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
                           output_format = "html_document",
@@ -298,12 +312,12 @@ for(i in genera){
                           # encoding = "utf-8"
         )
       )
-    }else{
-      if(!file.exists(allPaths$summaryHTMLPath)){
-        erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
-        
-      }
-    }
+    # }else{
+    #   if(!file.exists(allPaths$summaryHTMLPath)){
+    #     erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
+    #     
+    #   }
+    # }
     # block here for testing. I want variable in local environment and don't want them written out. 
     # stop()
     
@@ -312,7 +326,7 @@ for(i in genera){
     
   }else{# sp1 >= 5 condition 
     erroredSpecies$lessThenFive <- c(erroredSpecies$lessThenFive, j)
-  }
+    }
   }# end of species loop 
 }
 

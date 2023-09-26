@@ -26,6 +26,11 @@ orderNames <- function(data, names){
   return(d1)
 }
 
+removeDuplicatesID <- function(data){
+  d1 <- data[!duplicated(data$sourceUniqueID), ]
+  return(d1)
+}
+
 summarizeBySource <- function(data){
   d1 <- data %>% 
     group_by(databaseSource)%>%
@@ -54,61 +59,72 @@ standardColumnNames <- c(
 # render input datasets ---------------------------------------------------
 ## gbif 
 gbif <- processGBIF(path = "data/source_data/gbif.csv")%>%
-  orderNames(names = standardColumnNames)
+  orderNames(names = standardColumnNames)%>%
+  removeDuplicatesID()
 
-# write_csv(x = gbif, file = "data/processed_occurrence/gbif.csv")
+#write_csv(x = gbif, file = "data/processed_occurrence/gbif.csv")
 
 ## grin
 grin <- processGRIN(path = "data/source_data/grin.csv")%>%
-  orderNames(standardColumnNames)
+  orderNames(standardColumnNames)%>%
+  removeDuplicatesID()
   
-# write_csv(grin, file = "data/processed_occurrence/grin.csv")
+#write_csv(grin, file = "data/processed_occurrence/grin.csv")
 
 ## Midwest herberium
 mwh <- processMidwestHerberium(path = "data/source_data/midwestherberium.csv")%>%
-  orderNames(names = standardColumnNames)
+  orderNames(names = standardColumnNames)%>%
+  removeDuplicatesID()
 
-# write_csv(mwh, file = "data/processed_occurrence/midwestHerberium.csv")
+#write_csv(mwh, file = "data/processed_occurrence/midwestHerberium.csv")
 
 ## WEIWS 
 wiews <- processWIEWS(path = "data/source_data/wiews.csv")%>%
-  orderNames(names = standardColumnNames)
+  orderNames(names = standardColumnNames)%>%
+  removeDuplicatesID()
 
-# write_csv(wiews, file = "data/processed_occurrence/wiews.csv")
+#write_csv(wiews, file = "data/processed_occurrence/wiews.csv")
 
 ## GENESYS
 genesys <- processGenesys(path = "data/source_data/genesys.csv")%>%
-  orderNames(names = standardColumnNames)
+  orderNames(names = standardColumnNames)%>%
+  removeDuplicatesID()
 
-# write_csv(genesys, file = "data/processed_occurrence/genesys.csv")
+#write_csv(genesys, file = "data/processed_occurrence/genesys.csv")
 
 ## botanical garden Survey 
 bgSurvey <- processBG(path = "data/source_data/bg_survey.csv")%>%
-  orderNames(names = standardColumnNames)
+  orderNames(names = standardColumnNames)%>%
+  removeDuplicatesID()
 
-# write_csv(bgSurvey, file = "data/processed_occurrence/bgSurvey.csv")
+#write_csv(bgSurvey, file = "data/processed_occurrence/bgSurvey.csv")
 
 ## UC Davis datasets 
 ucdavis <- processDavis(path = "data/source_data/ucDavis.csv",
                         path2 = "data/source_data/ucDavis2.csv")%>%
-  orderNames(names = standardColumnNames)
-# write_csv(ucdavis, file = "data/processed_occurrence/UCDavis.csv" )
+  orderNames(names = standardColumnNames)%>%
+  removeDuplicatesID()
+#write_csv(ucdavis, file = "data/processed_occurrence/UCDavis.csv" )
 
 ## natural heritage county level data 
 ### potential to get lat lon, but be selective 
 iunc <- processIUNC(path  = "data/source_data/iuncData.gdb")%>%
-  orderNames(names = standardColumnNames)
-# write_csv(iunc, file = "data/processed_occurrence/natureServe.csv")
+  orderNames(names = standardColumnNames)%>%
+  removeDuplicatesID()
+#write_csv(iunc, file = "data/processed_occurrence/natureServe.csv")
 
 ## BONAP
 bonap <- processBonap(path = "data/source_data/bonap.csv")%>%
-  orderNames(names = standardColumnNames)
-# write_csv(bonap, file = "data/processed_occurrence/bonap.csv")
+  orderNames(names = standardColumnNames)%>%
+  removeDuplicatesID()
+#write_csv(bonap, file = "data/processed_occurrence/bonap.csv")
 
 
 ## Data from the PNAS paper 
 pnas2020 <- processPNAS(path = "data/source_data/pnas2020.csv")%>%
-  orderNames(names = standardColumnNames)
+  orderNames(names = standardColumnNames)%>%
+  removeDuplicatesID()
+#write_csv(bonap, file = "data/processed_occurrence/pnas2020.csv")
 
 # compile web sourced data into single dataset ---------------------------------------------
 d2 <- bind_rows(gbif, grin,mwh, wiews,genesys,bgSurvey,pnas2020, ucdavis)
@@ -120,7 +136,7 @@ d5_summary <- d2 %>%
   group_by(taxon,type)%>%
   summarise(count = n())
 
-# write_csv(d5_summary, file = "data/processed_occurrence/unfilterDataSummary.csv")
+#write_csv(d5_summary, file = "data/processed_occurrence/unfilterDataSummary.csv")
 
 
 # Standardize names ( genus, species)  ------------------------------------
@@ -129,7 +145,7 @@ d5 <- standardizeNames(d2)
 
 # species filter and synonym check  ---------------------------------------
 datasets <- speciesCheck(data = d5, synonymList = synonymList)
-# write_csv(x = datasets$excludedData, file = "data/processed_occurrence/excludedOnTaxonomy.csv")
+#write_csv(x = datasets$excludedData, file = "data/processed_occurrence/excludedOnTaxonomy.csv")
 
 d5a <- datasets$includedData
 d5a_sum <- summarizeBySource(d5a)
@@ -190,7 +206,7 @@ bonap2 <- bonap %>%
 countyEval <- bind_rows(countyEval, d7$countycheck, iunc2, bonap2)
 
 
-# write_csv(x = countyEval,  file = "data/processed_occurrence/checkForIncludingInCountyMaps.csv")
+#write_csv(x = countyEval,  file = "data/processed_occurrence/checkForIncludingInCountyMaps.csv")
 
 
 # evaluate the county level maps ------------------------------------------
@@ -198,15 +214,16 @@ c1 <- read_csv(file = "data/processed_occurrence/checkForIncludingInCountyMaps.c
 
 c2 <- checkCounties(countyCheckData = c1, states = states, counties = counties)
 
-write_csv(x = c2$exclude, file = "data/processed_occurrence/countyCheck_Exclude.csv")
-write_csv(x = c2$include, file = "data/processed_occurrence/countyCheck_Include.csv")
+#write_csv(x = c2$exclude, file = "data/processed_occurrence/countyCheck_Exclude.csv")
+#write_csv(x = c2$include, file = "data/processed_occurrence/countyCheck_Include.csv")
 
 # duplicate check for county data 
 c3 <- bind_rows(c2$include, valLatLon2) |>
   st_drop_geometry() |>
-  select(-validLat, -validLon,-validLatLon, -index)
+  select(-validLat, -validLon,-validLatLon, -index)%>%
+  assignFIPS()
 
-write_csv(x = c3, file = "data/processed_occurrence/tempDataForCountyMaps_20230920.csv")
+#write_csv(x = c3, file = "data/processed_occurrence/tempDataForCountyMaps_20230920.csv")
 
 # assign FIPS codes -------------------------------------------------------
 d8 <- assignFIPS(valLatLon2)
@@ -216,18 +233,18 @@ d8 <- assignFIPS(valLatLon2)
 ### need to write the function for this yet. 
 
 
-write_csv(x = d8, file = "data/processed_occurrence/draft_model_data.csv")
+#write_csv(x = d8, file = "data/processed_occurrence/draft_model_data.csv")
 
 ### Temp feature for testing new county maps 
 temp1 <- read_csv("data/processed_occurrence/draft_model_data.csv")%>%
   bind_rows(iunc2, bonap2)
-write_csv(temp1, file = "data/processed_occurrence/testFor0905CountyMaps.csv")
+##write_csv(temp1, file = "data/processed_occurrence/testFor0905CountyMaps.csv")
 
 d8a <- d8 %>%
   st_drop_geometry()%>%
   group_by(taxon, type)%>%
   summarize(count = n())
-write_csv(d8a, file = "data/processed_occurrence/filteredDataSummary.csv")
+##write_csv(d8a, file = "data/processed_occurrence/filteredDataSummary.csv")
 
 
 
