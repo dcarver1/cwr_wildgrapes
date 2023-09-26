@@ -61,4 +61,4 @@ generateOccurnaceRMD <- function(speciesList){
 
 
 ## needs to be commented out unless running 
-generateOccurnaceRMD(speciesList = fullSpecies)
+# generateOccurnaceRMD(speciesList = fullSpecies)
