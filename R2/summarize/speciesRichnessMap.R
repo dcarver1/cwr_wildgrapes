@@ -2,6 +2,20 @@
 #directory <- "daucus"
 
 
+
+#' replace NAN 
+#' @description Helper funtion to replace all nan values within a raster. 
+#' @param raster 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+replaceNAN <- function(raster){
+  raster[is.nan(raster)] <- 0 
+  return(raster)
+}
+
 #' Generate species richness map
 #'
 #' @param directory : the top level directy from which you want to look for files
@@ -12,7 +26,7 @@ generateSpeciesRichnessMap <- function(directory, runVersion){
   # plan(strategy = "multisession", workers = 12) ### have to be carefull with this because it copies all the session inform
   ### which is a lot of data to move around if this is part of the modeling environment. 
   # grab all potential options
-    allFiles <- list.files( path = paste0("data/",directory),
+    allFiles <- list.files( path = directory,
                 pattern =  "prj_threshold.tif",
                 full.names = TRUE,
                 recursive = TRUE)
@@ -27,11 +41,21 @@ generateSpeciesRichnessMap <- function(directory, runVersion){
   print("generating maximum extent")
   r2 <- Reduce(extend, r1)
   
-  # extend all features to same extent  
+  # extend all the raster in the stack
   print("extenting all the objects. ")
-  r3 <- map(.x = r1, .f = terra::extend, y = r2, fill = 0) 
+  r3 <- map(.x = r1, .f = terra::extend, y = r2, fill = 0) ## still nan values being applied  
+  
+  # replace the NaN values 
+  r4 <- map(.x = r3, .f = replaceNAN)
+  
+  
   # sum all the features 
   print("bind to single object")
-  r4 <- Reduce("+", r3)
+  r5 <- Reduce("+", r4)
   
+  output <- list(
+    richnessTif = r5,
+    speciesUsed = runFiles
+  )
+  return(output)
 }

@@ -328,6 +328,22 @@ for(i in genera){
     erroredSpecies$lessThenFive <- c(erroredSpecies$lessThenFive, j)
     }
   }# end of species loop 
+
+  # generate summary of all the models --------------------------------------
+  richnessTif <- generateSpeciesRichnessMap(directory = dir1,
+                                            runVersion = runVersion)
+  terra::writeRaster(x = richnessTif$richnessTif,
+                     filename =paste0("data/daucus/speciesrichness",Sys.Date(),".tif"))
+  # need to convert to a df before writing
+  # write_csv(x = richnessTif$speciesUsed, 
+  #           file = paste0("data/daucus/speciesUsedInRichnessMap",Sys.Date(),".csv"))
+  
+  
+  
 }
+
+
+
+
 
 
