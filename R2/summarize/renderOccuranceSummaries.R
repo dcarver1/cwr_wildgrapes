@@ -26,20 +26,19 @@ fullSpecies <- read_csv("~/Documents/cwr_wildgrapes/data/vitis/synonymList.csv")
 
 
 ## map implementation 
-generateOccurnaceRMD <- function(species){
-  print(species)
-    rmarkdown::render(input = "R2/summarize/occuranceDataEvaluation.Rmd",
-                      output_format = "html_document",
-                      output_dir = file.path("data/countyMaps"), 
-                      output_file = paste0(species,"_Evaluation.html"),
-                      params = list(
-                        speciesName = as.character(species))
-                      # envir = new.env(parent = globalenv()
-    )
-}
+# generateOccurnaceRMD <- function(species){
+#   print(species)
+#     rmarkdown::render(input = "R2/summarize/occuranceDataEvaluation.Rmd",
+#                       output_format = "html_document",
+#                       output_dir = file.path("data/countyMaps"), 
+#                       output_file = paste0(species,"_Evaluation.html"),
+#                       params = list(
+#                         speciesName = as.character(species))
+#                       # envir = new.env(parent = globalenv()
+#     )
+# }
 
 # fullSpecies |> furrr::future_map(.f = generateOccurnaceRMD, .progress = TRUE)
-
 
 
 ## for loop implementation 
@@ -61,4 +60,4 @@ generateOccurnaceRMD <- function(speciesList){
 
 
 ## needs to be commented out unless running 
-# generateOccurnaceRMD(speciesList = fullSpecies)
+generateOccurnaceRMD(speciesList = fullSpecies[1])

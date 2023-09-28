@@ -47,9 +47,11 @@ compileConservationData <- function(directory, runVersion, figure = FALSE){
     sort("FCSc_mean") |>
     mutate(ID = str_replace_all(string = ID, pattern = "_", replacement = " "))
   
-  plot_ly(data = tbl, 
+  if(figure==TRUE){
+    
+  p1 <- plot_ly(data = tbl, 
           x = ~ FCSc_mean,
-          y = ~ID,
+          y = ~reorder(ID,FCSc_mean),
           type = "scatter",
           name = "FCS mean",
           marker = list(
@@ -134,6 +136,7 @@ compileConservationData <- function(directory, runVersion, figure = FALSE){
                             y0=-2,
                             y1=length(unique(tbl$ID)),
                             fillcolor='#ffff80', 
+                            
                             layer='below'),
                       list(type=rect, 
                            x0=75, 
@@ -141,5 +144,20 @@ compileConservationData <- function(directory, runVersion, figure = FALSE){
                            y0=-2,
                            y1=length(unique(tbl$ID)),
                            fillcolor='#a8d2a8', 
-                           layer='below')))
+                           layer='below')))%>%
+    layout(title = 'Conservation Assessment of Daucus',
+           xaxis = list(title = ''), 
+           yaxis = list(title = ''), 
+           legend = list(title=list(text='<b> Conservation Assessment </b>'),
+                         orientation = 'h'))
+  }else{
+    p1 <- "No figure generated."
+  }
+  
+  
+  
+  return(list(
+    summaryData = df,
+    figure = p1))
+}
  

@@ -38,8 +38,9 @@ ers_exsitu <- function(speciesData,thres,natArea,ga50) {
     
     # determine ecoregions in ga50 area 
     v2 <- terra::zonal(x = ga50,z = n1,fun="sum",na.rm=TRUE)
-    gEco <- v2 %>% 
-      filter(layer >0)%>%
+    gEco <- v2 |> 
+      filter(layer >0) |>
+      filter(!is.nan(layer)) |> 
       nrow()
     
     # ERs calculation 

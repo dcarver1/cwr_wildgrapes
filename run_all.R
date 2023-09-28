@@ -29,7 +29,7 @@ runVersion <- "test1"
 
 ## overwrite Parameter 
 ### used to determine if you want to write over existing content. 
-overwrite <- TRUE
+overwrite <- FALSE
 
 # input datasets ----------------------------------------------------------
 ## species observations 
@@ -60,8 +60,10 @@ states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_pro
 # primary loop ------------------------------------------------------------
 genera <- unique(speciesData$genus)
 species <- sort(unique(speciesData$taxon))
+species <- species[!grepl(pattern = "Daucus_glochidiatus", x = species)]
 # species subset
-species <- species[c(30:length(species))]
+##! issues with Daucus_glochidiatus
+# species <- species[c(29:length(species))]
 # test species
 # D. syrticus,
 # D. sahariensis,
@@ -79,7 +81,7 @@ species <- species[c(30:length(species))]
 
 #testing
 # i <- genera[1]
-# j <- species[1]
+j <- species[53]
 
 erroredSpecies <- list(lessThenFive = c(),
                        noSDM = c(),
@@ -236,7 +238,7 @@ for(i in genera){
                                                 thres = thres))
       ## fcsin 
       fcsin <- write_CSV(path = allPaths$fcsinPath,
-                        overwrite = overwrite,
+                        overwrite = TRUE,
                         function1 = fcs_insitu(srsin = srsin,
                                                grsin = grsin,
                                                ersin = ersin))
@@ -258,14 +260,14 @@ for(i in genera){
                                                thres = thres))
       ##fcsex
       fcsex <- write_CSV(path = allPaths$fcsexPath,
-                        overwrite = overwrite,
+                        overwrite = TRUE,
                         function1 = fcs_exsitu(srsex = srsex,
                                                grsex = grsex,
                                                ersex = ersex))
       
       #combined measure 
       fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
-                              overwrite = overwrite,
+                              overwrite = TRUE,
                               function1 = fcs_combine(fcsin = fcsin,
                                                       fcsex = fcsex))
       
@@ -299,7 +301,7 @@ for(i in genera){
     ## need some work on this 
     ### there is need for conditional statements to determine if specific values
     ### should be used or not. 
-    # if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
+    if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
       try(
         rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
                           output_format = "html_document",
@@ -312,12 +314,12 @@ for(i in genera){
                           # encoding = "utf-8"
         )
       )
-    # }else{
-    #   if(!file.exists(allPaths$summaryHTMLPath)){
-    #     erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
-    #     
-    #   }
-    # }
+    }else{
+      if(!file.exists(allPaths$summaryHTMLPath)){
+        erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
+
+      }
+    }
     # block here for testing. I want variable in local environment and don't want them written out. 
     # stop()
     
@@ -330,16 +332,31 @@ for(i in genera){
   }# end of species loop 
 
   # generate summary of all the models --------------------------------------
+  if(!file.exists(paste0("data/daucus/speciesrichness",Sys.Date(),".tif")))
   richnessTif <- generateSpeciesRichnessMap(directory = dir1,
-                                            runVersion = runVersion)
-  terra::writeRaster(x = richnessTif$richnessTif,
-                     filename =paste0("data/daucus/speciesrichness",Sys.Date(),".tif"))
+                                             runVersion = runVersion)
+   terra::writeRaster(x = richnessTif$richnessTif,
+                      filename =paste0("data/daucus/speciesrichness",Sys.Date(),".tif"))
   # need to convert to a df before writing
   # write_csv(x = richnessTif$speciesUsed, 
   #           file = paste0("data/daucus/speciesUsedInRichnessMap",Sys.Date(),".csv"))
   
+  conservationSummary <- compileConservationData(directory = dir1, runVersion = runVersion, figure = TRUE)
+  conservationSummary$map <- rast("data/daucus/speciesrichness2023-09-28.tif")
   
-  
+  # run summary html 
+  try(
+    rmarkdown::render(input = "R2/summarize/runSummary.Rmd",
+                      output_format = "html_document",
+                      output_dir = "data/daucus/",
+                      output_file = paste0(runVersion,"_Summary.html"),
+                      params = list(
+                        reportData = conservationSummary),
+                      envir = new.env(parent = globalenv())
+                      # clean = F,
+                      # encoding = "utf-8"
+    )
+  )
 }
 
 
