@@ -1,6 +1,13 @@
 
 
 
+#' Generate Genus level conservation summaries 
+#'
+#' @param directory : top level directory contianing the output of the modeling process. 
+#' @param runVersion : specific run reference used in constructing file paths 
+#' @param figure : Return a figure or not 
+#'
+#' @return
 compileConservationData <- function(directory, runVersion, figure = FALSE){
   combined <- list.files( path = directory,
                           pattern =  "fcs_combined.csv",

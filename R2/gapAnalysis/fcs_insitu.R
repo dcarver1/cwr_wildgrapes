@@ -5,10 +5,28 @@
 #' @param ersin 
 #'
 #' @return
-fcs_insitu <- function(srsin, grsin, ersin) {
-  # calculate the mean across the three measures 
-  sp_fcs <- mean(c(srsin$SRS,grsin$GRS,ersin$ERS), na.rm=T)
+fcs_insitu <- function(srsin, grsin, ersin, noModel){
   
+  if(noModel == TRUE){
+    out_df <- data.frame(ID=srsin$ID, 
+                         SRS=srsin$SRS, 
+                         GRS=NA,
+                         ERS=NA, 
+                         FCS=srsin$SRS/3, # this might issues when zero... 
+                         FCS_Score = NA)
+  }else{
+    # calculate the mean across the three measures 
+    sp_fcs <- mean(c(srsin$SRS,grsin$GRS,ersin$ERS), na.rm=T)
+
+    out_df <- data.frame(ID=srsin$ID, 
+                         SRS=srsin$SRS, 
+                         GRS=grsin$GRS,
+                         ERS=ersin$ERS, 
+                         FCS=sp_fcs, 
+                         FCS_Score = NA)
+    
+  }
+  sp_fcs <- out_df$FCS
   #assign classes (min)
   if (sp_fcs < 25) {
     score <- "UP"
@@ -19,12 +37,7 @@ fcs_insitu <- function(srsin, grsin, ersin) {
   } else {
     score <- "LP"
   }
-  out_df <- data.frame(ID=srsin$ID, 
-                       SRS=srsin$SRS, 
-                       GRS=grsin$GRS,
-                       ERS=ersin$ERS, 
-                       FCS=sp_fcs, 
-                       FCS_Score = score)
-  return(out_df)
   
+  out_df$FCS_Score <- score
+  return(out_df)
 }

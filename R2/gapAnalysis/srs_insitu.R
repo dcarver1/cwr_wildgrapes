@@ -12,15 +12,18 @@ srs_insitu <- function(occuranceData, thres,protectedArea){
   ## threshold model 
   
   totalObservations <- nrow(occuranceData)
-  
-  thres[thres == 0] <- NA
-  # crop protected areas raster 
-  p1 <- terra::crop(x = protectedArea, y = thres)
-  # multiple to create mask 
-  p1 <- p1 * thres
-  
-  # extract values from crop 
-  t1 <- terra::extract(x = p1,y = vect(occuranceData))
+  ## if there is occurrance data but now modele
+  if(is.na(thres)){
+    t1 <- terra::extract(x = protectedArea,y = vect(occuranceData))
+  }else{
+    thres[thres == 0] <- NA
+    # crop protected areas raster 
+    p1 <- terra::crop(x = protectedArea, y = thres)
+    # multiple to create mask 
+    p1 <- p1 * thres
+    # extract values from crop 
+    t1 <- terra::extract(x = p1,y = vect(occuranceData))
+  }
   # extracted values are 1 or NA so sum all the values to get the total. 
   totalInProtectArea <- sum(t1$layer, na.rm = TRUE)
   

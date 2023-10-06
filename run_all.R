@@ -33,12 +33,28 @@ overwrite <- FALSE
 
 # input datasets ----------------------------------------------------------
 ## species observations 
+### Daucus 
 speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")
+# rename the institute code column 
+names(speciesData)[names(speciesData) == 'old.var.name'] <- 'new.var.name'
+
+
+### Vitis
+# speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv")
+
+
 ## bioclim layers 
 bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames.csv")
 bioVars <- readRDS("data/geospatial_datasets/bioclim_layers/bioclim_2.5arcsec_terra.RDS")
 names(bioVars) <- bioNames$shortName
 templateRast <- bioVars[[1]]
+
+# extract spatial data for independent dataset. 
+# sp1 <- st_point(x = c(-116.197659, 33.507408))
+# sp2 <-  terra::extract(x = bioVars, y = vect(sp1), bind= TRUE)
+# df2 <- as.data.frame(sp2)
+# df2[2,] <- bioNames$full_title
+# write_csv(x = df2, file = "data/temp/singleOccurrenceColin.csv" )
 ## countries
 country <- sf::st_read("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
 ## counties
@@ -60,7 +76,10 @@ states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_pro
 # primary loop ------------------------------------------------------------
 genera <- unique(speciesData$genus)
 species <- sort(unique(speciesData$taxon))
-species <- species[!grepl(pattern = "Daucus_glochidiatus", x = species)]
+## subset species for testings 
+species <- species[c(17,25,26)]# 2,9,
+
+# species <- species[!grepl(pattern = "Daucus_glochidiatus", x = species)]
 # species subset
 ##! issues with Daucus_glochidiatus
 # species <- species[c(29:length(species))]
@@ -81,20 +100,20 @@ species <- species[!grepl(pattern = "Daucus_glochidiatus", x = species)]
 
 #testing
 # i <- genera[1]
-j <- species[53]
+# j <- species[53]
 
 erroredSpecies <- list(lessThenFive = c(),
                        noSDM = c(),
                        noHTML = c())
 # 
-plan(strategy = "multisession", workers =4)
+plan(strategy = "multisession", workers =8)
 
 
 # Daucus_aureus is species[1] is a reasonable one for troubleshooting
 for(i in genera){
   print(i)
   #create folder
-  dir1 <- paste0("data/",genera) 
+  dir1 <- paste0("data/",i) 
   if(!dir.exists(dir1)){dir.create(dir1)}
   
   
@@ -114,7 +133,9 @@ for(i in genera){
   allPaths <- definePaths(dir1 = dir1,
                           j = j,
                           runVersion = runVersion) 
-
+  # create directories if needed 
+  generateFolders(allPaths)
+  
   # process data 
   ## species specific data
   sd1 <- subsetSpecies(occuranceData =speciesData, species = j)
@@ -224,12 +245,15 @@ for(i in genera){
       ## ersin 
       ### very slow at the moment. Lots of check against individual points. 
       ### Maybe test ecoregions individually from nat area-- extract values from sdm. 
-      ersin <- write_CSV(path = allPaths$ersinPath,
-                        overwrite = overwrite,
-                        function1 = ers_insitu(occuranceData = sp1,
-                                               nativeArea = natArea,
-                                               protectedArea = protectedAreas,
-                                               thres = thres)) 
+      if(j != "Daucus_glochidiatus"){
+        ersin <- write_CSV(path = allPaths$ersinPath,
+                           overwrite = overwrite,
+                           function1 = ers_insitu(occuranceData = sp1,
+                                                  nativeArea = natArea,
+                                                  protectedArea = protectedAreas,
+                                                  thres = thres)) 
+      }
+
       ## grsin 
       grsin <-  write_CSV(path = allPaths$grsinPath,
                          overwrite = overwrite,
@@ -238,10 +262,12 @@ for(i in genera){
                                                 thres = thres))
       ## fcsin 
       fcsin <- write_CSV(path = allPaths$fcsinPath,
-                        overwrite = TRUE,
+                        overwrite = overwrite,
                         function1 = fcs_insitu(srsin = srsin,
                                                grsin = grsin,
-                                               ersin = ersin))
+                                               ersin = ersin,
+                                               noModel = FALSE
+                                               ))
       
       
       #exsitu 
@@ -260,21 +286,22 @@ for(i in genera){
                                                thres = thres))
       ##fcsex
       fcsex <- write_CSV(path = allPaths$fcsexPath,
-                        overwrite = TRUE,
+                        overwrite = overwrite,
                         function1 = fcs_exsitu(srsex = srsex,
                                                grsex = grsex,
-                                               ersex = ersex))
+                                               ersex = ersex,
+                                               noModel = FALSE))
       
       #combined measure 
       fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
-                              overwrite = TRUE,
+                              overwrite = overwrite,
                               function1 = fcs_combine(fcsin = fcsin,
                                                       fcsex = fcsex))
       
       #gather features for RMD 
       ## just a helper function to reduce the number of input for the RMD
       reportData <- write_RDS(path = allPaths$summaryDataPath,
-                             overwrite = TRUE,
+                             overwrite = overwrite,
                              function1 = grabData(fscCombined = fcsCombined,
                                                   fcsex = fcsex,
                                                   fcsin = fcsin,
@@ -290,7 +317,38 @@ for(i in genera){
                                                   countsData = c1))
     }else{ # no sdm results 
       if(!file.exists(allPaths$sdmResults)){
-        erroredSpecies$noSDM <- c(erroredSpecies$noSDM, j)  
+        erroredSpecies$noSDM <- c(erroredSpecies$noSDM, j)
+        
+      #Complete conservation assessments without models 
+        ## srsin
+        srsin <- write_CSV(path = allPaths$srsinPath,
+                           overwrite = overwrite,
+                           function1 = srs_insitu(occuranceData = sp1, 
+                                                  thres = NA,
+                                                  protectedArea =protectedAreas ))
+        ## fcsin 
+        fcsin <- write_CSV(path = allPaths$fcsinPath,
+                           overwrite = overwrite,
+                           function1 = fcs_insitu(srsin = srsin,
+                                                  grsin = grsin,
+                                                  ersin = ersin,
+                                                  noModel = TRUE))
+        
+        
+        ##fcsex
+        fcsex <- write_CSV(path = allPaths$fcsexPath,
+                           overwrite = overwrite,
+                           function1 = fcs_exsitu(srsex = srsex,
+                                                  grsex = grsex,
+                                                  ersex = ersex,
+                                                  noModel = TRUE))
+        
+        #combined measure 
+        fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
+                                 overwrite = overwrite,
+                                 function1 = fcs_combine(fcsin = fcsin,
+                                                         fcsex = fcsex))
+      
       }
     }
    

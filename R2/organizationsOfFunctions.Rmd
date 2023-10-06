@@ -1,0 +1,127 @@
+primaryWorkflow.R
+
+-   *primaryWorkflow :* full workflow wrapped into a single function for furrr implimentaitons
+
+**helperFunctions.R**
+
+-   *sourceFiles :* single call for resource functions. helpful in troubleshooting
+
+## Data Processing
+
+**data_processing_functions.R**
+
+-   *subsetSpecies*
+
+-   *generateCounts*
+
+-   *createSF_Objects*
+
+-   *countryCheck*
+
+-   *removeDuplicates*
+
+-   *nat_area_shp*
+
+**exportFeatures.R**
+
+-   *write_CSV*
+
+-   *write_GPKG*
+
+-   *write_Rast*
+
+-   *write_RDS*
+
+**definePaths.R**
+
+-   definePaths
+
+## exporting
+
+**exportFunctions.R**
+
+-   writeData
+
+## gapAnalysis
+
+**ers_exsitu.R**
+
+-   *ers_exsitu*
+
+**grs_exsitu.R**
+
+-   *grs_exsitu*
+
+**fcs_combined.R**
+
+-   *fcs_combined*
+
+**fcs_insitu.R**
+
+-   *fcs_insitu*
+
+**grs_insitu.R**
+
+-   *grs_insitu*
+
+**ers_insitu.R**
+
+-   *ers_insitu*
+
+**srs_insitu.R**
+
+-   *srs_insitu*
+
+**fcs_exsitu.R**
+
+-   *fcs_exsitu*
+
+**srs_exitu.R**
+
+-   *srs_exitu*
+
+## Modeling
+
+**generateThresholdModel.R**
+
+-   *generateThresholdModel*
+
+**rasterResults.R**
+
+-   *rasterResults*
+
+**runMaxnet.R**
+
+-   runMaxnet
+
+**numberBackground.R**
+
+-   numberBackground
+
+**cropG_Buffer.R**
+
+-   cropG_Buffer
+
+**create_buffers.R**
+
+-   create_buffers
+
+**cropRasters.R**
+
+-   cropRasters
+
+**evaluateTable.R**
+
+-   evaluateTable
+
+**generateModelData.R**
+
+-   generateModelData
+
+**varaibleSelection.R**
+
+-   varaibleSelection
+
+## Summarize
+
+Still work to do in here so

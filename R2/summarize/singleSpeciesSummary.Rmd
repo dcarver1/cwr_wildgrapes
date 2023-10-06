@@ -26,7 +26,7 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 
 
 # transform data
-#data <- reportData # testing only 
+# data <- reportData # testing only 
 data <- params$reportData
 species <- data$occuranceData$taxon[1]
 ```
@@ -56,7 +56,8 @@ plot_ly(d3,
          margin = list(b = 100),
          barmode = 'group',
          title = list(text = "<b>Conservation Score Summary</b>",
-                      pad = list(b = 20, t = 100 )))
+                      pad = list(b = 20, t = 100 )),
+         hovermode = 'compare')
 
 ```
 
@@ -97,9 +98,13 @@ You can use this behavior to construct visualizations that convey specific conse
 occData <- data$occuranceData %>%
   dplyr::mutate(popup=paste0("<br/><b>Taxon:</b> ", taxon,
                              "<br/><b>Source:</b> ", databaseSource,
-                          "<br/><b>Collector Code:</b> ", institute  ,
-                          "<br/><b>Collection Type:</b> ", type))
-pointColor <- colorFactor(palette = c("#1184D4","#6300F0"), domain = occData$type)
+                          "<br/><b>Collector Code:</b> ", institutionCode,
+                          "<br/><b>Collection Type:</b> ", type)) |>
+  mutate(color = case_when(
+    type == "H" ~ "#1184D4",
+    type == "G" ~ "#6300F0"))
+## change this until do that we have a assigned values based on the type 
+# pointColor <- colorFactor(palette = c("#1184D4","#6300F0"), domain = occData$type)
 gBuf <- data$g_bufferCrop
 
 
@@ -145,7 +150,7 @@ stdevPal <- colorNumeric(palette = distColor,domain = values(stdevDist), na.colo
 m1 <- leaflet(width = "100%")%>%
   addTiles()%>%
   addCircleMarkers(data = occData,
-             color = ~pointColor(type),
+             color = ~color,
              opacity = 1,
              radius = 1,
              group = "Observations",

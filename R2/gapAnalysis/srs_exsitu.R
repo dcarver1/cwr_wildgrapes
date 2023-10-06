@@ -5,7 +5,7 @@
 #' @return Dataframe that summarizes the srs exist content. 
 srs_exsitu <- function(sp_counts){
   
-  # caluse for no g points
+  # caluse for no h points
   if(sp_counts$totalGRecords >= 1 & sp_counts$totalHRecords == 0){
     srs <-100
   }

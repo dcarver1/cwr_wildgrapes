@@ -25,6 +25,8 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 } 
 # for testing 
 # speciesName <- "Vitis palmata"
+## troubleshooting 
+#  speciesName <-"Vitis lincecumii"
 speciesName <- params$speciesName
 ```
 
@@ -47,11 +49,10 @@ observationData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrenc
 
 #spatial data 
 countySHP <- read_sf("~/Documents/cwr_wildgrapes/data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
-stateSHP <- read_sf("~/Documents/cwr_wildgrapes/data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")%>%
+stateSHP <- read_sf("~/Documents/cwr_wildgrapes/data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")|>
   dplyr::filter(adm0_a3 == "USA")
-
-speciesList <- dplyr::left_join(x = plantsData, y = namedFeatures, by = c("plant_symbol" =  "Accepted Symbol"))%>%
-  dplyr::select( "plant_symbol","Scientific Name")%>%
+speciesList <- dplyr::left_join(x = plantsData, y = namedFeatures, by = c("plant_symbol" =  "Accepted Symbol"))|>
+  dplyr::select( "plant_symbol","Scientific Name")|>
   distinct()
 ```
 
@@ -59,19 +60,19 @@ speciesList <- dplyr::left_join(x = plantsData, y = namedFeatures, by = c("plant
   species <- speciesList[speciesList$`Scientific Name` == speciesName, ]
 
   # select county data for species 
-  speciesSym <- speciesList %>% filter(`Scientific Name` == speciesName)
+  speciesSym <- speciesList |> filter(`Scientific Name` == speciesName)
 
-  plantsData <- plantsData %>% filter(plant_symbol %in% speciesSym$plant_symbol)%>%
-    mutate(plantsData = str_sub(geoid, start = 3, end = 7))%>%
+  plantsData <- plantsData |> filter(plant_symbol %in% speciesSym$plant_symbol)|>
+    mutate(plantsData = str_sub(geoid, start = 3, end = 7))|>
     select(plantsData)
-  bonap <- bonapData %>% filter(`Scientific Name` == speciesName)%>%
+  bonap <- bonapData |> filter(`Scientific Name` == speciesName)|>
     select(bonap = FIPS)
   natureServe <- natureSeverData[natureSeverData$taxon == speciesName,] |>
     select(natureServe = countyFIPS)
 
   # combine all the county datasets 
-  countyGathered <- countySHP %>%
-    select("NAME","NAME_ALT","CODE_LOCAL","REGION")%>%
+  countyGathered <- countySHP |>
+    select("NAME","NAME_ALT","CODE_LOCAL","REGION")|>
     mutate(
       plants = case_when(
         CODE_LOCAL %in% plantsData$plantsData ~ "USDA_Plants"),
@@ -80,8 +81,8 @@ speciesList <- dplyr::left_join(x = plantsData, y = namedFeatures, by = c("plant
       natureServe = case_when(
         CODE_LOCAL %in% natureServe$natureServe ~ "Nature_Serve"),
       allCountySources = paste0(plants," ",bonap," ",natureServe)
-    )%>%
-  mutate(allCountySources = str_remove_all(allCountySources, pattern = "NA"))%>%
+    )|>
+  mutate(allCountySources = str_remove_all(allCountySources, pattern = "NA"))|>
     filter(allCountySources != "  ")
   
   # render occ data
@@ -95,22 +96,22 @@ speciesList <- dplyr::left_join(x = plantsData, y = namedFeatures, by = c("plant
   
 ### select states of interset 
 # spatial object 
-sp1 <- occData %>% 
-  dplyr::filter(!is.na(latitude))%>%
-  dplyr::filter(iso3!= "CAN")%>%
-  dplyr::filter(iso3 != "MEX")%>%
+sp1 <- occData |> 
+  dplyr::filter(!is.na(latitude))|>
+  dplyr::filter(iso3!= "CAN")|>
+  dplyr::filter(iso3 != "MEX")|>
   sf::st_as_sf(coords = c("longitude","latitude"), crs = sf::st_crs(stateSHP))
 
 # select all states from classified data and lat long :FIPS 
 state1 <- paste0("US",unique(occData$stateFIPS)) 
 
-state_CountyData <- stateSHP %>%
-    filter(iso_3166_2 %in% unique(paste0("US-",countyGathered$REGION)))%>%
-    select(name)%>%
-    st_drop_geometry()%>% 
+state_CountyData <- stateSHP |>
+    filter(iso_3166_2 %in% unique(paste0("US-",countyGathered$REGION)))|>
+    select(name)|>
+    st_drop_geometry()|> 
     pull()
 
-all_states <- stateSHP %>% 
+all_states <- stateSHP |> 
   dplyr::filter(name %in% state_CountyData | code_local %in% state1)
 
 ### select all counties of interest 
@@ -126,9 +127,9 @@ countyCounts <- occData |>
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # select all the counties from the states of interest
-countyState <- countySHP %>% 
-  dplyr::filter(REGION %in% all_states$postal)%>%
-  dplyr::select(NAME, FIPS, REGION)%>%
+countyState <- countySHP |> 
+  dplyr::filter(REGION %in% all_states$postal)|>
+  dplyr::select(NAME, FIPS, REGION)|>
   mutate(
     inCountyData = case_when(
       FIPS %in% countyGathered$CODE_LOCAL ~ 1,
@@ -138,9 +139,9 @@ countyState <- countySHP %>%
 countyState$fips2 <- str_remove_all(string = countyState$FIPS, pattern = "US")
 
 # filter spatial data based on year recorded 
-sp2 <- sp1 %>% 
+sp2 <- sp1 |> 
   dplyr::filter(is.na(yearRecorded) | yearRecorded >= 1970)
-older <- sp1 %>% 
+older <- sp1 |> 
   dplyr::filter(yearRecorded < 1970)
 
 
@@ -157,9 +158,9 @@ for(i in c("O","H","G")){
     
   
   # # intersect the county and point data
-  # df2 <- countyState[unlist(sf::st_intersects(sp3, countyState)), "FIPS"]%>%
-  #   st_drop_geometry()%>%
-  #   group_by(FIPS)%>%
+  # df2 <- countyState[unlist(sf::st_intersects(sp3, countyState)), "FIPS"]|>
+  #   st_drop_geometry()|>
+  #   group_by(FIPS)|>
   #   dplyr::summarise(count = n())
   # 
   # names(df2) <- c("FIPS", as.character(i))
@@ -168,18 +169,39 @@ for(i in c("O","H","G")){
 }
 
 # append the older data count 
-df2 <- countyState[unlist(sf::st_intersects(older, countyState)), "FIPS"]%>%
-    st_drop_geometry()%>%
-    group_by(FIPS)%>%
+df2 <- countyState[unlist(sf::st_intersects(older, countyState)), "FIPS"]|>
+    st_drop_geometry()|>
+    group_by(FIPS)|>
     dplyr::summarise(pre1970 = n())
 # join to county feature 
   countyState <- left_join(x = countyState, y = df2, by = "FIPS")
-  
-# add any record column
-countyState <- countyState %>%
-  rowwise() %>%
-  mutate(anyRecord = sum(inCountyData,O,H,G,pre1970, na.rm = T))
 
+
+# join the counties(non point based records) with the spatial obervataions 
+c2 <- countyGathered |>
+  st_drop_geometry() |>
+  select(CODE_LOCAL, 
+         `USDA Plants` = plants,
+         BONAP = bonap, 
+         `Nature Serve` = natureServe)|>
+  mutate(`USDA Plants` = 
+           case_when(
+             !is.na(`USDA Plants`)~ 1),
+         BONAP = 
+           case_when(
+             !is.na(BONAP)~ 1),
+         `Nature Serve` = 
+           case_when(
+             !is.na(`Nature Serve`)~ 1)
+           )
+
+countyState <- countyState |>
+  left_join(y = c2, by = c("fips2"="CODE_LOCAL"))
+
+# add any record column
+countyState <- countyState |>
+  rowwise() |>
+  mutate(anyRecord = sum(inCountyData,O,H,G,pre1970,`USDA Plants`, BONAP,`Nature Serve`, na.rm = T))
 
 ```
 ## Map of Species Occurrences for `r speciesName`
@@ -195,7 +217,9 @@ Selecting a county will provide the name and summary of the observations within.
 <br>
 - Two herbarium samples have been collected from the county after 1970
 <br>
-- The county was identified by USDA Plants and contains at least one herbarium record. 
+- The county was identified by USDA Plants or Bonap and contains at least one herbarium record
+<br>
+- The county was indentified by Nature Serve 
 
 <br>
 
@@ -240,10 +264,10 @@ palDF <- data.frame(ref = c(" bonap ","USDA_Plants","Nature_Serve","USDA_Plants 
 # c("#1b9e77","#d95f02", "#7570b3", "#e7298a","#66a61e", "#e6ab02", "#a6761d")
 
 # filter counties based on usda plants data 
-  counties <- countyGathered %>%
+  counties <- countyGathered |>
     mutate(popup = paste0("<b>Name:</b> ",NAME_ALT , 
                          "<br/><b>FIPS:</b> ", CODE_LOCAL,
-                         "<br/><b>ID Source(s):</b> ", allCountySources))%>%
+                         "<br/><b>ID Source(s):</b> ", allCountySources))|>
   mutate(color = case_when(
     allCountySources == " bonap " ~ "#1b9e77",
     allCountySources == "USDA_Plants" ~ "#d95f02",
@@ -259,10 +283,13 @@ palDF_filtered <- palDF |>
   
   
 # counties caputered by occurrences and county data 
-countyClass <- countyState %>% 
+countyClass <- countyState |> 
   dplyr::mutate(reviewCounty = case_when(
     G > 0 ~ FALSE, 
     H >= 2 ~ FALSE,
+    `USDA Plants` ==1 & H ==1 ~ FALSE,
+    BONAP == 1 & H ==1 ~ FALSE,
+    `Nature Serve` ==1 ~ FALSE,
     inCountyData == 1 & H ==1 ~ FALSE,
     anyRecord == 0 ~ FALSE, 
     TRUE ~ TRUE
@@ -275,6 +302,9 @@ countyClass <- countyState %>%
       "<b>County Name: </b>", NAME,
       "<br/> <b>State: </b>", REGION,
       "<br/> <b> Listed in County Source Data: </b>", inCountyData,
+      "<br/> <b> Listed in USDA Plants: </b>", `USDA Plants`,
+      "<br/> <b> Listed in BONAP: </b>", `BONAP`,
+      "<br/> <b> Listed in Nature Serve: </b>", `Nature Serve`,
       "<br/> <b> Number of Observations Only Records: </b>", O,
       "<br/> <b> Number of herbarium Records: </b>", H,
       "<br/> <b> Number of germplasm  Records: </b>", G,
@@ -282,11 +312,11 @@ countyClass <- countyState %>%
     )
 )
 
-points <- sp1 %>%
+points <- sp1 |>
   dplyr::mutate(
      popup =paste0(
     "<b>Taxon: </b>", taxon,
-    "<b>Data Source: </b>", databaseSource,
+    "<br/> <b>Data Source: </b>", databaseSource,
     "<br/> <b> Record ID: </b>", sourceUniqueID,
     "<br/> <b> Type: </b>", type,
     "<br/> <b> Year: </b>", yearRecorded,
@@ -300,19 +330,23 @@ points <- sp1 %>%
 
 
 # Map 
- 
-m1 <- leaflet(width = "100%")%>%
-    addTiles()%>%
-    addMapPane("counties", zIndex = 415) %>%
-    addMapPane("points", zIndex = 420)%>%
-   addPolygons(data = counties,
-                color = ~color,
-                group = "County_Reference",
-                label = ~counties$NAME_ALT,
-                opacity = 0.4,
-                fillOpacity = 0.5,
-                popup = ~popup,
-                options = pathOptions(pane = "counties"))%>%
+## need conditions for the various types inputs 
+m1 <- leaflet(width = "100%")|>
+    addTiles()|>
+    addMapPane("counties", zIndex = 415) |>
+    addMapPane("points", zIndex = 420)
+
+
+if(nrow(counties) == 0){
+  m2 <- m1 |>
+   # addPolygons(data = counties,
+   #              color = ~color,
+   #              group = "County_Reference",
+   #              label = ~counties$NAME_ALT,
+   #              opacity = 0.4,
+   #              fillOpacity = 0.5,
+   #              popup = ~popup,
+   #              options = pathOptions(pane = "counties")) |>
     addPolygons(data = countyClass,
                 color = "white",
                 fillColor =~color,
@@ -321,16 +355,16 @@ m1 <- leaflet(width = "100%")%>%
                 fillOpacity = 0.6,
                 opacity = 0.4,
                 group = "counties",
-                options = pathOptions(pane = "counties"))%>%
-    addCircleMarkers(data =  points %>% filter(type =="O"),
+                options = pathOptions(pane = "counties"))|>
+    addCircleMarkers(data =  points |> filter(type =="O"),
              color = ~color,
              opacity = 1,
              radius = 2,
              stroke = 1,
              popup = ~popup,
              group = "observation",
-             options = pathOptions(pane = "points"))%>%
-    addCircleMarkers(data = points %>% filter(type =="H"),
+             options = pathOptions(pane = "points"))|>
+    addCircleMarkers(data = points |> filter(type =="H"),
              color = ~color,
              opacity = 1,
              radius = 2,
@@ -338,7 +372,7 @@ m1 <- leaflet(width = "100%")%>%
              popup = ~popup,
              group = "herbarium",
              options = pathOptions(pane = "points")
-               )%>%
+               )|>
     addCircleMarkers(data = points[points$type =="G",],
              color = ~color,
              opacity = 1,
@@ -347,23 +381,84 @@ m1 <- leaflet(width = "100%")%>%
              popup = ~popup,
              group = "germplasm ",
              options = pathOptions(pane = "points")
-               )%>%
+               )|>
     addLegend(colors = c("#74add1","#fdae61","#bdbdbd"),
               labels = c("Acceptable County","Review County", "Unknown"),
               group = "counties",
-              position = "bottomleft") %>%
+              position = "bottomleft") |>
+    # addLegend(position = "bottomright",
+    #           colors = palDF_filtered$pal,
+    #           labels = palDF_filtered$ref,
+    #           group = "County_Reference",
+    #           title = "County Reference Data")|>
+  addLayersControl(
+      overlayGroups = c("counties","observation", "herbarium", "germplasm "),
+      options = layersControlOptions(collapsed = FALSE)
+    )|>
+  hideGroup(c("observation","herbarium","germplasm "))
+}else{
+  m2 <- m1 |>
+   addPolygons(data = counties,
+                color = ~color,
+                group = "County_Reference",
+                label = ~counties$NAME_ALT,
+                opacity = 0.4,
+                fillOpacity = 0.5,
+                popup = ~popup,
+                options = pathOptions(pane = "counties")) |>
+    addPolygons(data = countyClass,
+                color = "white",
+                fillColor =~color,
+                popup = ~popup,
+                weight = 0.8,
+                fillOpacity = 0.6,
+                opacity = 0.4,
+                group = "counties",
+                options = pathOptions(pane = "counties"))|>
+    addCircleMarkers(data =  points |> filter(type =="O"),
+             color = ~color,
+             opacity = 1,
+             radius = 2,
+             stroke = 1,
+             popup = ~popup,
+             group = "observation",
+             options = pathOptions(pane = "points"))|>
+    addCircleMarkers(data = points |> filter(type =="H"),
+             color = ~color,
+             opacity = 1,
+             radius = 2,
+             stroke = 1,
+             popup = ~popup,
+             group = "herbarium",
+             options = pathOptions(pane = "points")
+               )|>
+    addCircleMarkers(data = points[points$type =="G",],
+             color = ~color,
+             opacity = 1,
+             radius = 2,
+             stroke = 1,
+             popup = ~popup,
+             group = "germplasm ",
+             options = pathOptions(pane = "points")
+               )|>
+    addLegend(colors = c("#74add1","#fdae61","#bdbdbd"),
+              labels = c("Acceptable County","Review County", "Unknown"),
+              group = "counties",
+              position = "bottomleft") |>
     addLegend(position = "bottomright",
               colors = palDF_filtered$pal,
               labels = palDF_filtered$ref,
               group = "County_Reference",
-              title = "County Reference Data")%>%
+              title = "County Reference Data")|>
   addLayersControl(
       overlayGroups = c("County_Reference","counties","observation", "herbarium", "germplasm "),
       options = layersControlOptions(collapsed = FALSE)
-    )%>%
+    )|>
   hideGroup(c("observation","herbarium","germplasm "))
+}
 
-m1
+
+m2
 
 
 ```
@@ -374,37 +469,16 @@ m1
 The table below display additional attribute data for all the counties with know observation on the the selected taxon. All columns can be filtered and sorted. 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-# join the counties(non point based records) with the spatial obervataions 
-c2 <- counties |>
-  st_drop_geometry() |>
-  select(CODE_LOCAL, 
-         `USDA Plants` = plants,
-         BONAP = bonap, 
-         `Nature Serve` = natureServe)%>%
-  mutate(`USDA Plants` = 
-           case_when(
-             !is.na(`USDA Plants`)~ 1),
-         BONAP = 
-           case_when(
-             !is.na(BONAP)~ 1),
-         `Nature Serve` = 
-           case_when(
-             !is.na(`Nature Serve`)~ 1)
-           )
-
-countyClass <- countyClass |>
-  left_join(y = c2, by = c("fips2"="CODE_LOCAL"))
-
 # 
-df <- countyClass %>%
-  st_drop_geometry()%>%
-  dplyr::filter(anyRecord !=0)%>%
-  dplyr::select(-color, -popup, -anyRecord)%>%
+df <- countyClass |>
+  st_drop_geometry()|>
+  dplyr::filter(anyRecord !=0)|>
+  dplyr::select(-color, -popup, -anyRecord)|>
   dplyr::mutate(inCountyData = case_when(
     inCountyData == 1 ~ TRUE,
     TRUE ~ FALSE
-  ))%>%
-  dplyr::arrange(REGION)%>%
+  ))|>
+  dplyr::arrange(REGION)|>
   rename(
     "County Name" = NAME,
     "GEOID" = "FIPS", 
