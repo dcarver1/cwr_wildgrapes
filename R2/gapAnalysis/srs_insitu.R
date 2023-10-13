@@ -13,7 +13,7 @@ srs_insitu <- function(occuranceData, thres,protectedArea){
   
   totalObservations <- nrow(occuranceData)
   ## if there is occurrance data but now modele
-  if(is.na(thres)){
+  if(class(thres) != "SpatRaster"){
     t1 <- terra::extract(x = protectedArea,y = vect(occuranceData))
   }else{
     thres[thres == 0] <- NA

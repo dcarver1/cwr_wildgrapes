@@ -43,6 +43,32 @@ print("Summary doc copied")
 
 # vitis specific moves ----------------------------------------------------
 folder <- "~/Documents/GeospatialCentroid.github.io/vitis"
+
+
+# vitis SDMS --------------------------------------------------------------
+genus <- "Vitis" 
+modelRun <- "test1"
+# species 
+splist <- read.csv("data/processed_occurrence/draft_model_data.csv")%>%
+  dplyr::select(taxon)%>%
+  dplyr::distinct()%>%
+  dplyr::pull()%>%
+  sort()
+# loop to grab the files 
+for(i in splist){
+  path <- paste0("data/",genus,"/",i,"/",modelRun,"/results")
+  files <- list.files(path, pattern = ".html",full.names = TRUE)
+  if(length(files)>0){
+    file.copy(files[1], folder)
+    print(paste0(i, " moved"))
+  }
+}
+
+# move the run summary 
+runsummary <- paste0("data/Vitis/",modelRun,"_Summary.html")
+file.copy(runsummary, folder)
+
+# vits county maps --------------------------------------------------------
 files <- list.files("data/countyMaps",pattern = "Evaluation.html",full.names = TRUE)
 print(files)
 # Find the files 

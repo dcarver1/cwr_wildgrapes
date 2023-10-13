@@ -8,18 +8,18 @@
 #' @param figure : Return a figure or not 
 #'
 #' @return
-compileConservationData <- function(directory, runVersion, figure = FALSE){
+compileConservationData <- function(directory, runVersion, genus, figure = FALSE){
   combined <- list.files( path = directory,
                           pattern =  "fcs_combined.csv",
                           full.names = TRUE,
                           recursive = TRUE)
   insitu <- list.files( path = directory,
-                        pattern =  "fcs_ex.csv",
+                        pattern =  "fcs_in.csv",
                         full.names = TRUE,
                         recursive = TRUE)
     
   exsitu <- list.files( path = directory,
-                        pattern =  "fcs_in.csv",
+                        pattern =  "fcs_ex.csv",
                         full.names = TRUE,
                         recursive = TRUE)
   # subset 
@@ -51,7 +51,7 @@ compileConservationData <- function(directory, runVersion, figure = FALSE){
   
   # new attempt at plot for species only 
   tbl <- df |> 
-    sort("FCSc_mean") |>
+    sort("ID") |>
     mutate(ID = str_replace_all(string = ID, pattern = "_", replacement = " "))
   
   if(figure==TRUE){
@@ -152,10 +152,10 @@ compileConservationData <- function(directory, runVersion, figure = FALSE){
                            y1=length(unique(tbl$ID)),
                            fillcolor='#a8d2a8', 
                            layer='below')))%>%
-    layout(title = 'Conservation Assessment of Daucus',
+    layout(title = paste0('Conservation Status of ',genus),
            xaxis = list(title = ''), 
            yaxis = list(title = ''), 
-           legend = list(title=list(text='<b> Conservation Assessment </b>'),
+           legend = list(title=list(text='<b> Conservation Status </b>'),
                          orientation = 'h'))
   }else{
     p1 <- "No figure generated."

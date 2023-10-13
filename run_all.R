@@ -9,7 +9,8 @@
 # local testing 
 pacman::p_load("terra", "dplyr", "sf", "purrr","randomForest","VSURF",
                "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo",
-               "leaflet", "tidyterra", "rmarkdown", "furrr")
+               "leaflet", "tidyterra", "rmarkdown", "furrr","tmap", "stringr")
+tmap_mode("view")
 
 #source functions
 source("R2/helperFunctions.R")
@@ -34,13 +35,13 @@ overwrite <- FALSE
 # input datasets ----------------------------------------------------------
 ## species observations 
 ### Daucus 
-speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")
+# speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")
 # rename the institute code column 
-names(speciesData)[names(speciesData) == 'old.var.name'] <- 'new.var.name'
+# names(speciesData)[names(speciesData) == 'institute'] <- 'institutionCode'
 
 
 ### Vitis
-# speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv")
+speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv")
 
 
 ## bioclim layers 
@@ -77,7 +78,7 @@ states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_pro
 genera <- unique(speciesData$genus)
 species <- sort(unique(speciesData$taxon))
 ## subset species for testings 
-species <- species[c(17,25,26)]# 2,9,
+species <- species[c(17,25,26)]# ,)]# 
 
 # species <- species[!grepl(pattern = "Daucus_glochidiatus", x = species)]
 # species subset
@@ -273,7 +274,7 @@ for(i in genera){
       #exsitu 
       ##ersex  
       ersex <- write_CSV(path = allPaths$ersexPath,
-                        overwrite = overwrite,
+                        overwrite = TRUE,
                         function1 = ers_exsitu(speciesData = sd1,
                                                thres = thres,
                                                natArea = natArea,
@@ -328,7 +329,7 @@ for(i in genera){
                                                   protectedArea =protectedAreas ))
         ## fcsin 
         fcsin <- write_CSV(path = allPaths$fcsinPath,
-                           overwrite = overwrite,
+                           overwrite = TRUE,
                            function1 = fcs_insitu(srsin = srsin,
                                                   grsin = grsin,
                                                   ersin = ersin,
@@ -337,7 +338,7 @@ for(i in genera){
         
         ##fcsex
         fcsex <- write_CSV(path = allPaths$fcsexPath,
-                           overwrite = overwrite,
+                           overwrite = TRUE,
                            function1 = fcs_exsitu(srsex = srsex,
                                                   grsex = grsex,
                                                   ersex = ersex,
@@ -345,7 +346,7 @@ for(i in genera){
         
         #combined measure 
         fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
-                                 overwrite = overwrite,
+                                 overwrite = TRUE,
                                  function1 = fcs_combine(fcsin = fcsin,
                                                          fcsex = fcsex))
       
@@ -389,32 +390,13 @@ for(i in genera){
     }
   }# end of species loop 
 
-  # generate summary of all the models --------------------------------------
-  if(!file.exists(paste0("data/daucus/speciesrichness",Sys.Date(),".tif")))
-  richnessTif <- generateSpeciesRichnessMap(directory = dir1,
-                                             runVersion = runVersion)
-   terra::writeRaster(x = richnessTif$richnessTif,
-                      filename =paste0("data/daucus/speciesrichness",Sys.Date(),".tif"))
-  # need to convert to a df before writing
-  # write_csv(x = richnessTif$speciesUsed, 
-  #           file = paste0("data/daucus/speciesUsedInRichnessMap",Sys.Date(),".csv"))
+  # produce Run level Summaries ---------------------------------------------
+  generateRunSummaries(dir1 = dir1,
+                       runVersion = runVersion,
+                       genus = i,
+                       overwrite = TRUE)
   
-  conservationSummary <- compileConservationData(directory = dir1, runVersion = runVersion, figure = TRUE)
-  conservationSummary$map <- rast("data/daucus/speciesrichness2023-09-28.tif")
   
-  # run summary html 
-  try(
-    rmarkdown::render(input = "R2/summarize/runSummary.Rmd",
-                      output_format = "html_document",
-                      output_dir = "data/daucus/",
-                      output_file = paste0(runVersion,"_Summary.html"),
-                      params = list(
-                        reportData = conservationSummary),
-                      envir = new.env(parent = globalenv())
-                      # clean = F,
-                      # encoding = "utf-8"
-    )
-  )
 }
 
 
