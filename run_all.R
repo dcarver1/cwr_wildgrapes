@@ -78,7 +78,7 @@ states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_pro
 genera <- unique(speciesData$genus)
 species <- sort(unique(speciesData$taxon))
 ## subset species for testings 
-species <- species[c(17,25,26)]# ,)]# 
+# species <- species[c(17,25,26)]# ,)]# 
 
 # species <- species[!grepl(pattern = "Daucus_glochidiatus", x = species)]
 # species subset
@@ -389,7 +389,12 @@ for(i in genera){
     erroredSpecies$lessThenFive <- c(erroredSpecies$lessThenFive, j)
     }
   }# end of species loop 
-
+  errorDF <- erroredSpecies |> 
+    bind_cols()
+  
+  # write_csv(x = errorDF, 
+  #           file = "data/Vitis/errorredSpecies_test1.csv")
+              # dir1,"/","errorredSpecies_",runVersion,".csv"))
   # produce Run level Summaries ---------------------------------------------
   generateRunSummaries(dir1 = dir1,
                        runVersion = runVersion,

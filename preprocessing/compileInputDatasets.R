@@ -45,7 +45,7 @@ counties <-st_read("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gp
 
  
 
-synonymList <- read_csv("data/vitis/synonymList.csv")
+synonymList <- read_csv("data/Vitis/synonymList.csv")
 
 
 standardColumnNames <- c(
@@ -109,9 +109,9 @@ ucdavis <- processDavis(path = "data/source_data/ucDavis.csv",
 ## natural heritage county level data 
 ### potential to get lat lon, but be selective 
 iunc <- processIUNC(path  = "data/source_data/iuncData.gdb")%>%
-  orderNames(names = standardColumnNames)%>%
-  removeDuplicatesID()
-#write_csv(iunc, file = "data/processed_occurrence/natureServe.csv")
+  orderNames(names = standardColumnNames)
+  # removeDuplicatesID() Do no call this here because this dataset does not have unique ids 
+# write_csv(iunc, file = "data/processed_occurrence/natureServe.csv")
 
 ## BONAP
 bonap <- processBonap(path = "data/source_data/bonap.csv")%>%
@@ -223,7 +223,7 @@ c3 <- bind_rows(c2$include, valLatLon2) |>
   select(-validLat, -validLon,-validLatLon, -index)%>%
   assignFIPS()
 
-#write_csv(x = c3, file = "data/processed_occurrence/tempDataForCountyMaps_20230920.csv")
+# write_csv(x = c3, file = "data/processed_occurrence/tempDataForCountyMaps_20231018.csv")
 
 # assign FIPS codes -------------------------------------------------------
 d8 <- assignFIPS(valLatLon2)
@@ -233,7 +233,7 @@ d8 <- assignFIPS(valLatLon2)
 ### need to write the function for this yet. 
 
 
-#write_csv(x = d8, file = "data/processed_occurrence/draft_model_data.csv")
+write_csv(x = d8, file = "data/processed_occurrence/draft_model_data.csv")
 
 ### Temp feature for testing new county maps 
 temp1 <- read_csv("data/processed_occurrence/draft_model_data.csv")%>%

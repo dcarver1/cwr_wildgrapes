@@ -1,12 +1,20 @@
 ---
 title: Taxon level assessment of occurrence  data
-author: Daniel P. Carver and Anne Frances 
+author: Daniel P. Carver, Anne Frances, and Colin Khoury 
 output:
   html_document:
       css: style.css
 date: "Report generated on `r Sys.Date()`"
 params:
   speciesName: NA
+  speciesNames: NA
+  namedFeatures: NA
+  plantsData1: NA
+  bonapData: NA
+  natureSeverData: NA
+  observationData: NA
+  countySHP : NA
+  stateSHP: NA
 ---
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 pacman::p_load("leaflet","data.table", "tidyr", "dplyr","plotly","DT","readr","sf", "tmap",
@@ -26,32 +34,46 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 # for testing 
 # speciesName <- "Vitis palmata"
 ## troubleshooting 
-#  speciesName <-"Vitis lincecumii"
+# speciesName <-"Vitis lincecumii"
 speciesName <- params$speciesName
 ```
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-### It be much better to pull out these reference dataset and pass the in as parameters. 
 
+# skip this in troubleshooting 
 
 # reading input datasets --------------------------------------------------
 ## taxonomic reference 
-speciesNames <- read_csv(file = "~/Documents/cwr_wildgrapes/data/source_data/taxonomy20230628.csv")
-namedFeatures <- read_csv(file = "~/Documents/cwr_wildgrapes/data/source_data/nameList.csv")
+speciesNames <- params$speciesNames
+  # 
+  # read_csv(file = "~/Documents/cwr_wildgrapes/data/source_data/taxonomy20230628.csv")
+namedFeatures <- params$namedFeatures
+  # read_csv(file = "~/Documents/cwr_wildgrapes/data/source_data/nameList.csv")
 ## county level reference data
-plantsData <- read_csv(file = "~/Documents/cwr_wildgrapes/data/source_data/usda_plants/completeVitis.csv")
-bonapData <- read_csv("~/Documents/cwr_wildgrapes/data/source_data/bonap.csv")
-natureSeverData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/natureServe.csv")
+plantsData1 <- params$plantsData1
+  # read_csv(file ="~/Documents/cwr_wildgrapes/data/source_data/usda_plants/completeVitis.csv")
+bonapData <- params$bonapData
+  # read_csv("~/Documents/cwr_wildgrapes/data/source_data/bonap.csv")
+natureSeverData <- params$natureSeverData
+  # read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/natureServe.csv")
 # valid lat long datasets 
-observationData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/tempDataForCountyMaps_20230920.csv") |> 
-  filter(!is.na(taxon))
+observationData <- params$observationData
+  # read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/tempDataForCountyMaps_2023118.csv") |> 
+  # filter(!is.na(taxon))
 
 #spatial data 
-countySHP <- read_sf("~/Documents/cwr_wildgrapes/data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
-stateSHP <- read_sf("~/Documents/cwr_wildgrapes/data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")|>
-  dplyr::filter(adm0_a3 == "USA")
-speciesList <- dplyr::left_join(x = plantsData, y = namedFeatures, by = c("plant_symbol" =  "Accepted Symbol"))|>
+countySHP <- params$countySHP
+# <- read_sf("~/Documents/cwr_wildgrapes/data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
+stateSHP  <- params$stateSHP
+# <- read_sf("~/Documents/cwr_wildgrapes/data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")|>
+#   dplyr::filter(adm0_a3 == "USA")
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+speciesList <- dplyr::left_join(x = plantsData1,
+                                y = namedFeatures,
+                                by = c("plant_symbol" =  "Accepted Symbol"))|>
   dplyr::select( "plant_symbol","Scientific Name")|>
   distinct()
 ```
@@ -60,12 +82,14 @@ speciesList <- dplyr::left_join(x = plantsData, y = namedFeatures, by = c("plant
   species <- speciesList[speciesList$`Scientific Name` == speciesName, ]
 
   # select county data for species 
-  speciesSym <- speciesList |> filter(`Scientific Name` == speciesName)
+  # speciesSym <- speciesList |> filter(`Scientific Name` == speciesName)
 
-  plantsData <- plantsData |> filter(plant_symbol %in% speciesSym$plant_symbol)|>
+  plantsData <- plantsData1 |> 
+    filter(plant_symbol %in% species$plant_symbol)|>
     mutate(plantsData = str_sub(geoid, start = 3, end = 7))|>
     select(plantsData)
-  bonap <- bonapData |> filter(`Scientific Name` == speciesName)|>
+  bonap <- bonapData |> 
+    filter(`Scientific Name` == speciesName)|>
     select(bonap = FIPS)
   natureServe <- natureSeverData[natureSeverData$taxon == speciesName,] |>
     select(natureServe = countyFIPS)
@@ -127,12 +151,12 @@ countyCounts <- occData |>
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # select all the counties from the states of interest
-countyState <- countySHP |> 
+countyState <- countyState |> 
   dplyr::filter(REGION %in% all_states$postal)|>
   dplyr::select(NAME, FIPS, REGION)|>
   mutate(
     inCountyData = case_when(
-      FIPS %in% countyGathered$CODE_LOCAL ~ 1,
+      FIPS %in% paste0("US",countyGathered$CODE_LOCAL) ~ 1,
       TRUE ~ 0
     )
   )
@@ -257,8 +281,20 @@ Selecting a county will provide the name and summary of the observations within.
 ### county data specifically 
 
 # defined palette for county classificatino 
-palDF <- data.frame(ref = c(" bonap ","USDA_Plants","Nature_Serve","USDA_Plants bonap ","USDA_Plants Nature_serve "," bonap Nature_Serve","USDA_Plants bonap Nature_Serve"),
-                    pal = c("#1b9e77","#d95f02", "#7570b3", "#e7298a","#66a61e", "#e6ab02", "#a6761d")
+palDF <- data.frame(ref = c(" bonap ",
+                            "USDA_Plants  ",
+                            "  Nature_Serve",
+                            "USDA_Plants bonap ",
+                            "USDA_Plants Nature_serve ",
+                            " bonap Nature_Serve",
+                            "USDA_Plants bonap Nature_Serve"),
+                    pal = c("#1b9e77",
+                            "#d95f02",
+                            "#7570b3",
+                            "#e7298a",
+                            "#66a61e",
+                            "#e6ab02",
+                            "#a6761d")
 )
 # c(" bonap ","USDA_Plants","Nature_Serve","USDA_Plants bonap ","USDA_Plants Nature_serve "," bonap Nature_Serve","USDA_Plants bonap Nature_Serve")
 # c("#1b9e77","#d95f02", "#7570b3", "#e7298a","#66a61e", "#e6ab02", "#a6761d")
@@ -270,8 +306,8 @@ palDF <- data.frame(ref = c(" bonap ","USDA_Plants","Nature_Serve","USDA_Plants 
                          "<br/><b>ID Source(s):</b> ", allCountySources))|>
   mutate(color = case_when(
     allCountySources == " bonap " ~ "#1b9e77",
-    allCountySources == "USDA_Plants" ~ "#d95f02",
-    allCountySources == "Nature_Serve" ~ "#7570b3",
+    allCountySources == "USDA_Plants  " ~ "#d95f02",
+    allCountySources == "  Nature_Serve" ~ "#7570b3",
     allCountySources == "USDA_Plants bonap " ~ "#e7298a",
     allCountySources == "USDA_Plants Nature_serve  " ~ "#66a61e",
     allCountySources == " bonap Nature_Serve" ~ "#e6ab02",
@@ -331,38 +367,37 @@ points <- sp1 |>
 
 # Map 
 ## need conditions for the various types inputs 
-m1 <- leaflet(width = "100%")|>
-    addTiles()|>
-    addMapPane("counties", zIndex = 415) |>
+m1 <- leaflet(width = "100%",
+              sizingPolicy = leafletSizingPolicy(defaultWidth = "100%",
+                                                 defaultHeight = 2000,
+                                                 padding = 10),
+              options = leafletOptions(minZoom = 3))|>
+    addTiles(urlTemplate = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', 
+             attribution =  'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+               )|>
+    addMapPane("countiesCheck", zIndex = 415) |>
+    addMapPane("countiesDesc", zIndex = 418) |>
     addMapPane("points", zIndex = 420)
 
-
 if(nrow(counties) == 0){
+  # no county desciption features 
   m2 <- m1 |>
-   # addPolygons(data = counties,
-   #              color = ~color,
-   #              group = "County_Reference",
-   #              label = ~counties$NAME_ALT,
-   #              opacity = 0.4,
-   #              fillOpacity = 0.5,
-   #              popup = ~popup,
-   #              options = pathOptions(pane = "counties")) |>
     addPolygons(data = countyClass,
                 color = "white",
                 fillColor =~color,
                 popup = ~popup,
                 weight = 0.8,
                 fillOpacity = 0.6,
-                opacity = 0.4,
-                group = "counties",
-                options = pathOptions(pane = "counties"))|>
+                opacity = 0.8,
+                group = "Counties to review",
+                options = pathOptions(pane = "countiesCheck"))|>
     addCircleMarkers(data =  points |> filter(type =="O"),
              color = ~color,
              opacity = 1,
              radius = 2,
              stroke = 1,
              popup = ~popup,
-             group = "observation",
+             group = "Observation",
              options = pathOptions(pane = "points"))|>
     addCircleMarkers(data = points |> filter(type =="H"),
              color = ~color,
@@ -370,7 +405,7 @@ if(nrow(counties) == 0){
              radius = 2,
              stroke = 1,
              popup = ~popup,
-             group = "herbarium",
+             group = "Herbarium",
              options = pathOptions(pane = "points")
                )|>
     addCircleMarkers(data = points[points$type =="G",],
@@ -379,49 +414,49 @@ if(nrow(counties) == 0){
              radius = 2,
              stroke = 1,
              popup = ~popup,
-             group = "germplasm ",
+             group = "Germplasm ",
              options = pathOptions(pane = "points")
                )|>
     addLegend(colors = c("#74add1","#fdae61","#bdbdbd"),
               labels = c("Acceptable County","Review County", "Unknown"),
-              group = "counties",
-              position = "bottomleft") |>
+              group = "Counties to review",
+              position = "bottomright") |>
     # addLegend(position = "bottomright",
     #           colors = palDF_filtered$pal,
     #           labels = palDF_filtered$ref,
     #           group = "County_Reference",
     #           title = "County Reference Data")|>
   addLayersControl(
-      overlayGroups = c("counties","observation", "herbarium", "germplasm "),
+      overlayGroups = c("Counties to review","Observation", "Herbarium", "Germplasm "),
       options = layersControlOptions(collapsed = FALSE)
     )|>
-  hideGroup(c("observation","herbarium","germplasm "))
+  hideGroup(c("Observation","Herbarium","Germplasm "))
 }else{
   m2 <- m1 |>
    addPolygons(data = counties,
                 color = ~color,
-                group = "County_Reference",
+                group = "Counties described",
                 label = ~counties$NAME_ALT,
-                opacity = 0.4,
-                fillOpacity = 0.5,
+                opacity = 0.2,
+                fillOpacity = 1,
                 popup = ~popup,
-                options = pathOptions(pane = "counties")) |>
+                options = pathOptions(pane = "countiesDesc")) |>
     addPolygons(data = countyClass,
                 color = "white",
                 fillColor =~color,
                 popup = ~popup,
                 weight = 0.8,
                 fillOpacity = 0.6,
-                opacity = 0.4,
-                group = "counties",
-                options = pathOptions(pane = "counties"))|>
+                opacity = 0.8,
+                group = "Counties to review",
+                options = pathOptions(pane = "countiesCheck"))|>
     addCircleMarkers(data =  points |> filter(type =="O"),
              color = ~color,
              opacity = 1,
              radius = 2,
              stroke = 1,
              popup = ~popup,
-             group = "observation",
+             group = "Observation",
              options = pathOptions(pane = "points"))|>
     addCircleMarkers(data = points |> filter(type =="H"),
              color = ~color,
@@ -429,7 +464,7 @@ if(nrow(counties) == 0){
              radius = 2,
              stroke = 1,
              popup = ~popup,
-             group = "herbarium",
+             group = "Herbarium",
              options = pathOptions(pane = "points")
                )|>
     addCircleMarkers(data = points[points$type =="G",],
@@ -438,31 +473,58 @@ if(nrow(counties) == 0){
              radius = 2,
              stroke = 1,
              popup = ~popup,
-             group = "germplasm ",
+             group = "Germplasm",
              options = pathOptions(pane = "points")
                )|>
     addLegend(colors = c("#74add1","#fdae61","#bdbdbd"),
               labels = c("Acceptable County","Review County", "Unknown"),
-              group = "counties",
-              position = "bottomleft") |>
+              group = "Counties to review",
+              position = "bottomright",
+              title = "Counties to review") |>
     addLegend(position = "bottomright",
               colors = palDF_filtered$pal,
               labels = palDF_filtered$ref,
-              group = "County_Reference",
-              title = "County Reference Data")|>
+              group = "Counties described",
+              title = "Counties with Described Occurrence")|>
   addLayersControl(
-      overlayGroups = c("County_Reference","counties","observation", "herbarium", "germplasm "),
+      overlayGroups = c("Counties described","Counties to review","Observation", "Herbarium", "Germplasm"),
       options = layersControlOptions(collapsed = FALSE)
     )|>
-  hideGroup(c("observation","herbarium","germplasm "))
+  hideGroup(c("Counties described", "Observation","Herbarium","Germplasm"))
 }
 
 
 m2
-
-
 ```
 
+
+
+
+## Summary of Occurrance Data 
+This table includes all records not just those with valid latitude and longitude information. 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+occFiltered <- occData %>%
+  dplyr::select(
+    "taxon",
+    "state",
+    "county",
+    "databaseSource",
+    "collectionSource",
+    "type",
+    "localityInformation",
+    "yearRecorded",
+     "latitude",
+    "longitude")
+
+
+DT::datatable(occFiltered,
+              rownames = FALSE,
+              width = "100%",
+              filter = c("top")
+              )
+
+```
 
 ## Summary Table of County Data 
 
@@ -495,19 +557,6 @@ df <- countyClass |>
 
 DT::datatable(df,
               rownames = FALSE,
-              filter = c("top")
-              )
-
-```
-
-## Summary of Occurrance Data 
-This table includes all records not just those with valid latitude and longitude information. 
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-DT::datatable(occData,
-              rownames = FALSE,
-              width = "100%",
               filter = c("top")
               )
 
