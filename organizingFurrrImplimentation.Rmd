@@ -1,0 +1,77 @@
+2023-10-23 
+
+The current workflow does not work well on the furrr implimentation because all the input data needs to be passed between the multiple sessions. To resolve this I want to group processing functions by inputs and dependencies. This will allow for specific inputs to be passed and specific furrr parameters depending on the inputs. Should make for a faster processing workflow. 
+
+
+## static inputs 
+This area text parameters that will be defined at the start of all functions calls. 
+
+numPoint <- 2000
+bufferDist <- 0.45
+set.seed(1234)
+runVersion <- "test1"
+overwrite <- FALSE
+
+## inputs files 
+These are the features we want to isolate as they are not allways needed within each function group 
+
+bioVars : raster stack of predictor variables 
+templateRast : example rast used to create features of a specific parameter set 
+protectedAreas : protected area tif 
+speciesData : csv of species occurrence data 
+
+
+## functions 
+
+j is the species, this will be the list object that the map function is applied over. 
+
+**this is a require input for all functions that write out content** 
+allPaths <- definePaths(dir1 = dir1, j = j, runVersion = runVersion) 
+
+
+### First group 
+
+**this only requires the allPaths object and the speciesData file.** 
+  
+  allPaths <- definePaths(dir1 = dir1, j = j, runVersion = runVersion) 
+
+  # create directories if needed 
+  generateFolders(allPaths)
+  
+  # process data 
+  ## species specific data
+  sd1 <- subsetSpecies(occuranceData =speciesData, species = j)
+  
+  ## counts data
+  c1 <- write_CSV(path = allPaths$countsPaths,
+                 overwrite = overwrite,
+                 function1 = generateCounts(speciesData = sd1))
+  
+  ## spatial object
+  sp1 <- write_GPKG (path = allPaths$spatialDataPath,
+                    overwrite = overwrite, 
+                    function1 = createSF_Objects(speciesData = sd1) %>%
+    removeDuplicates()
+    )
+  
+  
+  #srsex
+  srsex <- write_CSV(path = allPaths$srsExPath,
+                    overwrite = overwrite,
+                    function1 = srs_exsitu(sp_counts = c1))
+  
+
+## ecoregion group 
+Only function that directly calls the ecoregion object 
+**Need to export the sp1 object and call it in as a path from within the allPaths features**   
+  
+  allPaths <- definePaths(dir1 = dir1, j = j, runVersion = runVersion) 
+
+
+  ## define natural area based on ecoregions
+  natArea <- write_GPKG(path = allPaths$natAreaPath,
+                       overwrite = overwrite,
+                       function1 = nat_area_shp(speciesPoints = sp1,
+                                                ecoregions = ecoregions))
+  
+

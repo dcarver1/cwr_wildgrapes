@@ -15,7 +15,7 @@ tmap_mode("view")
 #source functions
 source("R2/helperFunctions.R")
 ## using the helper function to help with edits. Save changes then run sourceFiles to console
-sourceFiles()
+sourceFiles(furrr = FALSE)
 
 # source global objects 
 ## maximun number of points used in model (use in subSampleCountry.R)
@@ -57,17 +57,17 @@ templateRast <- bioVars[[1]]
 # df2[2,] <- bioNames$full_title
 # write_csv(x = df2, file = "data/temp/singleOccurrenceColin.csv" )
 ## countries
-country <- sf::st_read("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
+# country <- sf::st_read("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
 ## counties
-counties <- sf::st_read("data/geospatial_datasets/countries/ne_10m_admin_0_countries.gpkg")
+# counties <- sf::st_read("data/geospatial_datasets/countries/ne_10m_admin_0_countries.gpkg")
 ## ecoregions
 ecoregions <- sf::st_read("data/geospatial_datasets/ecoregions/tnc_terr_ecoregions.gpkg")
 ## north America
-northAmerica <- sf::st_read("data/geospatial_datasets/northAmerica/northAmericaArea.gpkg")
+# northAmerica <- sf::st_read("data/geospatial_datasets/northAmerica/northAmericaArea.gpkg")
 ## protect lands 
 protectedAreas <- terra::rast("data/geospatial_datasets/protectedLands/wdpa_rasterized_all.tif")
 ## states 
-states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")
+# states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")
 
 
 # set up environment  -----------------------------------------------------

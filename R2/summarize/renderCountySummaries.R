@@ -66,16 +66,16 @@ generateOccurnaceRMD <- function(species){
                       # envir = new.env(parent = globalenv()
     )
 }
-## needs to be commented out unless running 
-fullSpecies |> purrr::map(generateOccurnaceRMD)
-### troubleshooting
-generateOccurnaceRMD(species ="Vitis aestivalis" )
+# ## needs to be commented out unless running 
+# fullSpecies |> purrr::map(generateOccurnaceRMD)
+# ### troubleshooting
+# generateOccurnaceRMD(species ="Vitis aestivalis" )
 
 
 ## erroring out at specific species need to troubleshoot that directly 
 ## "Vitis tiliifolia"
- fullSpecies |> furrr::future_map(.f = generateOccurnaceRMD, .progress = TRUE,
-                                  .options = furrr_options(seed=TRUE))
+ # fullSpecies |> furrr::future_map(.f = generateOccurnaceRMD, .progress = TRUE,
+ #                                  .options = furrr_options(seed=TRUE))
 
 
 ## for loop implementation 
@@ -97,6 +97,6 @@ generateOccurnaceRMD <- function(speciesList){
 
 
 ## needs to be commented out unless running 
-generateOccurnaceRMD(speciesList = fullSpecies)
-### troubleshooting
-generateOccurnaceRMD(speciesList ="Vitis aestivalis" )
+# generateOccurnaceRMD(speciesList = fullSpecies)
+# ### troubleshooting
+# generateOccurnaceRMD(speciesList ="Vitis aestivalis" )
