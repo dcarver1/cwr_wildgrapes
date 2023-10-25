@@ -1,6 +1,7 @@
 species <- "Vitis palmata"
-speciesOccData <- 
+speciesOccData <- speciesData
 
 sectionOne <- function(species, speciesOccData){
+  
   
 }

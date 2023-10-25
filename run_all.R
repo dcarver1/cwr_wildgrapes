@@ -30,7 +30,7 @@ runVersion <- "test1"
 
 ## overwrite Parameter 
 ### used to determine if you want to write over existing content. 
-overwrite <- FALSE
+overwrite <- TRUE
 
 # input datasets ----------------------------------------------------------
 ## species observations 
@@ -49,23 +49,19 @@ bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames.csv"
 bioVars <- readRDS("data/geospatial_datasets/bioclim_layers/bioclim_2.5arcsec_terra.RDS")
 names(bioVars) <- bioNames$shortName
 templateRast <- bioVars[[1]]
+## ecoregions
+ecoregions <- sf::st_read("data/geospatial_datasets/ecoregions/tnc_terr_ecoregions.gpkg")
+## protect lands 
+protectedAreas <- terra::rast("data/geospatial_datasets/protectedLands/wdpa_rasterized_all.tif")
 
-# extract spatial data for independent dataset. 
-# sp1 <- st_point(x = c(-116.197659, 33.507408))
-# sp2 <-  terra::extract(x = bioVars, y = vect(sp1), bind= TRUE)
-# df2 <- as.data.frame(sp2)
-# df2[2,] <- bioNames$full_title
-# write_csv(x = df2, file = "data/temp/singleOccurrenceColin.csv" )
+
+# these are used by the summary documents ---------------------------------
 ## countries
 # country <- sf::st_read("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
 ## counties
 # counties <- sf::st_read("data/geospatial_datasets/countries/ne_10m_admin_0_countries.gpkg")
-## ecoregions
-ecoregions <- sf::st_read("data/geospatial_datasets/ecoregions/tnc_terr_ecoregions.gpkg")
 ## north America
 # northAmerica <- sf::st_read("data/geospatial_datasets/northAmerica/northAmericaArea.gpkg")
-## protect lands 
-protectedAreas <- terra::rast("data/geospatial_datasets/protectedLands/wdpa_rasterized_all.tif")
 ## states 
 # states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")
 
@@ -75,7 +71,7 @@ protectedAreas <- terra::rast("data/geospatial_datasets/protectedLands/wdpa_rast
 
 
 # primary loop ------------------------------------------------------------
-genera <- unique(speciesData$genus)
+genera <- unique(speciesData$genus)[1]
 species <- sort(unique(speciesData$taxon))
 ## subset species for testings 
 # species <- species[c(17,25,26)]# ,)]# 
@@ -100,8 +96,8 @@ species <- sort(unique(speciesData$taxon))
 
 
 #testing
-# i <- genera[1]
-# j <- species[53]
+i <- genera[1]
+j <- species[17]
 
 erroredSpecies <- list(lessThenFive = c(),
                        noSDM = c(),

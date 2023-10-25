@@ -14,30 +14,6 @@ lapply(X = list.files("preprocessing/functions", pattern = ".R", full.names = TR
        FUN = source)
 
 
-# helper funcitons --------------------------------------------------------
-is.integer0 <- function(x){
-  is.integer(x) && length(x) == 0L
-}
-
-orderNames <- function(data, names){
-  d1 <- data %>%
-    dplyr::select(all_of(names))%>%
-    mutate(across(everything(), as.character))
-  return(d1)
-}
-
-removeDuplicatesID <- function(data){
-  d1 <- data[!duplicated(data$sourceUniqueID), ]
-  return(d1)
-}
-
-summarizeBySource <- function(data){
-  d1 <- data %>% 
-    group_by(databaseSource)%>%
-    summarise(count = n())
-  return(d1)
-}
-
 # Spatail reference files  ------------------------------------------------
 countries <- st_read("data/geospatial_datasets/countries/ne_10m_admin_0_countries.gpkg")
 states <- st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")
@@ -46,6 +22,8 @@ counties <-st_read("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gp
  
 
 synonymList <- read_csv("data/Vitis/synonymList.csv")
+
+uniqueTaxon <- unique(synonymList$`Taxon Name`)
 
 
 standardColumnNames <- c(
@@ -154,6 +132,10 @@ d5a_sum <- summarizeBySource(d5a)
 # Lat long based quality checks  ------------------------------------------
 d6 <- checksOnLatLong(d5a)
 d6_sum <- summarizeBySource(d6$validLatLon)
+## grab the G records with no lat lon values 
+d6_g <- d6$countycheck |> 
+  filter(type == "G")
+
 
 ### has lat lon so can be used in both county and modeling products 
 valLatLon <- d6$validLatLon
@@ -229,11 +211,15 @@ c3 <- bind_rows(c2$include, valLatLon2) |>
 d8 <- assignFIPS(valLatLon2)
 
 
+# add the G records with no lat lon back to the modeling data---------------------------------------
+d8a <- d8 |> bind_rows(d6_g)
+
+
 # Remove duplicated data --------------------------------------------------
-### need to write the function for this yet. 
+d9 <- purrr::map(.x = uniqueTaxon, .f = removeDups, data = d8a) |> bind_rows()
 
-
-write_csv(x = d8, file = "data/processed_occurrence/draft_model_data.csv")
+# export data 2023-10-24 --- All g points included and duplicates between sources are removed. 
+write_csv(x = d9, file = "data/processed_occurrence/draft_model_data.csv")
 
 ### Temp feature for testing new county maps 
 temp1 <- read_csv("data/processed_occurrence/draft_model_data.csv")%>%

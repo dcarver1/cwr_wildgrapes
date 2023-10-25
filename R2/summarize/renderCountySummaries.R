@@ -34,7 +34,7 @@ plantsData1 <- read_csv(file ="~/Documents/cwr_wildgrapes/data/source_data/usda_
 bonapData <- read_csv("~/Documents/cwr_wildgrapes/data/source_data/bonap.csv")
 natureSeverData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/natureServe.csv")
 # valid lat long datasets 
-observationData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/tempDataForCountyMaps_20231018.csv") |> 
+observationData <- read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/tempDataForCountyMaps_20231025.csv") |> 
   filter(!is.na(taxon))
 
 #spatial data 
@@ -67,8 +67,8 @@ generateOccurnaceRMD <- function(species){
     )
 }
 # ## needs to be commented out unless running 
-# fullSpecies |> purrr::map(generateOccurnaceRMD)
-# ### troubleshooting
+fullSpecies |> purrr::map(generateOccurnaceRMD)
+### troubleshooting
 # generateOccurnaceRMD(species ="Vitis aestivalis" )
 
 

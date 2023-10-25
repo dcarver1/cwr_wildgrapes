@@ -151,7 +151,7 @@ countyCounts <- occData |>
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # select all the counties from the states of interest
-countyState <- countyState |> 
+countyState <- countySHP |> 
   dplyr::filter(REGION %in% all_states$postal)|>
   dplyr::select(NAME, FIPS, REGION)|>
   mutate(
@@ -225,7 +225,8 @@ countyState <- countyState |>
 # add any record column
 countyState <- countyState |>
   rowwise() |>
-  mutate(anyRecord = sum(inCountyData,O,H,G,pre1970,`USDA Plants`, BONAP,`Nature Serve`, na.rm = T))
+  mutate(anyRecord = sum(inCountyData,O,H,G,pre1970,`USDA Plants`, 
+                         BONAP,`Nature Serve`, na.rm = T))
 
 ```
 ## Map of Species Occurrences for `r speciesName`
