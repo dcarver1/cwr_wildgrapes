@@ -41,6 +41,7 @@ compileConservationData <- function(directory, runVersion, genus, figure = FALSE
            "GRSex" = GRS,
            "ERSex" = ERS)
   
+
   
   
   # read and bind data to a single object 
@@ -51,14 +52,14 @@ compileConservationData <- function(directory, runVersion, genus, figure = FALSE
   
   # new attempt at plot for species only 
   tbl <- df |> 
-    sort("ID") |>
-    mutate(ID = str_replace_all(string = ID, pattern = "_", replacement = " "))
+    mutate(ID = str_replace_all(string = ID, pattern = "_", replacement = " ")) |>
+    sort("ID")
   
   if(figure==TRUE){
     
   p1 <- plot_ly(data = tbl, 
           x = ~ FCSc_mean,
-          y = ~reorder(ID,FCSc_mean),
+          y = ~ID,
           type = "scatter",
           name = "FCS mean",
           marker = list(
@@ -154,7 +155,8 @@ compileConservationData <- function(directory, runVersion, genus, figure = FALSE
                            layer='below')))%>%
     layout(title = paste0('Conservation Status of ',genus),
            xaxis = list(title = ''), 
-           yaxis = list(title = ''), 
+           yaxis = list(title = '',
+                        autorange="reversed"),
            legend = list(title=list(text='<b> Conservation Status </b>'),
                          orientation = 'h'))
   }else{

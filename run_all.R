@@ -9,7 +9,8 @@
 # local testing 
 pacman::p_load("terra", "dplyr", "sf", "purrr","randomForest","VSURF",
                "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo",
-               "leaflet", "tidyterra", "rmarkdown", "furrr","tmap", "stringr")
+               "leaflet", "tidyterra", "rmarkdown", "furrr","tmap", "stringr",
+               "tictoc")
 tmap_mode("view")
 
 #source functions
@@ -30,18 +31,18 @@ runVersion <- "test1"
 
 ## overwrite Parameter 
 ### used to determine if you want to write over existing content. 
-overwrite <- TRUE
+overwrite <- FALSE
 
 # input datasets ----------------------------------------------------------
 ## species observations 
 ### Daucus 
-# speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")
+speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")
 # rename the institute code column 
-# names(speciesData)[names(speciesData) == 'institute'] <- 'institutionCode'
+names(speciesData)[names(speciesData) == 'institute'] <- 'institutionCode'
 
 
 ### Vitis
-speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv")
+# speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv")
 
 
 ## bioclim layers 
@@ -125,7 +126,7 @@ for(i in genera){
   ### this is probably the placee for a Furrr map function. Just the species being altered
   ### need to think about how to structure the code based from this part to best organize the process.
   for(j in species){
-    
+    print(j)
   #generate paths for exporting data 
   allPaths <- definePaths(dir1 = dir1,
                           j = j,
@@ -244,7 +245,7 @@ for(i in genera){
       ### Maybe test ecoregions individually from nat area-- extract values from sdm. 
       if(j != "Daucus_glochidiatus"){
         ersin <- write_CSV(path = allPaths$ersinPath,
-                           overwrite = overwrite,
+                           overwrite = TRUE,
                            function1 = ers_insitu(occuranceData = sp1,
                                                   nativeArea = natArea,
                                                   protectedArea = protectedAreas,
@@ -259,7 +260,7 @@ for(i in genera){
                                                 thres = thres))
       ## fcsin 
       fcsin <- write_CSV(path = allPaths$fcsinPath,
-                        overwrite = overwrite,
+                        overwrite = TRUE,
                         function1 = fcs_insitu(srsin = srsin,
                                                grsin = grsin,
                                                ersin = ersin,
@@ -283,7 +284,7 @@ for(i in genera){
                                                thres = thres))
       ##fcsex
       fcsex <- write_CSV(path = allPaths$fcsexPath,
-                        overwrite = overwrite,
+                        overwrite = TRUE,
                         function1 = fcs_exsitu(srsex = srsex,
                                                grsex = grsex,
                                                ersex = ersex,
@@ -291,14 +292,14 @@ for(i in genera){
       
       #combined measure 
       fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
-                              overwrite = overwrite,
+                              overwrite = TRUE,
                               function1 = fcs_combine(fcsin = fcsin,
                                                       fcsex = fcsex))
       
       #gather features for RMD 
       ## just a helper function to reduce the number of input for the RMD
       reportData <- write_RDS(path = allPaths$summaryDataPath,
-                             overwrite = overwrite,
+                             overwrite = TRUE,
                              function1 = grabData(fscCombined = fcsCombined,
                                                   fcsex = fcsex,
                                                   fcsin = fcsin,
@@ -391,11 +392,13 @@ for(i in genera){
   # write_csv(x = errorDF, 
   #           file = "data/Vitis/errorredSpecies_test1.csv")
               # dir1,"/","errorredSpecies_",runVersion,".csv"))
+
+  
   # produce Run level Summaries ---------------------------------------------
   generateRunSummaries(dir1 = dir1,
                        runVersion = runVersion,
                        genus = i,
-                       overwrite = TRUE)
+                       overwrite = FALSE)
   
   
 }

@@ -191,21 +191,6 @@ countyEval <- bind_rows(countyEval, d7$countycheck, iunc2, bonap2)
 #write_csv(x = countyEval,  file = "data/processed_occurrence/checkForIncludingInCountyMaps.csv")
 
 
-# evaluate the county level maps ------------------------------------------
-c1 <- read_csv(file = "data/processed_occurrence/checkForIncludingInCountyMaps.csv")
-
-c2 <- checkCounties(countyCheckData = c1, states = states, counties = counties)
-
-#write_csv(x = c2$exclude, file = "data/processed_occurrence/countyCheck_Exclude.csv")
-#write_csv(x = c2$include, file = "data/processed_occurrence/countyCheck_Include.csv")
-
-# duplicate check for county data 
-c3 <- bind_rows(c2$include, valLatLon2) |>
-  st_drop_geometry() |>
-  select(-validLat, -validLon,-validLatLon, -index)%>%
-  assignFIPS()
-
-# write_csv(x = c3, file = "data/processed_occurrence/tempDataForCountyMaps_20231018.csv")
 
 # assign FIPS codes -------------------------------------------------------
 d8 <- assignFIPS(valLatLon2)
@@ -221,16 +206,38 @@ d9 <- purrr::map(.x = uniqueTaxon, .f = removeDups, data = d8a) |> bind_rows()
 # export data 2023-10-24 --- All g points included and duplicates between sources are removed. 
 write_csv(x = d9, file = "data/processed_occurrence/draft_model_data.csv")
 
+
+
+# evaluate the county level maps ------------------------------------------
+c1 <- read_csv(file = "data/processed_occurrence/checkForIncludingInCountyMaps.csv")
+
+c2 <- checkCounties(countyCheckData = c1, states = states, counties = counties)
+
+write_csv(x = c2$exclude, file = "data/processed_occurrence/countyCheck_Exclude.csv")
+write_csv(x = c2$include, file = "data/processed_occurrence/countyCheck_Include.csv")
+
+# duplicate check for county data 
+### keep en eye out for duplicated within the county only feautes. I currently don't have a check put in place but it also 
+### seems like it;s not the big of an issue. 
+c3 <- bind_rows(c2$include, d9) |>
+  st_drop_geometry() |>
+  select(-validLat, -validLon,-validLatLon, -index)%>%
+  assignFIPS()
+
+write_csv(x = c3, file = "data/processed_occurrence/tempDataForCountyMaps_20231025.csv")
+
+
+
+
+
+
+
 ### Temp feature for testing new county maps 
 temp1 <- read_csv("data/processed_occurrence/draft_model_data.csv")%>%
   bind_rows(iunc2, bonap2)
-##write_csv(temp1, file = "data/processed_occurrence/testFor0905CountyMaps.csv")
 
-d8a <- d8 %>%
-  st_drop_geometry()%>%
-  group_by(taxon, type)%>%
-  summarize(count = n())
-##write_csv(d8a, file = "data/processed_occurrence/filteredDataSummary.csv")
+write_csv(temp1, file = "data/processed_occurrence/testFor1025CountyMaps.csv")
+
 
 
 

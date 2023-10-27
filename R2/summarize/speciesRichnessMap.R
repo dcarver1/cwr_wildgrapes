@@ -22,12 +22,12 @@ replaceNAN <- function(raster){
 #' @param runVersion : the specific run version that should be used for the analysis
 #'
 #' @return : a 
-generateSpeciesRichnessMap <- function(directory, runVersion){
+generateSpeciesRichnessMap <- function(directory, runVersion, rasterFileName){
   # plan(strategy = "multisession", workers = 12) ### have to be carefull with this because it copies all the session inform
   ### which is a lot of data to move around if this is part of the modeling environment. 
   # grab all potential options
     allFiles <- list.files( path = directory,
-                pattern =  "prj_threshold.tif",
+                pattern =  rasterFileName,
                 full.names = TRUE,
                 recursive = TRUE)
     # subset 

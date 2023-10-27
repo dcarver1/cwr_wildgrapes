@@ -67,7 +67,7 @@ generateOccurnaceRMD <- function(species){
     )
 }
 # ## needs to be commented out unless running 
-fullSpecies |> purrr::map(generateOccurnaceRMD)
+# fullSpecies |> purrr::map(generateOccurnaceRMD)
 ### troubleshooting
 # generateOccurnaceRMD(species ="Vitis aestivalis" )
 
@@ -76,6 +76,7 @@ fullSpecies |> purrr::map(generateOccurnaceRMD)
 ## "Vitis tiliifolia"
  # fullSpecies |> furrr::future_map(.f = generateOccurnaceRMD, .progress = TRUE,
  #                                  .options = furrr_options(seed=TRUE))
+
 
 
 ## for loop implementation 

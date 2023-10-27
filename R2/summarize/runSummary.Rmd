@@ -26,19 +26,41 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 
 
 # transform data
-# data <- conservationSummary$summaryData # testing only 
+# data <- conservationSummary$summaryData # testing only
 # figures <- conservationSummary$figure
+# image <- conservationSummary$map
+# p1 <- conservationSummary$proAreas
+# ga50 <- conservationSummary$ga50Map
+# protectCounts <- conservationSummary$protectAreasRichness
 
-data <- params$reportData$summaryData
-figure <- params$reportData$figure
-image <- params$reportData$map
+inputs <- params$reportData
+data <- inputs$summaryData
+figures <- inputs$figure
+image <- inputs$map
+p1 <- inputs$proAreas
+ga50 <- inputs$ga50Map
+protectCounts <- inputs$protectAreasRichness
 ```
 
 ## Conserveration Assessment 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='right',out.width="100%"}
-figure
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'right', fig.height = 8 } 
+#  fig.height= 8
+# not all species were showing up with autosize on. Have this set to capture, but need to evaluate how flexable it is. 
+heightPerRow <- 875/44
+height <- nrow(data) * heightPerRow
+figures |>  layout(autosize = F,height = height, width = 1200) # might
+htmltools::br()
+htmltools::br()
+htmltools::br()
+htmltools::br()
+htmltools::br()
+htmltools::br()
 ```
+<br>
+Selecting the objects at the bottom of the figure will turn on and off elements on the figure. Use this to highlight the conservation assessments that your are interested in. 
+<br>
+
 
 ## summary table 
 ```{r  echo=FALSE, message=FALSE, warning=FALSE}
@@ -51,31 +73,121 @@ c1[,2:12] <- lapply(c1[,2:12], sigfig)
 
 DT::datatable(c1,
               rownames = FALSE,
-              class = "compact")
-
+              class = "compact",
+              options = list(pageLength = 5),
+              filter = "top")
 ```
 
 ## Map of Species Density 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-r1 <- raster(image)
+# core species richness map
+r1 <- image
 r1[r1==0] <- NA
-#distribution palette 
+#distribution palette
 distColor <- c("#ffffd4","#fed98e","#fe9929","#d95f0e","#993404")
 vals <- unique(values(r1))
-
-# Mean distribution map 
+# Mean distribution map
 meanPal <- colorNumeric(palette = distColor,domain = values(r1), na.color = "transparent")
+```
 
-leaflet(width = "100%")%>%
-  addTiles()%>%
-  addRasterImage(x = r1, 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# produce the first map
+richness1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3)) |> 
+  addTiles() |> 
+  addRasterImage(x = r1,
                  colors = meanPal,
                  method = "ngb",
-                 group = "Species Richness")%>%
+                 group = "Species Richness") |> 
   addLegend(position = "bottomright",
             color = distColor,
             title = "Species Richness",
             labels = c("1","","","",max(vals,na.rm = TRUE)),
             group = "Mean Distribution Model")
+
+richness1
 ```
+
+
+## Insitu Gap Richness 
+This map shows the expect species richness outside of protected areas 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# reclass to make the mask of the protect areas features
+p2 <- classify(p1, cbind(1, 2))
+p2 <- classify(p2, cbind(NaN, 1))
+p2 <- classify(p2, cbind(2, NA))
+
+# mask the richness map to protect areas feature
+inGap <- raster(p2) * r1
+
+#distribution palette
+distColor <- c("#ffffd4","#fed98e","#fe9929","#d95f0e","#993404")
+valsInGAP <- unique(values(inGap))
+# Mean distribution map
+inGapPal <- colorNumeric(palette = distColor,
+                        domain = values(inGap), 
+                        na.color = "transparent")
+
+
+in1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3))%>%
+  addTiles()%>%
+  addRasterImage(x = inGap,
+                 colors = inGapPal,
+                 method = "ngb",
+                 group = "Species Richness")%>%
+  addLegend(position = "bottomright",
+            color = distColor,
+            title = "Insitu Gap Richness",
+            labels = c("1","","","",max(valsInGAP,na.rm = TRUE)),
+            group = "Mean Distribution Model")
+
+in1
+```
+
+### Insitu Gap Richness Table 
+Shows the number of species present in every protected area that contains at least one species project habitat 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# probably want to process this outside of the rendering of the document. '
+pc1 <- protectCounts |>
+  dplyr::filter(totalSpecies != 0) |>
+  dplyr::arrange(desc(totalSpecies))
+DT::datatable(pc1,
+              rownames = FALSE,
+              class = "compact",
+              filter = c("top"))
+```
+
+## Geographic Gap Richness
+This map show the expect species riches excluding the area that are within 50km of a germplasm collection. 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+g50 <- classify(ga50, cbind(NaN, 0)) |> raster()
+exGap <- r1 - g50
+
+#distribution palette
+valsexGap <- unique(values(exGap))
+# Mean distribution map
+exGapPal <- colorNumeric(palette = distColor,
+                        domain = values(exGap), 
+                        na.color = "transparent")
+
+
+
+g1 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))%>%
+  addTiles()%>%
+  addRasterImage(x = exGap,
+                 colors = exGapPal,
+                 method = "ngb",
+                 group = "Species Richness")%>%
+  addLegend(position = "bottomright",
+            color = distColor,
+            title = "Geographic Gap Richness",
+            labels = c("1","","","",max(valsexGap,na.rm = TRUE)),
+            group = "Mean Distribution Model")
+
+g1
+```
+
+
+
+## some wrap up summary? 
