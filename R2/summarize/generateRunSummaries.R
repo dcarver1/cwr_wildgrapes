@@ -44,7 +44,7 @@ generateRunSummaries <- function(dir1,runVersion, genus, protectedAreas, overwri
   
   # generate species richness within protected areas ------------------------
   if(overwrite == TRUE){
-    protectedAreaRichness(speciesRichness = rast(path1),
+    protectedAreaRichness(speciesRichness = path1,
                           pathToProGPKG =  "data/geospatial_datasets/protectedLands/WDPA_Mar2023_Public_shp",
                           countries = "data/geospatial_datasets/countries/ne_10m_admin_0_countries.gpkg",
                           exportPath =dir1 )

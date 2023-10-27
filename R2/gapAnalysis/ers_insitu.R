@@ -17,12 +17,10 @@ ers_insitu <- function(occuranceData,nativeArea, protectedArea, thres){
   thresPoints <- terra::as.points(x = thres)
   
   # convert native area to a vect object
-  nativeArea <- vect(nativeArea) %>% 
-    tidyterra::select("ECO_ID_U")
-  
+  nativeArea <- vect(nativeArea)
   # total number of eco regions within the SDM 
-  totalEcoregions <- terra::extract(x = nativeArea, y = thresPoints) %>%
-    tidyterra::distinct(ECO_ID_U)%>%
+  totalEcoregions <- terra::extract(x = nativeArea, y = thresPoints) |>
+    dplyr::distinct(ECO_ID_U) %>%
     tidyterra::drop_na()%>%
     tidyterra::pull()%>%
     length()
@@ -38,6 +36,8 @@ ers_insitu <- function(occuranceData,nativeArea, protectedArea, thres){
   }else{
     ers <- (totalProtectedEcoregions/totalEcoregions)*100
   }
+  
+  
   df <- data.frame(ID=occuranceData$taxon[1],
                    SPP_N_ECO = totalEcoregions,
                    SPP_WITHIN_PA_N_ECO = totalProtectedEcoregions,

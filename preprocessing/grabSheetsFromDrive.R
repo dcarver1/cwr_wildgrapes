@@ -18,6 +18,7 @@ d3 <- as.data.frame(d2)
 write_csv(d3,file = "data/source_data/taxonomy20230628.csv")
 
 
+
 # names list 
 d4 <-googlesheets4::read_sheet(as_id("https://docs.google.com/spreadsheets/d/1BA7FQ8EU0ejooartCoNfx7moUN7wNEmEqU0VmCU6nPw/edit?usp=sharing"),
                                sheet = "summaryName")
@@ -29,6 +30,113 @@ write_csv(x = d4, file = "data/source_data/nameList.csv")
 d5 <- googlesheets4::read_sheet(as_id("https://docs.google.com/spreadsheets/d/1QGY8witd4t8r6-ayNpLcx65z5UOTB8y4IBoevkuXrvs/edit?usp=sharing"))
                                 #,sheet = "Wiews_Exsitu_1684365085723")
 write_csv(x = d5, file = "data/source_data/wiews.csv")
+
+# flora of north america data 
+d6 <- googlesheets4::read_sheet(as_id("https://docs.google.com/spreadsheets/d/19e6wNr4Luc53NfBQJgl4AWGovZMp24P9yyDqmW9-h3Y/edit?usp=sharing"),
+                                  sheet = "FNA data")
+### need to do a bunch of find and replace with these ugly state names 
+uniqueNames <- d6$`States from FNA` |> 
+  stringr::str_split(pattern = ",") |>
+  unlist() |>
+  unique()
+# defined the correct names 
+dfName <- data.frame(original = uniqueNames, replace = NA)
+dfName$replace <- c(
+  NA,
+  "Alabama",
+  "Arkansas",
+  "Connecticut",
+  "Delaware",
+  "D.C",
+  "Florida",
+  "Georgia",
+  "Illinois",
+  "Indiana",
+  "Iowa",
+  "Kansas",
+  "Kentucky",
+  "Louisiana",
+  "Maine",
+  "Maryland",
+  "Massachusetts",
+  "Michigan",
+  "Minnesota",
+  "Mississippi",
+  "Missouri",
+  "Nebraska",
+  "New Hampshire",
+  "New Jersey",
+  "New York",
+  "North Carolina",
+  "Ohio",
+  "Oklahoma",
+  "Pennsylvania",
+  "Rhode Island",
+  "South Carolina",
+  "Tennessee",
+  "Texas",
+  "Vermont",
+  "Virginia",
+  "West Virginia",
+  "Wisconsin",
+  NA,
+  "Alabama",
+  NA,
+  "South Dakota",
+  "Florida",
+  "Texas",
+  "Oklahoma",
+  "California",
+  "Oregon",
+  "Colorado",
+  "New Mexico",
+  "Arizona",
+  "Nevada",
+  "Utah",
+  NA,
+  NA,
+  NA,
+  NA,
+  NA,
+  NA,
+  NA,
+  NA,
+  NA,
+  NA,
+  NA,
+  NA,
+  "Colorado",
+  "Montana",
+  "North Dakota",
+  "Washington",
+  "Wyoming",
+  "Arkansas",
+  NA,
+  "California",
+  "Idaho",
+  NA
+)
+
+newDF <- d6
+newDF$`States from FNA` <- list()
+
+for(i in 1:nrow(d6)){
+  vals <- d6[i,  "States from FNA"]
+  vals2 <- stringr::str_split(vals, pattern = ",") |> unlist()
+  vals2a <-c()
+  for(j in seq_along(vals2)){
+    print(j)
+    feature <- vals2[j]
+    vals2a[j] <- dfName[dfName$original == feature,"replace"][1]
+  }
+  # need to push this 
+  replacement <- paste(vals2a, collapse=" ",sep = ",") 
+
+  newDF[i,  2] <- replacement
+}
+
+write_csv(x = newDF,file = "data/source_data/FNA_stateClassification.csv")
+
 
 #genesys data 
 g1 <- read_sheet(as_id("https://docs.google.com/spreadsheets/d/1caDvF4nF7QA1-19A4n-sh2Gnc7Gl8xahCy5IwrTLaOY/edit?usp=sharing"))

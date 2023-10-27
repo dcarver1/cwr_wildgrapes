@@ -36,13 +36,13 @@ overwrite <- FALSE
 # input datasets ----------------------------------------------------------
 ## species observations 
 ### Daucus 
-speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")
+# speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")
 # rename the institute code column 
-names(speciesData)[names(speciesData) == 'institute'] <- 'institutionCode'
+# names(speciesData)[names(speciesData) == 'institute'] <- 'institutionCode'
 
 
 ### Vitis
-# speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv")
+speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv")
 
 
 ## bioclim layers 
@@ -98,7 +98,7 @@ species <- sort(unique(speciesData$taxon))
 
 #testing
 i <- genera[1]
-j <- species[17]
+j <- species[1]
 
 erroredSpecies <- list(lessThenFive = c(),
                        noSDM = c(),
