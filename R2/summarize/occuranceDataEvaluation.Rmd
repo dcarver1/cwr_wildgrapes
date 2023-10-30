@@ -15,6 +15,7 @@ params:
   observationData: NA
   countySHP : NA
   stateSHP: NA
+  fnaData: NA
 ---
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 pacman::p_load("leaflet","data.table", "tidyr", "dplyr","plotly","DT","readr","sf", "tmap",
@@ -32,7 +33,7 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 
 } 
 # for testing 
-# speciesName <- "Vitis palmata"
+# speciesName <- "Vitis baileyana"
 ## troubleshooting 
 # speciesName <-"Vitis lincecumii"
 speciesName <- params$speciesName
@@ -61,6 +62,7 @@ natureSeverData <- params$natureSeverData
 observationData <- params$observationData
   # read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/tempDataForCountyMaps_2023118.csv") |> 
   # filter(!is.na(taxon))
+fnaData <- params$fnaData
 
 #spatial data 
 countySHP <- params$countySHP
@@ -82,8 +84,6 @@ speciesList <- dplyr::left_join(x = plantsData1,
   species <- speciesList[speciesList$`Scientific Name` == speciesName, ]
 
   # select county data for species 
-  # speciesSym <- speciesList |> filter(`Scientific Name` == speciesName)
-
   plantsData <- plantsData1 |> 
     filter(plant_symbol %in% species$plant_symbol)|>
     mutate(plantsData = str_sub(geoid, start = 3, end = 7))|>
@@ -117,6 +117,48 @@ speciesList <- dplyr::left_join(x = plantsData1,
       TRUE ~ type
     ))
 
+# gather the states listed within FNA
+fna1 <- fnaData |> 
+  dplyr::filter(`Taxon Name` == speciesName) |>
+  dplyr::select(`States from FNA`)|>
+  pull()|>
+  stringr::str_trim(side = "left")|>
+  stringr::str_split(pattern = ",") |>
+  unlist()|>
+  stringr::str_trim()|>
+  str_subset(".+") # remove empty strings 
+
+# need a condition for determining when to run the FNA state filter 
+if(length(fna1)== 1 & fna1[1]=="NA"){
+  ### no FNA data 
+  # use the points and county data to gather the states 
+  # select all states from classified data and lat long :FIPS 
+  state1 <- paste0("US",unique(occData$stateFIPS)) 
+  
+  state_CountyData <- stateSHP |>
+      filter(iso_3166_2 %in% unique(paste0("US-",countyGathered$REGION)))|>
+      select(name)|>
+      st_drop_geometry()|> 
+      pull()
+  
+  all_states <- stateSHP |> 
+    dplyr::filter(name %in% state_CountyData | code_local %in% state1)
+}else{
+  # use the fna1 features to select the states 
+  state1 <- fna1[fna1 != "NA"]
+  # filter the states feature 
+ all_states <- stateSHP |>
+    filter(name %in% state1)
+}
+
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+  # filter the occurrance data to the states from FNA
+  ### 
+  occData <- occData |> 
+    dplyr::filter(state %in% all_states$name)
+  
   
 ### select states of interset 
 # spatial object 
@@ -126,26 +168,19 @@ sp1 <- occData |>
   dplyr::filter(iso3 != "MEX")|>
   sf::st_as_sf(coords = c("longitude","latitude"), crs = sf::st_crs(stateSHP))
 
-# select all states from classified data and lat long :FIPS 
-state1 <- paste0("US",unique(occData$stateFIPS)) 
-
-state_CountyData <- stateSHP |>
-    filter(iso_3166_2 %in% unique(paste0("US-",countyGathered$REGION)))|>
-    select(name)|>
-    st_drop_geometry()|> 
-    pull()
-
-all_states <- stateSHP |> 
-  dplyr::filter(name %in% state_CountyData | code_local %in% state1)
-
 ### select all counties of interest 
+extratedFIPS <- sf::st_intersection(countySHP, sp1)
 
-countyCounts <- occData |> 
-  dplyr::group_by(type, countyFIPS)|>
+
+countyCounts <- extratedFIPS |> 
+  dplyr::group_by(type, CODE_LOCAL)|>
+  st_drop_geometry() |> 
   dplyr::summarise(count = n())
   
 
 ```
+
+
 
 
 
@@ -178,18 +213,6 @@ for(i in c("O","H","G")){
   names(c2) <- c("fips2", type)
   countyState <- left_join(countyState, c2, by = "fips2")
   
-  
-    
-  
-  # # intersect the county and point data
-  # df2 <- countyState[unlist(sf::st_intersects(sp3, countyState)), "FIPS"]|>
-  #   st_drop_geometry()|>
-  #   group_by(FIPS)|>
-  #   dplyr::summarise(count = n())
-  # 
-  # names(df2) <- c("FIPS", as.character(i))
-  # # join to county feature 
-  # countyState <- left_join(x = countyState, y = df2, by = "FIPS")
 }
 
 # append the older data count 

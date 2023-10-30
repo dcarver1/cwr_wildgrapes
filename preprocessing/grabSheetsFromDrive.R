@@ -42,7 +42,7 @@ uniqueNames <- d6$`States from FNA` |>
 # defined the correct names 
 dfName <- data.frame(original = uniqueNames, replace = NA)
 dfName$replace <- c(
-  NA,
+  "Ontario",
   "Alabama",
   "Arkansas",
   "Connecticut",
@@ -93,32 +93,34 @@ dfName$replace <- c(
   "Arizona",
   "Nevada",
   "Utah",
-  NA,
-  NA,
-  NA,
-  NA,
-  NA,
-  NA,
-  NA,
-  NA,
-  NA,
-  NA,
-  NA,
-  NA,
+  "Chihuahua",
+  "Coahuila",
+  "Nuevo Leon",
+  "Sinaloa",
+  "Sonora",
+  "Baja California",
+  "Manitoba",
+  "New Brunswick",
+  "Nova Scotia",
+  "Ontario",
+  "Quebec",
+  "Saskatchewan",
   "Colorado",
   "Montana",
   "North Dakota",
   "Washington",
   "Wyoming",
   "Arkansas",
-  NA,
+  "British Columbia",
   "California",
   "Idaho",
   NA
 )
 
 newDF <- d6
-newDF$`States from FNA` <- list()
+#newDF$`States from FNA` <- list()
+# remove the NA value 
+dfName <- dfName[!is.na(dfName$original), ]
 
 for(i in 1:nrow(d6)){
   vals <- d6[i,  "States from FNA"]
@@ -127,7 +129,7 @@ for(i in 1:nrow(d6)){
   for(j in seq_along(vals2)){
     print(j)
     feature <- vals2[j]
-    vals2a[j] <- dfName[dfName$original == feature,"replace"][1]
+    vals2a[j] <- paste0(dfName[dfName$original == feature,"replace"][1], ",")
   }
   # need to push this 
   replacement <- paste(vals2a, collapse=" ",sep = ",") 
