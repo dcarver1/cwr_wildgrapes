@@ -5,12 +5,11 @@
 # 20230621
 ### 
 
-
 # local testing 
 pacman::p_load("terra", "dplyr", "sf", "purrr","randomForest","VSURF",
                "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo",
                "leaflet", "tidyterra", "rmarkdown", "furrr","tmap", "stringr",
-               "tictoc")
+               "tictoc","tmap")
 tmap_mode("view")
 
 #source functions
@@ -395,6 +394,7 @@ for(i in genera){
 
   
   # produce Run level Summaries ---------------------------------------------
+  ### big processing step... 
   generateRunSummaries(dir1 = dir1,
                        runVersion = runVersion,
                        genus = i,

@@ -3,7 +3,7 @@
 # carverd@colostate.edu 
 # 20230717
 ###
-pacman::p_load(furrr, dplyr, readr)
+pacman::p_load(furrr, dplyr, readr, sf, terra)
 # set the parallel processing structure 
 # plan(strategy = sequential) 
 plan(strategy = multisession, workers = 16) 
