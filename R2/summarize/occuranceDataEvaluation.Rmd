@@ -348,13 +348,42 @@ countyClass <- countyState |>
   )
 
 ## color palatte 
+### Good set to use for the visualization  
+brbg <- c("#a6611a","#dfc27d","#f5f5f5",'#c7eae5','#80cdc1','#35978f','#01665e')
+# Specific elements used in the reclass
+brbgWeighted <- brbg[c(1,4,5,6,7)]
+weightVals <- c("<1","1-2","2-3","3-4",">=4")
+brbgAll <- brbg[c(1,2,4,5,6,7)]
+allVals <- c("1", "2-3","3-5","5-8","8-11",">12")
+# trying to assign classes directly 
+countyClass <- countyClass |>
+  dplyr::mutate(
+    weightedColor= case_when(
+      is.na(weightedSum) ~ "#d9dbde",
+      weightedSum < 1 ~ brbg[1],
+      weightedSum >= 1 & weightedSum < 2 ~ brbg[4],
+      weightedSum >= 2 & weightedSum < 3 ~ brbg[5],
+      weightedSum >= 3 & weightedSum < 4 ~ brbg[6],
+      weightedSum >= 4  ~ brbg[7]
+    ),
+    allColor = case_when(
+      is.na(anyRecord) ~ "#d9dbde",
+      anyRecord == 1 ~ brbg[1],
+      anyRecord >= 2 & anyRecord < 3 ~ brbg[2],
+      anyRecord >= 3 & anyRecord < 5 ~ brbg[4],
+      anyRecord >= 5 & anyRecord < 8 ~ brbg[5],
+      anyRecord >= 8 & anyRecord < 12 ~ brbg[6],
+      anyRecord >= 12  ~ brbg[7]
+    )
+  )
+
 # Create a continuous palette function
 palAll <- colorNumeric(
-  palette = "Blues",
+  palette = "BrBG",
   domain = countyClass$anyRecord,
   na.color = "#d9dbde")
 palWeighted <- colorNumeric(
-  palette = "Greens",
+  palette = "BrBG",
   domain = countyClass$weightedSum,
   na.color = "#d9dbde")
 
@@ -394,7 +423,7 @@ m1 <- leaflet(width = "100%",
   m2 <- m1 |>
     addPolygons(data = countyClass,
                 color = "white",
-                fillColor =~palAll(anyRecord),
+                fillColor =~allColor,
                 popup = ~popup,
                 weight = 0.8,
                 fillOpacity = 0.6,
@@ -403,7 +432,7 @@ m1 <- leaflet(width = "100%",
                 options = pathOptions(pane = "allRecords"))|>
     addPolygons(data = countyClass,
                 color = "white",
-                fillColor =~palWeighted(weightedSum),
+                fillColor = ~weightedColor,
                 popup = ~popup,
                 weight = 0.8,
                 fillOpacity = 0.6,
@@ -436,12 +465,13 @@ m1 <- leaflet(width = "100%",
              group = "Germplasm",
              options = pathOptions(pane = "points")
                )|>
-    addLegend(pal = palAll, 
-              values = countyClass$anyRecord[!is.na(countyClass$anyRecord)],
+    addLegend(color = brbgAll,
+              labels = allVals, # countyClass$anyRecord[!is.na(countyClass$anyRecord)],
               group = "All Records",
               title = "All Records Counted")|>
-    addLegend(pal = palWeighted, 
-              values = countyClass$weightedSum[!is.na(countyClass$weightedSum)],
+    addLegend(colors = brbgWeighted,
+              labels = weightVals,
+              # values = ~weightedSum, # countyClass$weightedSum[!is.na(countyClass$weightedSum)],
               na.label = NA,
               group = "Weighted Records",
               title = "Weighted Records")|>

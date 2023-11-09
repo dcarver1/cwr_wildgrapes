@@ -69,7 +69,7 @@ runsummary <- paste0("data/Vitis/",modelRun,"_Summary.html")
 file.copy(runsummary, folder)
 
 # vits county maps --------------------------------------------------------
-files <- list.files("data/countyMaps",pattern = "Evaluation.html",full.names = TRUE)
+files <- list.files("data/countyMaps",pattern = "Evaluation2.html",full.names = TRUE)
 print(files)
 # Find the files 
 for(i in seq_along(files)){

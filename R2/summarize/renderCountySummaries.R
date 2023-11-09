@@ -53,7 +53,7 @@ generateOccurnaceRMD <- function(species){
     rmarkdown::render(input = "R2/summarize/occuranceDataEvaluation.Rmd",
                       output_format = "html_document",
                       output_dir = file.path("data/countyMaps"),
-                      output_file = paste0(species,"_Evaluation.html"),
+                      output_file = paste0(species,"_Evaluation2.html"),
                       params = list(
                         speciesName = as.character(species),
                         speciesNames = speciesNames,
@@ -71,6 +71,7 @@ generateOccurnaceRMD <- function(species){
 }
 # ## needs to be commented out unless running 
 # fullSpecies |> purrr::map(generateOccurnaceRMD)
+# speciesList |> purrr::map(generateOccurnaceRMD)
 # ### troubleshooting
 # generateOccurnaceRMD(species ="Vitis baileyana" )
 
