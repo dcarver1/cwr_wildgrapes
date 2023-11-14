@@ -1,7 +1,7 @@
 #' Grab Data for the summary html documents 
 #'
 #' @return RDS file with a nested list of all required file inputs 
-grabData <- function(fscCombined, fcsex, fcsin,evalTable,g_bufferCrop,thres, 
+grabData <- function(ersex, fscCombined, fcsex, fcsin,evalTable,g_bufferCrop,thres, 
                      projectsResults, v_data, g_buffer,natArea,protectedAreas,
                      occuranceData, countsData){
   # crop protected areas 
@@ -27,6 +27,7 @@ grabData <- function(fscCombined, fcsex, fcsin,evalTable,g_bufferCrop,thres,
     projectedResults = projectsResults,
     binaryMap = thres,
     modelEvaluation = evalTable,
+    ersex = ersex,
     fcsCombined = fcsCombined,
     fcsex= fcsex,
     fcsin = fcsin,

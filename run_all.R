@@ -97,7 +97,7 @@ species <- sort(unique(speciesData$taxon))
 
 #testing
 i <- genera[1]
-j <- species[1]
+j <- species[3]
 
 erroredSpecies <- list(lessThenFive = c(),
                        noSDM = c(),
@@ -244,7 +244,7 @@ for(i in genera){
       ### Maybe test ecoregions individually from nat area-- extract values from sdm. 
       if(j != "Daucus_glochidiatus"){
         ersin <- write_CSV(path = allPaths$ersinPath,
-                           overwrite = TRUE,
+                           overwrite = overwrite,
                            function1 = ers_insitu(occuranceData = sp1,
                                                   nativeArea = natArea,
                                                   protectedArea = protectedAreas,
@@ -259,7 +259,7 @@ for(i in genera){
                                                 thres = thres))
       ## fcsin 
       fcsin <- write_CSV(path = allPaths$fcsinPath,
-                        overwrite = TRUE,
+                        overwrite = overwrite,
                         function1 = fcs_insitu(srsin = srsin,
                                                grsin = grsin,
                                                ersin = ersin,
@@ -270,7 +270,7 @@ for(i in genera){
       #exsitu 
       ##ersex  
       ersex <- write_CSV(path = allPaths$ersexPath,
-                        overwrite = TRUE,
+                        overwrite = overwrite,
                         function1 = ers_exsitu(speciesData = sd1,
                                                thres = thres,
                                                natArea = natArea,
@@ -283,7 +283,7 @@ for(i in genera){
                                                thres = thres))
       ##fcsex
       fcsex <- write_CSV(path = allPaths$fcsexPath,
-                        overwrite = TRUE,
+                        overwrite = overwrite,
                         function1 = fcs_exsitu(srsex = srsex,
                                                grsex = grsex,
                                                ersex = ersex,
@@ -291,7 +291,7 @@ for(i in genera){
       
       #combined measure 
       fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
-                              overwrite = TRUE,
+                              overwrite = overwrite,
                               function1 = fcs_combine(fcsin = fcsin,
                                                       fcsex = fcsex))
       
@@ -300,6 +300,7 @@ for(i in genera){
       reportData <- write_RDS(path = allPaths$summaryDataPath,
                              overwrite = TRUE,
                              function1 = grabData(fscCombined = fcsCombined,
+                                                  ersex = ersex,
                                                   fcsex = fcsex,
                                                   fcsin = fcsin,
                                                   evalTable = evalTable,
@@ -325,7 +326,7 @@ for(i in genera){
                                                   protectedArea =protectedAreas ))
         ## fcsin 
         fcsin <- write_CSV(path = allPaths$fcsinPath,
-                           overwrite = TRUE,
+                           overwrite = overwrite,
                            function1 = fcs_insitu(srsin = srsin,
                                                   grsin = grsin,
                                                   ersin = ersin,
@@ -334,7 +335,7 @@ for(i in genera){
         
         ##fcsex
         fcsex <- write_CSV(path = allPaths$fcsexPath,
-                           overwrite = TRUE,
+                           overwrite = overwrite,
                            function1 = fcs_exsitu(srsex = srsex,
                                                   grsex = grsex,
                                                   ersex = ersex,
@@ -342,7 +343,7 @@ for(i in genera){
         
         #combined measure 
         fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
-                                 overwrite = TRUE,
+                                 overwrite = overwrite,
                                  function1 = fcs_combine(fcsin = fcsin,
                                                          fcsex = fcsex))
       
@@ -398,6 +399,7 @@ for(i in genera){
   generateRunSummaries(dir1 = dir1,
                        runVersion = runVersion,
                        genus = i,
+                       protectedAreas = protectedAreas,
                        overwrite = FALSE)
   
   

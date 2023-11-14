@@ -38,21 +38,35 @@ ers_exsitu <- function(speciesData,thres,natArea,ga50) {
     
     # determine ecoregions in ga50 area 
     v2 <- terra::zonal(x = ga50,z = n1,fun="sum",na.rm=TRUE)
-    gEco <- v2 |> 
+    v2$ECO_ID_U <- n1$ECO_ID_U
+    
+    # determine the ecoregions that are not being considered 
+    excludedAreas <- v2 |> 
       filter(layer >0) |>
-      filter(!is.nan(layer)) |> 
+      filter(!is.nan(layer)) 
+    # get the total number 
+    gEco <- excludedAreas |> 
       nrow()
+    # generate a list of the ecoregions ID that are inside the threshold but have no g buffer 
+    missingEcos <- v1 |> 
+      dplyr::filter( Threshold >0 & !ECO_ID_U %in% excludedAreas$ECO_ID_U) |> 
+      dplyr::select(ECO_ID_U) |> 
+      pull()
     
     # ERs calculation 
     ers <- min(c(100, (gEco/nEco)*100))
 
   }
   
+  # generate filter 
+  
+  out_df = data.frame(ID=speciesData$taxon[1],
+                  SPP_N_ECO=nEco,
+                  G_N_ECO=gEco, 
+                  ERS=ers)
+  out_df$missingEcos <- list(missingEcos)
+
   # generate dataframe
-  out_df <- data.frame(ID=speciesData$taxon[1],
-                       SPP_N_ECO=nEco,
-                       G_N_ECO=gEco, 
-                       ERS=ers)
   return(out_df)
 }
   

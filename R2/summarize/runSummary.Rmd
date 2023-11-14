@@ -146,11 +146,11 @@ in1
 ```
 
 ### Insitu Gap Richness Table 
-Shows the number of species present in every protected area that contains at least one species project habitat 
+Shows the number of species present in every protected area that contains at least 3 species project habitat. The full list of protected areas can be found (add a link once we have a location for hosting the data)
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # probably want to process this outside of the rendering of the document. '
 pc1 <- protectCounts |>
-  dplyr::filter(totalSpecies != 0) |>
+  dplyr::filter(totalSpecies > 3) |>
   dplyr::arrange(desc(totalSpecies))
 DT::datatable(pc1,
               rownames = FALSE,
@@ -189,5 +189,3 @@ g1
 ```
 
 
-
-## some wrap up summary? 
