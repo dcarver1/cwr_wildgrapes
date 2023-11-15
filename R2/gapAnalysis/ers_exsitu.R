@@ -65,6 +65,7 @@ ers_exsitu <- function(speciesData,thres,natArea,ga50) {
                   G_N_ECO=gEco, 
                   ERS=ers)
   out_df$missingEcos <- list(missingEcos)
+  out_df$ecosInThreshold <- 
 
   # generate dataframe
   return(out_df)

@@ -24,8 +24,8 @@ splist <- read.csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.c
   dplyr::pull()%>%
   sort()
 # or selected species 
-# splist <- c( "Daucus_carota_subsp._capillifolius","Daucus_carota_subsp._fontanesii",
-#              "Daucus_carota_subsp._gummifer","Daucus_sahariensis","Daucus_syrticus")
+splist <- c( "Daucus_carota_subsp._capillifolius","Daucus_carota_subsp._fontanesii",
+             "Daucus_carota_subsp._gummifer","Daucus_sahariensis","Daucus_syrticus")
 
 # Find the files 
 for(i in splist){

@@ -35,13 +35,13 @@ overwrite <- FALSE
 # input datasets ----------------------------------------------------------
 ## species observations 
 ### Daucus 
-# speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")
+speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")
 # rename the institute code column 
-# names(speciesData)[names(speciesData) == 'institute'] <- 'institutionCode'
+names(speciesData)[names(speciesData) == 'institute'] <- 'institutionCode'
 
 
 ### Vitis
-speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv")
+# speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv")
 
 
 ## bioclim layers 
@@ -357,7 +357,7 @@ for(i in genera){
     ## need some work on this 
     ### there is need for conditional statements to determine if specific values
     ### should be used or not. 
-    if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
+    # if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
       try(
         rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
                           output_format = "html_document",
@@ -370,12 +370,12 @@ for(i in genera){
                           # encoding = "utf-8"
         )
       )
-    }else{
-      if(!file.exists(allPaths$summaryHTMLPath)){
-        erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
-
-      }
-    }
+    # }else{
+    #   if(!file.exists(allPaths$summaryHTMLPath)){
+    #     erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
+    # 
+    #   }
+    # }
     # block here for testing. I want variable in local environment and don't want them written out. 
     # stop()
     

@@ -105,11 +105,83 @@ thresColor <- colorNumeric(palette = c( "#FFFFFF80","#45B320"),
                            domain = values(threshold),
                            alpha = TRUE,
                            na.color = "transparent")
+# generate a threshold mask 
+mask1 <- ifel(test = thres == 1, yes = 1, no = NA)
 
 # protected area
 protectedArea <- data$protectedArea
 protectColor <- colorNumeric(palette = "#B7B648", domain = values(protectedArea), na.color = "transparent")
+# protected areas mask 
+proMask <- ifel(test = protectedArea == 1, yes = 1, no = NA)
 
+
+
+
+# insitu map elements  
+## SRSIN 
+## total number of observations per cell of the threshold model 
+srs1 <- terra::rasterize(vect(occData), threshold, fun = "sum") |>
+  mask(mask1)
+totalObsinThres <- sum(values(srs1), na.rm = TRUE)
+## total number of observations in protected areas 
+pro1 <- terra::rasterize(vect(occData), protectedArea, fun = "sum") |>
+  mask(proMask)
+totalObsinPro <- sum(values(pro1), na.rm = TRUE)
+
+## GRSIN 
+## reclassy protected area 
+proReclass <- ifel(test = is.na(protectedArea), yes = 0, no = 1)
+## add values 
+grs1 <- threshold + proReclass
+exPal <- c("#ffffff80", "#45b320", "#7570b3")
+grsinColor <- colorNumeric(palette = exPal, # purple is a little lighter so the point locations show up clearly
+                             domain = values(grs1),
+                           na.color = "transparent")
+## ERSin
+# used on the ERS visualization
+allEcos <- data$naturalArea |>
+  dplyr::select("ECO_ID_U","ECO_NAME")
+## showcase ecoregions within the threshold model that do no have a protected area
+ers1 <- terra::zonal(proReclass,vect(allEcos), fun = "sum",na.rm=TRUE)
+ers1$ECO_ID_U <- allEcos$ECO_ID_U
+ers1$ECO_NAME <- allEcos$ECO_NAME
+
+# determine this ecoregions with model areas 
+n1 <-data$naturalArea %>% 
+    dplyr::select(ECO_ID_U)%>% 
+    vect()
+## zonal Stats to determine overlap 
+v1 <- terra::zonal(x = thres,z = n1,fun="sum",na.rm=TRUE)# , exact = TRUE) 
+# the extract parament could be a good way of getting the total areas over overlap 
+# between the features but it takes a while to run. so either add it to the modeling 
+# process or leave it out. 
+
+## reassign the eco id record
+v1$ECO_ID_U <- n1$ECO_ID_U
+ecosInThres <- v1 |> 
+  dplyr::filter(Threshold > 0 )|>
+  dplyr::select(ECO_ID_U)|>
+  pull()
+
+## ID ecoregions in threshold model with no 
+ers2 <- ers1 |>
+  dplyr::filter(ECO_ID_U %in% ecosInThres)|>
+  dplyr::filter(layer == 0)
+if(nrow(ers2)>0){
+  ersinMap <- n1 |>
+    filter(ECO_ID_U %in% ers2$ECO_ID_U)
+}else{
+  ersinMap <- "No values"
+}
+ecoINPal <- RColorBrewer::brewer.pal(n = length(ers2$ECO_ID_U), name = "Set3")
+# define a palette option so that we can set a transparent NA value 
+ecoINColor <- colorFactor(palette = ecoINPal, 
+                        domain = ers2$ECO_ID_U, 
+                        na.color =  "#FF000000")
+
+
+
+# exsitu map elements 
 
 #buffered G area
 gBuf <- data$g_bufferCrop
@@ -120,12 +192,10 @@ if(class(gBuf) != "character"){
   gbuf2 <- terra::classify(x = gBuf, m1)
   grsexMap <- threshold + gbuf2
   # need to defined this outside of the palette function so it can be called again in the legend 
-  exPal <- c("#ffffff80", "#45b320", "#7570b3")
   grsexColor <- colorNumeric(palette = exPal, # purple is a little lighter so the point locations show up clearly
                              domain = values(grsexMap),
                            na.color = "transparent")
 }
-
 
 
 #ecoregions
@@ -137,34 +207,33 @@ ecoReg <- data$naturalArea |>
   dplyr::mutate(
     ECO_NAME = as.factor(ECO_NAME)
   )
-# used on the ERS visualization
-allEcos <- data$naturalArea |>
-  dplyr::select("ECO_ID_U","ECO_NAME")
-
 
 # need to generate a raster object ecoregions, this should be done as part of the modeling process
 # then I can pass through a data frame of the ecoregion data, rather the spatial objects 
-# generate a mask 
-mask1 <- ifel(test = thres == 1, yes = 1, no = NA)
+
 # Rasterize the ecoregions 
 ecoRast <- terra::rasterize(x = ecoReg, y = thres, "ECO_ID_U")
+
 # apply the mask 
 ecoRast <- mask(ecoRast, mask1)
 
 
 # set the palette 
-ecoColor <- colorNumeric(palette = "Set1",
-                        na.color = "#80808000",
-                        domain = unique(ecoRast$ECO_ID_U)[,1])
-
-
-leaflet() |>
-  addRasterImage(raster(ecoRast),
-                 colors = ecoColor)
+# this defines the color used, and can be called in the legend creation 
+## set 3 has a cap of 12 unique colors 
+ecoPal <- RColorBrewer::brewer.pal(n = length(missingEcos), name = "Set3")
+# define a palette option so that we can set a transparent NA value 
+ecoColor <- colorFactor(palette = ecoPal, 
+                        domain = missingEcos, 
+                        na.color =  "#FF000000")
 
 
 #distribution palette 
 distColor <- c("#ffffd4","#fed98e","#fe9929","#d95f0e","#993404")
+# protect area palette 
+proColor <- c("#7570b3")
+# srsin palete 
+srsPal <- colorNumeric(palette = distColor,domain = values(srs1), na.color = "transparent")
 
 # Mean distribution map 
 meanDist <- data$projectedResults$mean
@@ -279,10 +348,11 @@ exCounts <- data$countsData |>
                 "Total G records" = totalGRecords,
                 "Total H records" = totalHRecords)
 exScores <- data$fcsex |> 
-  dplyr::select("SRSex" = SRS,
-                "GRSex" = GRS,
-                "ERSex" = ERS,
-                "FCSex" = FCS)|>
+  dplyr::mutate("SRSex" = sigfig(SRS),
+                "GRSex" = sigfig(GRS),
+                "ERSex" = sigfig(ERS),
+                "FCSex" = sigfig(FCS))|>
+  dplyr::select("SRSex","GRSex","ERSex","FCSex")|>
   dplyr::mutate(
     "FCSex priority category" = case_when(
       FCSex >= 75 ~ "LP",
@@ -313,84 +383,256 @@ The **GRSex** map shows the potential distribution (threshold map), with previou
 
 The **ERSex** The map below shows ecoregions from which no G occurrences have been collected. The ecoregion extent has been clipped to match the predicted potential distribution of the species. 
 
-0 = Native area (area of ecoregions within countries where taxon has been observed in the field)
-
-1 = area of potential distribution with ecoregions that have been collected for ex situ conservation
-
-Greater than 1 = area of potential distribution with ecoregions that have not been collected for ex situ conservation, identifying each ecoregion
-
+There are many cases where the model extent within a unconserved eco region is small(less than 5 cells). Utilize the "All Ecoregions" layer and the ERSex legend to help locate these areas.  
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-# generate the GRSex map 
-ex1 <- leaflet(width = "100%")%>%
-  addTiles()%>%
-  #GRSex raster
-  addRasterImage(x = raster(grsexMap),
-                 colors = grsexColor,
-                 group = "GRSex",
-                 method = "ngb",
-                 project=FALSE)|>
-  #G points 
-  addCircleMarkers(data = occData[occData$type == "G", ],
-             color = ~color,
-             opacity = 1,
-             radius = 1,
-             group = "GRSex",
-             stroke = 1,
-             popup = ~popup
-            )|>
-  #add legend
-  addLegend(position = "bottomright",
-        color = exPal,
-        title = "ex situ geographical representativeness",
-        labels = c("Native Area","Expected Habitat","Habitat with 50km buffer"),
-        group = "GRSex")
-
-
-
-
-# generate the ERSex map 
-ex2 <- leaflet(width = "100%")|>
+# generate the GRSex map
+ex1 <- leaflet(width = "100%")|>
   addTiles()|>
-    # threshold 
-  addRasterImage(x = raster(grsexMap),
-                 colors = grsexColor,
-                 group = "ERSin",
-                 method = "ngb")|>
-  #G points 
-  addCircleMarkers(data = occData[occData$type == "G", ],
-             color = ~color,
-             opacity = 1,
-             radius = 1,
-             group = "ERSin",
-             stroke = 1,
-             popup = ~popup
-            )|>
-  addRasterImage(x = raster(ecoRast),
-                 group = "ERSin",
-                 method = "ngb")|>
-  addPolygons(data = allEcos,
-              group = "All Ecoregions",
-              weight = 2,
-              stroke = TRUE,
-              fill = TRUE,
-              fillOpacity = 0.2,
-              color ="#60616050"
-)|>
-    addLegend(position = "bottomright",
-        color = exPal,
-        title = "ex situ geographical representativeness",
-        labels = c("Native Area","Expected Habitat","Habitat with 50km buffer"),
-        group = "GRSex")
+  #GRSex raster
+  addRasterImage(
+    x = raster(grsexMap),
+    colors = grsexColor,
+    group = "GRSex",
+    method = "ngb",
+    project = FALSE
+  ) |>
+  #G points
+  addCircleMarkers(
+    data = occData[occData$type == "G",],
+    color = ~ color,
+    opacity = 1,
+    radius = 1,
+    group = "GRSex",
+    stroke = 1,
+    popup = ~ popup
+  ) |>
+  #add legend
+  addLegend(
+    position = "bottomright",
+    color = exPal,
+    title = "ex situ geographical representativeness",
+    labels = c("Native Area", "Expected Habitat", "Habitat with 50km buffer"),
+    group = "GRSex"
+  )
 
 
- 
 
+
+# generate the ERSex map
+ex2 <- ex1 |>
+  # Ecoregion Raster Layers
+  addRasterImage(raster(ecoRast),
+               group = "ERSex",
+               colors = ecoColor) |>
+  # addLegend(colors = ecoPal,
+  #           group = "ERSex",
+  #           labels = ecoReg$ECO_NAME)|>
+  # Outline of all ecoregions
+  addPolygons(
+    data = allEcos,
+    group = "All Ecoregions",
+    weight = 2,
+    stroke = TRUE,
+    fill = TRUE,
+    fillOpacity = 0.2,
+    popup = allEcos$ECO_NAME,
+    color = "#60616050"
+  ) 
+
+# add controls for the layout
+ex3 <- ex2 |>
+  addLayersControl(
+    position = "topleft",
+    options = list(collapsed = FALSE,
+                   autoZIndex = FALSE),
+    overlayGroups = c(
+      "GRSex",
+      "ERSex",
+      "All Ecoregions"
+    )
+  ) |>
+  hideGroup(c(
+    "All Ecoregions"
+  ))
+
+## print the map
+ex3
 ```
 
 
+### Table of Unconserved Ecoregions 
 
+The table below shows all the ecoregions utilized within the study.
+
+The column `ERSex Gap Ecoregion` denotes if an ecoregion is within the threshold model but does no have a germplasm record within 50km of it. 
+
+The column `Ecoregion in Threshold Model Area` denotes if an ecoregion is within the predicted area of the threshold model. Any ecoregion with a false value for this column contained a valid occurrence records but does not contain any suitable habitat as defined by the model. 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+# All ecoregions considered
+# identify if they
+## have modeled habitat
+## are within a 50km buffer of a germplasm collection
+eco2 <- data$naturalArea |>
+  st_drop_geometry() |>
+  dplyr::mutate(
+    'ERSex Gap Ecoregion' = case_when(ECO_ID_U %in% missingEcos ~ TRUE,
+                                      TRUE ~ FALSE),
+    'Ecoregion in Threshold Model Area' = case_when(ECO_ID_U %in% ecosInThres ~ TRUE,
+                                                    TRUE ~ FALSE)
+  ) |>
+  dplyr::select(
+    'ERSex Gap Ecoregion',
+    'Ecoregion in Threshold Model Area',
+    `Unique ID` = "ECO_ID_U",
+    `Ecoregion Name` = "ECO_NAME",
+    `Source Name` = "SOURCEDATA"
+  ) |>
+  arrange(desc(`ERSex Gap Ecoregion`), desc(`Ecoregion in Threshold Model Area`))
+#visualize
+DT::datatable(eco2,
+              rownames = FALSE,
+              class = "compact")
+
+``` 
+## Insitu Gap Analysis 
+
+The table below shows the in situ conservation gap analysis summary. The sampling representativeness score in situ (SRSin) calculates the proportion of all occurrences of a taxon within its predicted distribution that fall within a protected area. The geographical representativeness score in situ (GRSin) compares the area (in km2) of the distribution model located within protected areas versus the total area of the model. The ecological representativeness score in situ (ERSin) calculates the proportion of ecoregions encompassed within the range of the taxon located inside protected areas to the ecoregions encompassed within the total area of the distribution model. A final conservation score for in situ (FCSin) was derived by calculating the average of the three in situ conservation metrics. All of the conservation metrics are on a scale from 0-100, with 0 = poor conservation and 100 = comprehensive protection. The FCSin is used to categorize species, with urgent priority (UP) for further conservation action assigned when FCSin < 25, high priority (HP) where 25 ≤ FCSin < 50, medium priority (MP) where 50 ≤ FCSin < 75, and low priority (LP) for taxa whose FCSin ≥75. 
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+inCounts <- data$countsData |> 
+  dplyr::select(species, 
+                "Total with coordinates" = totalUseful,
+                "Total G with coordinates" = totalGUseful,
+                "Total H with Coordinates" = totalHUseful
+                ## need to resolve some questions about the SRSin measure 
+                # "Total G records" = totalGRecords,
+                # "Total H records" = totalHRecords
+                )
+inScores <- data$fcsin |> 
+  dplyr::mutate("SRSin" = sigfig(SRS),
+                "GRSin" = sigfig(GRS),
+                "ERSin" = sigfig(ERS),
+                "FCSin" = sigfig(FCS),
+                "Total occurrances in modeled area" = totalObsinThres,
+                "Total occurrance in protected area" = totalObsinPro)|>
+  dplyr::select("SRSin","GRSin","ERSin","FCSin")|>
+  dplyr::mutate(
+    "FCSin priority category" = case_when(
+      FCSin >= 75 ~ "LP",
+      FCSin >=50 & FCSin < 75 ~ "MP",
+      FCSin >=25 & FCSin < 50 ~ "HP",
+      FCSin < 25 ~ "UP"
+    )
+  )
+# combine the data
+inTables <- bind_cols(inCounts,inScores)
+#visualize 
+DT::datatable(inTables,
+              rownames = FALSE,
+              class = "compact")
+
+
+```
+
+## Map of Insitu Representativeness Scores
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+uniqueSRSVals <- sort(unique(values(srs1)))
+
+in1 <- leaflet(width = "100%")|>
+  addTiles()|>
+  # SRSin 
+  addRasterImage(
+    x = raster(srs1),
+    colors = srsPal,
+    group = "SRSin",
+    method = "ngb",
+    project = FALSE
+  )|>
+  addLegend(colors = distColor,
+            group = "SRSin",
+            title = "SRSin",
+            labels = c(min(uniqueSRSVals), "","","",max(uniqueSRSVals)))
+
+in2 <- in1 |>
+   addRasterImage(
+    x = raster(pro1),
+    colors = proColor,
+    group = "Protected Areas"
+  )
+##GRSin map 
+in3 <- in2 |>
+  addRasterImage(
+    x = raster(grs1),
+    colors = grsinColor,
+    group = "GRSin"
+  )|>
+  addLegend(colors = exPal,
+            group = "GRSin",
+            labels = c("Native Area", "Predicted Habit", "Protected Area"))
+## ERS in map 
+if(class(ersinMap) != "character"){
+  in3 <- in3 |>
+  addRasterImage(
+    x = ersinMap,
+    colors = ecoINColor,
+    group = "ERSin"
+  )|>
+    addLegend(colors = ecoINPal,
+              group = "ERSin",
+              labels = ers2$ECO_NAME)
+}
+
+
+# add control groups 
+in3 <- in3|> 
+  addLayersControl(
+    position = "topleft",
+    options = list(collapsed = FALSE,
+                   autoZIndex = FALSE),
+    overlayGroups = c(
+      "SRSin",
+      "GRSin",
+      "ERSin",
+      "Protected Areas"))|>
+  hideGroup(group = c("Protected Areas"))
+
+in3
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+# All ecoregions considered
+# identify if they
+## have modeled habitat
+## are within a 50km buffer of a germplasm collection
+eco3 <- data$naturalArea |>
+  st_drop_geometry() |>
+  dplyr::mutate(
+    'ERSin Gap Ecoregion' = case_when(ECO_ID_U %in% ers2$ECO_ID_U ~ TRUE,
+                                      TRUE ~ FALSE),
+    'Ecoregion in Threshold Model Area' = case_when(ECO_ID_U %in% ecosInThres ~ TRUE,
+                                                    TRUE ~ FALSE)
+  ) |>
+  dplyr::select(
+    'ERSin Gap Ecoregion',
+    'Ecoregion in Threshold Model Area',
+    `Unique ID` = "ECO_ID_U",
+    `Ecoregion Name` = "ECO_NAME",
+    `Source Name` = "SOURCEDATA"
+  ) |>
+  arrange(desc(`ERSin Gap Ecoregion`), desc(`Ecoregion in Threshold Model Area`))
+#visualize
+DT::datatable(eco3,
+              rownames = FALSE,
+              class = "compact")
+
+``` 
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -500,11 +742,11 @@ eval1 <- data$modelEvaluation %>%
     "Normalized AUC" = "nAUC",
     "Calibrated AUC" = "cAUC",
     "Threshold Value" = "threshold_test",
-    "Sensitivity"  ="sensi_test",
-    "Specificity" ="speci_test", 
+    "Sensitivity"  = "sensi_test",
+    "Specificity" = "speci_test",
     "Mathews Correlation" = "matthews.cor_test",
-    "Cohen's kappa" = "kappa_index_test" 
-    )%>%
+    "Cohen's kappa" = "kappa_index_test"
+  ) %>%
   dplyr::mutate_all(.funs = sigfig)
 
 
