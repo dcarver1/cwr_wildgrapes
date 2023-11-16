@@ -33,6 +33,7 @@ ers_exsitu <- function(speciesData,thres,natArea,ga50) {
   if(class(ga50)[[1]] != "SpatRaster"){
     ers <- 0
     gEco <- NA
+    missingEcos <- v1$ECO_ID_U
   }else{
 
     
@@ -41,16 +42,17 @@ ers_exsitu <- function(speciesData,thres,natArea,ga50) {
     v2$ECO_ID_U <- n1$ECO_ID_U
     
     # determine the ecoregions that are not being considered 
-    excludedAreas <- v2 |> 
+    areasWithGBuffer <- v2 |> 
       filter(layer >0) |>
       filter(!is.nan(layer)) 
-    # get the total number 
-    gEco <- excludedAreas |> 
+    # get the total number number of eco regions with a g buffer area
+    gEco <- areasWithGBuffer |> 
       nrow()
     # generate a list of the ecoregions ID that are inside the threshold but have no g buffer 
     missingEcos <- v1 |> 
-      dplyr::filter( Threshold >0 & !ECO_ID_U %in% excludedAreas$ECO_ID_U) |> 
-      dplyr::select(ECO_ID_U) |> 
+      dplyr::filter(Threshold >0) |>
+      dplyr::filter(!ECO_ID_U %in% areasWithGBuffer$ECO_ID_U)|>
+      dplyr::select(ECO_ID_U)|>
       pull()
     
     # ERs calculation 
@@ -65,7 +67,6 @@ ers_exsitu <- function(speciesData,thres,natArea,ga50) {
                   G_N_ECO=gEco, 
                   ERS=ers)
   out_df$missingEcos <- list(missingEcos)
-  out_df$ecosInThreshold <- 
 
   # generate dataframe
   return(out_df)

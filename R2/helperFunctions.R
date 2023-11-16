@@ -1,4 +1,4 @@
-sourceFiles <- function(furrr){
+sourceFiles <- function(furrr=FALSE){
   if(furrr == TRUE){
     f1 <- list.files(
       path = "R2",

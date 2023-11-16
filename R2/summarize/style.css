@@ -11,3 +11,52 @@ div.main-container {
   color: white;
   text-align: center;
 }
+
+body {
+  font-family: Roboto, sans-serif;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  background-color: #92beee;
+  border-radius: 30px;
+  padding: 10px;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  background-color: #a5c2f0;
+  border-radius: 15px;
+  padding: 8px;
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  background-color: #b9d6f2;
+  padding: 8px;
+}
+
+p {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0 auto;
+  width: 90%;
+  margin-bottom: 8px;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+div.datatables {
+  color: #333;
+  background: #eceae640;
+}

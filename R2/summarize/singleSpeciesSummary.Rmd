@@ -22,17 +22,18 @@ sigfig <- function(vec, n=3){
 formatC(signif(vec,digits=n), digits=n,format="fg", flag="#") 
 
 } 
+```
 
-
-
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 # transform data
 # data <- reportData # testing only
 # species <- reportData$countsData$species # testing
 data <- params$reportData
 species <- data$occuranceData$taxon[1]
+printSpecies <- stringr::str_replace_all(string = species, pattern = "_", replacement = " ")
 ```
 
-# Conservation Summary of `r species`
+# Conservation Summary of `r printSpecies`
 
 Plot of the exsitu and insitu conservation scores. [Definitions of Conservation Scores]
 
@@ -64,7 +65,7 @@ plot_ly(d3,
 
 *Note: Score values of zero will not appear on the chart.*
 
-# Summary for Vitis arizonica
+# Summary of observation records  
 
 The table below shows a summary of the occurrence records for the taxon. A record “with coordinates” is one that has a complete set of latitude and longitude values associated with it, which could be used for distribution modeling and the conservation gap analysis. For this analysis, such records with coordinates were confined to those falling within the target native area, i.e. native states/administrative areas within the United States, Canada, and Mexico.  In preparation for the conservation gap analyses, we classified each record based on whether it was an existing ex situ sample from a genebank or botanic garden (labeled G, as most records were from genebanks), or a reference observation (labeled H, as most of these records were from herbaria).
 
@@ -120,8 +121,9 @@ proMask <- ifel(test = protectedArea == 1, yes = 1, no = NA)
 # insitu map elements  
 ## SRSIN 
 ## total number of observations per cell of the threshold model 
-srs1 <- terra::rasterize(vect(occData), threshold, fun = "sum") |>
+srs1 <- terra::rasterize(vect(occData), threshold, fun = "sum", background=0 )|>
   mask(mask1)
+
 totalObsinThres <- sum(values(srs1), na.rm = TRUE)
 ## total number of observations in protected areas 
 pro1 <- terra::rasterize(vect(occData), protectedArea, fun = "sum") |>
@@ -142,38 +144,42 @@ grsinColor <- colorNumeric(palette = exPal, # purple is a little lighter so the 
 allEcos <- data$naturalArea |>
   dplyr::select("ECO_ID_U","ECO_NAME")
 ## showcase ecoregions within the threshold model that do no have a protected area
-ers1 <- terra::zonal(proReclass,vect(allEcos), fun = "sum",na.rm=TRUE)
+ers1 <- terra::zonal(proReclass, vect(allEcos), fun = "sum",na.rm=TRUE)
 ers1$ECO_ID_U <- allEcos$ECO_ID_U
 ers1$ECO_NAME <- allEcos$ECO_NAME
 
-# determine this ecoregions with model areas 
+# determine this ecoregions with model areas -- all the features 
 n1 <-data$naturalArea %>% 
     dplyr::select(ECO_ID_U)%>% 
     vect()
-## zonal Stats to determine overlap 
+## zonal Stats to determine overlap between the ecoregions and the threshold model
 v1 <- terra::zonal(x = thres,z = n1,fun="sum",na.rm=TRUE)# , exact = TRUE) 
-# the extract parament could be a good way of getting the total areas over overlap 
-# between the features but it takes a while to run. so either add it to the modeling 
-# process or leave it out. 
 
 ## reassign the eco id record
 v1$ECO_ID_U <- n1$ECO_ID_U
+# get a list of ecoregions within the threshold model 
 ecosInThres <- v1 |> 
   dplyr::filter(Threshold > 0 )|>
   dplyr::select(ECO_ID_U)|>
   pull()
 
-## ID ecoregions in threshold model with no 
+## ID ecoregions in threshold model with no protected areas  
 ers2 <- ers1 |>
   dplyr::filter(ECO_ID_U %in% ecosInThres)|>
   dplyr::filter(layer == 0)
+
 if(nrow(ers2)>0){
+  ## use this list to generate a raster object masked to the 
   ersinMap <- n1 |>
-    filter(ECO_ID_U %in% ers2$ECO_ID_U)
+  dplyr::filter(ECO_ID_U %in% ers2$ECO_ID_U)|>
+  terra::rasterize(y = threshold, "ECO_ID_U")|>
+    mask(mask = mask1)
 }else{
   ersinMap <- "No values"
 }
 ecoINPal <- RColorBrewer::brewer.pal(n = length(ers2$ECO_ID_U), name = "Set3")
+# this palette requires at least 3 colors 
+ecoINPal <- ecoINPal[1:length(ers2$ECO_ID_U)]
 # define a palette option so that we can set a transparent NA value 
 ecoINColor <- colorFactor(palette = ecoINPal, 
                         domain = ers2$ECO_ID_U, 
@@ -222,6 +228,8 @@ ecoRast <- mask(ecoRast, mask1)
 # this defines the color used, and can be called in the legend creation 
 ## set 3 has a cap of 12 unique colors 
 ecoPal <- RColorBrewer::brewer.pal(n = length(missingEcos), name = "Set3")
+ecoPal <- ecoPal[1:length(missingEcos)]
+
 # define a palette option so that we can set a transparent NA value 
 ecoColor <- colorFactor(palette = ecoPal, 
                         domain = missingEcos, 
@@ -233,14 +241,15 @@ distColor <- c("#ffffd4","#fed98e","#fe9929","#d95f0e","#993404")
 # protect area palette 
 proColor <- c("#7570b3")
 # srsin palete 
-srsPal <- colorNumeric(palette = distColor,domain = values(srs1), na.color = "transparent")
+srsPal1 <- c("#FFFFFF20","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#0c2c84")
+srsPal <- colorNumeric(palette = srsPal1, domain = values(srs1),na.color = "transparent" )
 
 # Mean distribution map 
 meanDist <- data$projectedResults$mean
-meanPal <- colorNumeric(palette = distColor,domain = values(meanDist), na.color = "transparent")
+meanPal <- colorNumeric(palette = distColor, domain = values(meanDist), na.color = "transparent")
 # Median distribution map 
 medianDist <- data$projectedResults$median
-medianPal <- colorNumeric(palette = distColor,domain = values(medianDist), na.color = "transparent")
+medianPal <- colorNumeric(palette = distColor, domain = values(medianDist), na.color = "transparent")
 
 # standdard devation map 
 stdevDist <- data$projectedResults$stdev
@@ -249,7 +258,7 @@ stdevPal <- colorNumeric(palette = distColor,domain = values(stdevDist), na.colo
 
 
 
-# Map of Model Potential Habitat
+## Map of Model Potential Habitat
 
 The map below shows the predicted presence threshold distribution, the median, the mean, and the standard deviation spatial result from the species distribution model runs. The predicted presence threshold distribution was generated by applied as statistically determined threshold value to the median model distribution. The median, mean, and standard deviation model distributions represent the range of variability across the (10,6, or 3) model runs generated for a given species. Values in the key refer to the probability of occurrence. The occurrences used in the modeling process are represented by dots, distinguishing between G and H records (as available), and the attribute data associated with the points can be viewed by clicking on the dots. The background shows the target native area (i.e. the occupied native country-ecoregion area). 
 
@@ -259,8 +268,8 @@ Layers can be added to the map using the toggle buttons on the left side. The fi
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # modeled distribution Map
 ## Add occurrances 
-m1 <- leaflet(width = "100%")%>%
-  addTiles()%>%
+m1 <- leaflet(width = "100%") |>
+  addTiles()|>
   addCircleMarkers(data = occData,
              color = ~color,
              opacity = 1,
@@ -278,13 +287,13 @@ m1 <- leaflet(width = "100%")%>%
             labels = c("Herbarium", "Germplasm"),
             title = "Observation Type",
             group = "Observations")
+
 ## add rasters 
 m2 <- m1 |> 
   # threshold 
   addRasterImage(x = raster(threshold),
                  colors = thresColor, 
-                 group = "Expected Habitat", 
-                 method = "ngb")|>
+                 group = "Expected Habitat")|>
     addLegend(position = "bottomright",
             color = c( "#FFFFFF","#45B320"),
             labels = c("Native Area", "Expected Habitat"),
@@ -293,8 +302,7 @@ m2 <- m1 |>
   #mean 
   addRasterImage(x = meanDist, 
                  colors = meanPal,
-                 group = "Mean Distribution Model",
-                 method = "ngb")|>
+                 group = "Mean Distribution Model")|>
     addLegend(position = "bottomright",
             color = distColor,
             title = "Mean Distribution Model",
@@ -303,8 +311,7 @@ m2 <- m1 |>
   #median 
   addRasterImage(x = medianDist, 
                  colors = medianPal,
-                 group = "Median Distribution Model",
-                 method = "ngb") |>
+                 group = "Median Distribution Model") |>
     addLegend(position = "bottomright",
             color = distColor,
             title = "Median Distribution Model",
@@ -313,8 +320,7 @@ m2 <- m1 |>
     #stdev 
   addRasterImage(x = stdevDist, 
                  colors = stdevPal,
-                 group = "SD of Distribution Model",
-                 method = "ngb")|>
+                 group = "SD of Distribution Model")|>
     addLegend(position = "bottomright",
             color = distColor,
             title = "SD of Distribution Model",
@@ -387,17 +393,30 @@ There are many cases where the model extent within a unconserved eco region is s
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-# generate the GRSex map
+if(exTables$`Total G with coordinates` == 0){ # no G with lat lon 
+  # generate the GRSex map
+ex2 <- leaflet(width = "100%")|>
+  addTiles()|>
+  # Outline of all ecoregions
+  addPolygons(
+    data = allEcos,
+    group = "All Ecoregions",
+    weight = 2,
+    stroke = TRUE,
+    fill = TRUE,
+    fillOpacity = 0.2,
+    popup = allEcos$ECO_NAME,
+    color = "#60616050"
+  ) 
+}else{ # G points with valid lat lon are present
+  # generate the GRSex map
 ex1 <- leaflet(width = "100%")|>
   addTiles()|>
   #GRSex raster
   addRasterImage(
     x = raster(grsexMap),
     colors = grsexColor,
-    group = "GRSex",
-    method = "ngb",
-    project = FALSE
-  ) |>
+    group = "GRSex" ) |>
   #G points
   addCircleMarkers(
     data = occData[occData$type == "G",],
@@ -416,19 +435,30 @@ ex1 <- leaflet(width = "100%")|>
     labels = c("Native Area", "Expected Habitat", "Habitat with 50km buffer"),
     group = "GRSex"
   )
-
-
-
-
+  
 # generate the ERSex map
-ex2 <- ex1 |>
+if(ersex$ERS == 100){
+  ex2 <- ex1 |>
+    # Outline of all ecoregions
+  addPolygons(
+    data = allEcos,
+    group = "All Ecoregions",
+    weight = 2,
+    stroke = TRUE,
+    fill = TRUE,
+    fillOpacity = 0.2,
+    popup = allEcos$ECO_NAME,
+    color = "#60616050"
+  ) 
+}else{
+  ex2 <- ex1 |>
   # Ecoregion Raster Layers
   addRasterImage(raster(ecoRast),
                group = "ERSex",
-               colors = ecoColor) |>
-  # addLegend(colors = ecoPal,
-  #           group = "ERSex",
-  #           labels = ecoReg$ECO_NAME)|>
+               colors = ecoColor)|>
+  addLegend(colors = ecoPal,
+            group = "ERSex",
+            labels = ecoReg$ECO_NAME)|>
   # Outline of all ecoregions
   addPolygons(
     data = allEcos,
@@ -440,6 +470,10 @@ ex2 <- ex1 |>
     popup = allEcos$ECO_NAME,
     color = "#60616050"
   ) 
+}
+}
+
+
 
 # add controls for the layout
 ex3 <- ex2 |>
@@ -462,7 +496,7 @@ ex3
 ```
 
 
-### Table of Unconserved Ecoregions 
+### Table of Unconserved Ecoregions Exsitu
 
 The table below shows all the ecoregions utilized within the study.
 
@@ -497,7 +531,7 @@ DT::datatable(eco2,
               class = "compact")
 
 ``` 
-## Insitu Gap Analysis 
+# Insitu Gap Analysis 
 
 The table below shows the in situ conservation gap analysis summary. The sampling representativeness score in situ (SRSin) calculates the proportion of all occurrences of a taxon within its predicted distribution that fall within a protected area. The geographical representativeness score in situ (GRSin) compares the area (in km2) of the distribution model located within protected areas versus the total area of the model. The ecological representativeness score in situ (ERSin) calculates the proportion of ecoregions encompassed within the range of the taxon located inside protected areas to the ecoregions encompassed within the total area of the distribution model. A final conservation score for in situ (FCSin) was derived by calculating the average of the three in situ conservation metrics. All of the conservation metrics are on a scale from 0-100, with 0 = poor conservation and 100 = comprehensive protection. The FCSin is used to categorize species, with urgent priority (UP) for further conservation action assigned when FCSin < 25, high priority (HP) where 25 ≤ FCSin < 50, medium priority (MP) where 50 ≤ FCSin < 75, and low priority (LP) for taxa whose FCSin ≥75. 
 
@@ -549,20 +583,17 @@ in1 <- leaflet(width = "100%")|>
   addRasterImage(
     x = raster(srs1),
     colors = srsPal,
-    group = "SRSin",
-    method = "ngb",
-    project = FALSE
-  )|>
-  addLegend(colors = distColor,
+    group = "SRSin")|>
+  addLegend(colors = srsPal1,
             group = "SRSin",
             title = "SRSin",
-            labels = c(min(uniqueSRSVals), "","","",max(uniqueSRSVals)))
+            labels = c(min(uniqueSRSVals),"", "","","",max(uniqueSRSVals)))
 
 in2 <- in1 |>
    addRasterImage(
     x = raster(pro1),
     colors = proColor,
-    group = "Protected Areas"
+    group = "Observation within Protected Areas"
   )
 ##GRSin map 
 in3 <- in2 |>
@@ -573,12 +604,12 @@ in3 <- in2 |>
   )|>
   addLegend(colors = exPal,
             group = "GRSin",
-            labels = c("Native Area", "Predicted Habit", "Protected Area"))
+            labels = c("Native Area", "Predicted Habit", "Observation within Protected Area"))
 ## ERS in map 
 if(class(ersinMap) != "character"){
   in3 <- in3 |>
   addRasterImage(
-    x = ersinMap,
+    x = raster(ersinMap),
     colors = ecoINColor,
     group = "ERSin"
   )|>
@@ -598,12 +629,12 @@ in3 <- in3|>
       "SRSin",
       "GRSin",
       "ERSin",
-      "Protected Areas"))|>
-  hideGroup(group = c("Protected Areas"))
+      "Observation within Protected Areas"))|>
+  hideGroup(group = c("Observation within Protected Areas"))
 
 in3
 ```
-
+### Table of Unconserved Ecoregions Insitu
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -635,102 +666,7 @@ DT::datatable(eco3,
 ``` 
 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-# #raster elements
-# m2 <-m1 %>%
-#   # threshold 
-#   addRasterImage(x = raster(threshold), colors = thresColor, group = "Expected Habitat", method = "ngb")%>%
-#     addLegend(position = "bottomright",
-#             color = c( "#FFFFFF","#45B320"),
-#             labels = c("Native Area", "Expected Habitat"),
-#             title = "Modeled Habitat",
-#             group = "Expected Habitat")%>%
-#   #protected area
-#   addRasterImage(x = raster(protectedArea), colors = protectColor, group = "Protected Area", method = "ngb")%>%
-#      addLegend(position = "bottomleft",
-#                color = "#B7B648",
-#             labels = "Protected Area",
-#             group = "Protected Area")%>%
-#   #mean 
-#   addRasterImage(x = meanDist, 
-#                  colors = meanPal,
-#                  group = "Mean Distribution Model",
-#                  method = "ngb")%>%
-#     addLegend(position = "bottomright",
-#             color = distColor,
-#             title = "Mean Distribution Model",
-#             labels = c("low","","","","high"),
-#             group = "Mean Distribution Model")%>%
-#   #median 
-#   addRasterImage(x = medianDist, 
-#                  colors = medianPal,
-#                  group = "Median Distribution Model",
-#                  method = "ngb") %>%
-#     addLegend(position = "bottomright",
-#             color = distColor,
-#             title = "Median Distribution Model",
-#             labels = c("low","","","","high"),
-#             group = "Median Distribution Model")%>%
-#     #stdev 
-#   addRasterImage(x = stdevDist, 
-#                  colors = stdevPal,
-#                  group = "SD of Distribution Model",
-#                  method = "ngb")%>%
-#     addLegend(position = "bottomright",
-#             color = distColor,
-#             title = "SD of Distribution Model",
-#             labels = c("low","","","","high"),
-#             group = "SD of Distribution Model")%>%
-#     # add polygons
-#       addPolygons(
-#         data = ecoReg,
-#         color = ~ecoColor(ECO_ID_U),
-#         popup = ~ECO_NAME ,
-#         group = "Ecoregions")
-# 
-
-```
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-# # buffer specific formating
-# if(class(gBuf) != "character"){
-#   m3 <- m2 %>%  #G buf
-#   addRasterImage(x = raster(gBuf), colors = bufColor, group = "Buffer Germplasm Collections", method = "ngb")%>%
-#     addLegend(position = "bottomright",
-#             color = "#6300F0",
-#             labels = "Buffer Germplasm Collections",
-#             group = "Buffer Germplasm Collections")%>%
-#   addLayersControl(position = "topleft", options = list(collapsed = FALSE,
-#                                                         autoZIndex = FALSE),
-#     overlayGroups = c("Expected Habitat","Observations","Protected Area",
-#                       "Buffer Germplasm Collections", "Ecoregions",
-#                       "Mean Distribution Model","Median Distribution Model",
-#                       "SD of Distribution Model")
-#   )%>%hideGroup( c("Protected Area","Buffer Germplasm Collections", "Ecoregions",
-#                    "Mean Distribution Model","Median Distribution Model",
-#                    "SD of Distribution Model"))
-# }else{
-#   m3 <- m2 %>%
-#       addLayersControl(position = "topleft", options = list(collapsed = FALSE,
-#                                                         autoZIndex = FALSE),
-#     overlayGroups = c("Expected Habitat","Observations","Protected Area",
-#                       "Ecoregions",
-#                       "Mean Distribution Model","Median Distribution Model",
-#                       "SD of Distribution Model")
-#   )  %>%hideGroup( c("Protected Area", "Ecoregions",
-#                    "Mean Distribution Model","Median Distribution Model",
-#                    "SD of Distribution Model"))
-# 
-# }
-# 
-# # add control groups
-# m3 
-# 
-
-
-```
-
-### Statistical Summary of the Models.
+# Statistical Summary of the Models.
 
 Median models across MaxEnt replicates were evaluated using the area under the receiver operating characteristic curve (AUC), the SD of the AUC across replicates, and the proportion of the potential distribution model with an SD of the replicates \>0.15
 
@@ -766,7 +702,7 @@ DT::datatable(eval1,
 
 ### Sampling Representativeness Score (SRS)
 
-**\*Insitu** : The sampling representativeness score in situ (SRSin) calculates the proportion of all occurrences of a taxon within its native range that fall within a protected area.
+**Insitu** : The sampling representativeness score in situ (SRSin) calculates the proportion of all occurrences of a taxon within its native range that fall within a protected area.
 
 **Exsitu** : The sampling representativeness score ex situ (SRSex) calculates the ratio of germplasm accessions (G) available in ex situ repositories to reference (H) records for each taxon, making use of all compiled records irrespective of whether they include coordinates.
 
@@ -801,13 +737,3 @@ DT::datatable(eval1,
 **Herbarium Records(H)** : Observations that have a supporting herbarium record.
 
 **Unique Data Sources**: The number of unique data base sources from which observations of the species were gathered.
-
-## Building Conservation Assessment Maps
-
-**Geographic representativeness score exsitu** :
-
-1.  Select `Expected Habitat`
-
-2.  Select `Buffer Germplasm Collections`
-
-    The green area outside of the purple is expected habitat that is more then 50km from a germplasm collection. These are potential gaps in the collection of this species.

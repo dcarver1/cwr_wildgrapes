@@ -11,7 +11,7 @@
 # Daucus ---------------------------------------------------
 ## specific reference to file paths 
 genus <- "daucus" 
-modelRun <- "test1"
+modelRun <- "run20231114"
 # folder to move too
 folder <- "~/Documents/GeospatialCentroid.github.io/Daucus"
 
@@ -24,7 +24,7 @@ splist <- read.csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.c
   dplyr::pull()%>%
   sort()
 # or selected species 
-splist <- c( "Daucus_carota_subsp._capillifolius","Daucus_carota_subsp._fontanesii",
+splist <- c( "Daucus_aureus", "Daucus_carota_subsp._capillifolius","Daucus_carota_subsp._fontanesii",
              "Daucus_carota_subsp._gummifer","Daucus_sahariensis","Daucus_syrticus")
 
 # Find the files 
@@ -32,12 +32,12 @@ for(i in splist){
   path <- paste0("data/",genus,"/",i,"/",modelRun,"/results")
   files <- list.files(path, pattern = ".html",full.names = TRUE)
   if(length(files)>0){
-    file.copy(files[1], folder)
+    file.copy(files[1], folder,overwrite = TRUE)
     print(paste0(i, " moved"))
   }
 }
 # run summary assessments 
-file.copy("data/daucus/test1_Summary.html", folder, overwrite = TRUE)
+file.copy(paste0("data/daucus/",modelRun,"_Summary.html"), folder, overwrite = TRUE)
 print("Summary doc copied")
 
 
