@@ -153,7 +153,7 @@ compileConservationData <- function(directory, runVersion, genus, figure = FALSE
                            y1=length(unique(tbl$ID)),
                            fillcolor='#a8d2a8', 
                            layer='below')))%>%
-    layout(title = paste0('Conservation Status of ',genus),
+    layout(title = paste0('Conservation Status of ',stringr::str_to_title(genus)),
            xaxis = list(title = ''), 
            yaxis = list(title = '',
                         autorange="reversed"),

@@ -36,7 +36,7 @@ overwrite <- FALSE
 ## species observations 
 ### Daucus 
 speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")
-# # rename the institute code column 
+# # rename the institute code column
 names(speciesData)[names(speciesData) == 'institute'] <- 'institutionCode'
 
 
@@ -46,10 +46,10 @@ names(speciesData)[names(speciesData) == 'institute'] <- 'institutionCode'
 
 ## bioclim layers 
 ## commiting out for summary runs 
-# bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames.csv")
-# bioVars <- readRDS("data/geospatial_datasets/bioclim_layers/bioclim_2.5arcsec_terra.RDS")
-# names(bioVars) <- bioNames$shortName
-# templateRast <- bioVars[[1]]
+bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames.csv")
+bioVars <- readRDS("data/geospatial_datasets/bioclim_layers/bioclim_2.5arcsec_terra.RDS")
+names(bioVars) <- bioNames$shortName
+templateRast <- bioVars[[1]]
 ## ecoregions
 ecoregions <- sf::st_read("data/geospatial_datasets/ecoregions/tnc_terr_ecoregions.gpkg")
 ## protect lands 
@@ -76,31 +76,14 @@ genera <- unique(speciesData$genus)[1]
 species <- sort(unique(speciesData$taxon))
 
 ## for Daucus -- issues species
-species <- species[!grepl(pattern = "Daucus_glochidiatus", x = species)]
-species <- species[!grepl(pattern = "Daucus_carota_subsp._azoricus", x = species)] # points in ocean
-species <- species[!grepl(pattern = "Daucus_carota_subsp._fontanesii", x = species)] # no model
-species <- species[!grepl(pattern = "Daucus_carota_subsp._rupestris", x = species)] # no model 
-species <- species[!grepl(pattern = "Daucus_insularis", x = species)] # no model 
-
-# ## subset species for testings 
-species <- species[30:length(species)]
-
-# species subset
-##! issues with Daucus_glochidiatus
-# species <- species[c(29:length(species))]
-# test species
-# D. syrticus,
-# D. sahariensis,
-# D. carota susbp. gummifer, 
-# D. carota subsp. capillifolius 
-# D. carota subsp. fontanesii
-
-
-
-
-#issues 
-## [1] "Daucus_carota_subsp._fontanesii" : `k` must be a single integer.Error in h(simpleError(msg, call)) : 
-## [1] "Daucus_carota_subsp._rupestris" :  `k` must be a single integer.Error in h(simpleError(msg, call)) : 
+# species <- species[!grepl(pattern = "Daucus_glochidiatus", x = species)]
+# species <- species[!grepl(pattern = "Daucus_carota_subsp._azoricus", x = species)] # points in ocean
+# species <- species[!grepl(pattern = "Daucus_carota_subsp._fontanesii", x = species)] # no model
+# species <- species[!grepl(pattern = "Daucus_carota_subsp._rupestris", x = species)] # no model 
+# species <- species[!grepl(pattern = "Daucus_insularis", x = species)] # no model 
+# 
+# # ## subset species for testings 
+# species <- species[30:length(species)]
 
 
 # #testing
@@ -113,6 +96,9 @@ erroredSpecies <- list(lessThenFive = c(),
 # 
 plan(strategy = "multisession", workers =8)
 
+
+# testing 
+species <- species[2:length(species)]
 
 # Daucus_aureus is species[1] is a reasonable one for troubleshooting
 for(i in genera){
@@ -363,8 +349,8 @@ for(i in genera){
     ## need some work on this 
     ### there is need for conditional statements to determine if specific values
     ### should be used or not. 
-    # if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
-      # try(
+    if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
+    try(
         rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
                           output_format = "html_document",
                           output_dir = file.path(allPaths$result),
@@ -375,13 +361,13 @@ for(i in genera){
                           # clean = F,
                           # encoding = "utf-8"
         )
-      # )
-    # }else{
-    #   if(!file.exists(allPaths$summaryHTMLPath)){
-    #     erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
-    # 
-    #   }
-    # }
+      )
+    }else{
+      if(!file.exists(allPaths$summaryHTMLPath)){
+        erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
+
+      }
+    }
     # block here for testing. I want variable in local environment and don't want them written out.
     # stop()
     
@@ -405,7 +391,7 @@ for(i in genera){
                        runVersion = runVersion,
                        genus = i,
                        protectedAreas = protectedAreas,
-                       overwrite = FALSE)
+                       overwrite = TRUE)
   
   
 }

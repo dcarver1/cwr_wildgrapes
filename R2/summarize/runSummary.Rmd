@@ -42,7 +42,7 @@ ga50 <- inputs$ga50Map
 protectCounts <- inputs$protectAreasRichness
 ```
 
-## Conserveration Assessment 
+## Conservation Assessment 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'right', fig.height = 8 } 
 #  fig.height= 8
@@ -110,6 +110,37 @@ richness1
 ```
 
 
+
+## Geographic Gap Richness
+This map show the expect species riches excluding the area that are within 50km of a germplasm collection. 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+g50 <- classify(ga50, cbind(NaN, 0)) |> raster()
+exGap <- r1 - g50
+
+#distribution palette
+valsexGap <- unique(values(exGap))
+# Mean distribution map
+exGapPal <- colorNumeric(palette = distColor,
+                        domain = values(exGap), 
+                        na.color = "transparent")
+
+
+
+g1 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))%>%
+  addTiles()%>%
+  addRasterImage(x = exGap,
+                 colors = exGapPal,
+                 method = "ngb",
+                 group = "Species Richness")%>%
+  addLegend(position = "bottomright",
+            color = distColor,
+            title = "Geographic Gap Richness",
+            labels = c("1","","","",max(valsexGap,na.rm = TRUE)),
+            group = "Mean Distribution Model")
+
+g1
+```
+
 ## Insitu Gap Richness 
 This map shows the expect species richness outside of protected areas 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -157,35 +188,4 @@ DT::datatable(pc1,
               class = "compact",
               filter = c("top"))
 ```
-
-## Geographic Gap Richness
-This map show the expect species riches excluding the area that are within 50km of a germplasm collection. 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-g50 <- classify(ga50, cbind(NaN, 0)) |> raster()
-exGap <- r1 - g50
-
-#distribution palette
-valsexGap <- unique(values(exGap))
-# Mean distribution map
-exGapPal <- colorNumeric(palette = distColor,
-                        domain = values(exGap), 
-                        na.color = "transparent")
-
-
-
-g1 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))%>%
-  addTiles()%>%
-  addRasterImage(x = exGap,
-                 colors = exGapPal,
-                 method = "ngb",
-                 group = "Species Richness")%>%
-  addLegend(position = "bottomright",
-            color = distColor,
-            title = "Geographic Gap Richness",
-            labels = c("1","","","",max(valsexGap,na.rm = TRUE)),
-            group = "Mean Distribution Model")
-
-g1
-```
-
 

@@ -35,37 +35,7 @@ printSpecies <- stringr::str_replace_all(string = species, pattern = "_", replac
 
 # Conservation Summary of `r printSpecies`
 
-Plot of the exsitu and insitu conservation scores. [Definitions of Conservation Scores]
-
-```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='right',out.width="100%"}
-d2 <- rbind(data$fcsex, data$fcsin) %>%
-  mutate(Category = c("Exsitu", "Insitu"))
-
-d3 <- d2 %>%
-  pivot_longer(cols = c("SRS","GRS","ERS","FCS"), names_to = "Metric")
-# define the combined score for the species 
-d3[9, ] <- list(d3$ID[1], d3$FCS_Score[1],"Combined","FCSc",as.numeric(mean(d3$value[4],d3$value[8])))
-#
-d3$Metric <- factor(d3$Metric, levels = c("SRS","ERS","GRS","FCS","FCSc"))
-
-
-plot_ly(d3,
-         x = ~Metric,
-         y = ~value,
-         color = ~Category)%>%
-  layout(xaxis = list(title = "", tickangle = 0),
-         yaxis = list(title = ""),
-         margin = list(b = 100),
-         barmode = 'group',
-         title = list(text = "<b>Conservation Score Summary</b>",
-                      pad = list(b = 20, t = 100 )),
-         hovermode = 'compare')
-
-```
-
-*Note: Score values of zero will not appear on the chart.*
-
-# Summary of observation records  
+## Summary of observation records  
 
 The table below shows a summary of the occurrence records for the taxon. A record “with coordinates” is one that has a complete set of latitude and longitude values associated with it, which could be used for distribution modeling and the conservation gap analysis. For this analysis, such records with coordinates were confined to those falling within the target native area, i.e. native states/administrative areas within the United States, Canada, and Mexico.  In preparation for the conservation gap analyses, we classified each record based on whether it was an existing ex situ sample from a genebank or botanic garden (labeled G, as most records were from genebanks), or a reference observation (labeled H, as most of these records were from herbaria).
 
@@ -75,7 +45,7 @@ c1 <- data$countsData %>%
   dplyr::select(Taxon = species,
                 'Observations' = totalRecords,
                 'Observations with Lat/Long' = totalUseful, 
-                'Germplasma Records(G)' = totalGRecords,
+                'Germplasm Records(G)' = totalGRecords,
                 'Herbarium Records(H)' = totalHRecords,
                 'Unique Data Sources' = numberOfUniqueSources
                 )%>%
@@ -107,7 +77,7 @@ thresColor <- colorNumeric(palette = c( "#FFFFFF80","#45B320"),
                            alpha = TRUE,
                            na.color = "transparent")
 # generate a threshold mask 
-mask1 <- ifel(test = thres == 1, yes = 1, no = NA)
+mask1 <- ifel(test = threshold == 1, yes = 1, no = NA)
 
 # protected area
 protectedArea <- data$protectedArea
@@ -153,7 +123,7 @@ n1 <-data$naturalArea %>%
     dplyr::select(ECO_ID_U)%>% 
     vect()
 ## zonal Stats to determine overlap between the ecoregions and the threshold model
-v1 <- terra::zonal(x = thres,z = n1,fun="sum",na.rm=TRUE)# , exact = TRUE) 
+v1 <- terra::zonal(x = threshold,z = n1,fun="sum",na.rm=TRUE)# , exact = TRUE) 
 
 ## reassign the eco id record
 v1$ECO_ID_U <- n1$ECO_ID_U
@@ -218,7 +188,7 @@ ecoReg <- data$naturalArea |>
 # then I can pass through a data frame of the ecoregion data, rather the spatial objects 
 
 # Rasterize the ecoregions 
-ecoRast <- terra::rasterize(x = ecoReg, y = thres, "ECO_ID_U")
+ecoRast <- terra::rasterize(x = ecoReg, y = threshold, "ECO_ID_U")
 
 # apply the mask 
 ecoRast <- mask(ecoRast, mask1)
@@ -267,8 +237,9 @@ Layers can be added to the map using the toggle buttons on the left side. The fi
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # modeled distribution Map
+occData <- st_transform(occData,4326 )
 ## Add occurrances 
-m1 <- leaflet(width = "100%") |>
+m1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3)) |>
   addTiles()|>
   addCircleMarkers(data = occData,
              color = ~color,
@@ -276,12 +247,7 @@ m1 <- leaflet(width = "100%") |>
              radius = 1,
              group = "Observations",
              stroke = 1,
-             popup = ~popup,
-             clusterOptions = markerClusterOptions(
-               zoomToBoundsOnClick = FALSE,
-               disableClusteringAtZoom = 6,
-                showCoverageOnHover = TRUE,
-                  spiderLegPolylineOptions = list(weight = 1.5, color = "#08FE62", opacity = 0.5)))%>%
+             popup = ~popup)%>%
   addLegend(position = "bottomleft",
             color = c("#1184D4","#6300F0"),
             labels = c("Herbarium", "Germplasm"),
@@ -293,7 +259,8 @@ m2 <- m1 |>
   # threshold 
   addRasterImage(x = raster(threshold),
                  colors = thresColor, 
-                 group = "Expected Habitat")|>
+                 group = "Expected Habitat",
+                 project = FALSE)|>
     addLegend(position = "bottomright",
             color = c( "#FFFFFF","#45B320"),
             labels = c("Native Area", "Expected Habitat"),
@@ -302,7 +269,8 @@ m2 <- m1 |>
   #mean 
   addRasterImage(x = meanDist, 
                  colors = meanPal,
-                 group = "Mean Distribution Model")|>
+                 group = "Mean Distribution Model",
+                 project = FALSE)|>
     addLegend(position = "bottomright",
             color = distColor,
             title = "Mean Distribution Model",
@@ -311,7 +279,8 @@ m2 <- m1 |>
   #median 
   addRasterImage(x = medianDist, 
                  colors = medianPal,
-                 group = "Median Distribution Model") |>
+                 group = "Median Distribution Model",
+                 project = FALSE) |>
     addLegend(position = "bottomright",
             color = distColor,
             title = "Median Distribution Model",
@@ -320,7 +289,8 @@ m2 <- m1 |>
     #stdev 
   addRasterImage(x = stdevDist, 
                  colors = stdevPal,
-                 group = "SD of Distribution Model")|>
+                 group = "SD of Distribution Model",
+                 project = FALSE)|>
     addLegend(position = "bottomright",
             color = distColor,
             title = "SD of Distribution Model",
@@ -416,7 +386,8 @@ ex1 <- leaflet(width = "100%")|>
   addRasterImage(
     x = raster(grsexMap),
     colors = grsexColor,
-    group = "GRSex" ) |>
+    group = "GRSex",
+    project = FALSE) |>
   #G points
   addCircleMarkers(
     data = occData[occData$type == "G",],
@@ -455,7 +426,8 @@ if(ersex$ERS == 100){
   # Ecoregion Raster Layers
   addRasterImage(raster(ecoRast),
                group = "ERSex",
-               colors = ecoColor)|>
+               colors = ecoColor,
+    project = FALSE)|>
   addLegend(colors = ecoPal,
             group = "ERSex",
             labels = ecoReg$ECO_NAME)|>
@@ -583,7 +555,8 @@ in1 <- leaflet(width = "100%")|>
   addRasterImage(
     x = raster(srs1),
     colors = srsPal,
-    group = "SRSin")|>
+    group = "SRSin",
+    project = FALSE)|>
   addLegend(colors = srsPal1,
             group = "SRSin",
             title = "SRSin",
@@ -593,14 +566,16 @@ in2 <- in1 |>
    addRasterImage(
     x = raster(pro1),
     colors = proColor,
-    group = "Observation within Protected Areas"
+    group = "Observation within Protected Areas",
+    project = FALSE
   )
 ##GRSin map 
 in3 <- in2 |>
   addRasterImage(
     x = raster(grs1),
     colors = grsinColor,
-    group = "GRSin"
+    group = "GRSin",
+    project = FALSE
   )|>
   addLegend(colors = exPal,
             group = "GRSin",
@@ -611,7 +586,8 @@ if(class(ersinMap) != "character"){
   addRasterImage(
     x = raster(ersinMap),
     colors = ecoINColor,
-    group = "ERSin"
+    group = "ERSin",
+    project = FALSE
   )|>
     addLegend(colors = ecoINPal,
               group = "ERSin",
@@ -666,7 +642,7 @@ DT::datatable(eco3,
 ``` 
 
 
-# Statistical Summary of the Models.
+# Statistical Summary of the Models
 
 Median models across MaxEnt replicates were evaluated using the area under the receiver operating characteristic curve (AUC), the SD of the AUC across replicates, and the proportion of the potential distribution model with an SD of the replicates \>0.15
 
@@ -697,6 +673,38 @@ DT::datatable(eval1,
 <br>
 
 <br>
+
+## Conservation Score Figure 
+
+Plot of the exsitu and insitu conservation scores. [Definitions of Conservation Scores]
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='right',out.width="100%"}
+d2 <- rbind(data$fcsex, data$fcsin) %>%
+  mutate(Category = c("Exsitu", "Insitu"))
+
+d3 <- d2 %>%
+  pivot_longer(cols = c("SRS","GRS","ERS","FCS"), names_to = "Metric")
+# define the combined score for the species 
+d3[9, ] <- list(d3$ID[1], d3$FCS_Score[1],"Combined","FCSc",as.numeric(mean(d3$value[4],d3$value[8])))
+#
+d3$Metric <- factor(d3$Metric, levels = c("SRS","ERS","GRS","FCS","FCSc"))
+
+
+plot_ly(d3,
+         x = ~Metric,
+         y = ~value,
+         color = ~Category)%>%
+  layout(xaxis = list(title = "", tickangle = 0),
+         yaxis = list(title = ""),
+         margin = list(b = 100),
+         barmode = 'group',
+         title = list(text = "<b>Conservation Score Summary</b>",
+                      pad = list(b = 20, t = 100 )),
+         hovermode = 'compare')
+
+```
+
+*Note: Score values of zero will not appear on the chart.*
 
 ## Definitions of Conservation Scores
 
@@ -732,7 +740,7 @@ DT::datatable(eval1,
 
 **Observations with lat/long**: The total number of records that had a valid latitude and longitude pair and were used for spatial analysis. Non valid latitude longitude pairs included but is not limited to; points not over land masses and records with only one of the two values present.
 
-**Germplasma Records(G)** : Observations in which a living sample (via plant or seed) is present in a preservation focused environment (botanical garden, seed bank). These are observations which could protentially produce viable genetic resource information and are therefore evaluated with the suite of exsit focused conservation metrics.
+**Germplasm Records(G)** : Observations in which a living sample (via plant or seed) is present in a preservation focused environment (botanical garden, seed bank). These are observations which could protentially produce viable genetic resource information and are therefore evaluated with the suite of exsit focused conservation metrics.
 
 **Herbarium Records(H)** : Observations that have a supporting herbarium record.
 
