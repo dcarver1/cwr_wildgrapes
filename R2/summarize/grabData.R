@@ -17,9 +17,11 @@ grabData <- function(ersex, fscCombined, fcsex, fcsin,evalTable,g_bufferCrop,thr
   # some reprjecting issues are causing some visualization problems in the htmls
   # project all the raster objects to EPSG:3857
   # do not project the vector objects. 
-  p1 <- terra::project(x = p1, y = "epsg:3857", method = "near")
-  g_buffer <- terra::project(x = g_buffer, y = "epsg:3857", method = "near")
-  g_bufferCrop <- terra::project(x = g_bufferCrop, y = "epsg:3857", method = "near")
+  p1 <- terra::project(x = p1, y = "epsg:3857", method = "max")
+  if(class(g_buffer)!= "character"){
+    g_buffer <- terra::project(x = g_buffer, y = "epsg:3857", method = "near")
+    g_bufferCrop <- terra::project(x = g_bufferCrop, y = "epsg:3857", method = "near")
+  }
   projectsResults <- projectsResults |> map(raster::projectRaster, crs = "epsg:3857", method = "ngb" )
   thres <- terra::project(x = thres, y = "epsg:3857", method = "near")
   

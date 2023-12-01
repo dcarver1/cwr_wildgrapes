@@ -98,7 +98,7 @@ plan(strategy = "multisession", workers =8)
 
 
 # testing 
-species <- species[2:length(species)]
+species <- species[27:length(species)]
 
 # Daucus_aureus is species[1] is a reasonable one for troubleshooting
 for(i in genera){
@@ -154,11 +154,7 @@ for(i in genera){
                        overwrite = overwrite,
                        function1 = nat_area_shp(speciesPoints = sp1,
                                                 ecoregions = ecoregions))
-  
-  
-  ## at some point we're going to need to filter this out. I don't know if this
-  ## is the right time or not. 
-  
+  # condition for at least 5 observations 
   if(nrow(sp1) >=5 ){
     ## define number of background points 
     b_Number <- numberBackground(natArea = natArea)
@@ -342,14 +338,8 @@ for(i in genera){
       }
     }
    
-    
-    ## basic summary maps --- this is being phased out
-    # basicMap(thres = thres, occurances = sp1)
-    
-    ## need some work on this 
-    ### there is need for conditional statements to determine if specific values
-    ### should be used or not. 
-    if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
+    # generate summary html  
+    # if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
     try(
         rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
                           output_format = "html_document",
@@ -362,12 +352,12 @@ for(i in genera){
                           # encoding = "utf-8"
         )
       )
-    }else{
+    # }else{
       if(!file.exists(allPaths$summaryHTMLPath)){
         erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
 
       }
-    }
+    # }
     # block here for testing. I want variable in local environment and don't want them written out.
     # stop()
     
@@ -387,12 +377,12 @@ for(i in genera){
   
   # produce Run level Summaries ---------------------------------------------
   ### big processing step... 
-  generateRunSummaries(dir1 = dir1,
-                       runVersion = runVersion,
-                       genus = i,
-                       protectedAreas = protectedAreas,
-                       overwrite = TRUE)
-  
+  # generateRunSummaries(dir1 = dir1,
+  #                      runVersion = runVersion,
+  #                      genus = i,
+  #                      protectedAreas = protectedAreas,
+  #                      overwrite = TRUE)
+  # 
   
 }
 
