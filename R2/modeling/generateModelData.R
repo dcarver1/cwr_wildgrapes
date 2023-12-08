@@ -14,7 +14,8 @@ generateModelData <- function(speciesPoints,natArea,bioVars,b_Number){
   ## format species data
   sp1 <- speciesPoints %>%
     mutate("presence" = 1)%>%
-    dplyr::select(presence,geometry)
+    dplyr::select(presence)
+    # dplyr::select(presence,geometry)
   
   
   ## this will need to be adjust if species if only present in a small area 

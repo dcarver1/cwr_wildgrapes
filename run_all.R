@@ -17,20 +17,6 @@ source("R2/helperFunctions.R")
 ## using the helper function to help with edits. Save changes then run sourceFiles to console
 sourceFiles(furrr = FALSE)
 
-# source global objects 
-## maximun number of points used in model (use in subSampleCountry.R)
-numPoint <- 2000
-## used to define buffer distance in g buffer process in degrees 
-# 50k(1 degree/111km) = 0.45
-bufferDist <- 0.45
-# set random seed. Important for reproducability 
-set.seed(1234)
-# set run version 
-runVersion <- "run20231114"
-
-## overwrite Parameter 
-### used to determine if you want to write over existing content. 
-overwrite <- FALSE
 
 # input datasets ----------------------------------------------------------
 ## species observations 
@@ -56,20 +42,8 @@ ecoregions <- sf::st_read("data/geospatial_datasets/ecoregions/tnc_terr_ecoregio
 protectedAreas <- terra::rast("data/geospatial_datasets/protectedLands/wdpa_rasterized_all.tif")
 
 
-# these are used by the summary documents ---------------------------------
-## countries
-# country <- sf::st_read("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
-## counties
-# counties <- sf::st_read("data/geospatial_datasets/countries/ne_10m_admin_0_countries.gpkg")
-## north America
-# northAmerica <- sf::st_read("data/geospatial_datasets/northAmerica/northAmericaArea.gpkg")
-## states 
-# states <- sf::st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")
-
 
 # set up environment  -----------------------------------------------------
-
-
 
 # primary loop ------------------------------------------------------------
 genera <- unique(speciesData$genus)[1]

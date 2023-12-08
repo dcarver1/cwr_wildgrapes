@@ -18,18 +18,18 @@ subsetSpecies <- function(occuranceData, species){
 #'
 generateCounts <- function(speciesData){
   # define presence of usable lat long values
-  dataThin <- speciesData %>%
-    dplyr::select(c("taxon", "latitude", "longitude", "type","databaseSource")) %>%
-    mutate(hasLat = !is.na(latitude) & latitude != "\\N" & latitude != "" & !is.null(latitude) & latitude != "NULL") %>%
-    mutate(hasLong = !is.na(longitude) & longitude != "\\N"& longitude != "" & !is.null(longitude)& longitude != "NULL") %>%
+  dataThin <- speciesData |>
+    dplyr::select(c("taxon", "latitude", "longitude", "type","databaseSource")) |>
+    mutate(hasLat = !is.na(latitude) & latitude != "\\N" & latitude != "" & !is.null(latitude) & latitude != "NULL") |>
+    mutate(hasLong = !is.na(longitude) & longitude != "\\N"& longitude != "" & !is.null(longitude)& longitude != "NULL") |>
     mutate(hasLatLong = hasLat & hasLong)
   
   # set column names for counts df
   colNames <- c("species","totalRecords",	"hasLat", "hasLong","totalUseful", 	"totalGRecords",
                 "totalGUseful","totalHRecords",	"totalHUseful","numberOfUniqueSources")
   # summarize data
-  tbl <- dataThin %>%
-    dplyr::group_by(type, hasLatLong )%>%
+  tbl <- dataThin |>
+    dplyr::group_by(type, hasLatLong )|>
     dplyr::summarize(total = n())
   
   # generate counts df
@@ -58,14 +58,15 @@ generateCounts <- function(speciesData){
 #' @return : dataframe of species data with valid lat long values  
 createSF_Objects <- function(speciesData){
 
-  latLong <- speciesData %>%
+  latLong <- speciesData |>
     mutate(latitude = as.numeric(as.character(latitude)),
-           longitude = as.numeric(as.character(longitude)))%>%
+           longitude = as.numeric(as.character(longitude)))|>
     dplyr::filter(!is.na(latitude) | !is.na(longitude))
   
   if(nrow(latLong)>0){
-    coord <- latLong %>% 
-      sf::st_as_sf(coords = c("longitude","latitude"), crs = 4326)
+    coord <- latLong |> 
+      sf::st_as_sf(coords = c("longitude","latitude"), crs = 4326)|>
+      removeDuplicates()
     
   }else{
     print("there are no coodinate pairs for this species")
@@ -90,11 +91,11 @@ countryCheck <- function(sf_points, speciesList, countryLists){
 #' type == h and the same coordinates as another obervation has been removed. 
 removeDuplicates <- function(sf_points){
   #subset out all g points 
-  g_p <- sf_points %>% 
-    filter(type=="G")%>%
+  g_p <- sf_points |> 
+    filter(type=="G")|>
     filter(!duplicated(geometry))
-  h_p <- sf_points %>% 
-    filter(type=="H")%>%
+  h_p <- sf_points |> 
+    filter(type=="H")|>
     filter(!duplicated(geometry))
   sf_p <- bind_rows(g_p, h_p)
   
@@ -119,13 +120,13 @@ nat_area_shp <- function(speciesPoints, ecoregions) {
   }
   
   
-  ids <- speciesPoints %>%
-    sf::st_intersection(ecoregions)%>%
-    sf::st_drop_geometry()%>%
-    dplyr::select("ECO_ID_U")%>%
-    dplyr::distinct()%>%
+  ids <- speciesPoints |>
+    sf::st_intersection(ecoregions)|>
+    sf::st_drop_geometry()|>
+    dplyr::select("ECO_ID_U")|>
+    dplyr::distinct()|>
     pull()
-  natArea <- ecoregions[ecoregions$ECO_ID_U %in% ids, ]%>%
+  natArea <- ecoregions[ecoregions$ECO_ID_U %in% ids, ]|>
     sf::st_make_valid()
   
   return(natArea)

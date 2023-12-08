@@ -28,7 +28,9 @@ write_CSV <-function(path, overwrite, function1){
 write_GPKG <- function(path, overwrite, function1){
   if(!file.exists(path) | isTRUE(overwrite)){
     result <- function1
+    if(class(result)[1]=="sf"){
     sf::write_sf(obj = result, dsn = path)
+    }
     return(result)
   }else{
     return(sf::read_sf(path))
