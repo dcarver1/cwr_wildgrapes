@@ -1,41 +1,50 @@
 
 
+#' speciesCheck
+#'
+#' @param data : dataframe of unfilter occurance data
+#' @param synonymList : reference data from for define what synonyms are expected 
+#'
+#' @return data for reassigned species names based on accepted synonyms 
+#' 
 speciesCheck <- function(data, synonymList){
-  # create empty df to hold matched datasets 
-  data$index <- 1:nrow(data)
-  df1 <- data[0,]
   # check for each species on Taxon  
-  ## pull exact matched names 
-  ## pull synonyms and rename 
-  for(i in seq_along(synonymList$`Taxon Name`)){
-    species <- synonymList$`Taxon Name`[i]
-    # taxon match 
-    df2 <- data[data$taxon == species, ]
-    # redefine data to remove any element that was added to new df 
-    data <- data[!data$index %in% df2$index, ]
-    # synonym match 
-    if(!is.na(synonymList$Synonyms[i])){
-      synonyms <- synonymList$Synonyms[i] %>%
-        stringr::str_split(pattern = ";")%>%
+  nSpecies <- 1:length(synonymList$taxon)
+  # map over nSpecies... 
+  mapSynonyms <- function(nSpecies, synonymList, data){
+    i <- nSpecies
+    taxon <- synonymList$taxon[i]
+    synonyms <- synonymList$acceptedSynonym[i]
+    # grab all original taxon name 
+    df2 <- data[data$taxon == taxon, ]
+    
+    # grab all species with species name 
+    if(!is.na(synonyms)){
+      syn1 <- synonyms |>
+        stringr::str_split(pattern = ", ")|>
         unlist()
-      df3 <- data[data$taxon %in% synonyms, ] %>%
-        dplyr::mutate(taxon = synonymList$`Taxon Name`[i])
-      
-      # redefine data to remove any element that was added to new df 
-      data <- data[!data$index %in% df3$index, ]
-      
-      df1 <- df1 %>%
-        bind_rows(df2)%>%
-        bind_rows(df3)
-    }else{
-      df1 <- df1 %>%
-        bind_rows(df2)
+      for(j in syn1){
+        print(j)
+        df3 <- data[data$taxon == j, ]
+        df3$taxon <- taxon
+        df2 <- bind_rows(df2, df3)
+      }
     }
-  rm(df2, df3)
-
+    return(df2)
   }
+  
+  # gather data included
+  ## there can be repeated records for taxon that are being modeled directly and also included as a synonym "Vitis aestivalis var. aestivalis"
+  includedData <- nSpecies |>
+    purrr::map(mapSynonyms, synonymList =synonymList, data = data)|>
+    bind_rows()
+  
+  
+  # define excluded data 
+  excludedData <- data[!data$index %in% includedData$index, ]
+  
   return(list(
-    excludedData = data,
-    includedData = df1
+    excludedData = excludedData,
+    includedData = includedData
   ))
 }

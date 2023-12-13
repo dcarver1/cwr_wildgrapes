@@ -12,8 +12,15 @@ orderNames <- function(data, names){
 }
 
 removeDuplicatesID <- function(data){
-  d1 <- data[!duplicated(data$sourceUniqueID), ]
-  return(d1)
+  # split out NA values in sourceUniqueID column 
+  d1 <- data[is.na(data$sourceUniqueID), ]
+  # grap all described values
+  d2 <- data[!is.na(data$sourceUniqueID), ]
+  # remove duplicates 
+  d2 <- d2[!duplicated(d2$sourceUniqueID), ]
+  # combine back with original.
+  d3 <- bind_rows(d2,d1)
+  return(d3)
 }
 
 summarizeBySource <- function(data){

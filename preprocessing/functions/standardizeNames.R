@@ -3,7 +3,7 @@
 # 
 #
 ### 
-
+# data <- d2
 
 standardizeNames <- function(data){
   

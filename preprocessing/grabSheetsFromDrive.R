@@ -12,10 +12,15 @@ d1
 write.csv(d1, file = "data/source_data/usda_plants/completeVitis.csv")
 
 #synonym list 
-d2 <- googlesheets4::read_sheet(as_id("https://docs.google.com/spreadsheets/d/19e6wNr4Luc53NfBQJgl4AWGovZMp24P9yyDqmW9-h3Y/edit#gid=137674278"))
+d2 <- googlesheets4::read_sheet(as_id("https://docs.google.com/spreadsheets/d/1ZzKUr2GI8wZe42G-nnMZ3iyhUnnqn3OUCMK_0sFKniQ/edit?usp=sharing"))
 
-d3 <- as.data.frame(d2)
-write_csv(d3,file = "data/source_data/taxonomy20230628.csv")
+d3 <- as.data.frame(d2) |>
+  dplyr::select("taxon" = "Taxon Name",
+                acceptedSynonym = "Names to include in this concept (Homotypic synonyms)",  
+                countySpecies = "Include in county map analysis?",
+                modelSpecies = "Include in gap analsyis? (Colin)")                     
+
+write_csv(d3,file = "data/source_data/taxonomy20231212.csv")
 
 
 
@@ -30,6 +35,14 @@ write_csv(x = d4, file = "data/source_data/nameList.csv")
 d5 <- googlesheets4::read_sheet(as_id("https://docs.google.com/spreadsheets/d/1QGY8witd4t8r6-ayNpLcx65z5UOTB8y4IBoevkuXrvs/edit?usp=sharing"))
                                 #,sheet = "Wiews_Exsitu_1684365085723")
 write_csv(x = d5, file = "data/source_data/wiews.csv")
+
+
+
+# SEINET 
+d5a <- googlesheets4::read_sheet(as_id("https://docs.google.com/spreadsheets/d/1KSYUgtVBuQv0YTEtwm6_ZfElvFdV0m-aoxV_bdVnkZs/edit?usp=sharing"))
+
+write_csv(d5a, file = "data/source_data/seinet.csv")
+
 
 # flora of north america data 
 d6 <- googlesheets4::read_sheet(as_id("https://docs.google.com/spreadsheets/d/19e6wNr4Luc53NfBQJgl4AWGovZMp24P9yyDqmW9-h3Y/edit?usp=sharing"),

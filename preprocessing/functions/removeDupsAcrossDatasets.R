@@ -8,15 +8,13 @@ removeDups <- function(taxon1,data){
   # for each species 
   d2 <- d1 |> dplyr::filter(taxon == taxon1)
   
-  # pull data from 2019 wiews as that is a unique source 
-  d2_wiews <- d2 |> dplyr::filter(databaseSource == "FAO 2019 (WIEWS)")
-  
   # compare datasets where there is expect overlap 
   grin <- c("USDA_NPGS_GRINGlobal","USDA ARS NPGS 2019a") 
   grinDavis <-  c("USDA_NPGS_GRINGlobal","UC Davis Grape Breeding Collection")
   genesys <- c( "genesys",  "Global Crop Diversity Trust 2019a (Genesys)")
   gbif <- c("GBIF","GBIF 2019") 
-  mwh <- c( "midwestHerbarium","Midwest Herbaria 2019")
+  mwh <- c( "seinet","Midwest Herbaria 2019")
+  wiews <- c("wiews","FAO 2019 (WIEWS)")
   gbif_mdh <-c("GBIF","GBIF 2019", "midwestHerbarium","Midwest Herbaria 2019") 
   
   
@@ -39,9 +37,11 @@ removeDups <- function(taxon1,data){
   d2d <- sourceID_Check(gbif, d2)
   # midwest herberium 
   d2e <- sourceID_Check(mwh, d2)
+  # wiews
+  d2f <- sourceID_Check(wiews, d2)
   
   # combined back to single df 
-  df <-bind_rows(list(d2_wiews, d2a,d2b,d2c,d2d,d2e))
+  df <-bind_rows(list(d2a,d2b,d2c,d2d,d2e,d2f))
   
   # gbif_mdh 
   ## exclude NA from any of the filtering columns 

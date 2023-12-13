@@ -19,15 +19,16 @@ speciesList <-c("Vitis aestivalis",
                    "Vitis shuttleworthii",
                    "Vitis vinifera",
                    "Vitis vulpina")
-
-fullSpecies <- read_csv("data/Vitis/synonymList.csv")%>%
-  select(`Taxon Name`)%>%
+# or full species
+fullSpecies <- read_csv("data/source_data/taxonomy20231212.csv")|>
+  dplyr::filter(countySpecies  == "Y")|>
+  select(taxon)|>
   pull()
 
 
 # input parameters --------------------------------------------------------
 ## taxonomic reference 
-speciesNames <- read_csv(file = "data/source_data/taxonomy20230628.csv")
+speciesNames <- read_csv(file = "data/source_data/taxonomy20231212.csv")
 namedFeatures <- read_csv(file = "data/source_data/nameList.csv")
 ## county level reference data
 plantsData1 <- read_csv(file ="data/source_data/usda_plants/completeVitis.csv")
@@ -48,14 +49,14 @@ stateSHP <- read_sf("data/geospatial_datasets/states/ne_10m_admin_1_states_provi
 
 
 ## map implementation 
-generateOccurnaceRMD <- function(species){
-  print(species)
-    rmarkdown::render(input = "R2/summarize/occuranceDataEvaluation.Rmd",
+generateOccurnaceRMD <- function(species1){
+  print(species1)
+    rmarkdown::render(input = "R2/summarize/countyEvaluation.Rmd",
                       output_format = "html_document",
                       output_dir = file.path("data/countyMaps"),
-                      output_file = paste0(species,"_Evaluation2.html"),
+                      output_file = paste0(species1,"_Evaluation2.html"),
                       params = list(
-                        speciesName = as.character(species),
+                        speciesName = as.character(species1),
                         speciesNames = speciesNames,
                         namedFeatures = namedFeatures,
                         plantsData1 = plantsData1,
@@ -71,9 +72,11 @@ generateOccurnaceRMD <- function(species){
 }
 # ## needs to be commented out unless running 
 # fullSpecies |> purrr::map(generateOccurnaceRMD)
+
+
 # speciesList |> purrr::map(generateOccurnaceRMD)
 # ### troubleshooting
-# generateOccurnaceRMD(species ="Vitis baileyana" )
+# generateOccurnaceRMD(species ="Vitis x champinii" )
 
 
 ## erroring out at specific species need to troubleshoot that directly 
@@ -88,7 +91,7 @@ generateOccurnaceRMD <- function(speciesList){
   for(i in speciesList){
     print(i)
     try(
-    rmarkdown::render(input = "R2/summarize/occuranceDataEvaluation.Rmd",
+    rmarkdown::render(input = "R2/summarize/countyEvaluation.Rmd",
                       output_format = "html_document",
                       output_dir = file.path("data/countyMaps"),
                       output_file = paste0(i,"_Evaluation.html"),
@@ -102,6 +105,7 @@ generateOccurnaceRMD <- function(speciesList){
 
 
 ## needs to be commented out unless running 
-# generateOccurnaceRMD(speciesList = fullSpecies)
+#generateOccurnaceRMD(speciesList = fullSpecies)
 # ### troubleshooting
-# generateOccurnaceRMD(speciesList ="Vitis palmata" )
+### ISSUE with vitis x champinii
+#generateOccurnaceRMD(speciesList ="Vitis palmata" )
