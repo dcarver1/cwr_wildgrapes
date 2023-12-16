@@ -42,8 +42,6 @@ compileConservationData <- function(directory, runVersion, genus, figure = FALSE
            "ERSex" = ERS)
   
 
-  
-  
   # read and bind data to a single object 
   df <- runExsitu |> 
     left_join(y = runInsitu, by = "ID")%>%
@@ -69,56 +67,56 @@ compileConservationData <- function(directory, runVersion, genus, figure = FALSE
             )
           ) |>
     add_trace(x = ~FCSex,
-              name = "FCSex",
+              name = "FCS ex situ",
               marker = list(
                 size = 12,
                 color = "black",
                 symbol = "circle"
               )) |>
     add_trace(x = ~SRSex,
-              name = "SRSex",
+              name = "SRS ex situ",
               marker = list(
                 size = 8,
                 color = "blue",
                 symbol = "circle"
               )) |>
     add_trace(x = ~GRSex,
-              name = "GRSex",
+              name = "GRS ex situ",
               marker = list(
                 size = 8,
                 color = "purple",
                 symbol = "circle"
               )) |>
     add_trace(x = ~ERSex,
-              name = "ERSex",
+              name = "ERS ex situ",
               marker = list(
                 size = 8,
                 color = "green",
                 symbol = "circle"
               )) |>
     add_trace(x = ~FCSin,
-              name = "FCSin",
+              name = "FCS in situ",
               marker = list(
                 size = 12,
                 color ="black",
                 symbol = "triangle-up"
               )) |>
     add_trace(x = ~SRSin,
-              name = "SRSin",
+              name = "SRS in situ",
               marker = list(
                 size = 10,
                 color = "blue",
                 symbol = "triangle-up"
               )) |>
     add_trace(x = ~GRSin,
-              name = "GRSin",
+              name = "GRS in situ",
               marker = list(
                 size = 10,
                 color = "purple",
                 symbol = "triangle-up"
               )) |>
     add_trace(x = ~ERSin,
-              name = "ERSin",
+              name = "ERS in situ",
               marker = list(
                 size = 10,
                 color = "green",
@@ -153,7 +151,7 @@ compileConservationData <- function(directory, runVersion, genus, figure = FALSE
                            y1=length(unique(tbl$ID)),
                            fillcolor='#a8d2a8', 
                            layer='below')))%>%
-    layout(title = paste0('Conservation Status of ',stringr::str_to_title(genus)),
+    layout(title = " ",
            xaxis = list(title = ''), 
            yaxis = list(title = '',
                         autorange="reversed"),

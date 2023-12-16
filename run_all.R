@@ -21,27 +21,28 @@ sourceFiles(furrr = FALSE)
 # input datasets ----------------------------------------------------------
 ## species observations 
 ### Daucus 
-speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")
+# speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")
 # # rename the institute code column
-names(speciesData)[names(speciesData) == 'institute'] <- 'institutionCode'
+# names(speciesData)[names(speciesData) == 'institute'] <- 'institutionCode'
 
 
 ### Vitis
-# speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv")
+speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv")
 
 
 ## bioclim layers 
 ## commiting out for summary runs 
-bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames.csv")
-bioVars <- readRDS("data/geospatial_datasets/bioclim_layers/bioclim_2.5arcsec_terra.RDS")
-names(bioVars) <- bioNames$shortName
-templateRast <- bioVars[[1]]
+# bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames.csv")
+# bioVars <- readRDS("data/geospatial_datasets/bioclim_layers/bioclim_2.5arcsec_terra.RDS")
+# names(bioVars) <- bioNames$shortName
+# templateRast <- bioVars[[1]]
 ## ecoregions
 ecoregions <- sf::st_read("data/geospatial_datasets/ecoregions/tnc_terr_ecoregions.gpkg")
 ## protect lands 
 protectedAreas <- terra::rast("data/geospatial_datasets/protectedLands/wdpa_rasterized_all.tif")
 
-
+# run version 
+runVersion <- "run20231207"
 
 # set up environment  -----------------------------------------------------
 

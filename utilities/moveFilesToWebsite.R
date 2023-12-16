@@ -66,7 +66,7 @@ for(i in splist){
 
 # move the run summary 
 runsummary <- paste0("data/Vitis/",modelRun,"_Summary.html")
-file.copy(runsummary, folder)
+file.copy(runsummary, folder, overwrite = TRUE)
 
 # vits county maps --------------------------------------------------------
 files <- list.files("data/countyMaps",pattern = "Evaluation2.html",full.names = TRUE)
