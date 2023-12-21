@@ -21,9 +21,9 @@ sourceFiles(furrr = FALSE)
 # input datasets ----------------------------------------------------------
 ## species observations 
 ### Daucus 
-# speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")
-# # rename the institute code column
-# names(speciesData)[names(speciesData) == 'institute'] <- 'institutionCode'
+speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")
+# rename the institute code column
+names(speciesData)[names(speciesData) == 'institute'] <- 'institutionCode'
 
 
 ### Vitis
@@ -63,7 +63,7 @@ species <- sort(unique(speciesData$taxon))
 
 # #testing
 i <- genera[1]
-j <- species[9]
+j <- species[5]
 
 erroredSpecies <- list(lessThenFive = c(),
                        noSDM = c(),

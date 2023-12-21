@@ -27,25 +27,25 @@ fullSpecies <- read_csv("data/source_data/taxonomy20231212.csv")|>
 
 
 # input parameters --------------------------------------------------------
-## taxonomic reference 
-speciesNames <- read_csv(file = "data/source_data/taxonomy20231212.csv")
-namedFeatures <- read_csv(file = "data/source_data/nameList.csv")
-## county level reference data
-plantsData1 <- read_csv(file ="data/source_data/usda_plants/completeVitis.csv")
-bonapData <- read_csv("data/source_data/bonap.csv")
-natureSeverData <- read_csv("data/processed_occurrence/natureServe.csv")
-# valid lat long datasets 
-observationData <- read_csv("data/processed_occurrence/tempDataForCountyMaps_20231025.csv") |> 
-  filter(!is.na(taxon))
-# fnaData 
-fnaData <- read_csv("data/source_data/FNA_stateClassification.csv")
-
-#spatial data 
-countySHP <- read_sf("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
-stateSHP <- read_sf("data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")|>
-  dplyr::filter(adm0_a3 == "USA")
-
-
+# ## taxonomic reference 
+# speciesNames <- read_csv(file = "data/source_data/taxonomy20231212.csv")
+# namedFeatures <- read_csv(file = "data/source_data/nameList.csv")
+# ## county level reference data
+# plantsData1 <- read_csv(file ="data/source_data/usda_plants/completeVitis.csv")
+# bonapData <- read_csv("data/source_data/bonap.csv")
+# natureSeverData <- read_csv("data/processed_occurrence/natureServe.csv")
+# # valid lat long datasets 
+# observationData <- read_csv("data/processed_occurrence/tempDataForCountyMaps_20231025.csv") |> 
+#   filter(!is.na(taxon))
+# # fnaData 
+# fnaData <- read_csv("data/source_data/FNA_stateClassification.csv")
+# 
+# #spatial data 
+# countySHP <- read_sf("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
+# stateSHP <- read_sf("data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")|>
+#   dplyr::filter(adm0_a3 == "USA")
+# 
+# 
 
 
 ## map implementation 
