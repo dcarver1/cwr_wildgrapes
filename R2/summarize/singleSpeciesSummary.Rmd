@@ -1,5 +1,5 @@
 ---
-title: Taxon level modeling, preliminary threat assessment, and conservation gap analysis summary
+title: Taxon level predicted distribution modeling and conservation gap analysis summary
 author: Daniel P. Carver and Colin K. Khoury 
 output:
   html_document:
@@ -33,19 +33,19 @@ species <- data$occuranceData$taxon[1]
 printSpecies <- stringr::str_replace_all(string = species, pattern = "_", replacement = " ")
 ```
 
-# Conservation Summary of `r printSpecies`
+# `r printSpecies`
 
-## Summary of observation records  
+## Occurrence records    
 
-The table below shows a summary of the occurrence records for the taxon. A record “with coordinates” is one that has a complete set of latitude and longitude values associated with it, which could be used for distribution modeling and the conservation gap analysis. For this analysis, such records with coordinates were confined to those falling within the target native area, i.e. native states/administrative areas within the United States, Canada, and Mexico.  In preparation for the conservation gap analyses, we classified each record based on whether it was an existing ex situ sample from a genebank or botanic garden (labeled G, as most records were from genebanks), or a reference observation (labeled H, as most of these records were from herbaria).
+The table below shows a summary of the occurrence records for the taxon. A record “with coordinates” is one that has a complete set of latitude and longitude values associated with it, which could be used for distribution modeling and the conservation gap analysis. In preparation for the conservation gap analyses, we classified each record based on whether it was an existing **ex situ** sample from a genebank or botanic garden (labeled G, as most records were from genebanks), or a reference observation (labeled H, as most of these records were from herbaria).
 
 ```{r  echo=FALSE, message=FALSE, warning=FALSE}
 # alter Counts data for better visualizations
 c1 <- data$countsData %>%
   dplyr::select(
     Taxon = species,
-    'Observations' = totalRecords,
-    'Observations with Lat/Long' = totalUseful,
+    'Occurrences' = totalRecords,
+    'Occurrences with Lat/Long' = totalUseful,
     'Germplasm Records(G)' = totalGRecords,
     'Herbarium Records(H)' = totalHRecords,
     'Unique Data Sources' = numberOfUniqueSources
@@ -55,7 +55,8 @@ c1 <- data$countsData %>%
 
 DT::datatable(c1,
               rownames = FALSE,
-              class = "compact")
+              class = "compact",
+              options = list(dom = 't'))
 
 ```
 
@@ -82,7 +83,7 @@ occData <- data$occuranceData %>%
 # predicted presence map
 threshold <- data$binaryMap
 thresColor <- colorNumeric(
-  palette = c("#FFFFFF70", "#45B320"),
+  palette = c("#cfcccc70", "#45B320"),
   domain = values(threshold),
   alpha = TRUE,
   na.color = "transparent"
@@ -127,9 +128,9 @@ proReclass <- ifel(test = is.na(protectedArea),
                    no = 1)
 ## add values
 grs1 <- threshold + proReclass
-exPal <- c("#FFFFFF80", "#45b320", "#7570b3")
+exPal <- c("#cfcccc80", "#45b320", "#7570b3")
 # for some reason passing the vector exPal to the palette arg does not maintain the alpha reference? 
-grsinColor <- colorNumeric(palette = c("#FFFFFF80", "#45b320", "#7570b3"),
+grsinColor <- colorNumeric(palette = c("#cfcccc80", "#45b320", "#7570b3"),
                # purple is a little lighter so the point locations show up clearly
                domain = values(grs1),
                alpha = TRUE,
@@ -212,7 +213,7 @@ if (class(gBuf) != "character") {
   gbuf2 <- terra::classify(x = gBuf, m1)
   grsexMap <- threshold + gbuf2
   # need to defined this outside of the palette function so it can be called again in the legend
-  grsexColor <- colorNumeric(palette = c("#FFFFFF80", "#45b320", "#7570b3"),
+  grsexColor <- colorNumeric(palette = c("#cfcccc80", "#45b320", "#7570b3"),
                  # purple is a little lighter so the point locations show up clearly
                  domain = values(grsexMap),
                  alpha = TRUE,
@@ -256,13 +257,13 @@ distColor <- c("#ffffd4", "#fed98e", "#fe9929", "#d95f0e", "#993404")
 # protect area palette
 proColor <- c("#7570b3")
 # srsin palete
-srsPal1 <-  c("#FFFFFF95",
+srsPal1 <-  c("#cfcccc95",
     "#7fcdbb",
     "#41b6c4",
     "#1d91c0",
     "#225ea8",
     "#0c2c84")
-srsPal <- colorNumeric(palette = c("#FFFFFF95","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#0c2c84"),
+srsPal <- colorNumeric(palette = c("#cfcccc95","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#0c2c84"),
                domain = values(srs1),
                alpha = TRUE,
                na.color = "transparent")
@@ -288,9 +289,9 @@ stdevPal <- colorNumeric(palette = distColor,
 
 
 
-## Map of Model Potential Habitat
+## Map of Predicted distribution
 
-The map below shows the predicted presence threshold distribution, the median, the mean, and the standard deviation spatial result from the species distribution model runs. The predicted presence threshold distribution was generated by applied as statistically determined threshold value to the median model distribution. The median, mean, and standard deviation model distributions represent the range of variability across the (10,6, or 3) model runs generated for a given species. Values in the key refer to the probability of occurrence. The occurrences used in the modeling process are represented by dots, distinguishing between G and H records (as available), and the attribute data associated with the points can be viewed by clicking on the dots. The background shows the target native area (i.e. the occupied native country-ecoregion area). 
+The map below shows the median, mean, and standard deviation of potential distribution model runs, as well as the predicted presence threshold distribution, The predicted presence threshold distribution was generated by applying a statistically determined threshold value to the median model distribution, and is used in the conservation gap analysis as the potential distribution model. The occurrences used in the modeling process are represented by dots, distinguishing between ex situ germplasm collection (G) and reference sightings (H, for herbaria) records (as available), and the attribute data associated with the points can be viewed by clicking on the dots. The semi-transparent white background reflects the native country-ecoregion area.
 
 Layers can be added to the map using the toggle buttons on the left side. The first layer turned on will be in the bottom position on the map.
 
@@ -304,19 +305,19 @@ m1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3)) |>
              color = ~color,
              opacity = 1,
              radius = 1,
-             group = "Observations",
+             group = "Occurrences",
              stroke = 1,
              popup = ~popup)%>%
   addLegend(position = "bottomleft",
             color = c("#1184D4","#6300F0"),
             labels = c("Herbarium", "Germplasm"),
             title = "Observation Type",
-            group = "Observations") |>
+            group = "Occurrences") |>
   addCircleMarkers(data = occData[occData$type=="G",],
              color = ~color,
              opacity = 1,
              radius = 1,
-             group = "Observations",
+             group = "Occurrences",
              stroke = 1,
              popup = ~popup)
 
@@ -325,13 +326,13 @@ m2 <- m1 |>
   # threshold 
   addRasterImage(x = raster(threshold),
                  colors = thresColor, 
-                 group = "Expected Habitat",
+                 group = "Potential distribution model",
                  project = FALSE)|>
     addLegend(position = "bottomright",
-            color = c( "#FFFFFF","#45B320"),
-            labels = c("Native Area", "Expected Habitat"),
+            color = c( "#cfcccc","#45B320"),
+            labels = c("Native Area", "Potential distribution model"),
             title = "Modeled Habitat",
-            group = "Expected Habitat")|>
+            group = "Potential distribution model")|>
   #mean 
   addRasterImage(x = meanDist, 
                  colors = meanPal,
@@ -367,7 +368,7 @@ m2 <- m1 |>
 m3 <- m2 |>
   addLayersControl(position = "topleft", options = list(collapsed = FALSE,
                                                         autoZIndex = FALSE),
-    overlayGroups = c("Expected Habitat","Observations",
+    overlayGroups = c("Potential distribution model","Occurrences",
                       "Mean Distribution Model",
                       "Median Distribution Model",
                       "SD of Distribution Model"))|> 
@@ -469,7 +470,7 @@ ex1 <- leaflet(width = "100%")|>
     position = "bottomright",
     color = exPal,
     title = "Ex Situ geographical representativeness",
-    labels = c("Native Area", "Expected Habitat", "Habitat with 50km buffer"),
+    labels = c("Native Area", "Potential distribution model", "Habitat with 50km buffer"),
     group = "GRSex"
   )
   
@@ -829,12 +830,12 @@ plot_ly(d3,
 
 ## Definition of Occurrence Data Categories
 
-**Observations** : The total number of records for the species that were evaluated for used within the study.
+**Occurrences** : The total number of records for the species that were evaluated for used within the study.
 
-**Observations with lat/long**: The total number of records that had a valid latitude and longitude pair and were used for spatial analysis. Non valid latitude longitude pairs included but is not limited to; points not over land masses and records with only one of the two values present.
+**Occurrences with lat/long**: The total number of records that had a valid latitude and longitude pair and were used for spatial analysis. Non valid latitude longitude pairs included but is not limited to; points not over land masses and records with only one of the two values present.
 
-**Germplasm Records(G)** : Observations in which a living sample (via plant or seed) is present in a preservation focused environment (botanical garden, seed bank). These are observations which could protentially produce viable genetic resource information and are therefore evaluated with the suite of exsit focused conservation metrics.
+**Germplasm Records(G)** : Occurrences in which a living sample (via plant or seed) is present in a preservation focused environment (botanical garden, seed bank). These are Occurrences which could protentially produce viable genetic resource information and are therefore evaluated with the suite of exsit focused conservation metrics.
 
-**Herbarium Records(H)** : Observations that have a supporting herbarium record.
+**Herbarium Records(H)** : Occurrences that have a supporting herbarium record.
 
-**Unique Data Sources**: The number of unique data base sources from which observations of the species were gathered.
+**Unique Data Sources**: The number of unique data base sources from which Occurrences of the species were gathered.

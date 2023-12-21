@@ -40,7 +40,6 @@ write_csv(x = d5, file = "data/source_data/wiews.csv")
 
 # SEINET 
 d5a <- googlesheets4::read_sheet(as_id("https://docs.google.com/spreadsheets/d/1KSYUgtVBuQv0YTEtwm6_ZfElvFdV0m-aoxV_bdVnkZs/edit?usp=sharing"))
-
 write_csv(d5a, file = "data/source_data/seinet.csv")
 
 
@@ -205,4 +204,8 @@ write_csv(x = pnas, file = "data/source_data/pnas2020.csv")
 bonap <- read_sheet(as_id("https://docs.google.com/spreadsheets/d/1agwJm4rpFfY13UlwN8A6Vtb5p5MEUsWo-LaSXiFnvqM/edit?usp=sharing"))%>%
   mutate(across(everything(), as.character))
 write_csv(x = bonap, file = "data/source_data/bonap.csv")
+
+
+
+
 
