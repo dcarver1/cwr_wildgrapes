@@ -29,13 +29,17 @@ names(speciesData)[names(speciesData) == 'institute'] <- 'institutionCode'
 ### Vitis
 speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv")
 
+### Quercus 
+speciesData <- read_csv("data/Quercus/QUAC_coord_ind.csv")
+  
+
 
 ## bioclim layers 
 ## commiting out for summary runs 
-# bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames.csv")
-# bioVars <- readRDS("data/geospatial_datasets/bioclim_layers/bioclim_2.5arcsec_terra.RDS")
-# names(bioVars) <- bioNames$shortName
-# templateRast <- bioVars[[1]]
+bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames.csv")
+bioVars <- readRDS("data/geospatial_datasets/bioclim_layers/bioclim_2.5arcsec_terra.RDS")
+names(bioVars) <- bioNames$shortName
+templateRast <- bioVars[[1]]
 ## ecoregions
 ecoregions <- sf::st_read("data/geospatial_datasets/ecoregions/tnc_terr_ecoregions.gpkg")
 ## protect lands 
@@ -313,6 +317,22 @@ for(i in genera){
       }
     }
    
+    # temp leafletmap for QUAC
+    # thres2 <- thres |>
+    #   project("epsg:3857",method="near")
+    # 
+    # map1 <- leaflet() |>
+    #   addTiles() |>  
+    #   leaflet::addRasterImage(x = raster(thres2),
+    #                           colors = c("#FFFFFF80", "#00FF00"))|>
+    #   leaflet::addCircleMarkers(data = sp1,
+    #                             color = "#7532a8",
+    #                             opacity = 1,
+    #                             radius = 1,
+    #                             group = "Occurrences",
+    #                             stroke = 1)
+    # 
+    
     # generate summary html  
     # if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
     try(
