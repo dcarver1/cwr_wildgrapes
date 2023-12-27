@@ -30,7 +30,7 @@ names(speciesData)[names(speciesData) == 'institute'] <- 'institutionCode'
 speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv")
 
 ### Quercus 
-speciesData <- read_csv("data/Quercus/QUAC_coord_ind.csv")
+# speciesData <- read_csv("data/Quercus/QUAC_coord_ind.csv")
   
 
 
@@ -44,9 +44,15 @@ templateRast <- bioVars[[1]]
 ecoregions <- sf::st_read("data/geospatial_datasets/ecoregions/tnc_terr_ecoregions.gpkg")
 ## protect lands 
 protectedAreas <- terra::rast("data/geospatial_datasets/protectedLands/wdpa_rasterized_all.tif")
+## buffer distance 
+bufferDist <- 50000
+
 
 # run version 
-runVersion <- "run20231207"
+runVersion <- "run20231227"
+
+# overwrite 
+overwrite <- FALSE
 
 # set up environment  -----------------------------------------------------
 
