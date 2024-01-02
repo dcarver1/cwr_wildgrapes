@@ -8,7 +8,7 @@
 #' @param figure : Return a figure or not 
 #'
 #' @return
-compileConservationData <- function(directory, runVersion, genus, figure = FALSE){
+compileConservationData <- function(directory, runVersion, genus, figure = TRUE){
   combined <- list.files( path = directory,
                           pattern =  "fcs_combined.csv",
                           full.names = TRUE,
@@ -26,6 +26,7 @@ compileConservationData <- function(directory, runVersion, genus, figure = FALSE
   runCombined <- combined[grepl(pattern = runVersion, x = combined)] |>
     map(.f = read_csv) |>
     bind_rows()
+  
   runInsitu <- insitu[grepl(pattern = runVersion, x = insitu)]|>
     map(.f = read_csv) |>
     bind_rows()%>%

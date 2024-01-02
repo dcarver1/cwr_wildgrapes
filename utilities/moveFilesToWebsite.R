@@ -47,7 +47,7 @@ folder <- "~/Documents/GeospatialCentroid.github.io/vitis"
 
 # vitis SDMS --------------------------------------------------------------
 genus <- "Vitis" 
-modelRun <- "test1"
+modelRun <- "run20231227"
 # species 
 splist <- read.csv("data/processed_occurrence/draft_model_data.csv")%>%
   dplyr::select(taxon)%>%
@@ -59,7 +59,7 @@ for(i in splist){
   path <- paste0("data/",genus,"/",i,"/",modelRun,"/results")
   files <- list.files(path, pattern = ".html",full.names = TRUE)
   if(length(files)>0){
-    file.copy(files[1], folder)
+    file.copy(files[1], folder, overwrite = TRUE)
     print(paste0(i, " moved"))
   }
 }

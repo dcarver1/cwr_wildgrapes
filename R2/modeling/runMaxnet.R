@@ -51,7 +51,7 @@ runMaxnet <- function(selectVars,rasterData){
       stop()
     }
     # moving the modeling process into a for loop for better intermediate step testing
-    cvfolds <- modelr::crossv_kfold(points,k = kfold)
+    # cvfolds <- modelr::crossv_kfold(points,k = kfold)
     
     ####
     # I'm wrapping the modeling steps into a function because there are species which
@@ -78,7 +78,10 @@ runMaxnet <- function(selectVars,rasterData){
       #   paCount$backgroundTest[i] <- length(which(cvfolds$test[i]data$presence == 1))
       # }
       #
-      sdm_results <- cvfolds %>%
+      
+      
+      # fit the model using the automatically established feature set
+      sdm_results <- try(cvfolds %>%
         dplyr::mutate(.  #train sdm models using Maxnet and train data
                       , model_train = purrr::map2(.x = train, .y = .id, function(.x, .y) {
                         cat("Training MAXNET model for fold",
@@ -101,10 +104,48 @@ runMaxnet <- function(selectVars,rasterData){
                                                     f = maxnet.formula(p, data, classes = feat))
                         
                         return(fit.maxent)
-                        
-                      })
-                      #evaluate trained model
-                      , predictions_train = purrr::pmap(list(.x = model_train,
+                      })))
+
+        # Test to see if the inital feat setting worked.  -------------------------
+            if(class(sdm_results)[1] == "try-error"){
+              feat <- "lp"
+              sdm_results <- try(cvfolds %>%
+                                   dplyr::mutate(.  #train sdm models using Maxnet and train data
+                                                 , model_train = purrr::map2(.x = train, .y = .id, function(.x, .y) {
+                                                   cat("Training MAXNET model for fold",
+                                                       .y,
+                                                       ", all presence points added to background \n")
+                                                   
+                                                   data_train <- as.data.frame(.x)
+                                                   #select all presence and add them as background as well.
+                                                   pres <- data_train %>%
+                                                     filter(presence == 1)
+                                                   pres$presence <-
+                                                     rep(0, length(pres$presence))
+                                                   data_train <- rbind(data_train, pres)
+                                                   p <- data_train$presence
+                                                   # cat(print(p),"\n")
+                                                   data <- data_train %>% dplyr::select(all_of(variblesToModel))
+                                                   fit.maxent <-maxnet::maxnet(p = p,
+                                                                               data = data,
+                                                                               #regmult = beta,
+                                                                               f = maxnet.formula(p, data, classes = feat))
+                                                   
+                                                   return(fit.maxent)
+                                                 })))
+            }    
+      
+
+        # final test for feat setting ---------------------------------------------
+          if(class(sdm_results)[1] == "try-error"){
+            print("yes")
+            sdm_results <- NA
+            return(sdm_results)
+          }
+                      
+          sdm_results2 <- sdm_results |> 
+            dplyr::mutate(#evaluate trained model
+                          predictions_train = purrr::pmap(list(.x = model_train,
                                                              .y = .id, .z = train), function(.x, .y, .z) {
                                                                cat("Predicting train data for fold", .y, "\n")
                                                                train <-as.data.frame(.z)
@@ -267,7 +308,7 @@ runMaxnet <- function(selectVars,rasterData){
                       
                       
         )#end mutate
-      return(sdm_results)
+      return(sdm_results2)
     }
     ## set up while loop to test for itorations and successful run via the creation of
     # the sdm object.

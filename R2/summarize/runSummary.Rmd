@@ -24,7 +24,7 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 } 
 
 
-testing <- TRUE
+testing <- FALSE
 # transform data
 if(testing==TRUE){
   data <- conservationSummary$summaryData # testing only
@@ -53,10 +53,12 @@ if(testing==TRUE){
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'right', fig.height = 8 } 
 #  fig.height= 8
 # not all species were showing up with autosize on. Have this set to capture, but need to evaluate how flexable it is. 
-heightPerRow <- 875/44
+heightPerRow <- 875/30
 height <- nrow(data) * heightPerRow
-figures |>  layout(autosize = F,height = height, width = 800) # might
+figures |>  layout(autosize = F,height = round(height), width = 800) # might
 htmltools::br()
+htmltools::br()
+
 ```
 Clicking the objects at the bottom of the figure will turn on and off elements on the figure.
 <br>

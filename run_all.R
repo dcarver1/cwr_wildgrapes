@@ -52,7 +52,7 @@ bufferDist <- 50000
 runVersion <- "run20231227"
 
 # overwrite 
-overwrite <- FALSE
+overwrite <- TRUE
 
 # set up environment  -----------------------------------------------------
 
@@ -73,17 +73,19 @@ species <- sort(unique(speciesData$taxon))
 
 # #testing
 i <- genera[1]
-j <- species[5]
+j <- species[2]
 
-erroredSpecies <- list(lessThenFive = c(),
+erroredSpecies <- list(noLatLon = c(),
+                       lessThenFive = c(),
                        noSDM = c(),
                        noHTML = c())
 # 
 plan(strategy = "multisession", workers =8)
 
+ 
 
 # testing 
-species <- species[27:length(species)]
+# species <- species[27:length(species)] # error on Vitis rufotomentosa, Vitis x champinii, "Vitis x doaniana related to no coordinates
 
 # Daucus_aureus is species[1] is a reasonable one for troubleshooting
 for(i in genera){
@@ -120,6 +122,14 @@ for(i in genera){
   c1 <- write_CSV(path = allPaths$countsPaths,
                  overwrite = overwrite,
                  function1 = generateCounts(speciesData = sd1))
+  # check for no lat lon data
+  if(c1$totalUseful == 0){
+    erroredSpecies$noLatLon <- c(erroredSpecies$noLatLon, j)
+    next
+    print("next")
+  }
+  
+  
   
   ## spatial object
   sp1 <- write_GPKG (path = allPaths$spatialDataPath,
@@ -133,6 +143,7 @@ for(i in genera){
   srsex <- write_CSV(path = allPaths$srsExPath,
                     overwrite = overwrite,
                     function1 = srs_exsitu(sp_counts = c1))
+  
   
   ## define natural area based on ecoregions
   natArea <- write_GPKG(path = allPaths$natAreaPath,
@@ -210,14 +221,14 @@ for(i in genera){
       # insitu 
       ## srsin
       srsin <- write_CSV(path = allPaths$srsinPath,
-                        overwrite = TRUE,
+                        overwrite = overwrite,
                         function1 = srs_insitu(occuranceData = sp1, 
                                                thres = thres,
                                                protectedArea =protectedAreas ))
       ## ersin 
       if(j != "Daucus_glochidiatus"){
         ersin <- write_CSV(path = allPaths$ersinPath,
-                           overwrite = TRUE,
+                           overwrite = overwrite,
                            function1 = ers_insitu(occuranceData = sp1,
                                                   nativeArea = natArea,
                                                   protectedArea = protectedAreas,
@@ -232,7 +243,7 @@ for(i in genera){
                                                 thres = thres))
       ## fcsin 
       fcsin <- write_CSV(path = allPaths$fcsinPath,
-                        overwrite = TRUE,
+                        overwrite = overwrite,
                         function1 = fcs_insitu(srsin = srsin,
                                                grsin = grsin,
                                                ersin = ersin,
@@ -243,7 +254,7 @@ for(i in genera){
       #exsitu 
       ##ersex  
       ersex <- write_CSV(path = allPaths$ersexPath,
-                        overwrite = TRUE,
+                        overwrite = overwrite,
                         function1 = ers_exsitu(speciesData = sd1,
                                                thres = thres,
                                                natArea = natArea,
@@ -264,7 +275,7 @@ for(i in genera){
       
       #combined measure 
       fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
-                              overwrite = TRUE,
+                              overwrite = overwrite,
                               function1 = fcs_combine(fcsin = fcsin,
                                                       fcsex = fcsex))
       
@@ -293,13 +304,13 @@ for(i in genera){
       #Complete conservation assessments without models 
         ## srsin
         srsin <- write_CSV(path = allPaths$srsinPath,
-                           overwrite = TRUE,
+                           overwrite = overwrite,
                            function1 = srs_insitu(occuranceData = sp1, 
                                                   thres = NA,
                                                   protectedArea =protectedAreas ))
         ## fcsin 
         fcsin <- write_CSV(path = allPaths$fcsinPath,
-                           overwrite = TRUE,
+                           overwrite = overwrite,
                            function1 = fcs_insitu(srsin = srsin,
                                                   grsin = grsin,
                                                   ersin = ersin,
@@ -316,7 +327,7 @@ for(i in genera){
         
         #combined measure 
         fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
-                                 overwrite = TRUE,
+                                 overwrite = overwrite,
                                  function1 = fcs_combine(fcsin = fcsin,
                                                          fcsex = fcsex))
 
@@ -324,24 +335,24 @@ for(i in genera){
     }
    
     # temp leafletmap for QUAC
-    # thres2 <- thres |>
-    #   project("epsg:3857",method="near")
-    # 
-    # map1 <- leaflet() |>
-    #   addTiles() |>  
-    #   leaflet::addRasterImage(x = raster(thres2),
-    #                           colors = c("#FFFFFF80", "#00FF00"))|>
-    #   leaflet::addCircleMarkers(data = sp1,
-    #                             color = "#7532a8",
-    #                             opacity = 1,
-    #                             radius = 1,
-    #                             group = "Occurrences",
-    #                             stroke = 1)
-    # 
+    thres2 <- thres |>
+      project("epsg:3857",method="near")
+
+    map1 <- leaflet() |>
+      addTiles() |>
+      leaflet::addRasterImage(x = raster(thres2),
+                              colors = c("#FFFFFF80", "#00FF00"))|>
+      leaflet::addCircleMarkers(data = sp1,
+                                color = "#7532a8",
+                                opacity = 1,
+                                radius = 1,
+                                group = "Occurrences",
+                                stroke = 1)
+
     
     # generate summary html  
-    # if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
-    try(
+    if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
+    # try(
         rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
                           output_format = "html_document",
                           output_dir = file.path(allPaths$result),
@@ -352,13 +363,13 @@ for(i in genera){
                           # clean = F,
                           # encoding = "utf-8"
         )
-      )
-    # }else{
+      # )
+    }else{
       if(!file.exists(allPaths$summaryHTMLPath)){
         erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
 
       }
-    # }
+    }
     # block here for testing. I want variable in local environment and don't want them written out.
     # stop()
     
@@ -378,12 +389,11 @@ for(i in genera){
   
   # produce Run level Summaries ---------------------------------------------
   ### big processing step... 
-  # generateRunSummaries(dir1 = dir1,
-  #                      runVersion = runVersion,
-  #                      genus = i,
-  #                      protectedAreas = protectedAreas,
-  #                      overwrite = TRUE)
-  # 
+  generateRunSummaries(dir1 = dir1,
+                       runVersion = runVersion,
+                       genus = i,
+                       protectedAreas = protectedAreas,
+                       overwrite = TRUE)
   
 }
 
