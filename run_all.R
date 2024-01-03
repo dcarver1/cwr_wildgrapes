@@ -52,7 +52,7 @@ bufferDist <- 50000
 runVersion <- "run20231227"
 
 # overwrite 
-overwrite <- TRUE
+overwrite <- FALSE
 
 # set up environment  -----------------------------------------------------
 
@@ -86,6 +86,15 @@ plan(strategy = "multisession", workers =8)
 
 # testing 
 # species <- species[27:length(species)] # error on Vitis rufotomentosa, Vitis x champinii, "Vitis x doaniana related to no coordinates
+# # vitis subset 
+# species <- c("Vitis arizonica",
+#              "Vitis californica",
+#              "Vitis rupestris",
+#              "Vitis aestivalis",
+#              "Vitis shuttleworthii",
+#              "Vitis palmata",
+#              "Vitis vulpina"                        )
+
 
 # Daucus_aureus is species[1] is a reasonable one for troubleshooting
 for(i in genera){
@@ -221,14 +230,14 @@ for(i in genera){
       # insitu 
       ## srsin
       srsin <- write_CSV(path = allPaths$srsinPath,
-                        overwrite = overwrite,
+                        overwrite = TRUE,
                         function1 = srs_insitu(occuranceData = sp1, 
                                                thres = thres,
                                                protectedArea =protectedAreas ))
       ## ersin 
       if(j != "Daucus_glochidiatus"){
         ersin <- write_CSV(path = allPaths$ersinPath,
-                           overwrite = overwrite,
+                           overwrite = TRUE,
                            function1 = ers_insitu(occuranceData = sp1,
                                                   nativeArea = natArea,
                                                   protectedArea = protectedAreas,
@@ -237,13 +246,13 @@ for(i in genera){
 
       ## grsin 
       grsin <-  write_CSV(path = allPaths$grsinPath,
-                         overwrite = overwrite,
+                         overwrite = TRUE ,
                          function1 = grs_insitu(occuranceData = sp1,
                                                 protectedArea = protectedAreas,
                                                 thres = thres))
       ## fcsin 
       fcsin <- write_CSV(path = allPaths$fcsinPath,
-                        overwrite = overwrite,
+                        overwrite = TRUE ,
                         function1 = fcs_insitu(srsin = srsin,
                                                grsin = grsin,
                                                ersin = ersin,
@@ -254,20 +263,20 @@ for(i in genera){
       #exsitu 
       ##ersex  
       ersex <- write_CSV(path = allPaths$ersexPath,
-                        overwrite = overwrite,
+                        overwrite = TRUE,
                         function1 = ers_exsitu(speciesData = sd1,
                                                thres = thres,
                                                natArea = natArea,
                                                ga50 = g_bufferCrop))
       ##grsex 
       grsex <- write_CSV(path = allPaths$grsexPath,
-                        overwrite = overwrite,
+                        overwrite = TRUE,
                         function1 = grs_exsitu(speciesData = sd1,
                                                ga50 = g_bufferCrop,
                                                thres = thres))
       ##fcsex
       fcsex <- write_CSV(path = allPaths$fcsexPath,
-                        overwrite = overwrite,
+                        overwrite = TRUE,
                         function1 = fcs_exsitu(srsex = srsex,
                                                grsex = grsex,
                                                ersex = ersex,
@@ -275,7 +284,7 @@ for(i in genera){
       
       #combined measure 
       fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
-                              overwrite = overwrite,
+                              overwrite = TRUE,
                               function1 = fcs_combine(fcsin = fcsin,
                                                       fcsex = fcsex))
       
@@ -351,8 +360,8 @@ for(i in genera){
 
     
     # generate summary html  
-    if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
-    # try(
+    # if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
+    try(
         rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
                           output_format = "html_document",
                           output_dir = file.path(allPaths$result),
@@ -363,13 +372,13 @@ for(i in genera){
                           # clean = F,
                           # encoding = "utf-8"
         )
-      # )
-    }else{
-      if(!file.exists(allPaths$summaryHTMLPath)){
-        erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
-
-      }
-    }
+      )
+    # }else{
+    #   if(!file.exists(allPaths$summaryHTMLPath)){
+    #     erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
+    # 
+    #   }
+    # }
     # block here for testing. I want variable in local environment and don't want them written out.
     # stop()
     
