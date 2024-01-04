@@ -20,6 +20,9 @@ overwrite <- FALSE
 speciesData <- read_rds("~/Documents/cwr_wildgrapes/distributiveModel/data/speciesData.rds")
 genus <- unique(speciesData$genus)[1]
 speciesList <- unique(speciesData$taxon)
+## for testing 
+speciesList <- speciesList[c(5,8,9)]
+
 rm(speciesData)
 
 # set data directory 

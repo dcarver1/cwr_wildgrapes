@@ -22,8 +22,8 @@ generateModelData <- function(speciesPoints,natArea,bioVars,b_Number){
   bg1 <- sf::st_sample(x = natArea, size = b_Number)%>%
     sf::st_as_sf()%>%
     mutate("presence" = 0)%>%
-    dplyr::select(presence,"geometry" = x)%>%
-    filter(!geometry %in% sp1$geometry) # test for same coordinated between presence and background data
+    dplyr::select(presence,"geom" = x)%>%
+    filter(!geom %in% sp1$geom) # test for same coordinated between presence and background data
   # bind datasets 
   d1 <- bind_rows(sp1, bg1)
   
@@ -36,7 +36,7 @@ generateModelData <- function(speciesPoints,natArea,bioVars,b_Number){
   # convert to sf and drop NA values
   drop <- st_drop_geometry(d2)%>%
     complete.cases()
-  ### might be some issues here with droping observations, but this step is a requirement. 
+  ### might be some issues here with droping observations, but this step is a requirement.
   d3 <- d2[drop, ]
   return(d3) 
 }

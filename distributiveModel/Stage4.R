@@ -1,5 +1,5 @@
 ###
-# Stage 3 - Define native area features
+# Stage 4 - Prep data for modeing
 # 
 ###
 
@@ -18,9 +18,10 @@ source("~/Documents/cwr_wildgrapes/R2/modeling/cropRasters.R")
 # multicore -- shared environment distributed processes -- so far slightly slower then sequential?  
 # sequential  -- linear process
 # multisession -- not very good do to the set up of multiple environments 
-plan(multicore, workers = round(cores * 4/5)) # using multiplication to account for the variable cpu qualities 
 
-overwrite <- TRUE
+plan(multicore , workers = round(cores * 4/5)) # using multiplication to account for the variable cpu qualities 
+
+
 # generate function that containerizes the specific calls 
 ## these function should allways start with the taxon variable that that is what is being mapped over.
 stage4 <- function(taxon, dir1, runVersion,overwrite,
@@ -45,6 +46,8 @@ stage4 <- function(taxon, dir1, runVersion,overwrite,
       ## define number of background points 
       b_Number <- numberBackground(natArea = natArea)
     
+      # unwrap the biovars features 
+      bioVars <- bioVars |> terra::unwrap()
       # associate observations with bioclim data
       m_data <- write_CSV(path = allPaths$allDataPath,
                         overwrite = overwrite,
@@ -56,21 +59,21 @@ stage4 <- function(taxon, dir1, runVersion,overwrite,
       v_data <- write_RDS(path = allPaths$variablbeSelectPath,
                         overwrite = overwrite,
                         function1 = varaibleSelection(modelData = m_data))
-
-      ## prepare data for maxent model
-      # rasterInputs <- write_Rast(path = allPaths$prepRasters,
-      #                          overwrite = overwrite,
-      #                          function1 = cropRasters(natArea = natArea,
-      #                                                  bioVars = bioVars,
-      #                                                  selectVars = v_data))
       # 
+      ## prepare data for maxent model
+      rasterInputs <- write_Rast(path = allPaths$prepRasters,
+                               overwrite = overwrite,
+                               function1 = cropRasters(natArea = natArea,
+                                                       bioVars = bioVars,
+                                                       selectVars = v_data))
+
     }
   }
 }
 
-# read in input files 
-bioVars <- read_rds("~/Documents/cwr_wildgrapes/distributiveModel/data/bioClim.rds")|>
-  terra::unwrap()
+# read in input files --- might want to keeep this wrap until we pass into the function
+## - maybe this matters for multisesson vs multiprocessor
+bioVars <- read_rds("~/Documents/cwr_wildgrapes/distributiveModel/data/bioClim.rds")
 print("read in data")
 
 tictoc::tic()

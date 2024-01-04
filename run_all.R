@@ -27,7 +27,7 @@ names(speciesData)[names(speciesData) == 'institute'] <- 'institutionCode'
 
 
 ### Vitis
-speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv")
+# speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv")
 
 ### Quercus 
 # speciesData <- read_csv("data/Quercus/QUAC_coord_ind.csv")
@@ -102,13 +102,6 @@ for(i in genera){
   #create folder
   dir1 <- paste0("data/",i) 
   if(!dir.exists(dir1)){dir.create(dir1)}
-  
-  
-  
-
-  # furrr itoration ---------------------------------------------------------
-  
-#  furrr::future_map(species, primaryWorkflow, dir1 = dir1)
   
   
   # loop over species  ------------------------------------------------------

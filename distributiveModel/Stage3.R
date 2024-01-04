@@ -18,7 +18,9 @@ source("~/Documents/cwr_wildgrapes/R2/modeling/create_buffers.R")
 # multisession -- not very good do to the set up of multiple environments 
 plan(multicore, workers = round(cores * 3/4)) # using multiplication to account for the variable cpu qualities 
 
-overwrite <- TRUE
+### only want to define overwrite in a globalparameters section 
+# overwrite <- FALSE
+
 # generate function that containerizes the specific calls 
 ## these function should allways start with the taxon variable that that is what is being mapped over.
 stage3 <- function(taxon, dir1, runVersion,overwrite,
