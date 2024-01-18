@@ -13,7 +13,7 @@
 #' @param ga50 
 #'
 #' @return Data frames with ERS score details. 
-ers_exsitu <- function(speciesData,thres,natArea,ga50) {
+ers_exsitu <- function(speciesData,thres,natArea,ga50, rasterPath) {
 
   # convert natural area object in a vect feature
   n1 <- natArea %>% 
@@ -59,6 +59,12 @@ ers_exsitu <- function(speciesData,thres,natArea,ga50) {
     ers <- min(c(100, (gEco/nEco)*100))
 
   }
+  
+  # produce threshold map excluding collected eco regions. 
+  n2 <- n1 |>
+    dplyr::filter(ECO_ID_U %in% missingEcos)|>
+    terra::rasterize(y = thres)
+  terra::writeRaster(x = n2, filename = rasterPath,overwrite=TRUE)
   
   # generate filter 
   

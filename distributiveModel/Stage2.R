@@ -16,7 +16,7 @@ source("~/Documents/cwr_wildgrapes/R2/gapAnalysis/srs_exsitu.R")
 # multicore -- shared environment distributed processesd 
 # sequential  -- linear process
 # multisession -- not very good do to the set up of multiple environments 
-plan(multicore, workers = round(cores * 3/4)) # using multiplication to account for the variable cpu qualities 
+plan(sequential, workers = round(cores * 3/4)) # using multiplication to account for the variable cpu qualities 
 
 # generate function that containerizes the specific calls 
 ## these function should allways start with the taxon variable that that is what is being mapped over.
@@ -46,7 +46,7 @@ stage2 <- function(taxon, dir1, runVersion,overwrite,
 }
 
 # read in input files 
-speciesData <- read_rds("~/Documents/cwr_wildgrapes/distributiveModel/data/speciesData.rds")
+# speciesData <- read_rds("~/Documents/cwr_wildgrapes/distributiveModel/data/speciesData.rds")
 
 tictoc::tic()
 # all the function in parally 

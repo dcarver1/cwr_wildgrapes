@@ -26,13 +26,13 @@ stage1 <- function(taxon, dir1, runVersion){
   generateFolders(allPaths)
   
 }
-
+tictoc::tic()
 # all the function in parally 
 furrr::future_map(.x = speciesList, .f = stage1,
                   dir1 = dir1, 
                   runVersion = runVersion,
                   .progress = TRUE, 
                   .options = furrr_options(seed = seed))
-
+tictoc::toc()
 # clean environment 
 rm(list=ls())

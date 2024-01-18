@@ -27,7 +27,7 @@ generateRunSummaries <- function(dir1,runVersion, genus, protectedAreas, overwri
     write_csv(x = df,
               file = path2)
   }
-  # geneate gap richness map
+  # generate grsex richness map
   if(!file.exists(path3) | isTRUE(overwrite)){
     # generate specific richness map 
     ga50Richness <- generateSpeciesRichnessMap(directory = dir1,
@@ -42,6 +42,23 @@ generateRunSummaries <- function(dir1,runVersion, genus, protectedAreas, overwri
               file = path4)
   }
   
+  # generate ersex richness map
+  if(!file.exists(path3) | isTRUE(overwrite)){
+    # generate specific richness map 
+    ga50Richness <- generateSpeciesRichnessMap(directory = dir1,
+                                               runVersion = runVersion,
+                                               rasterFileName = "ga50_masked.tif")
+    terra::writeRaster(x = ga50Richness$richnessTif,
+                       filename = path3,
+                       overwrite  = TRUE)
+    # export the 
+    df <- data.frame(speciesUsed = ga50Richness$speciesUsed)
+    write_csv(x = df,
+              file = path4)
+  }
+  
+  
+  
   # generate species richness within protected areas ------------------------
   if(overwrite == TRUE){
     protectedAreaRichness(speciesRichness = path1,
@@ -53,11 +70,12 @@ generateRunSummaries <- function(dir1,runVersion, genus, protectedAreas, overwri
   
 
 
-    # generate conservation summary figures 
+  # generate conservation summary figures 
   conservationSummary <- compileConservationData(directory = dir1, 
                                                  runVersion = runVersion,
                                                  genus = genus, 
                                                  figure = TRUE)
+  # add additional object to the list to be passed to the rmd 
   conservationSummary$map <- raster(path1)
   conservationSummary$proAreas <- protectedAreas
   conservationSummary$ga50Map <- rast(path3)

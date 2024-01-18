@@ -1,4 +1,4 @@
-getFreeMemoryKB <- function() {
+getFreeMemoryGB <- function() {
   osName <- Sys.info()[["sysname"]]
   if (osName == "Windows") {
     x <- system2("wmic", args =  "OS get FreePhysicalMemory /Value", stdout = TRUE)
@@ -7,7 +7,7 @@ getFreeMemoryKB <- function() {
     x <- gsub("\r", "", x, fixed = TRUE)
     return(as.integer(x))
   } else if (osName == 'Linux') {
-    x <- system2('free', args='-k', stdout=TRUE)
+    x <- system2('free', args='-g', stdout=TRUE)
     x <- strsplit(x[2], " +")[[1]][4]
     return(as.integer(x))
   } else {

@@ -20,11 +20,11 @@ runMaxnet <- function(selectVars,rasterData){
       nrow()
     # predefine to capture feautes with 3 or less
     kfold <- NA
-    if(nPresence <= 8 & nPresence >3){
+    if(nPresence <= 12 & nPresence >8){
       kfold <- 3
       feat <- "lp"
     }
-    if(nPresence > 8 & nPresence <= 25){
+    if(nPresence > 12 & nPresence <= 25){
       kfold <- 6
       feat <- "lqph"
     }

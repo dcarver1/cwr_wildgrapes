@@ -73,6 +73,7 @@ definePaths <- function(dir1, j, runVersion){
   grsexPath = paste0(path$gap_analysis,"/grs_ex.csv"),
   # ersex
   ersexPath = paste0(path$gap_analysis,"/ers_ex.csv"),
+  ersexRast = paste0(path$gap_analysis,"/ers_ex_gaps.tif"),
   # fcsex
   fcsexPath = paste0(path$gap_analysis,"/fcs_ex.csv"),
   #srsin  
@@ -81,6 +82,7 @@ definePaths <- function(dir1, j, runVersion){
   grsinPath = paste0(path$gap_analysis,"/grs_in.csv"),
   # ersin
   ersinPath = paste0(path$gap_analysis,"/ers_in.csv"),
+  ersinRast = paste0(path$gap_analysis,"/ers_in_gaps.tif"),
   # fcsin
   fcsinPath = paste0(path$gap_analysis,"/fcs_in.csv"),
   #fcsCombined 

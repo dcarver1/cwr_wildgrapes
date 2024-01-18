@@ -5,25 +5,29 @@ library(readr)
 numPoint <- 2000
 ## used to define buffer distance in g buffer process in degrees 
 # 50k(1 degree/111km) = 0.45
-bufferDist <- 0.45
+### terra implementation uses measure in meters
+bufferDist <- 50000
 # set random seed. Important for reproducability
 seed <- 1234
 set.seed(seed)
 # set run version 
-runVersion <- "run20231207"
+runVersion <- "run20231227"
 
 ## overwrite Parameter 
 ### used to determine if you want to write over existing content. 
-overwrite <- FALSE
+overwrite <- TRUE
 
 # read in species Data 
-speciesData <- read_rds("~/Documents/cwr_wildgrapes/distributiveModel/data/speciesData.rds")
+## vitis 
+# speciesData <- read_rds("~/Documents/cwr_wildgrapes/distributiveModel/data/vitis_speciesData.rds")
+## daucus 
+speciesData <- read_rds("~/Documents/cwr_wildgrapes/distributiveModel/data/daucus_speciesData.rds")
 genus <- unique(speciesData$genus)[1]
 speciesList <- unique(speciesData$taxon)
-## for testing 
-speciesList <- speciesList[c(5,8,9)]
 
-rm(speciesData)
+## for testing 
+# speciesList <- speciesList[c(5,8,9)]
+
 
 # set data directory 
 dir1 <- paste0("data/",genus) 
@@ -33,7 +37,8 @@ dir1 <- paste0("data/",genus)
 source("~/Documents/cwr_wildgrapes/R2/dataProcessing/definePaths.R")
 ## export features function
 source("~/Documents/cwr_wildgrapes/R2/dataProcessing/exportFeatures.R")
-
+## source memory testing function
+source("~/Documents/cwr_wildgrapes/distributiveModel/memoryAvailable.R")
 
 
 # # provide some estimated core requirements base on processes --------------
@@ -50,4 +55,9 @@ cores <- future::availableCores()
 ## creating spatial features : 3/4 
 ## moderate spatial operations : 1/2 
 ## heavy spatial operations : 2/5 
+
+totalMemory <- getFreeMemoryGB()
+
+
+
 

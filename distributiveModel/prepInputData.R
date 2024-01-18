@@ -1,9 +1,15 @@
 # prep input parameters
-pacman::p_load("terra", "sf", "readr") 
+pacman::p_load("terra", "sf", "readr","dplyr") 
 
 # species data --------------------------------------------------------
+# vitis
 read_csv("data/processed_occurrence/draft_model_data.csv")|>
-  write_rds(file = "~/Documents/cwr_wildgrapes/distributiveModel/data/speciesData.rds")
+  dplyr::select(-c("geometry","index", "validLat","validLon","validLatLon"))|>
+  write_rds(file = "~/Documents/cwr_wildgrapes/distributiveModel/data/vitis_speciesData.rds")
+# daucus
+read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")|>
+  dplyr::rename(institutionCode = institute)|>
+  write_rds(file = "~/Documents/cwr_wildgrapes/distributiveModel/data/daucus_speciesData.rds")
 
 # bioclim Layers --------------------------------------------------------
 bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames.csv")

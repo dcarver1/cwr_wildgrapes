@@ -3,7 +3,7 @@
 #' @param modelData 
 #'
 #' @return A csv of occurance data that has been thinned to include on primary variables. 
-varaibleSelection <- function(modelData){
+varaibleSelection <- function(modelData, parallel){
   # subset predictor data and presence column
   varOnly <- modelData %>% 
     st_drop_geometry() %>% 
@@ -28,7 +28,7 @@ varaibleSelection <- function(modelData){
   ### change for 30 arc second run 
   vsurfThres <- VSURF_thres(x=bioValues[,2:27] , 
                             y=as.factor(bioValues$presence),
-                            parallel = TRUE )
+                            parallel = parallel )
   ###
   #correlation matrix
   ###

@@ -21,13 +21,13 @@ sourceFiles(furrr = FALSE)
 # input datasets ----------------------------------------------------------
 ## species observations 
 ### Daucus 
-speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")
-# rename the institute code column
-names(speciesData)[names(speciesData) == 'institute'] <- 'institutionCode'
+speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified_20240117.csv")
 
 
 ### Vitis
-# speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv")
+## filtering the extra values coming from the data prep process 
+# speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv") |>
+#   dplyr::select(-c("geometry","index", "validLat","validLon","validLatLon"))
 
 ### Quercus 
 # speciesData <- read_csv("data/Quercus/QUAC_coord_ind.csv")
@@ -49,7 +49,7 @@ bufferDist <- 50000
 
 
 # run version 
-runVersion <- "run20231227"
+runVersion <- "run20240104"
 
 # overwrite 
 overwrite <- FALSE
@@ -73,7 +73,7 @@ species <- sort(unique(speciesData$taxon))
 
 # #testing
 i <- genera[1]
-j <- species[2]
+j <- species[48]
 
 erroredSpecies <- list(noLatLon = c(),
                        lessThenFive = c(),
@@ -134,7 +134,7 @@ for(i in genera){
   
   
   ## spatial object
-  sp1 <- write_GPKG (path = allPaths$spatialDataPath,
+  sp1 <- write_GPKG(path = allPaths$spatialDataPath,
                     overwrite = overwrite, 
                     function1 = createSF_Objects(speciesData = sd1) %>%
     removeDuplicates()
@@ -153,7 +153,7 @@ for(i in genera){
                        function1 = nat_area_shp(speciesPoints = sp1,
                                                 ecoregions = ecoregions))
   # condition for at least 5 observations 
-  if(nrow(sp1) >=5 ){
+  if(nrow(sp1) >=8){
     ## define number of background points 
     b_Number <- numberBackground(natArea = natArea)
     
@@ -176,7 +176,8 @@ for(i in genera){
     ## perform variable selection
     v_data <- write_RDS(path = allPaths$variablbeSelectPath, 
                        overwrite = overwrite,
-                       function1 = varaibleSelection(modelData = m_data))
+                       function1 = varaibleSelection(modelData = m_data,
+                                                     parallel = TRUE))
     
     ## prepare data for maxent model 
     rasterInputs <- write_Rast(path = allPaths$prepRasters,
@@ -223,23 +224,22 @@ for(i in genera){
       # insitu 
       ## srsin
       srsin <- write_CSV(path = allPaths$srsinPath,
-                        overwrite = TRUE,
+                        overwrite = overwrite,
                         function1 = srs_insitu(occuranceData = sp1, 
                                                thres = thres,
                                                protectedArea =protectedAreas ))
       ## ersin 
-      if(j != "Daucus_glochidiatus"){
-        ersin <- write_CSV(path = allPaths$ersinPath,
+      ersin <- write_CSV(path = allPaths$ersinPath,
                            overwrite = TRUE,
                            function1 = ers_insitu(occuranceData = sp1,
                                                   nativeArea = natArea,
                                                   protectedArea = protectedAreas,
-                                                  thres = thres)) 
-      }
+                                                  thres = thres,
+                                                  rasterPath = allPaths$ersinRast))
 
       ## grsin 
       grsin <-  write_CSV(path = allPaths$grsinPath,
-                         overwrite = TRUE ,
+                         overwrite = overwrite ,
                          function1 = grs_insitu(occuranceData = sp1,
                                                 protectedArea = protectedAreas,
                                                 thres = thres))
@@ -260,10 +260,11 @@ for(i in genera){
                         function1 = ers_exsitu(speciesData = sd1,
                                                thres = thres,
                                                natArea = natArea,
-                                               ga50 = g_bufferCrop))
+                                               ga50 = g_bufferCrop,
+                                               rasterPath = allPaths$ersexRast))
       ##grsex 
       grsex <- write_CSV(path = allPaths$grsexPath,
-                        overwrite = TRUE,
+                        overwrite = overwrite,
                         function1 = grs_exsitu(speciesData = sd1,
                                                ga50 = g_bufferCrop,
                                                thres = thres))
@@ -353,7 +354,7 @@ for(i in genera){
 
     
     # generate summary html  
-    # if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
+    if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
     try(
         rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
                           output_format = "html_document",
@@ -366,12 +367,11 @@ for(i in genera){
                           # encoding = "utf-8"
         )
       )
-    # }else{
-    #   if(!file.exists(allPaths$summaryHTMLPath)){
-    #     erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
-    # 
-    #   }
-    # }
+    }else{
+      if(!file.exists(allPaths$summaryHTMLPath)){
+        erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
+      }
+    }
     # block here for testing. I want variable in local environment and don't want them written out.
     # stop()
     

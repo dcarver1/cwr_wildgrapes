@@ -1,7 +1,7 @@
 
 
 
-ers_insitu <- function(occuranceData,nativeArea, protectedArea, thres){
+ers_insitu <- function(occuranceData,nativeArea, protectedArea, thres,rasterPath){
   # total e
   
   # mask protected areas layer 
@@ -18,11 +18,14 @@ ers_insitu <- function(occuranceData,nativeArea, protectedArea, thres){
   
   # convert native area to a vect object
   nativeArea <- vect(nativeArea)
-  # total number of eco regions within the SDM 
-  totalEcoregions <- terra::zonal(x = thres ,z = nativeArea, fun = "sum",na.rm=TRUE)|>
+  # total number of eco regions within the SDM
+  ## ecoregions with predicted presence within the boundaries
+  totEco <- terra::zonal(x = thres ,z = nativeArea, fun = "sum",na.rm=TRUE)|>
     dplyr::mutate(ECO_ID_U = nativeArea$ECO_ID_U)|> 
-    dplyr::filter(Threshold > 0) |>
-    nrow()
+    dplyr::filter(Threshold > 0) 
+  
+  # reduce to number of rows for simple math
+  totalEcoregions <- nrow(totEco) 
   
   
   # totalEcoregions <- terra::extract(x = nativeArea, y = thresPoints) |>
@@ -31,10 +34,11 @@ ers_insitu <- function(occuranceData,nativeArea, protectedArea, thres){
   #   tidyterra::pull()%>%
   #   length()
   # total number of eco regions within the SDM with protect areas. 
-  totalProtectedEcoregions <- terra::zonal(x = p1 ,z = nativeArea, fun = "sum",na.rm=TRUE)|>
+  totProEco <- terra::zonal(x = p1 ,z = nativeArea, fun = "sum",na.rm=TRUE) |>
     dplyr::mutate(ECO_ID_U = nativeArea$ECO_ID_U) |> 
-    dplyr::filter(layer > 0) |>
-    nrow()
+    dplyr::filter(layer > 0)
+  
+  totalProtectedEcoregions <- nrow(totProEco) 
   
   # totalProtectedEcoregions <- terra::extract(x = nativeArea, y = protectedPoints)%>%
   #   tidyterra::distinct(ECO_ID_U)%>%
@@ -47,6 +51,15 @@ ers_insitu <- function(occuranceData,nativeArea, protectedArea, thres){
   }else{
     ers <- (totalProtectedEcoregions/totalEcoregions)*100
   }
+  
+  # generate a gap map for the ERSin 
+  mEcos <- totEco[!totEco$ECO_ID_U %in% totProEco$ECO_ID_U, ]
+  
+  missingEcos <- nativeArea |> 
+    dplyr::filter(ECO_ID_U %in% mEcos$ECO_ID_U) |> # needed to add the $ for filter to work
+    terra::rasterize(y = thres)
+  # export for the full 
+  terra::writeRaster(x = missingEcos, filename = rasterPath,overwrite=TRUE)
   
   
   df <- data.frame(ID=occuranceData$taxon[1],

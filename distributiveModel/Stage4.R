@@ -1,6 +1,7 @@
 ###
 # Stage 4 - Prep data for modeing
-# 
+# Memory use is ~ 32gb -- so keep the cores number of process to 3 
+# sequential : 4421.243 sec elapsed
 ###
 
 #define libraries used 
@@ -19,8 +20,10 @@ source("~/Documents/cwr_wildgrapes/R2/modeling/cropRasters.R")
 # sequential  -- linear process
 # multisession -- not very good do to the set up of multiple environments 
 
-plan(multicore , workers = round(cores * 4/5)) # using multiplication to account for the variable cpu qualities 
+plan(sequential , workers = 3) # using multiplication to account for the variable cpu qualities 
 
+#testing
+overwrite <- TRUE
 
 # generate function that containerizes the specific calls 
 ## these function should allways start with the taxon variable that that is what is being mapped over.
@@ -32,7 +35,7 @@ stage4 <- function(taxon, dir1, runVersion,overwrite,
                           j = taxon,
                           runVersion = runVersion)
 
-  
+  print(taxon)
   # read in generated Objects 
   if(file.exists(allPaths$spatialDataPath)){
     # read in point object 
@@ -50,17 +53,19 @@ stage4 <- function(taxon, dir1, runVersion,overwrite,
       bioVars <- bioVars |> terra::unwrap()
       # associate observations with bioclim data
       m_data <- write_CSV(path = allPaths$allDataPath,
-                        overwrite = overwrite,
+                        overwrite = TRUE,
                         generateModelData(speciesPoints = sp1,
                                           natArea = natArea,
                                           bioVars = bioVars,
                                           b_Number = b_Number))
       ## perform variable selection
       v_data <- write_RDS(path = allPaths$variablbeSelectPath,
-                        overwrite = overwrite,
-                        function1 = varaibleSelection(modelData = m_data))
+                        overwrite = TRUE,
+                        function1 = varaibleSelection(modelData = m_data,
+                                                      parallel = FALSE))
       # 
       ## prepare data for maxent model
+      print("preping Rasters")
       rasterInputs <- write_Rast(path = allPaths$prepRasters,
                                overwrite = overwrite,
                                function1 = cropRasters(natArea = natArea,

@@ -11,7 +11,7 @@
 # Daucus ---------------------------------------------------
 ## specific reference to file paths 
 genus <- "daucus" 
-modelRun <- "run20231114"
+modelRun <- "run20240104"
 # folder to move too
 folder <- "~/Documents/GeospatialCentroid.github.io/Daucus"
 

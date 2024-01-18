@@ -27,7 +27,7 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # transform data
 
-testing <- TRUE
+testing <- FALSE
 if(testing == TRUE){
   data <- reportData # testing only
   species <- reportData$countsData$species # testing
@@ -139,20 +139,25 @@ proMask <- ifel(test = protectedArea == 1, yes = 1, no = NA)
 
 # insitu map elements
 ## SRSIN
-## total number of observations per cell of the threshold model
+## total number of observations per cell of the threshold model masked against the protect areas layer 
+# filter points outside of protected areas 
 webMecOccData <- vect(st_transform(occData, crs = "epsg:3857")) # need to change project
 # for the spatial operations with the layer. occData can't have the proj
+# get all the points that are outside of a protected area
+inThres <- terra::extract(x = mask1, y = webMecOccData)|>
+  dplyr::filter(Threshold==1)
+inPro <- terra::extract(x = protectedArea, y = webMecOccData) |>
+  dplyr::filter(is.na(layer))
+
 srs1 <- terra::rasterize(webMecOccData,
                    threshold,
                    fun = "sum",
                    background = 0) |>
   mask(mask1)
 
-totalObsinThres <- sum(values(srs1), na.rm = TRUE)
+totalObsinThres <- nrow(inThres)
 ## total number of observations in protected areas
-pro1 <-terra::rasterize(webMecOccData, protectedArea, fun = "sum") |>
-  mask(proMask)
-totalObsinPro <- sum(values(pro1), na.rm = TRUE)
+totalObsinPro <- nrow(inThres) - nrow(inPro)
 
 ## GRSIN
 ## reclassy protected area
@@ -182,15 +187,9 @@ ers1 <- terra::zonal(proReclass,
 ers1$ECO_ID_U <- allEcos$ECO_ID_U
 ers1$ECO_NAME <- allEcos$ECO_NAME
 
-# determine this ecoregions with model areas -- all the features
-n1 <- data$naturalArea %>%
-  dplyr::select(ECO_ID_U) %>%
-  vect()
-# reproject for spatial operations
-webMecn1 <- terra::project(x = n1, "epsg:3875")
 ## zonal Stats to determine overlap between the ecoregions and the threshold model
 v1 <- terra::zonal(x = threshold,
-               z = n1,
+               z = vect(webMecAllEcos),
                fun = "sum",
                na.rm = TRUE)# , exact = TRUE)
 
@@ -209,7 +208,7 @@ ers2 <- ers1 |>
 
 if(nrow(ers2) > 0) {
   ## use this list to generate a raster object masked to the
-  ersinMap <- n1 |>
+  ersinMap <- webMecAllEcos |>
     dplyr::filter(ECO_ID_U %in% ers2$ECO_ID_U) |>
     terra::rasterize(y = threshold, "ECO_ID_U") |>
     mask(mask = mask1)
@@ -217,12 +216,10 @@ if(nrow(ers2) > 0) {
   ersinMap <- "No values"
 }
 
-ecoINPal <- RColorBrewer::brewer.pal(n = length(ers2$ECO_ID_U), name = "Set3")
-# this palette requires at least 3 colors
-ecoINPal <- ecoINPal[1:length(ers2$ECO_ID_U)]
+getPalette = colorRampPalette(RColorBrewer::brewer.pal(length(ers2$ECO_ID_U), "Set1"))
 # define a palette option so that we can set a transparent NA value
-ecoINColor <- colorFactor(
-  palette = ecoINPal,
+ecoINColor <- colorNumeric(
+  palette = getPalette,
   domain = ers2$ECO_ID_U,
   alpha = TRUE,
   na.color =  "#FF000000"
@@ -693,11 +690,11 @@ if(class(ersinMap) != "character"){
   in3 <- in3 |>
   addRasterImage(
     x = raster(ersinMap),
-    colors = ecoINPal,
+    colors = getPalette(length(ers2$ECO_NAME)),
     group = "ERS in situ",
     project = FALSE
   )|>
-    addLegend(colors = ecoINPal,
+    addLegend(colors = getPalette(length(ers2$ECO_NAME)),
               group = "ERS in situ",
               labels = ers2$ECO_NAME)
 }
