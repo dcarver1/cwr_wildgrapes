@@ -3,7 +3,7 @@
 #' @return RDS file with a nested list of all required file inputs 
 grabData <- function(ersex, fscCombined, fcsex, fcsin,evalTable,g_bufferCrop,thres, 
                      projectsResults, v_data, g_buffer,natArea,protectedAreas,
-                     occuranceData, countsData){
+                     occuranceData, countsData, variableImportance){
   # crop protected areas 
   # mask protected areas layer 
   p2 <- thres
@@ -25,6 +25,12 @@ grabData <- function(ersex, fscCombined, fcsex, fcsin,evalTable,g_bufferCrop,thr
   projectsResults <- projectsResults |> map(raster::projectRaster, crs = "epsg:3857", method = "ngb" )
   thres <- terra::project(x = thres, y = "epsg:3857", method = "near")
   
+  # add variable importance data 
+  var1 <- readRDS(variableImportance)$rankPredictors
+  names <- bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames.csv")
+  variableImportance <- var1 |> 
+    dplyr::left_join(y = names, by = c("varNames" ="shortName"))
+  
   # bind to export object 
   reportData <- list(
     occuranceData = occuranceData,
@@ -40,7 +46,8 @@ grabData <- function(ersex, fscCombined, fcsex, fcsin,evalTable,g_bufferCrop,thr
     fcsCombined = fcsCombined,
     fcsex= fcsex,
     fcsin = fcsin,
-    countsData = countsData
+    countsData = countsData,
+    variableImportance = variableImportance
   ) 
   return(reportData)
 }

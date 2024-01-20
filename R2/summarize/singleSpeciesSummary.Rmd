@@ -10,7 +10,7 @@ params:
 ---
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-pacman::p_load("leaflet","data.table", "tidyr", "dplyr","plotly","DT")
+pacman::p_load("leaflet","data.table", "tidyr", "dplyr","plotly","DT","RColorBrewer")
 
 ### function for control number of character after the decimal place 
 sigfig <- function(vec, n=3){ 
@@ -194,7 +194,7 @@ v1 <- terra::zonal(x = threshold,
                na.rm = TRUE)# , exact = TRUE)
 
 ## reassign the eco id record
-v1$ECO_ID_U <- n1$ECO_ID_U
+v1$ECO_ID_U <- webMecAllEcos$ECO_ID_U
 # get a list of ecoregions within the threshold model
 ecosInThres <- v1 |>
   dplyr::filter(Threshold > 0) |>
@@ -212,18 +212,27 @@ if(nrow(ers2) > 0) {
     dplyr::filter(ECO_ID_U %in% ers2$ECO_ID_U) |>
     terra::rasterize(y = threshold, "ECO_ID_U") |>
     mask(mask = mask1)
+  # generate palatte object for map 
+  ecoPal2 <-  rep(RColorBrewer::brewer.pal(n = 12, name = "Spectral"), 6)
+  ecoPal2 <- ecoPal2[1:length(ers2$ECO_ID_U)]
+  # need to order the names so they appear as expected 
+  ers2$color <- ecoPal2
+  ers2 <- ers2 |> arrange(desc(ECO_NAME))
+  ers2$color <- ecoPal2
+  
+  ers2$ECO_ID_U <- factor(ers2$ECO_ID_U , ordered = TRUE, 
+                                  levels = c(ers2$ECO_ID_U))
+  
+  
+  # define a palette option so that we can set a transparent NA value
+  ecoInColor <- colorFactor(palette =ers2$color,
+                            domain = ers2$ECO_ID_U,
+                            na.color =  "#FF000000")
+  
+    
 } else{
   ersinMap <- "No values"
 }
-
-getPalette = colorRampPalette(RColorBrewer::brewer.pal(length(ers2$ECO_ID_U), "Set1"))
-# define a palette option so that we can set a transparent NA value
-ecoINColor <- colorNumeric(
-  palette = getPalette,
-  domain = ers2$ECO_ID_U,
-  alpha = TRUE,
-  na.color =  "#FF000000"
-)
 
 
 
@@ -273,12 +282,18 @@ ecoRast <- mask(ecoRast, mask1)
 # set the palette
 # this defines the color used, and can be called in the legend creation
 ## set 3 has a cap of 12 unique colors
-ecoPal <-  RColorBrewer::brewer.pal(n = length(missingEcos), name = "Set3")
-ecoPal <- ecoPal[1:length(missingEcos)]
+### duplicating the values then subsetting base on the required number. 
+ecoPal <-  rep(RColorBrewer::brewer.pal(n = 12, name = "Spectral"), 6)
+ecoPal <- ecoPal[1:length(ecoReg$ECO_ID_U)]
+
+ecoReg$color <- ecoPal
+ecoReg <- ecoReg |> arrange(desc(ECO_NAME))
+ecoReg$ECO_ID_U <- factor(ecoReg$ECO_ID_U, ordered = TRUE, 
+                                levels = c(ecoReg$ECO_ID_U))
 
 # define a palette option so that we can set a transparent NA value
-ecoColor <- colorFactor(palette = c(ecoPal),
-                        domain = missingEcos,
+ecoColor <- colorFactor(palette = ecoReg$color,
+                        domain = ecoReg$ECO_ID_U,
                         na.color =  "#FF000000")
 
 
@@ -407,6 +422,25 @@ m3 <- m2 |>
                   "SD of Distribution Model"))
 m3 
 ```
+### Variables used in prediction model 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+varTable <- data$variableImportance |>
+  dplyr::select("Predictor Variable" = `Current title`,
+                "Relative Important on Model" = importance,
+                "Included in model" = includeInFinal,
+                "Abbrevaition" = varNames
+                )|>
+  dplyr::arrange(desc(`Relative Important on Model`))|>
+  dplyr::arrange(desc(`Included in model`))
+# display table 
+DT::datatable(varTable,
+              rownames = FALSE,
+              class = "compact")
+
+```
+
+
 
 #  *ex situ* conservation gap analysis 
 
@@ -516,8 +550,8 @@ if(ersex$ERS == 100){
   addRasterImage(raster(ecoRast),
                group = "ERS ex situ",
                colors = ecoColor,
-    project = FALSE)|>
-  addLegend(colors = ecoPal,
+               project = FALSE)|>
+  addLegend(colors = ecoReg$color,
             group = "ERS ex situ",
             labels = ecoReg$ECO_NAME) |>
   # Outline of all ecoregions
@@ -660,6 +694,17 @@ in1 <- leaflet(width = "100%")|>
     colors = srsPal,
     group = "SRS in situ",
     project = FALSE)|>
+  # Outline of all ecoregions
+  addPolygons(
+    data = allEcos,
+    group = "All ecoregions",
+    weight = 2,
+    stroke = TRUE,
+    fill = TRUE,
+    fillOpacity = 0.2,
+    popup = allEcos$ECO_NAME,
+    color = "#60616050"
+  ) |>
   addLegend(colors = srsPal1,
             group = "SRS in situ",
             title = "SRS in situ",
@@ -685,16 +730,16 @@ in3 <- in1 |>
             group = "GRS in situ",
             labels = c("Background area", "Potential distribution model", "Potential distribution within a protected area"))
 
+
 ## ERS in map 
 if(class(ersinMap) != "character"){
   in3 <- in3 |>
-  addRasterImage(
-    x = raster(ersinMap),
-    colors = getPalette(length(ers2$ECO_NAME)),
+  addRasterImage(x = raster(ersinMap),
+    colors = ecoInColor,
     group = "ERS in situ",
     project = FALSE
   )|>
-    addLegend(colors = getPalette(length(ers2$ECO_NAME)),
+    addLegend(colors = ers2$color,
               group = "ERS in situ",
               labels = ers2$ECO_NAME)
 }
@@ -709,8 +754,9 @@ in3 <- in3|>
     overlayGroups = c(
       "SRS in situ",
       "GRS in situ",
-      "ERS in situ"))|>
-  hideGroup(group = c( "SRS in situ", "ERS in situ"))
+      "ERS in situ",
+      "All ecoregions"))|>
+  hideGroup(group = c( "SRS in situ", "ERS in situ","All ecoregions"))
 
 in3
 ```

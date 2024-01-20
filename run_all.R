@@ -131,8 +131,6 @@ for(i in genera){
     print("next")
   }
   
-  
-  
   ## spatial object
   sp1 <- write_GPKG(path = allPaths$spatialDataPath,
                     overwrite = overwrite, 
@@ -299,7 +297,8 @@ for(i in genera){
                                                   g_buffer = g_buffer,
                                                   natArea = natArea,
                                                   protectedAreas = protectedAreas,
-                                                  countsData = c1))
+                                                  countsData = c1,
+                                                  variableImportance = allPaths$variablbeSelectPath))
     }else{ # no sdm results 
       if(!file.exists(allPaths$sdmResults)){
         erroredSpecies$noSDM <- c(erroredSpecies$noSDM, j)
@@ -354,7 +353,7 @@ for(i in genera){
 
     
     # generate summary html  
-    if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
+    # if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
     try(
         rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
                           output_format = "html_document",
@@ -367,11 +366,11 @@ for(i in genera){
                           # encoding = "utf-8"
         )
       )
-    }else{
+    # }else{
       if(!file.exists(allPaths$summaryHTMLPath)){
         erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
       }
-    }
+    # }
     # block here for testing. I want variable in local environment and don't want them written out.
     # stop()
     
