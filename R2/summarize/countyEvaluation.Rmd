@@ -270,9 +270,11 @@ countyState <- countyState |>
 ## Map of Species Occurrences for `r speciesName`
 
 The map below summarizes all occurrence data at the country level. This includes 
+
 - Observational data : Validated records from INaturalist
 - Herbarium data : Occurrence data with associated herbariumspecimens
-- Germplasm data : Occurrence data with living specimens stored in genebanks or botanical gardens 
+- Germplasm data : Occurrence data with living specimens stored in genebanks or 
+botanical gardens 
 - USDA Plants : County level reference of species presence
 - BONAP : County level reference of species presence
 - Nature Serve : county level reference of species presence 

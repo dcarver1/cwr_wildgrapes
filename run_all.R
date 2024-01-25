@@ -94,6 +94,9 @@ plan(strategy = "multisession", workers =8)
 #              "Vitis shuttleworthii",
 #              "Vitis palmata",
 #              "Vitis vulpina"                        )
+# daucus subset
+species <- species[c(1,8,14,48,54,51)]
+
 
 
 # Daucus_aureus is species[1] is a reasonable one for troubleshooting
@@ -228,7 +231,7 @@ for(i in genera){
                                                protectedArea =protectedAreas ))
       ## ersin 
       ersin <- write_CSV(path = allPaths$ersinPath,
-                           overwrite = TRUE,
+                           overwrite = overwrite,
                            function1 = ers_insitu(occuranceData = sp1,
                                                   nativeArea = natArea,
                                                   protectedArea = protectedAreas,
@@ -243,7 +246,7 @@ for(i in genera){
                                                 thres = thres))
       ## fcsin 
       fcsin <- write_CSV(path = allPaths$fcsinPath,
-                        overwrite = TRUE ,
+                        overwrite = overwrite ,
                         function1 = fcs_insitu(srsin = srsin,
                                                grsin = grsin,
                                                ersin = ersin,
@@ -254,7 +257,7 @@ for(i in genera){
       #exsitu 
       ##ersex  
       ersex <- write_CSV(path = allPaths$ersexPath,
-                        overwrite = TRUE,
+                        overwrite = overwrite,
                         function1 = ers_exsitu(speciesData = sd1,
                                                thres = thres,
                                                natArea = natArea,
@@ -268,7 +271,7 @@ for(i in genera){
                                                thres = thres))
       ##fcsex
       fcsex <- write_CSV(path = allPaths$fcsexPath,
-                        overwrite = TRUE,
+                        overwrite = overwrite,
                         function1 = fcs_exsitu(srsex = srsex,
                                                grsex = grsex,
                                                ersex = ersex,
@@ -276,7 +279,7 @@ for(i in genera){
       
       #combined measure 
       fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
-                              overwrite = TRUE,
+                              overwrite = overwrite,
                               function1 = fcs_combine(fcsin = fcsin,
                                                       fcsex = fcsex))
       
@@ -345,11 +348,11 @@ for(i in genera){
       leaflet::addRasterImage(x = raster(thres2),
                               colors = c("#FFFFFF80", "#00FF00"))|>
       leaflet::addCircleMarkers(data = sp1,
-                                color = "#7532a8",
+                                color = c("#7532a8",
                                 opacity = 1,
                                 radius = 1,
                                 group = "Occurrences",
-                                stroke = 1)
+                                stroke = 1))
 
     
     # generate summary html  

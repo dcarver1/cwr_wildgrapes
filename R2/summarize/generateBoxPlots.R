@@ -50,5 +50,3 @@ generateBoxPlot_export <- function(data,names,variables,exportLocation){
 #                "bio_19","bio_20","bio_21","bio_22","bio_23","bio_24",
 #                "bio_25","bio_26")
 
-generateBoxPlot_export <- 
-
