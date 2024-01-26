@@ -4,13 +4,13 @@
 # library(plotly)
 # library(dplyr)
 
-# d1 <- read.csv("C:/Users/carverd/Downloads/daucusData_BioClimatic_2.5arc_modified_forTesting.csv")
+d1 <- read.csv("C:/Users/carverd/Downloads/daucusData_BioClimatic_2.5arc_modified_forTesting.csv")
 # n1 <- read.csv("C:/Users/carverd/Downloads/variableNames2.csv")
 
 
 generateBoxPlot <- function(data,names,parameter){
   # grab the title
-  title <- names$Current.title[names$shortName == parameter]
+  title <- names$`Current title`[names$shortName == parameter]
   # assign the model param
   vals <- data |> dplyr::select(parameter) |> pull()
   data <- data |>
@@ -18,7 +18,7 @@ generateBoxPlot <- function(data,names,parameter){
   # select generate the plot 
   fig <- plot_ly(data,
                  x = ~modelParam,
-                 color = ~Name, 
+                 color = ~taxon, 
                  type = "box",
                  boxpoints = "outlier",
                  line = list(width = 6),

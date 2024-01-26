@@ -1,0 +1,29 @@
+---
+title: Genus/genepool level visualization of species indicator distribution
+author: Daniel P. Carver and Colin K. Khoury 
+output:
+  html_document:
+      css: style.css
+date: "Report generated on `r Sys.Date()`"
+params:
+  inputData: NA
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# compile all model data for species 
+species <- inputData$species
+data <- inputData$data
+names <- inputData$names
+# change to params$inputData$species
+
+for(i in species){
+  
+}
+
+generateBoxPlot(data = data,
+                names = names,
+                parameter = "bio_01")
+```
+
+Set a header for each plot and render.... 
+
