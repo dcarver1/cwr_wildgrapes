@@ -73,8 +73,7 @@ generateRunSummaries <- function(dir1,runVersion, genus, protectedAreas, overwri
   # generate conservation summary figures 
   conservationSummary <- compileConservationData(directory = dir1, 
                                                  runVersion = runVersion,
-                                                 genus = genus, 
-                                                 figure = TRUE)
+                                                 genus = genus)
   # add additional object to the list to be passed to the rmd 
   conservationSummary$map <- raster(path1)
   conservationSummary$proAreas <- protectedAreas

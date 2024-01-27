@@ -28,7 +28,9 @@ testing <- FALSE
 # transform data
 if(testing==TRUE){
   data <- conservationSummary$summaryData # testing only
-  figures <- conservationSummary$figure
+  figure1 <- conservationSummary$figure1
+  figure2 <- conservationSummary$figure2
+  figure3 <- conservationSummary$figure3
   image <- conservationSummary$map
   p1 <- conservationSummary$proAreas
   ga50 <- conservationSummary$ga50Map
@@ -36,7 +38,9 @@ if(testing==TRUE){
 }else{
   inputs <- params$reportData
   data <- inputs$summaryData
-  figures <- inputs$figure
+  figure1 <- inputs$figure1
+  figure2 <- inputs$figure2
+  figure3 <- inputs$figure3  
   image <- inputs$map
   p1 <- inputs$proAreas
   ga50 <- inputs$ga50Map
@@ -50,17 +54,34 @@ if(testing==TRUE){
 
 ## Conservation gap analysis results 
 
+
+:::: {style="display: flex;"}
+
+::: {}
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'right', fig.height = 8 } 
 #  fig.height= 8
 # not all species were showing up with autosize on. Have this set to capture, but need to evaluate how flexable it is. 
-heightPerRow <- 875/30
+heightPerRow <- 35
 height <- nrow(data) * heightPerRow
-figures |>  layout(autosize = F,height = round(height), width = 800) # might
-htmltools::br()
-htmltools::br()
-
+figure1 # |>  layout(autosize = T, width = 800) # might
 ```
-Clicking the objects at the bottom of the figure will turn on and off elements on the figure.
+:::
+
+::: {}
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'right', fig.height = 8 } 
+#  fig.height= 8
+# not all species were showing up with autosize on. Have this set to capture, but need to evaluate how flexable it is. 
+heightPerRow <- 35
+height <- nrow(data) * heightPerRow
+figure2  # might
+```
+:::
+
+::::
+
+Clicking the objects at the bottom of the figures will turn on and off elements on the figure.
 <br>
 
 
@@ -129,12 +150,12 @@ meanPal <- colorNumeric(palette = distColor,domain = values(r1), na.color = "tra
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # produce the first map
-richness1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3)) |> 
-  addTiles() |> 
+richness1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3)) |>
+  addTiles() |>
   addRasterImage(x = r1,
                  colors = meanPal,
                  method = "ngb",
-                 group = "Species Richness") |> 
+                 group = "Species Richness") |>
   addLegend(position = "bottomright",
             color = distColor,
             title = "Species Richness",
@@ -165,7 +186,7 @@ exGap <- r1 - g50
 valsexGap <- unique(values(exGap))
 # Mean distribution map
 exGapPal <- colorNumeric(palette = distColor,
-                        domain = values(exGap), 
+                        domain = values(exGap),
                         na.color = "transparent")
 
 
@@ -220,7 +241,7 @@ distColor <- c("#ffffd4","#fed98e","#fe9929","#d95f0e","#993404")
 valsInGAP <- unique(values(inGap))
 # Mean distribution map
 inGapPal <- colorNumeric(palette = distColor,
-                        domain = values(inGap), 
+                        domain = values(inGap),
                         na.color = "transparent")
 
 
@@ -275,6 +296,8 @@ same (ca. 5 km2) areas.
 <br>
 <br>
 <br> 
+*Note: Score values of zero will not appear on the chart.*
+
 
 ## Definitions of conservation gap analysis scores
 
@@ -300,9 +323,9 @@ same (ca. 5 km2) areas.
 
 ### Final Conservation Score (FCS)
 
-**ex situ** : The  Final Conservation Score *ex situ* (FCS ex situ) was derived by calculating the average of the three *ex situ* conservation metrics.
+**Ex situ** : The  Final Conservation Score *ex situ* (FCS ex situ) was derived by calculating the average of the three *ex situ* conservation metrics.
 
-**in situ** : The Final Conservation Score *in situ* (FCS in situ) in was derived by calculating the average of the three *in situ* conservation metrics.
+**In situ** : The Final Conservation Score *in situ* (FCS in situ) in was derived by calculating the average of the three *in situ* conservation metrics.
 
 **FCSc-mean** : The Combined Final Conservation Score (FCSc-mean) was calculated for each taxon by averaging its final FCS ex situ and FCS in situ scores. Taxa were then categorized with regard to the two conservation strategies as well as in combination, with Urgent Priority (UP) for further conservation action assigned when FCS \<25, High Priority (HP) assigned when 25 ≤ FCS \< 50, Medium Priority (MP) when 50 ≤ FCS \< 75, and Low Priority (LP) when FCS ≥75.
 
@@ -312,11 +335,9 @@ same (ca. 5 km2) areas.
 
 **Occurrences with lat/long**: The total number of records that had a valid latitude and longitude pair and were used for spatial analysis. Non valid latitude longitude pairs included but were not limited to: points not on land masses, and records with only one of the two values present.
 
-**Germplasm Records(G)** : Occurrences in which a living sample (via plant or seed) is present in an *ex situ* conservation system (i.e., botanical garden, seed bank, genebank, etc.). 
+**Germplasm Records (G)** : Occurrences in which a living sample (via plant or seed) is present in an *ex situ* conservation system (i.e., botanical garden, seed bank, genebank, etc.). 
 
 
-**Herbarium Records(H)** : Occurrences that have a supporting herbarium or other reference record.
+**Reference Records (H)** : Occurrences that have a supporting herbarium or other reference record.
 
 **Unique Data Sources**: The number of unique database sources from which occurrences of the taxon were gathered.
-
-

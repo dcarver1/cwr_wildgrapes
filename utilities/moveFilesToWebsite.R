@@ -43,7 +43,8 @@ for(i in splist){
 # run summary assessments 
 file.copy(paste0("data/daucus/",modelRun,"_Summary.html"), folder, overwrite = TRUE)
 print("Summary doc copied")
-
+file.copy(paste0("data/daucus/",modelRun,"_boxPlotSummary.html"), folder, overwrite = TRUE)
+print("Summary doc copied")
 
 # vitis specific moves ----------------------------------------------------
 folder <- "~/Documents/GeospatialCentroid.github.io/vitis"

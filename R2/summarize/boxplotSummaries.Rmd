@@ -4,6 +4,8 @@ author: Daniel P. Carver and Colin K. Khoury
 output:
   html_document:
       css: style.css
+      toc: true
+      toc_float: true
 date: "Report generated on `r Sys.Date()`"
 params:
   inputData: NA
@@ -11,19 +13,134 @@ params:
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # compile all model data for species 
-species <- inputData$species
-data <- inputData$data
-names <- inputData$names
+species <- params$inputData$species
+data <- params$inputData$data
+names <- params$inputData$names
 # change to params$inputData$species
 
-for(i in species){
-  
+# generate the plots then append them to a named list
+for(i in seq_along(names$shortName)){
+  parameter <- names$shortName[i]
+  box1 <- generateBoxPlot(data = data,
+                names = names,
+                parameter = parameter)
+  l2 <- list("temp" = box1)
+  names(l2) <- parameter
+
+  if(i == 1){
+    plots <- l2
+    
+  }else{
+    plots <- c(plots, l2)
+  }
 }
 
-generateBoxPlot(data = data,
-                names = names,
-                parameter = "bio_01")
 ```
 
-Set a header for each plot and render.... 
 
+### Annual mean temperature     
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_01
+
+```
+### Mean diurnal temperature range   
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_02
+
+```
+### Isothermality                                     
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_03
+```
+### Temperature seasonality (standard deviation)        
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_04
+```
+### Maximum temperature of warmest month                
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_05
+```
+### Minimum temperature of coldest month                
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_06
+```
+### Temperature annual range                            
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_07
+```
+### Mean temperature of wettest quarter                 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_08
+```
+### Mean temperature of driest quarter
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_09
+```
+### Mean temperature of warmest quarter                 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_10
+```
+### Mean temperature of coldest quarter                 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_11
+```
+### Annual precipitation                                
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_12
+```
+### Precipitation of wettest month                      
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_13
+```
+### Precipitation of driest month                      
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_14
+```
+### Precipitation seasonality (coefficient of variation)
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_15
+```
+### Precipitation of wettest quarter                   
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_16
+```
+### Precipitation of driest quarter                    
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_17
+```
+### Precipitation of warmest quarter                   
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_18
+```
+### Precipitation of coldest quarter                   
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_19
+```
+### srad                                               
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_20
+```
+### vapr                                               
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_21
+```
+### wind                                              
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_22
+```
+### Altitude                                          
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_23
+```
+### Aspect (North-South)                             
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_24
+```
+### Aspect (East-West)                                  
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_25
+```
+### Slope
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_26
+```

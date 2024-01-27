@@ -37,7 +37,7 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 
 ```{r testing_parameters, echo=FALSE, message=FALSE, warning=FALSE}
 # for testing 
-# speciesName <- "Vitis baileyana"
+speciesName <- "Vitis baileyana"
 ## troubleshooting  
 # speciesName <- species1
 ```
@@ -61,10 +61,10 @@ plantsData1 <- params$plantsData1
 bonapData <- params$bonapData
   # read_csv("~/Documents/cwr_wildgrapes/data/source_data/bonap.csv")
 natureSeverData <- params$natureSeverData
-  # read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/natureServe.csv")
+   # read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/natureServe.csv")
 # valid lat long datasets 
 observationData <- params$observationData
-  # read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/tempDataForCountyMaps_2023118.csv") |> 
+  # read_csv("~/Documents/cwr_wildgrapes/data/processed_occurrence/tempDataForCountyMaps_2023118.csv") |>
   # filter(!is.na(taxon))
 fnaData <- params$fnaData
 
@@ -345,10 +345,17 @@ countyClass <- countyState |>
   mutate(weightedSum = sum(Ow,Hw,G,Cw,`Nature Serve`, na.rm = T))|>
   dplyr::select(-c(Ow,Hw,Cw))|>
   dplyr::mutate(
+    link = paste0("https://docs.google.com/forms/d/e/1FAIpQLScCTcg6ITFMXs9QpQEAvN92GI06wtSTiGSTcUBrOK6E2kChjw/viewform?usp=pp_url&entry.1016353547=",
+    speciesName,
+    "&entry.764274277=",
+    fips2,
+    "&entry.763749150=",
+    REGION,
+    "&entry.1585476570=",
+    NAME),
     popup = paste0(
         "<b>County Name: </b>", NAME,
         "<br/> <b>State: </b>", REGION,
-        "<br/> <b> Listed in County Source Data: </b>", inCountyData,
         "<br/> <b> Listed in USDA Plants: </b>", `USDA Plants`,
         "<br/> <b> Listed in BONAP: </b>", `BONAP`,
         "<br/> <b> Listed in Nature Serve: </b>", `Nature Serve`,
@@ -357,9 +364,8 @@ countyClass <- countyState |>
         "<br/> <b> Number of germplasm  Records: </b>", G,
         "<br/> <b> Number of Records before 1970: </b>",pre1970,
         "<br/> <b> All Records: </b>",anyRecord,
-        "<br/> <b> Weighted Records: </b>",weightedSum 
-      )
-  )|>
+        "<br/> <b> Report Issue: </b>",  "<a href=\"", link , "\">", "click here", "</a>")
+    )|>
   dplyr::mutate(
     weightedSum = case_when(weightedSum == 0 ~ NA,
                             TRUE ~ weightedSum),

@@ -73,7 +73,7 @@ species <- sort(unique(speciesData$taxon))
 
 # #testing
 i <- genera[1]
-j <- species[48]
+j <- species[1]
 
 erroredSpecies <- list(noLatLon = c(),
                        lessThenFive = c(),
@@ -422,6 +422,18 @@ for(i in genera){
       species = species,
       names = bioNames
     )
+    # produce the document 
+    rmarkdown::render(input = "R2/summarize/boxplotSummaries.Rmd",
+                      output_format = "html_document",
+                      output_dir = file.path(dir1),
+                      output_file = paste0(runVersion,"_boxPlotSummary.html"),
+                      params = list(
+                        inputData = inputData),
+                      envir = new.env(parent = globalenv())
+                      # clean = F,
+                      # encoding = "utf-8"
+    )
+    
   }
   
 }

@@ -4,7 +4,7 @@
 # library(plotly)
 # library(dplyr)
 
-d1 <- read.csv("C:/Users/carverd/Downloads/daucusData_BioClimatic_2.5arc_modified_forTesting.csv")
+# d1 <- read.csv("C:/Users/carverd/Downloads/daucusData_BioClimatic_2.5arc_modified_forTesting.csv")
 # n1 <- read.csv("C:/Users/carverd/Downloads/variableNames2.csv")
 
 
