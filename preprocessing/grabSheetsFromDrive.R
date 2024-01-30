@@ -18,7 +18,10 @@ d3 <- as.data.frame(d2) |>
   dplyr::select("taxon" = "Taxon Name",
                 acceptedSynonym = "Names to include in this concept (Homotypic synonyms)",  
                 countySpecies = "Include in county map analysis?",
-                modelSpecies = "Include in gap analsyis? (Colin)")                     
+                modelSpecies = "Include in gap analsyis? (Colin)",
+                everything()) |>
+  dplyr::select(c(-countySpecies, -modelSpecies, -`Reason for exclusion from county map`,-`Reason for exclusion from gap analysis (Colin)`,
+                  ))
 
 write_csv(d3,file = "data/source_data/taxonomy20231212.csv")
 

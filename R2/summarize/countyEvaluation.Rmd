@@ -16,6 +16,7 @@ params:
   countySHP : NA
   stateSHP: NA
   fnaData: NA
+  synData: NA
 ---
 ```{r load_packages_functions, echo=FALSE, message=FALSE, warning=FALSE}
 pacman::p_load("leaflet","data.table", "tidyr", "dplyr","plotly","DT","readr","sf", "tmap",
@@ -37,7 +38,7 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 
 ```{r testing_parameters, echo=FALSE, message=FALSE, warning=FALSE}
 # for testing 
-speciesName <- "Vitis baileyana"
+# speciesName <- "Vitis baileyana"
 ## troubleshooting  
 # speciesName <- species1
 ```
@@ -122,15 +123,15 @@ speciesList <- dplyr::left_join(x = plantsData1,
     ))
 
 # gather the states listed within FNA
-fna1 <- fnaData |> 
-  dplyr::filter(`Taxon Name` == speciesName) |>
-  dplyr::select(`States from FNA`)|>
-  pull()|>
-  stringr::str_trim(side = "left")|>
-  stringr::str_split(pattern = ",") |>
-  unlist()|>
-  stringr::str_trim()|>
-  str_subset(".+") # remove empty strings 
+  fna1 <- fnaData |> 
+    dplyr::filter(`Taxon Name` == speciesName) |>
+    dplyr::select(`States from FNA`)|>
+    pull()|>
+    stringr::str_trim(side = "left")|>
+    stringr::str_split(pattern = ",") |>
+    unlist()|>
+    stringr::str_trim()|>
+    str_subset(".+") # remove empty strings 
 
 # need a condition for determining when to run the FNA state filter 
 if(length(fna1)== 1 & fna1[1]=="NA"){
@@ -159,6 +160,23 @@ if(length(fna1)== 1 & fna1[1]=="NA"){
  FNAspecies<- TRUE
 
 }
+  
+# pull the synonym data 
+s1 <- synData |> 
+  dplyr::filter(taxon == species1)|>
+  as.data.frame()
+names(s1) <- c("taxon",
+               "acceptedSynonym",
+               "Names_to_exclude_from_this_Species_Complex",
+               "Species_Complex", 
+               "NatureServe_Concept_reference",
+               "Relationship_to_FNA",
+               "Taxonomic_notes",
+               "Classification_Status_NatureServe",
+               "Number_of_lower_taxa",
+               "Careful_review_needed?",
+               "Extralimital_to_US/Canada_(nativerange)")
+  
 
 ```
 
@@ -267,55 +285,60 @@ countyState <- countyState |>
 
 ```
 
-## Map of Species Occurrences for `r speciesName`
 
-The map below summarizes all occurrence data at the country level. This includes 
+## Supporting information on method and taxonomy {.tabset}
 
-- Observational data : Validated records from INaturalist
-- Herbarium data : Occurrence data with associated herbariumspecimens
-- Germplasm data : Occurrence data with living specimens stored in genebanks or 
-botanical gardens 
-- USDA Plants : County level reference of species presence
-- BONAP : County level reference of species presence
-- Nature Serve : county level reference of species presence 
+### Taxonomic concept
 
-### Spatial Reference
-When Latitude and longitude data is present for herbarium and germplasm data, this information is used to spatial derive the county location. When not spatial reference is provide and attempt was made to pull a county reference from attribute data associated with the record. If no certifiable county information was included, the occurrence was drop from the analysis. 
 
-### Flora of North America Mask 
-If state level distribution information was provided for a given specific species, that information was used to filter the states in which counties are evalutated. 
+<br>
+**Taxon** : `r speciesName` ,
+<br>
+**Accepted Synonym(s)** : `r s1$acceptedSynonym`
+<br> 
+**Excluded from concept** : `r s1$Names_to_exclude_from_this_Species_Complex`
+<br>
+**NatureServe Concept Reference**: `r s1$NatureServe_Concept_reference`
+<br>
+**Relationship to Flora of North America**: `r s1$s1$Relationship_to_FNA`
+<br>
+**Taxonomic Notes**: `r s1$Taxonomic_notes`
+<br> 
+**NatureServe Classification Status**: `r s1$Classification_Status_NatureServe`
 <br>
 **This species is included in FNA : `r FNAspecies`**
 <br> 
 
-### Determining Occupency 
+### Details on the map elements 
 
-Two maps have been generate to estimate the likelihood of species occurrence within a give county. 
+The map below summarizes all occurrence data at the country level. This includes 
 
-#### Un weighted map 
-The goal of this map is to make as little assumptions about the value or impact of a specific record. 
+- Observational data : Validated records from INaturalist
 
-- Observational data : 1 per observation
-- Herbarium data : 1 per observation
-- Germplasm data : 1 per observation
-- USDA Plants : 1 per reference
-- BONAP : 1 per reference
-- Nature Serve : 1 per reference
+- Herbarium data : Occurrence data with associated herbarium specimens
 
-For example a county with 3 observational records, 1 germplasm record, and referenced by Nature Serve would have a score of 5. 
+- Germplasm data : Occurrence data with living specimens stored in genebanks or 
+botanical gardens 
 
-#### Weighted Map 
-The map was generated using the same input data as the unweighted map, but more consideration was given to the expected significance of a record for a specific data source. In this example any records that were collected prior to 1970 do not contribute to the score.  
+- USDA Plants : County level reference of species presence
 
-- Observational data : 0.25 per observation 
-- Herbarium data : 0.5 per observation
-- Germplasm data : 1 per observation
-- USDA Plants and Bonap combined : 0.5 per reference
-- Nature Serve : 1 per reference
+- BONAP : County level reference of species presence
 
-The USDA Plants and Bonap measures were combine to a single feature due to the similarity in methods for creating these datasets. If a county was referenced by USDA Plants, Bonap, or both USDA Plants and Bonap it receives a score of 0.5
+- Nature Serve : county level reference of species presence 
 
-For example a county with 3 observational records, 1 germplasm record, and referenced by Nature Serve would have a score of 3. 
+### Spatial Reference 
+
+When latitude and longitude data is present for a record this information was used to assign the state/country. When valid latitude and longitude values were not provide the state and county reference information was pulled from the attribute data associated with the record. If no valid county information was included in the attribute data, the record was not used within this analysis. 
+
+
+### Flora of North America 
+
+If state level distribution information was provided for a given specific species, that information was used to filter the states in which counties are evaluated. 
+
+
+
+
+## 
 
 ```{r produceMAP, echo=FALSE, message=FALSE, warning=FALSE}
 if(nrow(sp1)==0){
@@ -342,7 +365,7 @@ countyClass <- countyState |>
     )
   )|>
   rowwise() |>
-  mutate(weightedSum = sum(Ow,Hw,G,Cw,`Nature Serve`, na.rm = T))|>
+  # mutate(weightedSum = sum(Ow,Hw,G,Cw,`Nature Serve`, na.rm = T))|>
   dplyr::select(-c(Ow,Hw,Cw))|>
   dplyr::mutate(
     link = paste0("https://docs.google.com/forms/d/e/1FAIpQLScCTcg6ITFMXs9QpQEAvN92GI06wtSTiGSTcUBrOK6E2kChjw/viewform?usp=pp_url&entry.1016353547=",
@@ -352,7 +375,9 @@ countyClass <- countyState |>
     "&entry.763749150=",
     REGION,
     "&entry.1585476570=",
-    NAME),
+    NAME,
+    "&entry.1304312867=",
+    NA),
     popup = paste0(
         "<b>County Name: </b>", NAME,
         "<br/> <b>State: </b>", REGION,
@@ -364,11 +389,11 @@ countyClass <- countyState |>
         "<br/> <b> Number of germplasm  Records: </b>", G,
         "<br/> <b> Number of Records before 1970: </b>",pre1970,
         "<br/> <b> All Records: </b>",anyRecord,
-        "<br/> <b> Report Issue: </b>",  "<a href=\"", link , "\">", "click here", "</a>")
+        "<br/> <b> Report Issue: </b>",  "<a target='_blank', href=\"", link , "\">", "click here", "</a>")
     )|>
   dplyr::mutate(
-    weightedSum = case_when(weightedSum == 0 ~ NA,
-                            TRUE ~ weightedSum),
+    # weightedSum = case_when(weightedSum == 0 ~ NA,
+    #                         TRUE ~ weightedSum),
     anyRecord = case_when(anyRecord == 0 ~NA,
                           TRUE ~ anyRecord)
   )
@@ -384,14 +409,6 @@ allVals <- c("1", "2-3","3-5","5-8","8-11",">12")
 # trying to assign classes directly 
 countyClass <- countyClass |>
   dplyr::mutate(
-    weightedColor= case_when(
-      is.na(weightedSum) ~ "#d9dbde",
-      weightedSum < 1 ~ brbg[1],
-      weightedSum >= 1 & weightedSum < 2 ~ brbg[4],
-      weightedSum >= 2 & weightedSum < 3 ~ brbg[5],
-      weightedSum >= 3 & weightedSum < 4 ~ brbg[6],
-      weightedSum >= 4  ~ brbg[7]
-    ),
     allColor = case_when(
       is.na(anyRecord) ~ "#d9dbde",
       anyRecord == 1 ~ brbg[1],
@@ -403,19 +420,56 @@ countyClass <- countyClass |>
     )
   )
 
+# Bonap and plants data only 
+bpData <- countyClass |>
+  dplyr::filter(`USDA Plants` == 1 | `BONAP` == 1) |>
+  dplyr::filter(anyRecord ==1 | anyRecord == 2)
+
+
+# county with H or G records 
+hgData <- countyClass |> 
+  dplyr::filter(H > 0 | G >0)
+
+# county with H or G records 
+oData <- countyClass |> 
+  dplyr::filter(O > 0 & anyRecord == O)
+
+
 # Create a continuous palette function
 palAll <- colorNumeric(
   palette = "BrBG",
   domain = countyClass$anyRecord,
   na.color = "#d9dbde")
-palWeighted <- colorNumeric(
-  palette = "BrBG",
-  domain = countyClass$weightedSum,
-  na.color = "#d9dbde")
 
-
+# generate point data 
 points <- sp1 |>
   dplyr::mutate(
+    tempID = 1:nrow(sp1),
+    link = paste0("https://docs.google.com/forms/d/e/1FAIpQLScCTcg6ITFMXs9QpQEAvN92GI06wtSTiGSTcUBrOK6E2kChjw/viewform?usp=pp_url&entry.1016353547=",
+    taxon,
+    "&entry.764274277=",
+    countyFIPS,
+    "&entry.763749150=",
+    state,
+    "&entry.1585476570=",
+    county,
+    "&entry.1304312867=",
+    tempID),
+    color = case_when(
+      type == "O" ~ "#fc8d62",
+      type == "H" ~ "#8da0cd",
+      type == "G" ~ "#66c2a5"
+    ),
+    url = case_when(
+      grepl("http", x = sourceUniqueID) ~ paste0("<a target='_blank', href=\"", sourceUniqueID , "\">", "view", "</a>"),
+      grepl("http", x = collectionSource) ~ paste0("<a target='_blank', href=\"", collectionSource , "\">", "view", "</a>"),
+      TRUE ~ NA
+    ),
+    h_link = case_when(
+      type == "H" & !is.na(url) ~ TRUE,
+      type == "H" & is.na(url) ~ FALSE,
+      TRUE ~ NA
+    ),
      popup =paste0(
     "<b>Taxon: </b>", taxon,
     "<br/> <b>Data Source: </b>", databaseSource,
@@ -423,26 +477,33 @@ points <- sp1 |>
     "<br/> <b> Type: </b>", type,
     "<br/> <b> Year: </b>", yearRecorded,
     "<br/> <b> Location Description: </b>", localityInformation,
-    "<br/> <b> External Reference: </b>",collectionSource ),
-    color = case_when(
-      type == "O" ~ "#fc8d62",
-      type == "H" ~ "#8da0cd",
-      type == "G" ~ "#66c2a5"
-    ))
+    "<br/> <b> External Reference: </b>", url,
+    "<br/> <b> Report Issue: </b>",  "<a target='_blank', href=\"", link , "\">", "click here", "</a>")
+  )
+
+# herbarium with URL ref 
+h_url <- points |> 
+  dplyr::filter(h_link == TRUE)
+
+# herbarium with URL ref 
+h_no_url <- points |> 
+  dplyr::filter(h_link == FALSE)
+
 
 
 # Map 
 ## need conditions for the various types inputs 
 m1 <- leaflet(width = "100%",
-              sizingPolicy = leafletSizingPolicy(defaultWidth = "100%",
-                                                 defaultHeight = 2000,
-                                                 padding = 10),
+              height=800,
+              # sizingPolicy = leafletSizingPolicy(defaultWidth = "100%",
+              #                                    padding = 10),
               options = leafletOptions(minZoom = 3))|>
     addTiles(urlTemplate = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', 
              attribution =  'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
                )|>
     addMapPane("allRecords", zIndex = 415) |>
-    addMapPane("weightedRecords", zIndex = 418) |>
+    addMapPane("bpData", zIndex = 418) |>
+    addMapPane("hgData", zIndex = 419) |>
     addMapPane("points", zIndex = 420)
 
 # add spatial features to map
@@ -456,15 +517,33 @@ m1 <- leaflet(width = "100%",
                 opacity = 0.8,
                 group = "All Records",
                 options = pathOptions(pane = "allRecords"))|>
-    addPolygons(data = countyClass,
+    addPolygons(data = bpData,
                 color = "white",
-                fillColor = ~weightedColor,
+                fillColor = "#fec44f",
                 popup = ~popup,
                 weight = 0.8,
                 fillOpacity = 0.6,
                 opacity = 0.8,
-                group = "Weighted Records",
-                options = pathOptions(pane = "weightedRecords"))|> 
+                group = "Plants or Bonap Only",
+                options = pathOptions(pane = "bpData"))|>
+    addPolygons(data = hgData,
+            color = "white",
+            fillColor = "#fa9fb5",
+            popup = ~popup,
+            weight = 0.8,
+            fillOpacity = 0.6,
+            opacity = 0.8,
+            group = "H or G record",
+            options = pathOptions(pane = "hgData"))|>
+    addPolygons(data = oData,
+            color = "white",
+            fillColor = "#f03b20",
+            popup = ~popup,
+            weight = 0.8,
+            fillOpacity = 0.6,
+            opacity = 0.8,
+            group = "Observation only",
+            options = pathOptions(pane = "hgData"))|>
     addCircleMarkers(data =  points |> filter(type =="O"),
              color = ~color,
              opacity = 1,
@@ -479,9 +558,18 @@ m1 <- leaflet(width = "100%",
              radius = 2,
              stroke = 1,
              popup = ~popup,
-             group = "Herbarium",
+             group = "All Herbarium",
              options = pathOptions(pane = "points")
                )|>
+    addCircleMarkers(data = h_url,
+         color = "#c51b8a",
+         opacity = 1,
+         radius = 2,
+         stroke = 1,
+         popup = ~popup,
+         group = "Herbarium with URL",
+         options = pathOptions(pane = "points")
+           )|>
     addCircleMarkers(data = points[points$type =="G",],
              color = ~color,
              opacity = 1,
@@ -495,17 +583,11 @@ m1 <- leaflet(width = "100%",
               labels = allVals, # countyClass$anyRecord[!is.na(countyClass$anyRecord)],
               group = "All Records",
               title = "All Records Counted")|>
-    addLegend(colors = brbgWeighted,
-              labels = weightVals,
-              # values = ~weightedSum, # countyClass$weightedSum[!is.na(countyClass$weightedSum)],
-              na.label = NA,
-              group = "Weighted Records",
-              title = "Weighted Records")|>
   addLayersControl(
-      overlayGroups = c("All Records","Weighted Records","Observation", "Herbarium", "Germplasm"),
+      overlayGroups = c("All Records","Observation", "Herbarium", "Germplasm","Plants or Bonap Only","H or G record","Observation only"),
       options = layersControlOptions(collapsed = FALSE)
     )|>
-  hideGroup(c("Weighted Records","Observation","Herbarium","Germplasm"))
+  hideGroup(c("Observation","Herbarium","Germplasm","Plants or Bonap Only","H or G record","Observation only"))
 }
 
 m2
@@ -547,7 +629,7 @@ The table below display additional attribute data for all the counties with know
 df <- countyClass |>
   st_drop_geometry()|>
   dplyr::filter(anyRecord !=0)|>
-  dplyr::select(-weightedColor,-allColor, -inCountyData, -fips2 ,-popup)|>
+  dplyr::select(-allColor, -inCountyData, -fips2 ,-popup)|>
   dplyr::arrange(REGION)|>
   rename(
     "County Name" = NAME,
@@ -561,7 +643,7 @@ df <- countyClass |>
     "BONAP" = BONAP,
     "Nature Serve" = `Nature Serve`,
     "All Records Score" = anyRecord,
-    "Weighted Records Score" = weightedSum 
+    # "Weighted Records Score" = weightedSum 
     ) 
 
 DT::datatable(df,
