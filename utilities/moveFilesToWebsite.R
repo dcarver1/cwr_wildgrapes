@@ -67,7 +67,11 @@ splist <- c("Vitis arizonica",
              "Vitis aestivalis",
              "Vitis shuttleworthii",
              "Vitis palmata",
-             "Vitis vulpina"                        )
+             "Vitis vulpina",
+            "Vitis acerifolia",
+            "Vitis riparia",
+            "Vitis rotundifolia")
+
 
 # loop to grab the files 
 for(i in splist){

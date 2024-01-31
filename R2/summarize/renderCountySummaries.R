@@ -11,13 +11,13 @@ plan(strategy = multisession, workers = 16)
 # multisessoin is in parallel works on windows -- sequential runs withour parallel
 # multicore is faster because there is less overhead, but it can not be ran on windows or thourgh R studio
 # 
-speciesList <-c("Vitis aestivalis",
+speciesList <-c("Vitis acerifolia",
+                "Vitis aestivalis",
                    "Vitis palmata",
                    "Vitis riparia",
                    "Vitis rotundifolia",
                    "Vitis rupestris",
                    "Vitis shuttleworthii",
-                   "Vitis vinifera",
                    "Vitis vulpina")
 # or full species
 fullSpecies <- read_csv("data/source_data/taxonomy20231212.csv")|>
@@ -78,11 +78,11 @@ generateOccurnaceRMD <- function(species1){
 }
 # ## needs to be commented out unless running 
 # fullSpecies |> purrr::map(generateOccurnaceRMD)
-
+speciesList |> purrr::map(generateOccurnaceRMD)
 
 # speciesList |> purrr::map(generateOccurnaceRMD)
 # ### troubleshooting
-generateOccurnaceRMD(species ="Vitis x champinii" )
+generateOccurnaceRMD(species ="Vitis acerifolia" )
 
 
 ## erroring out at specific species need to troubleshoot that directly 

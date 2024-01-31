@@ -1,11 +1,11 @@
-# path <- "data/source_data/gbif.csv"
+ # path <- "data/source_data/gbif.csv"
 
 processGBIF <- function(path){
   
   d1a <- vroom(file = path)
   
   # grab and rename all features from gbif
-  d1 <- d1a %>% 
+  d1 <- d1a |> 
     dplyr::select(
       originalTaxon = "scientificName",
       sourceUniqueID = "occurrenceID",
@@ -22,15 +22,16 @@ processGBIF <- function(path){
       countryCode,
       state = "stateProvince", 
       taxonRank,
-      coordinateUncertainty = "coordinateUncertaintyInMeters"
-    )%>%
+      coordinateUncertainty = "coordinateUncertaintyInMeters",
+      observerName = "identifiedBy"
+    ) |>
     dplyr::mutate(databaseSource = "GBIF",
                   collectionSource = NA,
-                  biologicalStatus = NA)%>%
+                  biologicalStatus = NA)|>
     # remove fossil records 
-    filter(sampleCategory != "FOSSIL_SPECIMEN")%>%
+    filter(sampleCategory != "FOSSIL_SPECIMEN")|>
     # assign location value  and drop original 
-    dplyr::mutate(localityInformation = paste0(state, " -- ",locality ))%>%
+    dplyr::mutate(localityInformation = paste0(state, " -- ",locality ))|>
     dplyr::filter(is.na(latitude) | latitude > 10,
                   is.na(longitude) | longitude < -50)
   
@@ -38,19 +39,19 @@ processGBIF <- function(path){
   
   
   # mutate the taxon 
-  d1 <- d1 %>% mutate( taxon =  case_when(
-      taxonRank == "SPECIES" ~ d1$species,
-      taxonRank == "GENUS" ~ d1$genus,
-      taxonRank == "VARIETY" ~ paste0(d1$species, " var. ", d1$infraspecificEpithet),
-      taxonRank == "SUBSPECIES" ~ paste0(d1$species, " subsp. ", d1$infraspecificEpithet),
-      TRUE ~ d1$species,
-    )
+  d1 <- d1 |> mutate( taxon =  case_when(
+    taxonRank == "SPECIES" ~ d1$species,
+    taxonRank == "GENUS" ~ d1$genus,
+    taxonRank == "VARIETY" ~ paste0(d1$species, " var. ", d1$infraspecificEpithet),
+    taxonRank == "SUBSPECIES" ~ paste0(d1$species, " subsp. ", d1$infraspecificEpithet),
+    TRUE ~ d1$species,
   )
-
+  )
+  
   
   # define the type
   ## GBIF has a perserved specimen class as well, could be good   
-  d1 <- d1 %>%
+  d1 <- d1 |>
     mutate(type = case_when(
       sampleCategory != "LIVING_SPECIMEN" ~ "H",
       sampleCategory == "LIVING_SPECIMEN" ~ "G"
@@ -60,17 +61,18 @@ processGBIF <- function(path){
   d1$country <- countrycode(sourcevar = d1$countryCode, 
                             origin = "iso2c", 
                             destination = "country.name.en")
-
+  
   # iso3 
   d1$iso3 <- countrycode(sourcevar = d1$countryCode,
                          origin = "iso2c",
                          destination = "iso3c")
   # add elements not define in data and select for correct order 
-  d1 <- d1%>% mutate(
-      county = NA,
-      countyFIPS = NA,
-      stateFIPS  = NA
-    )%>% dplyr::select(
+  d1 <- d1|> mutate(
+    county = NA,
+    countyFIPS = NA,
+    stateFIPS  = NA,
+    recordID = paste0(databaseSource,"_",sourceUniqueID)
+  )|> dplyr::select(
     taxon,
     originalTaxon,
     genus,
@@ -93,7 +95,9 @@ processGBIF <- function(path){
     countyFIPS,
     state,
     stateFIPS,
-    coordinateUncertainty
+    coordinateUncertainty,
+    observerName,
+    recordID
   )
   
   return(d1)

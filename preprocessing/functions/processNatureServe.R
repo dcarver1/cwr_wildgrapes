@@ -19,7 +19,7 @@ processIUNC <- function(path){
       yearRecorded = max_obs_year,
       county = county_name ,
       state = state_cd,
-      countyFIPS = fips_cd ,
+      countyFIPS = fips_cd,
     )%>%
     mutate(
       species = str_remove(string = taxon, pattern = "Vitis "),
@@ -37,7 +37,9 @@ processIUNC <- function(path){
       localityInformation = NA,
       biologicalStatus= NA,
       stateFIPS = NA ,
-      coordinateUncertainty = NA
+      coordinateUncertainty = NA,
+      recordID = paste0(databaseSource, "_",sourceUniqueID),
+      observerName =NA
     )
   return(d1)   
 }

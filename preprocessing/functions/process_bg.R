@@ -1,5 +1,5 @@
 
-path <- "data/source_data/bg_survey.csv"
+# path <- "data/source_data/bg_survey.csv"
 ### something with the lat long column is preventing it from being read in? 
 processBG <- function(path){
   
@@ -18,7 +18,8 @@ processBG <- function(path){
       collectionSource = `Original Source`,
       yearRecorded = `Collection Year`,
       county = `County of Wild-Collection Site`,
-      state = `State/Province of Wild-Collection Site`
+      state = `State/Province of Wild-Collection Site`,
+      observerName =`Collector Name`
     )%>%
     mutate(
       taxon = paste0(genus," ",species)%>%
@@ -30,7 +31,8 @@ processBG <- function(path){
       finalOriginStat = NA,
       countyFIPS = NA,
       stateFIPS = NA ,
-      coordinateUncertainty = NA
+      coordinateUncertainty = NA,
+      recordID = paste0(databaseSource, "_",sourceUniqueID)
     )
   return(d1)     
   

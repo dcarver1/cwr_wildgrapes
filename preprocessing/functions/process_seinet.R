@@ -25,7 +25,9 @@ processSEINET <- function(path){
       county = county,
       localityInformation = locality,
       collectionSource = references,
-      coordinateUncertainty = coordinateUncertaintyInMeters)|>
+      coordinateUncertainty = coordinateUncertaintyInMeters,
+      observerName = identifiedBy
+      )|>
     dplyr::mutate(
       species = NA, 
       databaseSource = "seinet",
@@ -35,16 +37,21 @@ processSEINET <- function(path){
       countyFIPS = NA,
       biologicalStatus = NA, 
       stateFIPS = NA,
-      coordinateUncertainty = NA
+      recordID = paste0(databaseSource,"_",sourceUniqueID)
     )
+  
+  # Assign types based on sample category
+  d3 <- d2 |>
+    filter(!sampleCategory %in% c("Observation", "HumanObservation"))
+    
   
   # # reassign datatype on lat lon column 
   # d2$latitude <- d2$latitude
   # 
   # assign genus species 
-  d4 <- stringr::str_split_fixed(d2$taxon, " ", 2)
-  d2$species <- d4[,2]
+  d4 <- stringr::str_split_fixed(d3$taxon, " ", 2)
+  d3$species <- d4[,2]
   
-  return(d2)
+  return(d3)
 }
 

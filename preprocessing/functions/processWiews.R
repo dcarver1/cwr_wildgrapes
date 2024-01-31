@@ -29,11 +29,13 @@ processWIEWS <- function(path){
       finalOriginStat = NA,
       countyFIPS = NA,
       stateFIPS = NA,
-      coordinateUncertainty = NA
+      coordinateUncertainty = NA,
+      observerName = NA,
+      recordID = paste0(databaseSource,"_",sourceUniqueID)
     )
   
   # adding condition to apply 
-  
+  ## reassing type based on 
   
   return(d2)
 }

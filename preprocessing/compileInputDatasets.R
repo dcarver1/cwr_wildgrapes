@@ -61,7 +61,9 @@ standardColumnNames <- c(
   "countyFIPS",
   "state",
   "stateFIPS",
-  "coordinateUncertainty"
+  "coordinateUncertainty",
+  "observerName",
+  "recordID"
 )
 
 
@@ -93,7 +95,7 @@ grin <- processGRIN(path = "data/source_data/grin.csv") |>
 
 ## seinet
 if(overwrite == TRUE){
-seinet <- processSEINET(path = "data/source_data/midwestherberium.csv")|>
+seinet <- processSEINET(path = "data/source_data/seinet.csv")|>
   orderNames(names = standardColumnNames) |>
   removeDuplicatesID()
   
@@ -162,7 +164,7 @@ iunc <- processIUNC(path  = "data/source_data/iuncData.gdb") |>
 
 ## BONAP
 if(overwrite == TRUE){
-bonap <- processBonap(path = "data/source_data/bonap.csv") |>
+  bonap <- processBonap(path = "data/source_data/bonap.csv") |>
   orderNames(names = standardColumnNames) |>
   removeDuplicatesID()
   # write out data
@@ -220,7 +222,17 @@ d6 <- checksOnLatLong(d5a)
 d6_sum <- summarizeBySource(d6$validLatLon)
 ## grab the G records with no lat lon values
 d6_g <- d6$countycheck |>
-  filter(type == "G")
+  dplyr::mutate(
+    county = stringr::str_remove_all(string = county,pattern = " .Co"),
+    county = stringr::str_remove_all(string = county,pattern = " Co."),
+    county = case_when(
+      grepl("County", county) ~ county, 
+      is.na(county) ~ NA,
+      TRUE ~ paste0(county," County")
+    )
+  )
+  
+
 
 
 ### has lat lon so can be used in both county and modeling products
@@ -277,10 +289,13 @@ write_csv(x = countyEval,  file = "data/processed_occurrence/checkForIncludingIn
 
 
 # assign FIPS codes -------------------------------------------------------
+## all the state and coutry 
 d8 <- assignFIPS(valLatLon2)
 
 
 # add the G records with no lat lon back to the modeling data---------------------------------------
+
+### need to apply 
 d8a <- d8 |> bind_rows(d6_g)
 
 
@@ -293,13 +308,17 @@ write_csv(x = d9, file = "data/processed_occurrence/draft_model_data.csv")
 
 
 # evaluate the county level maps ------------------------------------------
-c1 <-
-  read_csv(file = "data/processed_occurrence/checkForIncludingInCountyMaps.csv")
+c1 <- read_csv(file = "data/processed_occurrence/checkForIncludingInCountyMaps.csv")
 
-c2 <-
-  checkCounties(countyCheckData = c1,
+c2 <-checkCounties(countyCheckData = c1,
                 states = states,
                 counties = counties)
+#resolve state features add assign states 
+statesUS <- states |> filter(adm0_a3 == "USA")
+c3 <- c2$include
+## there are a lot of issues with the state names here... need to resolve some for completion of the county data
+c4 <- c3 |>
+  assignFIPS()
 
 write_csv(x = c2$exclude, file = "data/processed_occurrence/countyCheck_Exclude.csv")
 write_csv(x = c2$include, file = "data/processed_occurrence/countyCheck_Include.csv")
@@ -307,12 +326,11 @@ write_csv(x = c2$include, file = "data/processed_occurrence/countyCheck_Include.
 # duplicate check for county data
 ### keep en eye out for duplicated within the county only feautes. I currently don't have a check put in place but it also
 ### seems like it;s not the big of an issue.
-c3 <- bind_rows(c2$include, d9) |>
+c4 <- bind_rows(c4, d9) |>
   st_drop_geometry() |>
-  select(-validLat,-validLon, -validLatLon,-index) |>
-  assignFIPS()
+  select(-validLat,-validLon, -validLatLon,-index)
 
-write_csv(x = c3, file = "data/processed_occurrence/tempDataForCountyMaps_20231025.csv")
+write_csv(x = c4, file = "data/processed_occurrence/tempDataForCountyMaps_20231025.csv")
 
 
 

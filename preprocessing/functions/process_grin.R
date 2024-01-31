@@ -1,11 +1,11 @@
 
- # path <- "data/processed_occurance/grin.csv"
+# path <- "data/source_data/grin.csv"
 
 processGRIN <- function(path){
 # define and generate specific features  
   d1 <- read.csv(path)
   
-  d2 <- d1 %>% 
+  d2 <- d1 |> 
     dplyr::select(
       taxon = taxon, 
       originalTaxon = taxon, 
@@ -15,7 +15,7 @@ processGRIN <- function(path){
       sourceUniqueID = accession_number,
       sampleCategory = status_code,
       biologicalStatus = improvement_status_code, 
-      localityInformation = collector_verbatim_locality)%>%
+      localityInformation = collector_verbatim_locality)|>
     dplyr::mutate(
       genus = NA,
       species = NA, 
@@ -30,12 +30,14 @@ processGRIN <- function(path){
       countyFIPS = NA,
       state = NA,
       stateFIPS = NA,
-      coordinateUncertainty = NA
-    )
+      coordinateUncertainty = NA,
+      observerName = NA
+    )|>
+    dplyr::mutate(recordID = paste0(databaseSource,"_",sourceUniqueID))
   
   # filter based on active sampleCategory and biological status
-  d3 <- d2 %>% 
-    dplyr::filter(biologicalStatus == "WILD")%>%
+  d3 <- d2 |> 
+    dplyr::filter(biologicalStatus == "WILD")|>
     dplyr::mutate(type = case_when(
       sampleCategory == "INACTIVE" ~ "H",
       TRUE ~ "G"

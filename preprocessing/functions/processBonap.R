@@ -36,7 +36,9 @@ processBonap <- function(path){
       type = "H",
       finalOriginStat = NA,
       stateFIPS = substr(countyFIPS, start = 1, stop = 2),
-      coordinateUncertainty = NA
+      coordinateUncertainty = NA,
+      recordID = paste0(databaseSource, "_",sourceUniqueID),
+      observerName =NA
     )
   
   return(d2)

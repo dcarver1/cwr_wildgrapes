@@ -18,7 +18,12 @@ assignFIPS <- function(data){
   # set state value 
   j1 <- left_join(d1, states, by = c("state" = "state_name"))%>%
     mutate(stateFIPS = state_code,
-           county = paste0(county, " County"))
+           county = case_when(
+             grepl("County", county) ~ county, 
+             is.na(county) ~ NA,
+             TRUE ~ paste0(county," County")
+             )
+           )
   
   j2 <- left_join(j1, codes, by = c("stateFIPS" = "state_code" , 
                                      "county" = "county"))%>%

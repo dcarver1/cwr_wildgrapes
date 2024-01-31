@@ -280,7 +280,7 @@ countyState <- countyState |>
 # add any record column
 countyState <- countyState |>
   rowwise() |>
-  mutate(anyRecord = sum(O,H,G,pre1970,`USDA Plants`, 
+  mutate(anyRecord = sum(O,H,G,`USDA Plants`, 
                          BONAP,`Nature Serve`, na.rm = T))
 
 ```
@@ -300,7 +300,7 @@ countyState <- countyState |>
 <br>
 **NatureServe Concept Reference**: `r s1$NatureServe_Concept_reference`
 <br>
-**Relationship to Flora of North America**: `r s1$s1$Relationship_to_FNA`
+**Relationship to Flora of North America**: `r s1$Relationship_to_FNA`
 <br>
 **Taxonomic Notes**: `r s1$Taxonomic_notes`
 <br> 
@@ -356,18 +356,6 @@ if(nrow(sp1)==0){
 # counties caputered by occurrences and county data 
 countyClass <- countyState |> 
   dplyr::mutate(
-    Ow = O*0.25,
-    Hw = H*0.5,
-    Cw = case_when(
-      `USDA Plants` == 1 ~ 0.5,
-      `BONAP` == 1 ~ 0.5,
-      TRUE ~ 0 
-    )
-  )|>
-  rowwise() |>
-  # mutate(weightedSum = sum(Ow,Hw,G,Cw,`Nature Serve`, na.rm = T))|>
-  dplyr::select(-c(Ow,Hw,Cw))|>
-  dplyr::mutate(
     link = paste0("https://docs.google.com/forms/d/e/1FAIpQLScCTcg6ITFMXs9QpQEAvN92GI06wtSTiGSTcUBrOK6E2kChjw/viewform?usp=pp_url&entry.1016353547=",
     speciesName,
     "&entry.764274277=",
@@ -384,16 +372,14 @@ countyClass <- countyState |>
         "<br/> <b> Listed in USDA Plants: </b>", `USDA Plants`,
         "<br/> <b> Listed in BONAP: </b>", `BONAP`,
         "<br/> <b> Listed in Nature Serve: </b>", `Nature Serve`,
-        "<br/> <b> Number of Observations Only Records: </b>", O,
-        "<br/> <b> Number of herbarium Records: </b>", H,
-        "<br/> <b> Number of germplasm  Records: </b>", G,
-        "<br/> <b> Number of Records before 1970: </b>",pre1970,
+        "<br/> <b> Number of observations records: </b>", O,
+        "<br/> <b> Number of herbarium records: </b>", H,
+        "<br/> <b> Number of germplasm records: </b>", G,
+        "<br/> <b> Number of records before 1970: </b>",pre1970,
         "<br/> <b> All Records: </b>",anyRecord,
         "<br/> <b> Report Issue: </b>",  "<a target='_blank', href=\"", link , "\">", "click here", "</a>")
     )|>
   dplyr::mutate(
-    # weightedSum = case_when(weightedSum == 0 ~ NA,
-    #                         TRUE ~ weightedSum),
     anyRecord = case_when(anyRecord == 0 ~NA,
                           TRUE ~ anyRecord)
   )
@@ -402,8 +388,6 @@ countyClass <- countyState |>
 ### Good set to use for the visualization  
 brbg <- c("#a6611a","#dfc27d","#f5f5f5",'#c7eae5','#80cdc1','#35978f','#01665e')
 # Specific elements used in the reclass
-brbgWeighted <- brbg[c(1,4,5,6,7)]
-weightVals <- c("<1","1-2","2-3","3-4",">=4")
 brbgAll <- brbg[c(1,2,4,5,6,7)]
 allVals <- c("1", "2-3","3-5","5-8","8-11",">12")
 # trying to assign classes directly 
@@ -417,8 +401,14 @@ countyClass <- countyClass |>
       anyRecord >= 5 & anyRecord < 8 ~ brbg[5],
       anyRecord >= 8 & anyRecord < 12 ~ brbg[6],
       anyRecord >= 12  ~ brbg[7]
+    ),
+    singleColor = case_when(
+      is.na(anyRecord) ~ "#d9dbde",
+      anyRecord >= 1 ~ "#a8ddb5"
     )
   )
+
+
 
 # Bonap and plants data only 
 bpData <- countyClass |>
@@ -495,13 +485,12 @@ h_no_url <- points |>
 ## need conditions for the various types inputs 
 m1 <- leaflet(width = "100%",
               height=800,
-              # sizingPolicy = leafletSizingPolicy(defaultWidth = "100%",
-              #                                    padding = 10),
               options = leafletOptions(minZoom = 3))|>
     addTiles(urlTemplate = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', 
              attribution =  'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
                )|>
-    addMapPane("allRecords", zIndex = 415) |>
+    addMapPane("anyRecord", zIndex = 414) |>
+    addMapPane("sumOfRecords", zIndex = 415) |>
     addMapPane("bpData", zIndex = 418) |>
     addMapPane("hgData", zIndex = 419) |>
     addMapPane("points", zIndex = 420)
@@ -509,20 +498,29 @@ m1 <- leaflet(width = "100%",
 # add spatial features to map
   m2 <- m1 |>
     addPolygons(data = countyClass,
+            color = "white",
+            fillColor =~singleColor,
+            popup = ~popup,
+            weight = 0.8,
+            fillOpacity = 0.6,
+            opacity = 0.8,
+            group = "Any records",
+            options = pathOptions(pane = "anyRecord"))|>
+    addPolygons(data = countyClass,
                 color = "white",
                 fillColor =~allColor,
                 popup = ~popup,
                 weight = 0.8,
-                fillOpacity = 0.6,
+                fillOpacity = 1,
                 opacity = 0.8,
-                group = "All Records",
-                options = pathOptions(pane = "allRecords"))|>
+                group = "Sum of records",
+                options = pathOptions(pane = "sumOfRecords"))|>
     addPolygons(data = bpData,
                 color = "white",
                 fillColor = "#fec44f",
                 popup = ~popup,
                 weight = 0.8,
-                fillOpacity = 0.6,
+                fillOpacity = 1,
                 opacity = 0.8,
                 group = "Plants or Bonap Only",
                 options = pathOptions(pane = "bpData"))|>
@@ -531,7 +529,7 @@ m1 <- leaflet(width = "100%",
             fillColor = "#fa9fb5",
             popup = ~popup,
             weight = 0.8,
-            fillOpacity = 0.6,
+            fillOpacity = 1,
             opacity = 0.8,
             group = "H or G record",
             options = pathOptions(pane = "hgData"))|>
@@ -540,7 +538,7 @@ m1 <- leaflet(width = "100%",
             fillColor = "#f03b20",
             popup = ~popup,
             weight = 0.8,
-            fillOpacity = 0.6,
+            fillOpacity = 1,
             opacity = 0.8,
             group = "Observation only",
             options = pathOptions(pane = "hgData"))|>
@@ -552,13 +550,13 @@ m1 <- leaflet(width = "100%",
              popup = ~popup,
              group = "Observation",
              options = pathOptions(pane = "points"))|>
-    addCircleMarkers(data = points |> filter(type =="H"),
-             color = ~color,
+    addCircleMarkers(data = h_no_url,
+             color = "#fa9fb5",
              opacity = 1,
              radius = 2,
              stroke = 1,
              popup = ~popup,
-             group = "All Herbarium",
+             group = "Herbarium without web content",
              options = pathOptions(pane = "points")
                )|>
     addCircleMarkers(data = h_url,
@@ -567,7 +565,7 @@ m1 <- leaflet(width = "100%",
          radius = 2,
          stroke = 1,
          popup = ~popup,
-         group = "Herbarium with URL",
+         group = "Herbarium with web content",
          options = pathOptions(pane = "points")
            )|>
     addCircleMarkers(data = points[points$type =="G",],
@@ -578,19 +576,64 @@ m1 <- leaflet(width = "100%",
              popup = ~popup,
              group = "Germplasm",
              options = pathOptions(pane = "points")
-               )|>
-    addLegend(color = brbgAll,
-              labels = allVals, # countyClass$anyRecord[!is.na(countyClass$anyRecord)],
-              group = "All Records",
-              title = "All Records Counted")|>
-  addLayersControl(
-      overlayGroups = c("All Records","Observation", "Herbarium", "Germplasm","Plants or Bonap Only","H or G record","Observation only"),
-      options = layersControlOptions(collapsed = FALSE)
-    )|>
-  hideGroup(c("Observation","Herbarium","Germplasm","Plants or Bonap Only","H or G record","Observation only"))
+               )
 }
 
-m2
+## add legends 
+m3 <- m2 |>
+    # legend for the binary map 
+    addLegend(color = "#a8ddb5",
+              group = "Any records",
+              labels = "Any records")|>
+    # legend for the sum map 
+    addLegend(color = brbgAll,
+              labels = allVals,
+              group = "Sum of records",
+              title = "Sum of records")|>
+      # legend for the plants and bonap 
+    addLegend(color = "#fec44f",
+              group = "Plants or Bonap Only",
+              labels = "Plants or Bonap only county")|>
+      # legend for the h or g 
+    addLegend(color = "#fa9fb5",
+              group = "H or G record",
+              label = "H or G record in county")|>
+      # legend for the observation only 
+    addLegend(color = "#f03b20",
+              group = "Observation only",
+              labels = "Observation only county")|>
+    # legend for the G
+    addLegend(color = "#66c2a5",
+              group = "Germplasm",
+              labels = "Germplasm points")|>
+    # legend for the H with
+    addLegend(color = "#c51b8a",
+              group = "Herbarium with web content",
+              labels = "Herbarium points with web content")|>
+  # legend for the H without
+    addLegend(color = "#fa9fb5",
+              group = "Herbarium without web content",
+              labels =  "Herbarium points without web content")|>
+  # legend for the O
+    addLegend(color = "#fc8d62",
+              labels = "Observation points",
+              group = "Observation")|>
+  addLayersControl(
+      overlayGroups = c("Any records", "Sum of records", "Plants or Bonap Only","H or G record","Observation only",
+                        "Germplasm", "Herbarium with web content","Herbarium without web content", "Observation"),
+      options = layersControlOptions(collapsed = FALSE)
+    )|>
+    # This is good option for a single feature but it's not going to work for both
+    #    htmlwidgets::onRender("
+    #     function() {
+    #         $('.leaflet-control-layers-overlays').prepend('<label style=\"text-align:center\">County Layers</label>');
+    #         $('.leaflet-control-layers-base').prepend('<label style=\"text-align:center\">Point Layers</label>');
+    #     }
+    # ")|>
+  hideGroup(c("Sum of records", "Plants or Bonap Only","H or G record","Observation only", 
+              "Herbarium with web content","Herbarium without web content", "Observation",  "Germplasm"))
+
+m3
 ```
 
 
@@ -629,7 +672,7 @@ The table below display additional attribute data for all the counties with know
 df <- countyClass |>
   st_drop_geometry()|>
   dplyr::filter(anyRecord !=0)|>
-  dplyr::select(-allColor, -inCountyData, -fips2 ,-popup)|>
+  dplyr::select(-allColor, -inCountyData, -fips2 ,-popup, -link, -singleColor)|>
   dplyr::arrange(REGION)|>
   rename(
     "County Name" = NAME,

@@ -2,7 +2,7 @@
 # this data is a bit unique, it was provided by two different poeple with alot of expected overlap
 # Need to merge them together priotizing source 2 as it contain more attribute data.  
 ### 
- # path <- "data/source_data/ucDavis.csv" # Luis 
+ # path <- "data/source_data/ucDavis.csv" # Luis
  # path2 <- "data/source_data/ucDavis2.csv" # Claire H
 
 processDavis <- function(path,path2){
@@ -77,5 +77,12 @@ processDavis <- function(path,path2){
     mutate(sourceUniqueID = str_replace_all(string = sourceUniqueID, pattern = "FEMALE", replacement = "female"))
   f3 <- f3[!duplicated(f3[,2:4]),]
   
-  return(f3)
+  f4 <- f3 |>
+    dplyr::mutate(
+      recordID = paste0(databaseSource, "_",sourceUniqueID),
+      observerName =NA
+      
+    )
+  
+  return(f4)
 }

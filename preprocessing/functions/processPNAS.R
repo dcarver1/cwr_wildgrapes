@@ -32,7 +32,9 @@ processPNAS <- function(path){
       county = NA,
       countyFIPS = NA,
       stateFIPS = NA,
-      coordinateUncertainty = NA
+      coordinateUncertainty = NA,
+      recordID = paste0(databaseSource, "_",sourceUniqueID),
+      observerName =NA
     )
   return(d3)
 }

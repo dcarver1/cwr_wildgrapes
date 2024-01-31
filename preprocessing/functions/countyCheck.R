@@ -6,11 +6,11 @@ checkCounties <- function(countyCheckData, states, counties){
   names2 <- names(countyCheckData)[1:27]
 
   # filter to locations of interest
-  states <- states |> 
+  states1 <- states |> 
     filter(adm0_a3 %in% c("USA","CAN", "MEX"))|>
     st_make_valid()
   # grab state names from state files 
-  stateNames <- states |>
+  stateNames <- states1 |>
     st_drop_geometry() |>
     filter(adm0_a3 == "USA") |>
     select(name) |>
@@ -18,8 +18,21 @@ checkCounties <- function(countyCheckData, states, counties){
   
   # various test to see if addition county level observations can be derived 
   
+  
+  # organize the county column 
+  newCounty <- stringr::str_remove_all(string = countyCheckData$county,pattern = " .Co") 
+  newCounty <- stringr::str_remove_all(string = newCounty,pattern = " Co.") 
+    
+  countyCheckData$county <- newCounty
+  countyCheckData1 <- countyCheckData|>
+    dplyr::mutate(county = case_when(
+      grepl("County", county) ~ county, 
+      is.na(county) ~ NA,
+      TRUE ~ paste0(county," County")
+    ))
+  
   ## without lat lon values 
-  noLatLon <- countyCheckData |>
+  noLatLon <- countyCheckData1 |>
     filter(is.na(latitude) | is.na(longitude)) 
   ### lat is NA or lon is NA and county is NA : exclude 
   exclude1 <- noLatLon |> 
@@ -50,7 +63,7 @@ checkCounties <- function(countyCheckData, states, counties){
     st_drop_geometry()
   
   # with Lat Lon Values 
-  withLatLon <- countyCheckData |>
+  withLatLon <- countyCheckData1 |>
     filter(!is.na(latitude) & !is.na(longitude)) %>%
     st_as_sf(coords = c("longitude","latitude"),crs = st_crs(4326),remove = FALSE)
   ### extract county
@@ -102,7 +115,9 @@ checkCounties <- function(countyCheckData, states, counties){
   exclude <- bind_rows(exclude1, exclude2, exclude3, exclude4, exclude5)
   
   # all additional reference data
-  include <- bind_rows(addToCounty1, addToCounty2)
+  include <- bind_rows(addToCounty1, addToCounty2) |>
+    dplyr::mutate(county = str_replace_all(county, pattern = "nty ", replacement = " "))|>
+    dplyr::mutate(county = str_to_title(county))
   ### the nrow of these two features are > then the Nrow of the input feature, 
   ### so something is going duplicated. I'm rolling with it for now. 
   

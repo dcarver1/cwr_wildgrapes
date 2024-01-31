@@ -1,4 +1,4 @@
-#path <- "data/source_data/genesys.csv"
+# path <- "data/source_data/genesys.csv"
 
 processGenesys <- function(path){
   d1 <- read_csv(path)
@@ -58,6 +58,8 @@ processGenesys <- function(path){
       countyFIPS = NA,
       biologicalStatus = NA, 
       stateFIPS = NA,
+      observerName = NA,
+      recordID = paste0(databaseSource,"_",sourceUniqueID)
     )
   
   

@@ -19,8 +19,8 @@ d3 <- as.data.frame(d2) |>
                 acceptedSynonym = "Names to include in this concept (Homotypic synonyms)",  
                 countySpecies = "Include in county map analysis?",
                 modelSpecies = "Include in gap analsyis? (Colin)",
-                everything()) |>
-  dplyr::select(c(-countySpecies, -modelSpecies, -`Reason for exclusion from county map`,-`Reason for exclusion from gap analysis (Colin)`,
+                everything())|>
+  dplyr::select(c( -`Reason for exclusion from county map`,-`Reason for exclusion from gap analysis (Colin)`,
                   ))
 
 write_csv(d3,file = "data/source_data/taxonomy20231212.csv")
@@ -36,7 +36,7 @@ write_csv(x = d4, file = "data/source_data/nameList.csv")
 # Wiews Data 
 ## takes a long time to read in 
 d5 <- googlesheets4::read_sheet(as_id("https://docs.google.com/spreadsheets/d/1QGY8witd4t8r6-ayNpLcx65z5UOTB8y4IBoevkuXrvs/edit?usp=sharing"))
-                                #,sheet = "Wiews_Exsitu_1684365085723")
+#,sheet = "Wiews_Exsitu_1684365085723")
 write_csv(x = d5, file = "data/source_data/wiews.csv")
 
 
@@ -48,7 +48,7 @@ write_csv(d5a, file = "data/source_data/seinet.csv")
 
 # flora of north america data 
 d6 <- googlesheets4::read_sheet(as_id("https://docs.google.com/spreadsheets/d/19e6wNr4Luc53NfBQJgl4AWGovZMp24P9yyDqmW9-h3Y/edit?usp=sharing"),
-                                  sheet = "FNA data")
+                                sheet = "FNA data")
 ### need to do a bunch of find and replace with these ugly state names 
 uniqueNames <- d6$`States from FNA` |> 
   stringr::str_split(pattern = ",") |>
@@ -148,7 +148,7 @@ for(i in 1:nrow(d6)){
   }
   # need to push this 
   replacement <- paste(vals2a, collapse=" ",sep = ",") 
-
+  
   newDF[i,  2] <- replacement
 }
 
@@ -194,7 +194,7 @@ davis2 <- read_sheet(as_id("https://docs.google.com/spreadsheets/d/1Ozx8m8iEk5-6
          `Long (DD)`= as.numeric(`Long (DD)`))
 write_csv(x = davis2, file = "data/source_data/ucDavis2.csv")
 
-    
+
 ### 2020 PNAS paper 
 pnas <- read_sheet(as_id("https://docs.google.com/spreadsheets/d/13D4SAcJwQDG_aVVQDJFuP8-vO0Lep8QoqbnKRaV00lw/edit?usp=sharing"))%>%
   mutate(across(everything(), as.character),
