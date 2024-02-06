@@ -24,7 +24,34 @@ fullSpecies <- read_csv("data/source_data/taxonomy20231212.csv")|>
   dplyr::filter(countySpecies  == "Y")|>
   select(taxon)|>
   pull()
-
+fullSpeciesTrim <- c("Vitis acerifolia"                    
+                     ,"Vitis aestivalis"                    
+                     # ,"Vitis aestivalis var. aestivalis"    
+                     # ,"Vitis aestivalis var. bicolor"       
+                     ,"Vitis arizonica"                     
+                     ,"Vitis baileyana"                     
+                     ,"Vitis berlandieri"                   
+                     ,"Vitis californica"                   
+                     ,"Vitis cinerea"                       
+                    ,"Vitis girdiana"                      
+                    ,"Vitis labrusca"                      
+                    # ,"Vitis lincecumii"                    
+                    ,"Vitis monticola"                     
+                    ,"Vitis mustangensis"                  
+                    ,"Vitis palmata"                       
+                    ,"Vitis riparia"                       
+                    ,"Vitis rotundifolia"                  
+                    ,"Vitis rotundifolia var. munsoniana"  
+                    ,"Vitis rotundifolia var. pygmaea"     
+                    ,"Vitis rotundifolia var. rotundifolia"
+                    # ,"Vitis rufotomentosa"                 
+                    ,"Vitis rupestris"                     
+                    ,"Vitis shuttleworthii"                
+                    ,"Vitis simpsonii"                     
+                    ,"Vitis vulpina"                       
+                    # ,"Vitis x champinii"                   
+                    # ,"Vitis x doaniana"                    
+                    ,"Vitis x novae-angliae"    )
 
 
 
@@ -36,7 +63,7 @@ namedFeatures <- read_csv(file = "data/source_data/nameList.csv")
 plantsData1 <- read_csv(file ="data/source_data/usda_plants/completeVitis.csv")
 bonapData <- read_csv("data/source_data/bonap.csv")
 natureSeverData <- read_csv("data/processed_occurrence/natureServe.csv")
-# valid lat long datasets
+# all data for the county maps
 observationData <- read_csv("data/processed_occurrence/tempDataForCountyMaps_20231025.csv") |>
   filter(!is.na(taxon))
 # fnaData
@@ -46,12 +73,41 @@ synData <- read_csv("data/source_data/taxonomy20231212.csv")
 
 
 # #spatial data
-countySHP <- read_sf("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
+countySHP <- sf::st_read("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
 stateSHP <- read_sf("data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")|>
   dplyr::filter(adm0_a3 == "USA")
 
 
+### try to assign fips to all OCC data 
+codes <- tigris::fips_codes %>%
+  select(-state)
 
+#grap only state records 
+states <- codes %>%
+  select(state_code, state_name)%>%
+  distinct()
+
+
+# bind the plants and bonap layers 
+# b1 <- bonapData |> 
+#   dplyr::select("State Abbveation" = Stateabb,
+#                 "taxon"= "Scientific Name", 
+#                 "countyFIPS" = "FIPS",  
+#                 "county name" = "County")|>
+#   dplyr::mutate("BONAP" =1)
+# pl1 <- plantsData1 |>
+#   dplyr::left_join(y = namedFeatures,
+#                    by = c("plant_symbol" =  "Accepted Symbol"))|>
+#   dplyr::mutate(countyFIPS = stringr::str_sub(geoid, start = 3))|>
+#   dplyr::select(taxon = `Scientific Name`,
+#                 state,
+#                 countyFIPS,
+#                 "county name" = county)|>
+#   dplyr::mutate("USDA Plants"= 1)
+# 
+# pb <- dplyr::bind_rows(b1,pl1) |>
+#   dplyr::select( "taxon","countyFIPS","county name", "State Abbveation", "state","BONAP","USDA Plants")
+# write_csv(pb, file = "data/processed_occurrence/vitis_plants_bonap.csv" )
 
 ## map implementation 
 generateOccurnaceRMD <- function(species1){
@@ -77,12 +133,12 @@ generateOccurnaceRMD <- function(species1){
     )
 }
 # ## needs to be commented out unless running 
-# fullSpecies |> purrr::map(generateOccurnaceRMD)
+fullSpecies |> purrr::map(generateOccurnaceRMD)
 speciesList |> purrr::map(generateOccurnaceRMD)
-
+fullSpeciesTrim[24:length(fullSpeciesTrim)] |> purrr::map(generateOccurnaceRMD)
 # speciesList |> purrr::map(generateOccurnaceRMD)
 # ### troubleshooting
-generateOccurnaceRMD(species ="Vitis acerifolia" )
+generateOccurnaceRMD(species ="Vitis rotundifolia" )
 
 
 ## erroring out at specific species need to troubleshoot that directly 

@@ -37,8 +37,8 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 
 
 ```{r testing_parameters, echo=FALSE, message=FALSE, warning=FALSE}
-# for testing 
-# speciesName <- "Vitis baileyana"
+# for testing
+# speciesName <- "Vitis rotundifolia"
 ## troubleshooting  
 # speciesName <- species1
 ```
@@ -163,7 +163,7 @@ if(length(fna1)== 1 & fna1[1]=="NA"){
   
 # pull the synonym data 
 s1 <- synData |> 
-  dplyr::filter(taxon == species1)|>
+  dplyr::filter(taxon == speciesName)|>
   as.data.frame()
 names(s1) <- c("taxon",
                "acceptedSynonym",
@@ -182,7 +182,7 @@ names(s1) <- c("taxon",
 
 ```{r org_occurrenceData, echo=FALSE, message=FALSE, warning=FALSE}
   
-  # gather occurrance data that is removed by FNA filter 
+  # gather occurrence data that is removed by FNA filter 
   occFNAFilter <- occData |> 
     dplyr::filter(!state %in% all_states$name)
   # filter the occurrence data to the states from FNA
@@ -203,12 +203,20 @@ sp1 <- occData |>
 ### select all counties of interest 
 extratedFIPS <- sf::st_intersection(countySHP, sp1)
 
-
-countyCounts <- extratedFIPS |> 
-  dplyr::group_by(type, CODE_LOCAL)|>
+## generate the number of records per county 
+### spatial data 
+countyCount1 <- extratedFIPS 
+### no lat lon 
+countyCounts2 <-  occData |> 
+  dplyr::filter(is.na(latitude))|>
+  dplyr::filter(iso3!= "CAN")|>
+  dplyr::filter(iso3 != "MEX")
+# bind the features   
+countyCounts <- occData|> 
+  dplyr::group_by(type, countyFIPS)|>
   st_drop_geometry() |> 
   dplyr::summarise(count = n())
-  
+
 
 ```
 
@@ -413,7 +421,12 @@ countyClass <- countyClass |>
 # Bonap and plants data only 
 bpData <- countyClass |>
   dplyr::filter(`USDA Plants` == 1 | `BONAP` == 1) |>
-  dplyr::filter(anyRecord ==1 | anyRecord == 2)
+  dplyr::filter(is.na(O))|>
+  dplyr::filter(is.na(G))|>
+  dplyr::filter(is.na(H))|>
+  dplyr::filter(is.na(`Nature Serve`))|>
+  dplyr::filter(is.na(pre1970))
+
 
 
 # county with H or G records 
@@ -444,7 +457,7 @@ points <- sp1 |>
     "&entry.1585476570=",
     county,
     "&entry.1304312867=",
-    tempID),
+    recordID),
     color = case_when(
       type == "O" ~ "#fc8d62",
       type == "H" ~ "#8da0cd",
@@ -466,6 +479,7 @@ points <- sp1 |>
     "<br/> <b> Record ID: </b>", sourceUniqueID,
     "<br/> <b> Type: </b>", type,
     "<br/> <b> Year: </b>", yearRecorded,
+    "<br/> <b> Recorder Name: </b>", observerName,
     "<br/> <b> Location Description: </b>", localityInformation,
     "<br/> <b> External Reference: </b>", url,
     "<br/> <b> Report Issue: </b>",  "<a target='_blank', href=\"", link , "\">", "click here", "</a>")
@@ -637,10 +651,10 @@ m3
 ```
 
 
-## Summary of Occurrance Data 
+## Summary of occurrence Data 
 This table includes all records not just those with valid latitude and longitude information. 
 
-```{r occurranceDataSummary, echo=FALSE, message=FALSE, warning=FALSE}
+```{r occurrenceDataSummary, echo=FALSE, message=FALSE, warning=FALSE}
 occFiltered <- occData %>%
   dplyr::select(
     "taxon",

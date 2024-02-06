@@ -1,5 +1,5 @@
 
-# data <- d7
+# data <- occData
 
 assignFIPS <- function(data){
   codes <- tigris::fips_codes %>%
