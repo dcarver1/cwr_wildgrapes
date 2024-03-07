@@ -110,35 +110,35 @@ states <- codes %>%
 # write_csv(pb, file = "data/processed_occurrence/vitis_plants_bonap.csv" )
 
 ## map implementation 
-generateOccurnaceRMD <- function(species1){
-  print(species1)
-    rmarkdown::render(input = "R2/summarize/countyEvaluation.Rmd",
-                      output_format = "html_document",
-                      output_dir = file.path("data/countyMaps"),
-                      output_file = paste0(species1,"_Evaluation2.html"),
-                      params = list(
-                        speciesName = as.character(species1),
-                        speciesNames = speciesNames,
-                        namedFeatures = namedFeatures,
-                        plantsData1 = plantsData1,
-                        bonapData = bonapData,
-                        natureSeverData = natureSeverData,
-                        observationData = observationData,
-                        countySHP = countySHP,
-                        stateSHP = stateSHP,
-                        fnaData = fnaData,
-                        synData = synData
-                        )
-                      # envir = new.env(parent = globalenv()
-    )
-}
-# ## needs to be commented out unless running 
-fullSpecies |> purrr::map(generateOccurnaceRMD)
-speciesList |> purrr::map(generateOccurnaceRMD)
-fullSpeciesTrim[24:length(fullSpeciesTrim)] |> purrr::map(generateOccurnaceRMD)
+# generateOccurnaceRMD <- function(species1){
+#   print(species1)
+#     rmarkdown::render(input = "R2/summarize/countyEvaluation.Rmd",
+#                       output_format = "html_document",
+#                       output_dir = file.path("data/countyMaps"),
+#                       output_file = paste0(species1,"_Evaluation2.html"),
+#                       params = list(
+#                         speciesName = as.character(species1),
+#                         speciesNames = speciesNames,
+#                         namedFeatures = namedFeatures,
+#                         plantsData1 = plantsData1,
+#                         bonapData = bonapData,
+#                         natureSeverData = natureSeverData,
+#                         observationData = observationData,
+#                         countySHP = countySHP,
+#                         stateSHP = stateSHP,
+#                         fnaData = fnaData,
+#                         synData = synData
+#                         )
+#                       # envir = new.env(parent = globalenv()
+#     )
+# }
+# # ## needs to be commented out unless running 
+# fullSpecies |> purrr::map(generateOccurnaceRMD)
 # speciesList |> purrr::map(generateOccurnaceRMD)
-# ### troubleshooting
-generateOccurnaceRMD(species ="Vitis rotundifolia" )
+# fullSpeciesTrim[24:length(fullSpeciesTrim)] |> purrr::map(generateOccurnaceRMD)
+# # speciesList |> purrr::map(generateOccurnaceRMD)
+# # ### troubleshooting
+# generateOccurnaceRMD(species ="Vitis rotundifolia" )
 
 
 ## erroring out at specific species need to troubleshoot that directly 
@@ -149,21 +149,21 @@ generateOccurnaceRMD(species ="Vitis rotundifolia" )
 
 
 ## for loop implementation 
-generateOccurnaceRMD <- function(speciesList){
-  for(i in speciesList){
-    print(i)
-    try(
-    rmarkdown::render(input = "R2/summarize/countyEvaluation.Rmd",
-                      output_format = "html_document",
-                      output_dir = file.path("data/countyMaps"),
-                      output_file = paste0(i,"_Evaluation.html"),
-                      params = list(
-                        speciesName = as.character(i))
-                      # envir = new.env(parent = globalenv()
-      )
-    )
-  }
-}
+# generateOccurnaceRMD <- function(speciesList){
+#   for(i in speciesList){
+#     print(i)
+#     try(
+#     rmarkdown::render(input = "R2/summarize/countyEvaluation.Rmd",
+#                       output_format = "html_document",
+#                       output_dir = file.path("data/countyMaps"),
+#                       output_file = paste0(i,"_Evaluation.html"),
+#                       params = list(
+#                         speciesName = as.character(i))
+#                       # envir = new.env(parent = globalenv()
+#       )
+#     )
+#   }
+# }
 
 
 ## needs to be commented out unless running 

@@ -9,7 +9,7 @@
 pacman::p_load("terra", "dplyr", "sf", "purrr","randomForest","VSURF",
                "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo",
                "leaflet", "tidyterra", "rmarkdown", "furrr","tmap", "stringr",
-               "tictoc","tmap")
+               "tictoc","tigris")
 tmap_mode("view")
 
 #source functions
@@ -26,12 +26,13 @@ sourceFiles(furrr = FALSE)
 
 ### Vitis
 ## filtering the extra values coming from the data prep process 
-speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv") |>
-  dplyr::select(-c("geometry","index", "validLat","validLon","validLatLon"))
+# speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv") |>
+#   dplyr::select(-c("geometry","index", "validLat","validLon","validLatLon"))
 
 ### Quercus 
 # speciesData <- read_csv("data/Quercus/QUAC_coord_ind.csv")
-  
+speciesData <- read_csv("data/Quercus/Quercus_lobata.csv")
+
 
 
 ## bioclim layers 
@@ -50,9 +51,11 @@ bufferDist <- 50000
 
 # run version 
 ## daucus 
-runVersion <- "run20240104"
+# runVersion <- "run20240104"
 #vitis run 
-runVersion <- "run20231227"
+# runVersion <- "run20231227"
+# Quercus
+runVersion <- "run1"
 
 # overwrite 
 overwrite <- FALSE
