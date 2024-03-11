@@ -26,12 +26,12 @@ sourceFiles(furrr = FALSE)
 
 ### Vitis
 ## filtering the extra values coming from the data prep process 
-# speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv") |>
-#   dplyr::select(-c("geometry","index", "validLat","validLon","validLatLon"))
+speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv") |>
+  dplyr::select(-c("geometry","index", "validLat","validLon","validLatLon"))
 
 ### Quercus 
 # speciesData <- read_csv("data/Quercus/QUAC_coord_ind.csv")
-speciesData <- read_csv("data/Quercus/Quercus_lobata.csv")
+# speciesData <- read_csv("data/Quercus/Quercus_lobata.csv")
 
 
 
@@ -53,9 +53,9 @@ bufferDist <- 50000
 ## daucus 
 # runVersion <- "run20240104"
 #vitis run 
-# runVersion <- "run20231227"
+runVersion <- "run20231227"
 # Quercus
-runVersion <- "run1"
+# runVersion <- "run1"
 
 # overwrite 
 overwrite <- FALSE

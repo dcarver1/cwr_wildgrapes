@@ -121,20 +121,28 @@ speciesList <- dplyr::left_join(x = plantsData1,
       sampleCategory  == "HUMAN_OBSERVATION" ~ "O",
       TRUE ~ type
     ))
+  # lots of duplicated in here at the moment. Need to remove
+  duplicated <- duplicated(occData)
+  occData <- occData[!duplicated,]
 
 # gather the states listed within FNA
-  fna1 <- fnaData |> 
-    dplyr::filter(`Taxon Name` == speciesName) |>
-    dplyr::select(`States from FNA`)|>
-    pull()|>
-    stringr::str_trim(side = "left")|>
-    stringr::str_split(pattern = ",") |>
-    unlist()|>
-    stringr::str_trim()|>
-    str_subset(".+") # remove empty strings 
+  if(speciesName %in% fnaData$`Taxon Name`){
+      fna1 <- fnaData |> 
+        dplyr::filter(`Taxon Name` == speciesName) |>
+        dplyr::select(`States from FNA`)|>
+        pull()|>
+        stringr::str_trim(side = "left")|>
+        stringr::str_split(pattern = ",") |>
+        unlist()|>
+        stringr::str_trim()|>
+        str_subset(".+") # remove empty strings 
+  }else{
+    fna1 <- "no"
+  }
+
 
 # need a condition for determining when to run the FNA state filter 
-if(length(fna1)== 1 & fna1[1]=="NA"){
+if(fna1[1] == "no"){
   ### no FNA data 
   # use the points and county data to gather the states 
   # select all states from classified data and lat long :FIPS 
@@ -319,20 +327,38 @@ countyState <- countyState |>
 
 ### Details on the map elements 
 
-The map below summarizes all occurrence data at the country level. This includes 
+Written description of the features on the map. 
 
-- Observational data : Validated records from INaturalist
+#### County Level Features 
 
-- Herbarium data : Occurrence data with associated herbarium specimens
+All county level features report information that as aggregated to the county level. This include text reference to the county (state/county) and spatial point reference that occur within the county. 
 
-- Germplasm data : Occurrence data with living specimens stored in genebanks or 
+- <strong> Counties with a record </strong> : This is a binary presence absence map that shows if a specific county has at least one record of the the species from across all evaluated sources. 
+
+- <strong> Sum of records within County </strong> : This layer depicts the total number of unique records of a species across all sources within a county.
+
+- <strong> Counties listed in USDA Plants and/or Bonap Only  </strong> : These counties only contain a reference from USDA Plants and/or BONAP. There are no identified observation, herberium, or germplasm records from these counties.  
+
+- <strong> Counties with one or more Herbarium or Germplasm record </strong> : These counties has at least one herbarium and/or germplasm occurrence. There may be additional record sources within this county. 
+
+- <strong> Counties with observational records only </strong> : These counties only have species records from observational datasources such as INaturalist.  
+
+#### Spatial Data Occurrence Features 
+
+The spatial data occurrence features are location records with valid latitude and longitude values. As such, all these features are shown on the the map as point locations. 
+
+
+-  <strong>Location based Germplasm Records </strong>: Occurrence data with living specimens stored in genebanks or 
 botanical gardens 
 
-- USDA Plants : County level reference of species presence
+-  <strong>Location based Herbarium Records with web url </strong>: Occurrence data with associated herbarium specimens. That includes a web visable reference for the herbarium records. 
 
-- BONAP : County level reference of species presence
+-  <strong>Location based Herbarium Records without web url </strong>: Occurrence data with associated herbarium specimens. No web visable reference for the herbarium records is included. 
 
-- Nature Serve : county level reference of species presence 
+-  <strong>Location Based Observation data </strong>: Validated records from INaturalist. Only research grade observations are used. These observations are approve as correctly identified by at least two other member of the online community. 
+
+
+
 
 ### Spatial Reference 
 
@@ -349,10 +375,9 @@ If state level distribution information was provided for a given specific specie
 ## 
 
 ```{r produceMAP, echo=FALSE, message=FALSE, warning=FALSE}
-if(nrow(sp1)==0){
-  m2 <- "there is not spatail data for this species and no map can be produced."
-}else{
-### county data specifically 
+
+## all map elements that can be create work needing to have spatial data
+## county data specifically 
 
 # filter counties based on usda plants data 
   counties <- countyGathered |>
@@ -438,6 +463,12 @@ oData <- countyClass |>
   dplyr::filter(O > 0 & anyRecord == O)
 
 
+if(nrow(sp1)==0){
+  m2 <- "there is not spatail data for this species and no map can be produced."
+}else{
+#
+
+
 # Create a continuous palette function
 palAll <- colorNumeric(
   palette = "BrBG",
@@ -496,6 +527,12 @@ h_no_url <- points |>
 
 
 # Map 
+## add species name as a title element 
+rr <- tags$div(
+  HTML(paste0("<h3>", speciesName , "</h3>"))
+)  
+
+
 ## need conditions for the various types inputs 
 m1 <- leaflet(width = "100%",
               height=800,
@@ -507,7 +544,9 @@ m1 <- leaflet(width = "100%",
     addMapPane("sumOfRecords", zIndex = 415) |>
     addMapPane("bpData", zIndex = 418) |>
     addMapPane("hgData", zIndex = 419) |>
-    addMapPane("points", zIndex = 420)
+    addMapPane("points", zIndex = 420)|>
+    addControl(rr, position = "bottomleft")
+
 
 # add spatial features to map
   m2 <- m1 |>
@@ -518,7 +557,7 @@ m1 <- leaflet(width = "100%",
             weight = 0.8,
             fillOpacity = 0.6,
             opacity = 0.8,
-            group = "Any records",
+            group = "Counties with a record",
             options = pathOptions(pane = "anyRecord"))|>
     addPolygons(data = countyClass,
                 color = "white",
@@ -527,7 +566,7 @@ m1 <- leaflet(width = "100%",
                 weight = 0.8,
                 fillOpacity = 1,
                 opacity = 0.8,
-                group = "Sum of records",
+                group = "Sum of records within County",
                 options = pathOptions(pane = "sumOfRecords"))|>
     addPolygons(data = bpData,
                 color = "white",
@@ -536,7 +575,7 @@ m1 <- leaflet(width = "100%",
                 weight = 0.8,
                 fillOpacity = 1,
                 opacity = 0.8,
-                group = "Plants or Bonap Only",
+                group = "Counties listed in USDA Plants and/or Bonap Only",
                 options = pathOptions(pane = "bpData"))|>
     addPolygons(data = hgData,
             color = "white",
@@ -545,7 +584,7 @@ m1 <- leaflet(width = "100%",
             weight = 0.8,
             fillOpacity = 1,
             opacity = 0.8,
-            group = "H or G record",
+            group = "Counties with one or more Herbarium or Germplasm record",
             options = pathOptions(pane = "hgData"))|>
     addPolygons(data = oData,
             color = "white",
@@ -554,7 +593,7 @@ m1 <- leaflet(width = "100%",
             weight = 0.8,
             fillOpacity = 1,
             opacity = 0.8,
-            group = "Observation only",
+            group = "Counties with observational records only",
             options = pathOptions(pane = "hgData"))|>
     addCircleMarkers(data =  points |> filter(type =="O"),
              color = ~color,
@@ -562,7 +601,7 @@ m1 <- leaflet(width = "100%",
              radius = 2,
              stroke = 1,
              popup = ~popup,
-             group = "Observation",
+             group = "Location Based Observation data",
              options = pathOptions(pane = "points"))|>
     addCircleMarkers(data = h_no_url,
              color = "#fa9fb5",
@@ -570,7 +609,7 @@ m1 <- leaflet(width = "100%",
              radius = 2,
              stroke = 1,
              popup = ~popup,
-             group = "Herbarium without web content",
+             group = "Location based Herbarium Records without web url",
              options = pathOptions(pane = "points")
                )|>
     addCircleMarkers(data = h_url,
@@ -579,7 +618,7 @@ m1 <- leaflet(width = "100%",
          radius = 2,
          stroke = 1,
          popup = ~popup,
-         group = "Herbarium with web content",
+         group = "Location based Herbarium Records with web url",
          options = pathOptions(pane = "points")
            )|>
     addCircleMarkers(data = points[points$type =="G",],
@@ -588,53 +627,58 @@ m1 <- leaflet(width = "100%",
              radius = 2,
              stroke = 1,
              popup = ~popup,
-             group = "Germplasm",
+             group = "Location based Germplasm Records",
              options = pathOptions(pane = "points")
                )
-}
-
-## add legends 
+  ## add legends 
 m3 <- m2 |>
     # legend for the binary map 
     addLegend(color = "#a8ddb5",
-              group = "Any records",
-              labels = "Any records")|>
+              group = "Counties with a record",
+              labels = "Counties with a record")|>
     # legend for the sum map 
     addLegend(color = brbgAll,
               labels = allVals,
-              group = "Sum of records",
-              title = "Sum of records")|>
+              group = "Sum of records within County",
+              title = "Sum of records within County")|>
       # legend for the plants and bonap 
     addLegend(color = "#fec44f",
-              group = "Plants or Bonap Only",
-              labels = "Plants or Bonap only county")|>
+              group = "Counties listed in USDA Plants and/or Bonap Only",
+              labels = "Counties listed in USDA Plants and/or Bonap Only")|>
       # legend for the h or g 
     addLegend(color = "#fa9fb5",
-              group = "H or G record",
-              label = "H or G record in county")|>
+              group = "Counties with one or more Herbarium or Germplasm record",
+              label = "Counties with one or more Herbarium or Germplasm record")|>
       # legend for the observation only 
     addLegend(color = "#f03b20",
-              group = "Observation only",
-              labels = "Observation only county")|>
+              group = "Counties with observational records only",
+              labels = "Counties with observational records only")|>
     # legend for the G
     addLegend(color = "#66c2a5",
-              group = "Germplasm",
-              labels = "Germplasm points")|>
+              group = "Location based Germplasm Records",
+              labels = "Location based Germplasm Records")|>
     # legend for the H with
     addLegend(color = "#c51b8a",
-              group = "Herbarium with web content",
-              labels = "Herbarium points with web content")|>
+              group = "Location based Herbarium Records with web url",
+              labels = "Location based Herbarium Records with web url ")|>
   # legend for the H without
     addLegend(color = "#fa9fb5",
-              group = "Herbarium without web content",
-              labels =  "Herbarium points without web content")|>
+              group = "Location based Herbarium Records without web url",
+              labels =  "Location based Herbarium Records without web url ")|>
   # legend for the O
     addLegend(color = "#fc8d62",
-              labels = "Observation points",
-              group = "Observation")|>
+              group = "Location Based Observation data",
+              labels = "Location Based Observation data")|>
   addLayersControl(
-      overlayGroups = c("Any records", "Sum of records", "Plants or Bonap Only","H or G record","Observation only",
-                        "Germplasm", "Herbarium with web content","Herbarium without web content", "Observation"),
+      overlayGroups = c("Counties with a record", 
+                        "Sum of records within County", 
+                        "Counties listed in USDA Plants and/or Bonap Only",
+                        "Counties with one or more Herbarium or Germplasm record",
+                        "Counties with observational records only",
+                        "Location based Germplasm Records", 
+                        "Location based Herbarium Records with web url",
+                        "Location based Herbarium Records without web url", 
+                        "Location Based Observation data"),
       options = layersControlOptions(collapsed = FALSE)
     )|>
     # This is good option for a single feature but it's not going to work for both
@@ -644,10 +688,20 @@ m3 <- m2 |>
     #         $('.leaflet-control-layers-base').prepend('<label style=\"text-align:center\">Point Layers</label>');
     #     }
     # ")|>
-  hideGroup(c("Sum of records", "Plants or Bonap Only","H or G record","Observation only", 
-              "Herbarium with web content","Herbarium without web content", "Observation",  "Germplasm"))
+  hideGroup(c("Sum of records within County",
+              "Counties listed in USDA Plants and/or Bonap Only",
+              "Counties with one or more Herbarium or Germplasm record",
+              "Counties with observational records only", 
+              "Location based Herbarium Records with web url",
+              "Location based Herbarium Records without web url",
+              "Location Based Observation data",
+              "Location based Germplasm Records"))
 
-m3
+  m3
+}# end of condition for no special data
+
+
+
 ```
 
 
@@ -657,16 +711,18 @@ This table includes all records not just those with valid latitude and longitude
 ```{r occurrenceDataSummary, echo=FALSE, message=FALSE, warning=FALSE}
 occFiltered <- occData %>%
   dplyr::select(
-    "taxon",
-    "state",
-    "county",
-    "databaseSource",
-    "collectionSource",
-    "type",
-    "localityInformation",
-    "yearRecorded",
-     "latitude",
-    "longitude")
+    Taxon = "taxon",
+    State = "state",
+    County = "county",
+    "Data Source" = "databaseSource",
+    Type = "type",
+    "Collector's Name" = observerName,
+    "Locality Description" = "localityInformation",
+     Year = "yearRecorded",
+    "Source ID" = "sourceUniqueID"
+    # "latitude",
+    # "longitude"
+    )
 
 
 DT::datatable(occFiltered,
@@ -692,7 +748,7 @@ df <- countyClass |>
     "County Name" = NAME,
     "GEOID" = "FIPS", 
     "State Abbrevation" = "REGION",
-    "Obersevation Only Records" = O,
+    "Obersevation Records" = O,
     "Heberium Records" = H,
     "Germplasm  Records" = G,
     "Pre 1970 Records" = pre1970,

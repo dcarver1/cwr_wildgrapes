@@ -53,7 +53,14 @@ fullSpeciesTrim <- c("Vitis acerifolia"
                     # ,"Vitis x doaniana"                    
                     ,"Vitis x novae-angliae"    )
 
-
+erroredSpecies <- c(
+  "Vitis aestivalis var. aestivalis"    
+  ,"Vitis aestivalis var. bicolor"       
+  ,"Vitis lincecumii"                    
+  ,"Vitis rufotomentosa"                 
+  ,"Vitis x champinii"                   
+  ,"Vitis x doaniana"
+  )
 
 # input parameters --------------------------------------------------------
 ## taxonomic reference
@@ -65,7 +72,13 @@ bonapData <- read_csv("data/source_data/bonap.csv")
 natureSeverData <- read_csv("data/processed_occurrence/natureServe.csv")
 # all data for the county maps
 observationData <- read_csv("data/processed_occurrence/tempDataForCountyMaps_20231025.csv") |>
-  filter(!is.na(taxon))
+  dplyr::filter(!is.na(taxon))
+# apply some additional filter to remove duplicated records 
+duplicates <- duplicated(observationData, subset = c("taxon","recordID"))
+observationData <- observationData[duplicates, ]
+
+
+
 # fnaData
 fnaData <- read_csv("data/source_data/FNA_stateClassification.csv")
 # synonym dataset
@@ -110,35 +123,35 @@ states <- codes %>%
 # write_csv(pb, file = "data/processed_occurrence/vitis_plants_bonap.csv" )
 
 ## map implementation 
-# generateOccurnaceRMD <- function(species1){
-#   print(species1)
-#     rmarkdown::render(input = "R2/summarize/countyEvaluation.Rmd",
-#                       output_format = "html_document",
-#                       output_dir = file.path("data/countyMaps"),
-#                       output_file = paste0(species1,"_Evaluation2.html"),
-#                       params = list(
-#                         speciesName = as.character(species1),
-#                         speciesNames = speciesNames,
-#                         namedFeatures = namedFeatures,
-#                         plantsData1 = plantsData1,
-#                         bonapData = bonapData,
-#                         natureSeverData = natureSeverData,
-#                         observationData = observationData,
-#                         countySHP = countySHP,
-#                         stateSHP = stateSHP,
-#                         fnaData = fnaData,
-#                         synData = synData
-#                         )
-#                       # envir = new.env(parent = globalenv()
-#     )
-# }
+generateOccurnaceRMD <- function(species1){
+  print(species1)
+    rmarkdown::render(input = "R2/summarize/countyEvaluation.Rmd",
+                      output_format = "html_document",
+                      output_dir = file.path("data/countyMaps"),
+                      output_file = paste0(species1,"_Evaluation2.html"),
+                      params = list(
+                        speciesName = as.character(species1),
+                        speciesNames = speciesNames,
+                        namedFeatures = namedFeatures,
+                        plantsData1 = plantsData1,
+                        bonapData = bonapData,
+                        natureSeverData = natureSeverData,
+                        observationData = observationData,
+                        countySHP = countySHP,
+                        stateSHP = stateSHP,
+                        fnaData = fnaData,
+                        synData = synData
+                        )
+                      # envir = new.env(parent = globalenv()
+    )
+}
 # # ## needs to be commented out unless running 
 # fullSpecies |> purrr::map(generateOccurnaceRMD)
 # speciesList |> purrr::map(generateOccurnaceRMD)
-# fullSpeciesTrim[24:length(fullSpeciesTrim)] |> purrr::map(generateOccurnaceRMD)
-# # speciesList |> purrr::map(generateOccurnaceRMD)
-# # ### troubleshooting
-# generateOccurnaceRMD(species ="Vitis rotundifolia" )
+# fullSpeciesTrim[1:length(fullSpeciesTrim)] |> purrr::map(generateOccurnaceRMD)
+# erroredSpecies |> purrr::map(generateOccurnaceRMD)
+# ### troubleshooting
+generateOccurnaceRMD(species ="Vitis x doaniana")
 
 
 ## erroring out at specific species need to troubleshoot that directly 
