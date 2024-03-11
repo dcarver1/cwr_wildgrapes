@@ -46,9 +46,10 @@ print("Summary doc copied")
 file.copy(paste0("data/daucus/",modelRun,"_boxPlotSummary.html"), folder, overwrite = TRUE)
 print("Summary doc copied")
 
+
+##################
 # vitis specific moves ----------------------------------------------------
 folder <- "~/Documents/GeospatialCentroid.github.io/vitis"
-
 
 # vitis SDMS --------------------------------------------------------------
 genus <- "Vitis" 
