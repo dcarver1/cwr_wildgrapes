@@ -301,6 +301,10 @@ countyState <- countyState |>
 
 ```
 
+[Vitis Home Page](https://geospatialcentroid.github.io/vitis/home)
+<br>
+[All Vitis County Maps](https://geospatialcentroid.github.io/vitis/countyReports)
+<br>
 
 ## Supporting information on method and taxonomy {.tabset}
 
@@ -358,21 +362,47 @@ botanical gardens
 -  <strong>Location Based Observation data </strong>: Validated records from INaturalist. Only research grade observations are used. These observations are approve as correctly identified by at least two other member of the online community. 
 
 
+### General Methods 
+
+#### Gathering Data
+
+Data was gathered at the Genus level from the following 
+
+**public repositories**
+
+- Seinet 
+- Genesys
+- Wiews
+- GRIN 
+- USDA Plants 
+- Crop Wild Relative 2020 publication 
+
+**Sourced through communication with data owners** 
+
+- 2023 Botanical Garden Survey 
+- BONAP
+- IUNC 
+
+#### Data Standardization and Taxonomy 
+
+**data standardization** : All data sets were altered to matched a standard data structure. The specific translation of data sets can be seen [here](https://github.com/dcarver1/cwr_wildgrapes/tree/main/preprocessing). The compileInputDatasets.r and the specific functions within the functions folder. 
 
 
-### Spatial Reference 
+
+**Taxonomy**: The full synonyms cross walk can be viewed [here](https://docs.google.com/spreadsheets/d/1ZzKUr2GI8wZe42G-nnMZ3iyhUnnqn3OUCMK_0sFKniQ/edit?usp=drive_link). 
+
+
+
+#### Spatial Reference 
 
 When latitude and longitude data is present for a record this information was used to assign the state/country. When valid latitude and longitude values were not provide the state and county reference information was pulled from the attribute data associated with the record. If no valid county information was included in the attribute data, the record was not used within this analysis. 
 
 
-### Flora of North America 
+#### Flora of North America 
 
 If state level distribution information was provided for a given specific species, that information was used to filter the states in which counties are evaluated. 
 
 
-
-
-## 
 
 ```{r produceMAP, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -766,7 +796,9 @@ DT::datatable(df,
 
 ```
 ## Data exluded by FNA state filter
+
 If the species state level range has been defined by the Flora of North America, then all spatial data has been clip to the that extent. The table below shows the occurrence data that has been removed by the FNA filter.
+
 *note: if no FNA data was available for the species no table will be shown as all the data is already on the map* 
 
 ```{r fna exclusion, echo=FALSE, message=FALSE, warning=FALSE}
