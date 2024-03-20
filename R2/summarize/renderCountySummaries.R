@@ -3,7 +3,7 @@
 # carverd@colostate.edu 
 # 20230717
 ###
-pacman::p_load(furrr, dplyr, readr, sf, terra)
+pacman::p_load(furrr, dplyr, readr, sf, terra, htmltools)
 # set the parallel processing structure 
 # plan(strategy = sequential)
 plan(strategy = multisession, workers = 16) 
@@ -71,12 +71,13 @@ plantsData1 <- read_csv(file ="data/source_data/usda_plants/completeVitis.csv")
 bonapData <- read_csv("data/source_data/bonap.csv")
 natureSeverData <- read_csv("data/processed_occurrence/natureServe.csv")
 # all data for the county maps
-observationData <- read_csv("data/processed_occurrence/tempDataForCountyMaps_20231025.csv") |>
+observationData <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.csv") |>
   dplyr::filter(!is.na(taxon))
 # apply some additional filter to remove duplicated records 
 duplicates <- duplicated(observationData, subset = c("taxon","recordID"))
 observationData <- observationData[duplicates, ]
 
+### some Updates to the 
 
 
 # fnaData

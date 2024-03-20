@@ -765,7 +765,7 @@ DT::datatable(occFiltered,
 
 ## Summary Table of County Data 
 
-The table below display additional attribute data for all the counties with know observation on the the selected taxon. All columns can be filtered and sorted. 
+The table below display additional attribute data for all the counties with know observation on the the selected taxon. All columns can be filtered and sorted. The follows states are included in the FNA designation `r if(fna1[1] !=0){all_states$name}`
 
 ```{r countyDataTable, echo=FALSE, message=FALSE, warning=FALSE}
 # 
@@ -799,11 +799,13 @@ DT::datatable(df,
 
 If the species state level range has been defined by the Flora of North America, then all spatial data has been clip to the that extent. The table below shows the occurrence data that has been removed by the FNA filter.
 
-*note: if no FNA data was available for the species no table will be shown as all the data is already on the map* 
+**The following States are included in the FNA description** : `r if(fna1[1]!="no"){all_states$name}else{"Not included in FNA"}`
 
 ```{r fna exclusion, echo=FALSE, message=FALSE, warning=FALSE}
-
-fnaFiltered <- occFNAFilter %>%
+if(fna1[1]=="no"){
+  print("This species is not present in the Flora of North America")
+}else{
+  fnaFiltered <- occFNAFilter %>%
   dplyr::select(
     "taxon",
     "state",
@@ -817,9 +819,10 @@ fnaFiltered <- occFNAFilter %>%
     "longitude")
 
 
-DT::datatable(fnaFiltered,
+  DT::datatable(fnaFiltered,
               rownames = FALSE,
               width = "100%",
               filter = c("top")
               )
+}
 ```

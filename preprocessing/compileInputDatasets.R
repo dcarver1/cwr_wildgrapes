@@ -332,5 +332,63 @@ c4 <- bind_rows(c4, d9) |>
 
 write_csv(x = c4, file = "data/processed_occurrence/tempDataForCountyMaps_20231025.csv")
 
+### more work on assign correct county fips 
+c4$index <- 1:nrow(c4)
+goodCounty <- c4[!grepl(pattern = "NA", x = c4$countyFIPS),]
+
+badCounty <- c4[!c4$index %in% goodCounty$index, ]
+
+badCounty$state <- str_to_title(badCounty$state)
+
+statesNames <- states |>
+  sf::st_drop_geometry()|>
+  dplyr::filter(adm0_a3 =="USA")
+
+for(i in seq_along(statesNames$name)){
+  stAbv <- statesNames$postal[i]
+  fullNames <- statesNames$name[i] 
+  stFips <- statesNames$fips[i] |> 
+    stringr::str_remove("US")
+  # grab all counties for state 
+  sCounties <- counties |>
+    dplyr::filter(REGION == stAbv)
+  
+  # filter for bad county names from the state 
+  bc1 <- badCounty |> 
+    dplyr::filter(state == fullNames)
+  # assign the state FIPS 
+  bc1$stateFIPS <- stFips
+  
+  # loop over records and check for match on counties 
+  for(j in seq_along(bc1$taxon)){
+      val1 <- bc1$county[j]    
+      shortname <- grepl(pattern = val1, x = sCounties$NAME, ignore.case = TRUE)
+      longname <- grepl(pattern = val1, x = sCounties$NAME_ALT, ignore.case = TRUE)
+      fips <- NA
+      if(TRUE %in% shortname){
+        fips <- sCounties$FIPS[shortname] |>
+          stringr::str_remove("US")
+      }
+      if(TRUE %in% longname){
+        fips <- sCounties$FIPS[longname]|>
+          stringr::str_remove("US")
+      }
+      bc1$countyFIPS[j] <- fips
+  }
+  if(i == 1){
+    newVals <- bc1
+  }else{
+    newVals <- dplyr::bind_rows(newVals, bc1)
+  }
+}
+
+# bind back to good county data 
+c5 <- dplyr::bind_rows(goodCounty, newVals)
+# add back the county records that can not be corrected. 
+c6 <- dplyr::bind_rows(c5, badCounty[!badCounty$index %in% c5$index, ]) |> 
+  dplyr::select(-index)
+
+# export 
+write_csv(x = c6, file = "data/processed_occurrence/DataForCountyMaps_20230320.csv")
 
 
