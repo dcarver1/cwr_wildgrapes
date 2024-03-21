@@ -38,7 +38,7 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 
 ```{r testing_parameters, echo=FALSE, message=FALSE, warning=FALSE}
 # for testing
-# speciesName <- "Vitis rotundifolia"
+# speciesName <- "Vitis rufotomentosa"
 ## troubleshooting  
 # speciesName <- species1
 ```
@@ -404,6 +404,8 @@ If state level distribution information was provided for a given specific specie
 
 
 
+## Map of County and Point Records
+
 ```{r produceMAP, echo=FALSE, message=FALSE, warning=FALSE}
 
 ## all map elements that can be create work needing to have spatial data
@@ -726,8 +728,8 @@ m3 <- m2 |>
               "Location based Herbarium Records without web url",
               "Location Based Observation data",
               "Location based Germplasm Records"))
-
   m3
+
 }# end of condition for no special data
 
 

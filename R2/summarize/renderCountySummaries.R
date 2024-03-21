@@ -24,12 +24,13 @@ fullSpecies <- read_csv("data/source_data/taxonomy20231212.csv")|>
   dplyr::filter(countySpecies  == "Y")|>
   select(taxon)|>
   pull()
-fullSpeciesTrim <- c("Vitis acerifolia"                    
-                     ,"Vitis aestivalis"                    
-                     # ,"Vitis aestivalis var. aestivalis"    
-                     # ,"Vitis aestivalis var. bicolor"       
-                     ,"Vitis arizonica"                     
-                     ,"Vitis baileyana"                     
+fullSpeciesTrim <- c(
+  # "Vitis acerifolia"                    
+  #                    ,"Vitis aestivalis"                    
+  #                    ,"Vitis aestivalis var. aestivalis"
+  #                    ,"Vitis aestivalis var. bicolor"
+  #                    ,"Vitis arizonica"                     
+                     "Vitis baileyana" 
                      ,"Vitis berlandieri"                   
                      ,"Vitis californica"                   
                      ,"Vitis cinerea"                       
@@ -44,13 +45,13 @@ fullSpeciesTrim <- c("Vitis acerifolia"
                     ,"Vitis rotundifolia var. munsoniana"  
                     ,"Vitis rotundifolia var. pygmaea"     
                     ,"Vitis rotundifolia var. rotundifolia"
-                    # ,"Vitis rufotomentosa"                 
+                    ,"Vitis rufotomentosa"
                     ,"Vitis rupestris"                     
                     ,"Vitis shuttleworthii"                
                     ,"Vitis simpsonii"                     
                     ,"Vitis vulpina"                       
-                    # ,"Vitis x champinii"                   
-                    # ,"Vitis x doaniana"                    
+                    ,"Vitis x champinii"
+                    ,"Vitis x doaniana"
                     ,"Vitis x novae-angliae"    )
 
 erroredSpecies <- c(
@@ -75,7 +76,7 @@ observationData <- read_csv("data/processed_occurrence/DataForCountyMaps_2023032
   dplyr::filter(!is.na(taxon))
 # apply some additional filter to remove duplicated records 
 duplicates <- duplicated(observationData, subset = c("taxon","recordID"))
-observationData <- observationData[duplicates, ]
+observationData <- observationData[!duplicates, ]
 
 ### some Updates to the 
 
@@ -149,10 +150,10 @@ generateOccurnaceRMD <- function(species1){
 # # ## needs to be commented out unless running 
 # fullSpecies |> purrr::map(generateOccurnaceRMD)
 # speciesList |> purrr::map(generateOccurnaceRMD)
-# fullSpeciesTrim[1:length(fullSpeciesTrim)] |> purrr::map(generateOccurnaceRMD)
+fullSpeciesTrim[1:length(fullSpeciesTrim)] |> purrr::map(generateOccurnaceRMD)
 # erroredSpecies |> purrr::map(generateOccurnaceRMD)
 # ### troubleshooting
-generateOccurnaceRMD(species ="Vitis arizonica")
+# generateOccurnaceRMD(species ="Vitis rufotomentosa")
 
 
 ## erroring out at specific species need to troubleshoot that directly 
