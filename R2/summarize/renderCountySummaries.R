@@ -150,7 +150,7 @@ generateOccurnaceRMD <- function(species1){
 # # ## needs to be commented out unless running 
 # fullSpecies |> purrr::map(generateOccurnaceRMD)
 # speciesList |> purrr::map(generateOccurnaceRMD)
-fullSpeciesTrim[1:length(fullSpeciesTrim)] |> purrr::map(generateOccurnaceRMD)
+# fullSpeciesTrim[1:length(fullSpeciesTrim)] |> purrr::map(generateOccurnaceRMD)
 # erroredSpecies |> purrr::map(generateOccurnaceRMD)
 # ### troubleshooting
 # generateOccurnaceRMD(species ="Vitis rufotomentosa")

@@ -5,6 +5,12 @@ library(readr)
 library(dplyr)
 gs4_deauth()
 
+# data for IMLS genetic correlation project 
+imlsData <- googlesheets4::read_sheet(as_id("https://docs.google.com/spreadsheets/d/1s-Yj--_xAXur2l5jTGslkwdKDywOvK98g_VUoGsvXe0/edit?usp=sharing"))|>
+  dplyr::select(-geometry)
+write.csv(imlsData, file = "data/imlsGenCorSpeciesData.csv")
+
+
 # USDA Plants Data
 d1 <- googlesheets4::read_sheet(as_id("https://docs.google.com/spreadsheets/d/1BA7FQ8EU0ejooartCoNfx7moUN7wNEmEqU0VmCU6nPw/edit?usp=sharing"),
                                 sheet = "Raw_data")

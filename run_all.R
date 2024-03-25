@@ -33,6 +33,9 @@ speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv") |>
 # speciesData <- read_csv("data/Quercus/QUAC_coord_ind.csv")
 # speciesData <- read_csv("data/Quercus/Quercus_lobata.csv")
 
+### unique species data 
+speciesData <- read_csv("data/imlsGenCorSpeciesData.csv")
+
 
 
 ## bioclim layers 
@@ -53,9 +56,9 @@ bufferDist <- 50000
 ## daucus 
 # runVersion <- "run20240104"
 #vitis run 
-runVersion <- "run20231227"
-# Quercus
-# runVersion <- "run1"
+# runVersion <- "run20231227"
+# Quercus and other IMLS species 
+runVersion <- "run1"
 
 # overwrite 
 overwrite <- FALSE
@@ -63,10 +66,8 @@ overwrite <- FALSE
 # set up environment  -----------------------------------------------------
 
 # primary loop ------------------------------------------------------------
-genera <- unique(speciesData$genus)[1]
+genera <- unique(speciesData$genus)
 species <- sort(unique(speciesData$taxon))
-
-## for Daucus -- issues species
 # species <- species[!grepl(pattern = "Daucus_glochidiatus", x = species)]
 # species <- species[!grepl(pattern = "Daucus_carota_subsp._azoricus", x = species)] # points in ocean
 # species <- species[!grepl(pattern = "Daucus_carota_subsp._fontanesii", x = species)] # no model
