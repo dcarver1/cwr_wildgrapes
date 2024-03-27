@@ -86,7 +86,7 @@ erroredSpecies <- list(noLatLon = c(),
                        lessThenFive = c(),
                        noSDM = c(),
                        noHTML = c())
-# 
+
 plan(strategy = "multisession", workers =8)
 
  
@@ -361,21 +361,21 @@ for(i in genera){
     
     # generate summary html  
     # if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
-    try(
-        rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
-                          output_format = "html_document",
-                          output_dir = file.path(allPaths$result),
-                          output_file = paste0(j,"_Summary.html"),
-                          params = list(
-                            reportData = reportData),
-                          envir = new.env(parent = globalenv())
-                          # clean = F,
-                          # encoding = "utf-8"
-        )
-      )
+    # try(
+    #     rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
+    #                       output_format = "html_document",
+    #                       output_dir = file.path(allPaths$result),
+    #                       output_file = paste0(j,"_Summary.html"),
+    #                       params = list(
+    #                         reportData = reportData),
+    #                       envir = new.env(parent = globalenv())
+    #                       # clean = F,
+    #                       # encoding = "utf-8"
+    #     )
+    #   )
     # }else{
       if(!file.exists(allPaths$summaryHTMLPath)){
-        erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
+        # erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
       }
     # }
     # block here for testing. I want variable in local environment and don't want them written out.
@@ -385,7 +385,7 @@ for(i in genera){
     rm(c1,sp1,srsex,natArea,g_buffer, projectsResults,evalTable,thres)
     
   }else{# sp1 >= 5 condition 
-    erroredSpecies$lessThenFive <- c(erroredSpecies$lessThenFive, j)
+    # erroredSpecies$lessThenFive <- c(erroredSpecies$lessThenFive, j)
     }
   }# end of species loop 
   errorDF <- erroredSpecies |> 
