@@ -429,7 +429,7 @@ compileConservationData <- function(directory, runVersion, genus){
       yaxis = list(zeroline = F,
                    showgrid = F))
   
-  p4 <- subplot(fig1, fig2,fig3,
+  p3 <- subplot(fig1, fig2,fig3,
                 nrows = 3,
                 shareX = TRUE
                 # margin = -0.01
@@ -437,10 +437,6 @@ compileConservationData <- function(directory, runVersion, genus){
     layout(showlegend=FALSE,
            showgrid =FALSE,
            xaxis = list(title = '<b>Final Conservation Score</b>')) 
-
-
-  
-
 # return objects ----------------------------------------------------------
   return(list(
     summaryData = df,

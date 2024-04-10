@@ -24,7 +24,7 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 } 
 
 
-testing <- FALSE
+testing <- TRUE
 # transform data
 if(testing==TRUE){
   data <- conservationSummary$summaryData # testing only
@@ -84,9 +84,6 @@ figure2  # might
 Clicking the objects at the bottom of the figures will turn on and off elements on the figure.
 <br>
 
-
-## Add second figure based on fig2 from the PNAS paper 
-
 *figure caption text* : Conservation scores per US native CWR (black circles), grouped by conservation assessment type—combined FCSc-mean, FCS ex situ, and FCS in situ — with the average score across taxa displayed as red circles. FCS scores are used to categorize taxa for further conservation action: UP (FCS <25), HP (25 ≤ FCS < 50), MP (50 ≤ FCS < 75), and LP (FCS ≥75).
 
 
@@ -95,7 +92,7 @@ Clicking the objects at the bottom of the figures will turn on and off elements 
 <br>
 
 ## Conservation gap analysis results table
-```{r  echo=FALSE, message=FALSE, warning=FALSE}
+```{r  echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
 # # alter Counts data for better visualizations
 c1 <- data %>%
   select(Taxon = ID, everything()) %>%
@@ -106,6 +103,7 @@ c1[,2:12] <- lapply(c1[,2:12], sigfig)
 # rename features for the table 
 c2 <- c1 |>
   dplyr::select(
+    "Taxon",
     "SRS ex situ" = "SRSex",           
     "GRS ex situ" = "GRSex",   
     "ERS ex situ" = "ERSex",           
@@ -136,7 +134,7 @@ DT::datatable(c2,
 
 ## Map of predicted taxon richness
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
 # core species richness map
 r1 <- image
 r1[r1==0] <- NA
@@ -148,7 +146,7 @@ meanPal <- colorNumeric(palette = distColor,domain = values(r1), na.color = "tra
 ```
 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
 # produce the first map
 richness1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3)) |>
   addTiles() |>
@@ -175,10 +173,10 @@ Predicted taxonomic richness map for assessed taxa, combining `r length(unique(d
 
 ## Geographic *ex situ* gap richness
 
-Predicted collecting priority hotspots map to resolve geographic gaps in current *ex situ* conservation. The map displays richness of geographic areas within the potential distributions of the assessed taxa that have not been previously collected for *ex situ* conservation (i.e. that are not within 50 km of an existing germplasm collection location). Darker colors indicate greater numbers of taxa potentially overlapping in the same (ca. 5 km2) areas.
+Predicted collecting priority hotspots map to resolve geographic gaps in current *ex situ* conservation. The map displays richness of geographic areas within the potential distributions of the assessed taxa that have not been previously collected for *ex situ* conservation (i.e. that areas not within 50 km of an existing germplasm collection location). Darker colors indicate greater numbers of taxa potentially overlapping in the same (ca. 5 km2) areas.
 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
 g50 <- classify(ga50, cbind(NaN, 0)) |> raster()
 exGap <- r1 - g50
 
@@ -225,9 +223,9 @@ km2) areas.
 
 ## Geographic *in situ* gap richness
 
-Predicted habitat protection priorities map to resolve geographic gaps in current *in situ* conservation. The map displays richness of geographic areas within the potential distributions of the assessed taxa that are outside of current protected areas. Darker colors indicate greater numbers of taxa potentially overlapping in the same (ca. 5 km2) are
+Predicted habitat protection priorities map to resolve geographic gaps in current *in situ* conservation. The map displays richness of geographic areas within the potential distributions of the assessed taxa that are outside of current protected areas. Darker colors indicate greater numbers of taxa potentially overlapping in the same (ca. 5 km2) areas.
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE ,fig.align='center', out.width='90%'}
 # reclass to make the mask of the protect areas features
 p2 <- classify(p1, cbind(1, 2))
 p2 <- classify(p2, cbind(NaN, 1))
@@ -265,9 +263,9 @@ in1
 
 
 ### Protected areas table
-This table lists all protected areas overlapping with the predicted distributions of three or more taxa. The total number of taxa potentially present in the protected area is shown in a column. A full list of protected areas can be found at (add a link once we have a location for hosting the data)
+This table lists all protected areas overlapping with the predicted distributions of four or more taxa. The total number of taxa potentially present in the protected area is shown in a column. A full list of protected areas can be found at (add a link once we have a location for hosting the data)
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', out.width='90%'}
 # probably want to process this outside of the rendering of the document. '
 pc1 <- protectCounts |>
   dplyr::filter(totalSpecies > 3) |>
@@ -299,7 +297,7 @@ same (ca. 5 km2) areas.
 *Note: Score values of zero will not appear on the chart.*
 
 
-## Definitions of conservation gap analysis scores
+## Definitions of conservation gap analysis scores {.tabset}
 
 ### Sampling Representativeness Score (SRS)
 
