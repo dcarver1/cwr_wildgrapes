@@ -1,7 +1,7 @@
 
 
 
-ers_insitu <- function(occuranceData,nativeArea, protectedArea, thres,rasterPath){
+ers_insitu <- function(occuranceData,nativeArea, protectedArea, thres,rasterPath = NULL){
   # total e
   
   # mask protected areas layer 
@@ -17,7 +17,9 @@ ers_insitu <- function(occuranceData,nativeArea, protectedArea, thres,rasterPath
   # thresPoints <- terra::as.points(x = mask1)
   
   # convert native area to a vect object
-  nativeArea <- vect(nativeArea)
+  if(class(nativeArea)[1] != "SpatVector"){
+    nativeArea <- vect(nativeArea)
+  }
   # total number of eco regions within the SDM
   ## ecoregions with predicted presence within the boundaries
   totEco <- terra::zonal(x = thres ,z = nativeArea, fun = "sum",na.rm=TRUE)|>
@@ -56,10 +58,14 @@ ers_insitu <- function(occuranceData,nativeArea, protectedArea, thres,rasterPath
   mEcos <- totEco[!totEco$ECO_ID_U %in% totProEco$ECO_ID_U, ]
   
   missingEcos <- nativeArea |> 
+    st_as_sf()|>
     dplyr::filter(ECO_ID_U %in% mEcos$ECO_ID_U) |> # needed to add the $ for filter to work
+    terra::vect()|>
     terra::rasterize(y = thres)
   # export for the full 
-  terra::writeRaster(x = missingEcos, filename = rasterPath,overwrite=TRUE)
+  if(!is.null(rasterPath)){
+    terra::writeRaster(x = missingEcos, filename = rasterPath,overwrite=TRUE)
+  }
   
   
   df <- data.frame(ID=occuranceData$taxon[1],

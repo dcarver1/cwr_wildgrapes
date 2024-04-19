@@ -3,7 +3,7 @@
 # carverd@colostate.edu 
 # 20230717
 ###
-pacman::p_load(furrr, dplyr, readr, sf, terra, htmltools)
+pacman::p_load(furrr, dplyr, readr, sf, terra, htmltools, googledrive4)
 # set the parallel processing structure 
 # plan(strategy = sequential)
 plan(strategy = multisession, workers = 16) 
@@ -84,7 +84,9 @@ observationData <- observationData[!duplicates, ]
 # fnaData
 fnaData <- read_csv("data/source_data/FNA_stateClassification.csv")
 # synonym dataset
-synData <- read_csv("data/source_data/taxonomy20231212.csv")
+synData <- 
+  
+  read_csv("data/source_data/taxonomy20231212.csv")
 
 
 # #spatial data

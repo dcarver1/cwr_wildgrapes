@@ -1,0 +1,178 @@
+
+As of 2024-04-19 the GapAnalysis R package is not working efficiently due to the dependency on deprecated spatial libraries (sp, raster). 
+
+The package is expected to be updated in at some time in 2024. 
+
+In the mean time, this functions described below can be used to alternative to the GapAnalysis package. 
+
+This will require some working knowledge of github and sourcing functions, making it a generally less user friendly, though more stable application of the Gap Analysis conservation assessment. 
+
+Please direct questions to Dan Carver -- carverd@colostate.edu 
+
+
+
+## Downloading the working repository 
+
+Clone or download and extract the following [git repository](https://github.com/dcarver1/cwr_wildgrapes)
+
+The following functions should be sourced into your working environment 
+
+```{r}
+### your specific path will differ based on your current working directly and the relative path to the downloaded repository 
+# some data processing functions stored in a single file 
+source("~/Documents/cwr_wildgrapes/R2/dataProcessing/data_processing_functions.R")
+# g_buffer 
+source("~/Documents/cwr_wildgrapes/R2/modeling/create_buffers.R")
+source("~/Documents/cwr_wildgrapes/R2/modeling/cropG_buffer.R")
+
+# gap analysis function 
+## list all options 
+f1 <- list.files(
+      path = "~/Documents/cwr_wildgrapes/R2/gapAnalysis",
+      pattern = "\\.R$", # \\ensure file extension. $ensures ends with. Avoids .Rmd
+      full.names = TRUE,
+      recursive = TRUE )
+# source
+for(i in f1){
+  print(i)
+  source(i)
+}
+```
+
+## supporting libraries 
+Load supporting libraries using pacman 
+
+```{r}
+# optional but good 
+# install.packages("pacman")
+pacman::p_load("terra", "dplyr", "sf","devtools")
+```
+
+
+## testing data 
+
+We will be using the datasets from the gap analysis package for examples. 
+If you are running on your own I'd suggesting changing the source here. 
+
+Because of the issues with dependency, GapAnalysis can not be reliably download via CRAN so we will pull and compile from github. 
+
+```{r}
+# remotes::install_github("CIAT-DAPA/GapAnalysis")
+library(GapAnalysis)
+```
+Pull in some example data 
+
+The [full ecoregion file](https://geospatial.tnc.org/datasets/b1636d640ede4d6ca8f5e369f2dc368b/about)
+
+```{r}
+# pulls the ecoregion and protected areas dataset from a dataverse repository 
+GapAnalysis::GetDatasets()
+
+# assign ecoregion 
+## note this is a subset of the full file that can be download from the link above  
+ecos <- GapAnalysis::ecoregions |>
+  sf::st_as_sf()
+# assign protected areas 
+proAreas <- GapAnalysis::ProtectedAreas |>
+  terra::rast()|>
+  terra::project(ecos) # reproject the dataset to match ecos --- some to be some issues when moving to terra and maintaining the projection
+# change the name to match the requirements of functions 
+names(proAreas) <- "layer"
+# occurrance records -- store as a dataframe 
+occData <- GapAnalysis::CucurbitaData 
+# distributions rasters 
+rasters <- GapAnalysis::CucurbitaRasters |>
+  terra::rast()
+
+```
+
+
+## Single Species Example 
+
+```{r}
+# subset species data
+occFilter <- occData |>
+  dplyr::filter(species == "Cucurbita_digitata") |>
+  dplyr::mutate(databaseSource = "NA") # required for the generateCounts functions 
+names(occFilter) <- c("taxon", "latitude", "longitude", "type", "databaseSource")
+
+
+# subset raster and project to crs of ecos ( this is was is used to define crs of points, but as long as your data have the CRS you should be fine)
+raster <- rasters$digitata |> 
+  terra::project(ecos)
+# reset the name of the raster for some specific indexing within gap analysis functions 
+names(raster) <- "Threshold"
+
+## preping some data for the gap analysis functions 
+### counts is used for the SRSex measures
+counts <- generateCounts(speciesData = occFilter)
+### make a spatial representation 
+sp1 <-createSF_Objects(speciesData = occFilter)
+# optional remove duplicated points will not effect your SRSex score  
+sp1 <- removeDuplicates(sp1)
+### define natural areas, efficency step so you do have to pass the full ecoregion file to functions. 
+natArea <- nat_area_shp(speciesPoints = sp1, ecoregions = ecos)
+### or (recommend if you did not limit your model extent by ecoregions. )
+# natArea <- ecos 
+
+
+# generate some measures 
+## exsitu
+thres <- raster |>
+      terra::crop(natArea) |>
+      terra::mask(natArea)
+
+### srsex
+srsex <- srs_exsitu(sp_counts = counts)
+### grsex 
+gBuffer <- create_buffers(speciesPoints = sp1,
+               natArea = natArea,
+               bufferDist = 50000, 
+               templateRast = thres)
+gCropBuffer <- cropG_Buffer(ga50 = gBuffer, 
+                            thres = thres)
+grsex <- grs_exsitu(speciesData = sp1,
+                    ga50 = gCropBuffer,
+                    thres = thres)
+### ersex
+ersex <- ers_exsitu(speciesData = sp1, 
+                    thres = thres,
+                    natArea = natArea,
+                    ga50 = gCropBuffer
+                    )
+### fcsex 
+fcsex <- fcs_exsitu(srsex = srsex,grsex = grsex,ersex = ersex,noModel = FALSE)
+
+
+## insitu 
+### srsin 
+srsin <- srs_insitu(occuranceData = sp1,
+                    thres = thres, 
+                    protectedArea = proAreas)
+### grsin 
+grsin <- grs_insitu(occuranceData = sp1,
+                    protectedArea = proAreas,
+                    thres = thres)
+### ersin
+ersin <- ers_insitu(occuranceData = sp1,
+                    nativeArea = natArea,
+                    protectedArea = proAreas,
+                    thres = thres)
+### fcsin 
+fcsin <- fcs_insitu(srsin = srsin,
+                    grsin = grsin,
+                    ersin = ersin,
+                    noModel = FALSE)
+
+### combined models
+fcsCombined <- fcs_combine(fcsin = fcsin,
+                           fcsex = fcsex)
+
+```
+
+
+
+## multiple species 
+
+I'd recommend just tossing the workflow above into a for loop. You'll need to be carefull with the indexing, specifically of the raster elements. 
+

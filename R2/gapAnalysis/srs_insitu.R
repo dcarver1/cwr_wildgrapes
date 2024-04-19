@@ -27,7 +27,7 @@ srs_insitu <- function(occuranceData, thres,protectedArea){
     p1 <- p1 * mask1
     # extract values from crop 
     t1 <- terra::extract(x = p1,y = vect(occuranceData))
-    
+    names(t1) <- c("ID", "layer")
   }
   # extracted values are 1 or NA so sum all the values to get the total. 
   totalInProtectArea <- sum(t1$layer, na.rm = TRUE)

@@ -1,4 +1,4 @@
-sourceFiles <- function(furrr=FALSE){
+sourceFiles <- function(gapAnalysisOnly, furrr=FALSE){
   if(furrr == TRUE){
     f1 <- list.files(
       path = "R2",
@@ -22,7 +22,17 @@ sourceFiles <- function(furrr=FALSE){
       source(i)
     }
   }
-  
+  if(gapAnalysisOnly = TRUE){
+    f1 <- list.files(
+      path = "R2/gapAnalysis",
+      pattern = "\\.R$", # \\ensure file extension. $ensures ends with. Avoids .Rmd
+      full.names = TRUE,
+      recursive = TRUE )
+    for(i in f2){
+      print(i)
+      source(i)
+    }
+  }
 
 }
 
