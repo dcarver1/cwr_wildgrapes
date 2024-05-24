@@ -1,6 +1,6 @@
 ---
-title: Taxon level assessment of occurrence  data
-author: Daniel P. Carver, Anne Frances, and Colin Khoury 
+title: County Assessment Maps
+author: 
 output:
   html_document:
       css: style.css
@@ -17,6 +17,9 @@ params:
   stateSHP: NA
   fnaData: NA
   synData: NA
+  reviewedPoints : NA
+  reviewedCounty : NA
+  nsRefData : NA
 ---
 ```{r load_packages_functions, echo=FALSE, message=FALSE, warning=FALSE}
 pacman::p_load("leaflet","data.table", "tidyr", "dplyr","plotly","DT","readr","sf", "tmap",
@@ -38,8 +41,8 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 
 ```{r testing_parameters, echo=FALSE, message=FALSE, warning=FALSE}
 # for testing
-# speciesName <- "Vitis rufotomentosa"
-## troubleshooting  
+# speciesName <- "Vitis baileyana"
+# troubleshooting
 # speciesName <- species1
 ```
 
@@ -75,6 +78,12 @@ countySHP <- params$countySHP
 stateSHP  <- params$stateSHP
 # <- read_sf("~/Documents/cwr_wildgrapes/data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")|>
 #   dplyr::filter(adm0_a3 == "USA")
+
+# reviewed Data
+reviewedPoints <- params$reviewedPoints
+reviewedCounty <- params$reviewedCounty
+nsRefData <- params$nsRefData
+
 ```
 
 ```{r species_list, echo=FALSE, message=FALSE, warning=FALSE}
@@ -87,6 +96,10 @@ speciesList <- dplyr::left_join(x = plantsData1,
 
 ```{r spatial_reference_data, echo=FALSE, message=FALSE, warning=FALSE}
   species <- speciesList[speciesList$`Scientific Name` == speciesName, ]
+
+  # select taxon specific review data 
+  reviewedPoints1 <- reviewedPoints[reviewedPoints$Taxon ==speciesName, ]
+  reviewedCounty1 <- reviewedCounty[reviewedCounty$Taxon == speciesName,  ]
 
   # select county data for species 
   plantsData <- plantsData1 |> 
@@ -114,6 +127,51 @@ speciesList <- dplyr::left_join(x = plantsData1,
   mutate(allCountySources = str_remove_all(allCountySources, pattern = "NA"))|>
     filter(allCountySources != "  ")
   
+  # remove species counties that have been review 
+  if(nrow(reviewedCounty1) > 0){
+    
+    reviewedCounty1$CODE_LOCAL <- as.character(unlist(reviewedCounty1$`GEOID for County`))
+
+    # display layer 
+    rCounty <- countyGathered |>
+      dplyr::filter(CODE_LOCAL %in% reviewedCounty1$`GEOID for County`)|>
+      dplyr::left_join(reviewedCounty1, by = "CODE_LOCAL") |>
+      dplyr::mutate(
+            popup = paste0("<b>Suggested Action for this County:</b> ",`Suggested Action for this Occurrence: select one` , 
+                         "<br/><b>Comments: </b> ", Comments,
+                         "<br/><b>Reviewers name:</b> ", `Reviewers name (Initials okay after first submission)`)  
+      )
+    # filtered primary layer
+    countyGathered <- countyGathered |>
+      dplyr::filter(!CODE_LOCAL %in% reviewedCounty1$`GEOID for County`)
+    
+  }else{
+    rCounty <- countyGathered[0,]
+  }
+    # remove any reviewed points #test with the specific that has points removed 
+  if(nrow(reviewedPoints1) > 0){
+    # pull this value from the full dataset 
+    rPoints <- observationData |>
+      dplyr::filter(
+        recordID == reviewedPoints1$`Record ID for point`
+      )|>
+      dplyr::left_join(reviewedCounty1, by = c("recordID" ="Record ID for point")) |>
+      dplyr::mutate(
+            popup = paste0("<b>Suggested Action for this Observations:</b> ",`Suggested Action for this Occurrence: select one` , 
+                         "<br/><b>Comments: </b> ", Comments,
+                         "<br/><b>Reviewers name:</b> ", `Reviewers name (Initials okay after first submission)`)  
+      )
+    # remore this feature from the full dataset
+    observationData <- observationData |>
+      dplyr::filter(
+        recordID != reviewedPoints1$`Record ID for point`
+      )
+  }else{
+    rPoints <- observationData[0,]
+  }
+  
+  
+  
   # render occ data
   occData <- observationData |>
     dplyr::filter(taxon == speciesName) |>
@@ -124,6 +182,9 @@ speciesList <- dplyr::left_join(x = plantsData1,
   # lots of duplicated in here at the moment. Need to remove
   duplicated <- duplicated(occData)
   occData <- occData[!duplicated,]
+  
+
+  
 
 # gather the states listed within FNA
   if(speciesName %in% fnaData$`Taxon Name`){
@@ -172,19 +233,22 @@ if(fna1[1] == "no"){
 # pull the synonym data 
 s1 <- synData |> 
   dplyr::filter(taxon == speciesName)|>
-  as.data.frame()
-names(s1) <- c("taxon",
-               "acceptedSynonym",
-               "Names_to_exclude_from_this_Species_Complex",
-               "Species_Complex", 
-               "NatureServe_Concept_reference",
-               "Relationship_to_FNA",
-               "Taxonomic_notes",
-               "Classification_Status_NatureServe",
-               "Number_of_lower_taxa",
-               "Careful_review_needed?",
-               "Extralimital_to_US/Canada_(nativerange)")
+  as.data.frame()|>
+  dplyr::select(
+    "taxon",                                  
+    "acceptedSynonym",
+    "Names_to_exclude_from_this_Species_Complex" = "Names to exclude from this concept", 
+    "Species_Complex" = "Species Complex",
+    "NatureServe_Concept_reference" = "NatureServe Concept reference",
+    "Relationship_to_FNA" = "Relationship to FNA",
+    "Taxonomic_notes" = "Taxonomic notes",
+    "Classification_Status_NatureServe" = "Classification Status NatureServe"
+  )
   
+# grab the species of intereset from natureserverref data 
+nsRefData2 <- nsRefData |>
+  dplyr::filter(`Scientific Name` == speciesName)
+nsRefData2$link <- nsRefData2$`View on NatureServe Explorer`
 
 ```
 
@@ -301,10 +365,22 @@ countyState <- countyState |>
 
 ```
 
-[Vitis Home Page](https://geospatialcentroid.github.io/vitis/home)
+<img src="logoBannner.png" alt="Supporting Organizations" style="width: 100%">
 <br>
-[All Vitis County Maps](https://geospatialcentroid.github.io/vitis/countyReports)
+<a href="https://geospatialcentroid.github.io/vitis/home" target="_blank">Vitis Home Page</a>
+<!-- [Vitis Home Page](https://geospatialcentroid.github.io/vitis/home) -->
 <br>
+<a href="https://geospatialcentroid.github.io/vitis/countyReports" target="_blank">All Vitis County Maps</a>
+
+<!-- [All Vitis County Maps](https://geospatialcentroid.github.io/vitis/countyReports) -->
+<br>
+
+*If you are evaluating these maps, please be sure to complete the initial <a href="https://docs.google.com/forms/d/e/1FAIpQLSeyoQC-Ta2-KP-rGiGVqcZ3jq5AnpN6FdFptGcoCuOAteKYuw/viewform?usp=sf_link" target="_blank">registration form</a>.*
+<br>
+[]()
+<a href="https://docs.google.com/spreadsheets/d/1fROduCBuYkKUv9bd1_N9SJ8ijyaA0C5BqG9nKZHFigI/edit?usp=sharing" target="_blank">Listing of all occurrance records for all species</a>
+<br> 
+<a href="https://docs.google.com/spreadsheets/d/1m6toqYmv49nz9A029p4DrkuQL7sis04wHZH1RzgsXdg/edit?usp=sharing" target="_blank">Listing of all USDA Plants and Bonap records</a>
 
 ## Supporting information on method and taxonomy {.tabset}
 
@@ -325,6 +401,10 @@ countyState <- countyState |>
 **Taxonomic Notes**: `r s1$Taxonomic_notes`
 <br> 
 **NatureServe Classification Status**: `r s1$Classification_Status_NatureServe`
+<br>
+**NatureServe Distribution**: `r nsRefData2$Distribution`
+<br>
+**NatureServe Explorer**: `r nsRefData2$link`
 <br>
 **This species is included in FNA : `r FNAspecies`**
 <br> 
@@ -707,10 +787,12 @@ m3 <- m2 |>
                         "Counties listed in USDA Plants and/or Bonap Only",
                         "Counties with one or more Herbarium or Germplasm record",
                         "Counties with observational records only",
+                        "Counties removed during review",
                         "Location based Germplasm Records", 
                         "Location based Herbarium Records with web url",
                         "Location based Herbarium Records without web url", 
-                        "Location Based Observation data"),
+                        "Location Based Observation data",
+                        "Locations removed during review"),
       options = layersControlOptions(collapsed = FALSE)
     )|>
     # This is good option for a single feature but it's not going to work for both
@@ -728,11 +810,38 @@ m3 <- m2 |>
               "Location based Herbarium Records without web url",
               "Location Based Observation data",
               "Location based Germplasm Records"))
+# conditions for removed species 
+  if(nrow(rCounty)> 0){
+    m3a <- m3 |>
+      #add layer and legend element 
+      addPolygons(data = rCounty,
+              color = "black",
+              fillColor = "#ebfc03",
+              popup = ~popup,
+              weight = 0.8,
+              fillOpacity = 1,
+              opacity = 0.8,
+              group = "Counties removed during review",
+              options = pathOptions(pane = "hgData"))
+    m3 <- m3a
+  }
+
+  if(nrow(rPoints)> 0){
+    m3b <- m3 |>
+      #add layer and legend element 
+      addCircleMarkers(data = rPoints,
+           color = "#ebfc03",
+           opacity = 1,
+           radius = 2,
+           stroke = 1,
+           popup = ~popup,
+           group = "Locations removed during review",
+           options = pathOptions(pane = "points")
+             )
+   m3 <- m3b
+  }
   m3
-
 }# end of condition for no special data
-
-
 
 ```
 
@@ -807,24 +916,41 @@ If the species state level range has been defined by the Flora of North America,
 if(fna1[1]=="no"){
   print("This species is not present in the Flora of North America")
 }else{
-  fnaFiltered <- occFNAFilter %>%
-  dplyr::select(
+  fnaFiltered <- occFNAFilter |>
+    dplyr::mutate(
+    link = paste0("https://docs.google.com/forms/d/e/1FAIpQLScCTcg6ITFMXs9QpQEAvN92GI06wtSTiGSTcUBrOK6E2kChjw/viewform?usp=pp_url&entry.1016353547=",
+    taxon,
+    "&entry.764274277=",
+    countyFIPS,
+    "&entry.763749150=",
+    state,
+    "&entry.1585476570=",
+    county,
+    "&entry.1304312867=",
+    recordID))  |>
+    dplyr::mutate(
+      "report issue" = paste0("<a target='_blank', href=\"", link , "\">", "link", "</a>"),
+    )|>
+    dplyr::select(
     "taxon",
     "state",
     "county",
     "databaseSource",
     "collectionSource",
     "type",
+    "report issue link" = link,
     "localityInformation",
     "yearRecorded",
     "latitude",
     "longitude")
 
 
-  DT::datatable(fnaFiltered,
-              rownames = FALSE,
-              width = "100%",
-              filter = c("top")
-              )
+DT::datatable(fnaFiltered,
+            rownames = FALSE,
+            width = "100%",
+            filter = c("top"),
+            escape = TRUE
+            )
+  
 }
 ```

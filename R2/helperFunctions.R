@@ -22,7 +22,7 @@ sourceFiles <- function(gapAnalysisOnly, furrr=FALSE){
       source(i)
     }
   }
-  if(gapAnalysisOnly = TRUE){
+  if(gapAnalysisOnly == TRUE){
     f1 <- list.files(
       path = "R2/gapAnalysis",
       pattern = "\\.R$", # \\ensure file extension. $ensures ends with. Avoids .Rmd

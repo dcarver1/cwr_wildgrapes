@@ -21,7 +21,7 @@ sourceFiles(furrr = FALSE)
 # input datasets ----------------------------------------------------------
 ## species observations 
 ### Daucus 
-speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified_20240117.csv")
+# speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified_20240117.csv")
 ### sepecies with less then 8 D. biseriatus, D. carota subsp. annuus, D. carota subsp. fontanesii, D. carota subsp. parviflorus, D. carota subsp. rupestris , D. carota subsp. tenuissimus , D. della-cellae, D. edulis, D. gracilis, D. jordanicus, D. mauritii, D. microscias, D. mirabilis ,D. reboudii ,D. virgatus
 ### Vitis
 ## filtering the extra values coming from the data prep process 
@@ -30,7 +30,7 @@ speciesData <- read_csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modif
 
 ### Quercus 
 # speciesData <- read_csv("data/Quercus/QUAC_coord_ind.csv")
-# speciesData <- read_csv("data/Quercus/Quercus_lobata.csv")
+speciesData <- read_csv("data/Quercus/Quercus_lobata.csv")
 
 ### unique species data 
 # speciesData <- read_csv("data/imlsGenCorSpeciesData.csv")
@@ -53,16 +53,16 @@ bufferDist <- 50000
 
 # run version 
 ## daucus 
-runVersion <- "run20240104"
+# runVersion <- "run20240104"
 #vitis run 
 # runVersion <- "run20231227"
 # Quercus and other IMLS species 
-# runVersion <- "run1"
+runVersion <- "run1"
 
 # overwrite 
 overwrite <- FALSE
 
-# set up environment  -----------------------------------------------------
+  # set up environment  -----------------------------------------------------
 
 # primary loop ------------------------------------------------------------
 genera <- unique(speciesData$genus)
@@ -363,20 +363,20 @@ for(i in genera){
 
     
     # generate summary html  
-    # if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
-    # try(
-    #     rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
-    #                       output_format = "html_document",
-    #                       output_dir = file.path(allPaths$result),
-    #                       output_file = paste0(j,"_Summary.html"),
-    #                       params = list(
-    #                         reportData = reportData),
-    #                       envir = new.env(parent = globalenv())
-    #                       # clean = F,
-    #                       # encoding = "utf-8"
-    #     )
-    #   )
-    # }else{
+    if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
+    try(
+        rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
+                          output_format = "html_document",
+                          output_dir = file.path(allPaths$result),
+                          output_file = paste0(j,"_Summary.html"),
+                          params = list(
+                            reportData = reportData),
+                          envir = new.env(parent = globalenv())
+                          # clean = F,
+                          # encoding = "utf-8"
+        )
+      )
+    }else{
       if(!file.exists(allPaths$summaryHTMLPath)){
         # erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
       }
@@ -408,42 +408,42 @@ for(i in genera){
 
 
   # produce boxplot summaries -----------------------------------------------
-  renderBoxPlots  <- FALSE
-  if(renderBoxPlots == TRUE){
-    # compile all modeling data
-    amd <- list.files(dir1, pattern = "allmodelData.csv", full.names = TRUE, recursive = TRUE)
-    amd2 <- amd[grepl(pattern = runVersion, x = amd)]
-    #empty df for storing data from the loop
-    df4 <- data.frame()
-    # loop over species
-    for(p in seq_along(species)){
-      p1 <- amd2[grepl(pattern = species[p],x = amd2)]
-      if(length(p1)==1){
-        p2 <- p1 |>
-          read.csv() |>
-          dplyr::filter(presence == 1)|>
-          dplyr::mutate(taxon = species[p])
-        df4 <- bind_rows(p2,df4)
-      }
-    }
-    # generate input data set
-    inputData <- list(
-      data = df4,
-      species = species,
-      names = bioNames
-    )
-    # produce the document
-    rmarkdown::render(input = "R2/summarize/boxplotSummaries.Rmd",
-                      output_format = "html_document",
-                      output_dir = file.path(dir1),
-                      output_file = paste0(runVersion,"_boxPlotSummary.html"),
-                      params = list(
-                        inputData = inputData),
-                      envir = new.env(parent = globalenv())
-                      # clean = F,
-                      # encoding = "utf-8"
-    )
-
+  # renderBoxPlots  <- FALSE
+  # if(renderBoxPlots == TRUE){
+  #   # compile all modeling data
+  #   amd <- list.files(dir1, pattern = "allmodelData.csv", full.names = TRUE, recursive = TRUE)
+  #   amd2 <- amd[grepl(pattern = runVersion, x = amd)]
+  #   #empty df for storing data from the loop
+  #   df4 <- data.frame()
+  #   # loop over species
+  #   for(p in seq_along(species)){
+  #     p1 <- amd2[grepl(pattern = species[p],x = amd2)]
+  #     if(length(p1)==1){
+  #       p2 <- p1 |>
+  #         read.csv() |>
+  #         dplyr::filter(presence == 1)|>
+  #         dplyr::mutate(taxon = species[p])
+  #       df4 <- bind_rows(p2,df4)
+  #     }
+  #   }
+  #   # generate input data set
+  #   inputData <- list(
+  #     data = df4,
+  #     species = species,
+  #     names = bioNames
+  #   )
+  #   # produce the document
+  #   rmarkdown::render(input = "R2/summarize/boxplotSummaries.Rmd",
+  #                     output_format = "html_document",
+  #                     output_dir = file.path(dir1),
+  #                     output_file = paste0(runVersion,"_boxPlotSummary.html"),
+  #                     params = list(
+  #                       inputData = inputData),
+  #                     envir = new.env(parent = globalenv())
+  #                     # clean = F,
+  #                     # encoding = "utf-8"
+  #   )
+  #
   }
   
 }

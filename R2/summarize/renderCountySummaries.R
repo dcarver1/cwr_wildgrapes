@@ -3,7 +3,7 @@
 # carverd@colostate.edu 
 # 20230717
 ###
-pacman::p_load(furrr, dplyr, readr, sf, terra, htmltools, googledrive4)
+pacman::p_load(furrr, dplyr, readr, sf, terra, htmltools, googledrive, googlesheets4)
 # set the parallel processing structure 
 # plan(strategy = sequential)
 plan(strategy = multisession, workers = 16) 
@@ -24,44 +24,6 @@ fullSpecies <- read_csv("data/source_data/taxonomy20231212.csv")|>
   dplyr::filter(countySpecies  == "Y")|>
   select(taxon)|>
   pull()
-fullSpeciesTrim <- c(
-  # "Vitis acerifolia"                    
-  #                    ,"Vitis aestivalis"                    
-  #                    ,"Vitis aestivalis var. aestivalis"
-  #                    ,"Vitis aestivalis var. bicolor"
-  #                    ,"Vitis arizonica"                     
-                     "Vitis baileyana" 
-                     ,"Vitis berlandieri"                   
-                     ,"Vitis californica"                   
-                     ,"Vitis cinerea"                       
-                    ,"Vitis girdiana"                      
-                    ,"Vitis labrusca"                      
-                    # ,"Vitis lincecumii"                    
-                    ,"Vitis monticola"                     
-                    ,"Vitis mustangensis"                  
-                    ,"Vitis palmata"                       
-                    ,"Vitis riparia"                       
-                    ,"Vitis rotundifolia"                  
-                    ,"Vitis rotundifolia var. munsoniana"  
-                    ,"Vitis rotundifolia var. pygmaea"     
-                    ,"Vitis rotundifolia var. rotundifolia"
-                    ,"Vitis rufotomentosa"
-                    ,"Vitis rupestris"                     
-                    ,"Vitis shuttleworthii"                
-                    ,"Vitis simpsonii"                     
-                    ,"Vitis vulpina"                       
-                    ,"Vitis x champinii"
-                    ,"Vitis x doaniana"
-                    ,"Vitis x novae-angliae"    )
-
-erroredSpecies <- c(
-  "Vitis aestivalis var. aestivalis"    
-  ,"Vitis aestivalis var. bicolor"       
-  ,"Vitis lincecumii"                    
-  ,"Vitis rufotomentosa"                 
-  ,"Vitis x champinii"                   
-  ,"Vitis x doaniana"
-  )
 
 # input parameters --------------------------------------------------------
 ## taxonomic reference
@@ -72,22 +34,19 @@ plantsData1 <- read_csv(file ="data/source_data/usda_plants/completeVitis.csv")
 bonapData <- read_csv("data/source_data/bonap.csv")
 natureSeverData <- read_csv("data/processed_occurrence/natureServe.csv")
 # all data for the county maps
-observationData <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.csv") |>
+observationData <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.csv")|>
   dplyr::filter(!is.na(taxon))
 # apply some additional filter to remove duplicated records 
 duplicates <- duplicated(observationData, subset = c("taxon","recordID"))
 observationData <- observationData[!duplicates, ]
 
-### some Updates to the 
-
 
 # fnaData
 fnaData <- read_csv("data/source_data/FNA_stateClassification.csv")
 # synonym dataset
-synData <- 
-  
-  read_csv("data/source_data/taxonomy20231212.csv")
-
+synData <-  read_csv("data/source_data/taxonomy20231212.csv")
+#nature server reference file 
+nsRefData <- read_csv("data/source_data/vitisReferenceFile.csv")
 
 # #spatial data
 countySHP <- sf::st_read("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg")
@@ -104,6 +63,12 @@ states <- codes %>%
   select(state_code, state_name)%>%
   distinct()
 
+# filter out any of the accessed datasets. 
+reviewedData <- googlesheets4::read_sheet(as_id("https://docs.google.com/spreadsheets/d/1_BfJawocOnA-1m9_gl5qZvufXHBCCOacMZX69cQz2LY/edit#gid=139317771"))
+  
+reviewedPoints <- reviewedData[reviewedData$`Record ID for point` != "NA", ]
+reviewedCounty <- reviewedData[!reviewedData$Timestamp %in% reviewedPoints$Timestamp, ] 
+  
 
 # bind the plants and bonap layers 
 # b1 <- bonapData |> 
@@ -144,7 +109,10 @@ generateOccurnaceRMD <- function(species1){
                         countySHP = countySHP,
                         stateSHP = stateSHP,
                         fnaData = fnaData,
-                        synData = synData
+                        synData = synData,
+                        reviewedPoints = reviewedPoints, 
+                        reviewedCounty= reviewedCounty,
+                        nsRefData =nsRefData
                         )
                       # envir = new.env(parent = globalenv()
     )
@@ -155,8 +123,7 @@ generateOccurnaceRMD <- function(species1){
 # fullSpeciesTrim[1:length(fullSpeciesTrim)] |> purrr::map(generateOccurnaceRMD)
 # erroredSpecies |> purrr::map(generateOccurnaceRMD)
 # ### troubleshooting
-# generateOccurnaceRMD(species ="Vitis rufotomentosa")
-
+generateOccurnaceRMD(species ="Vitis rupestris")
 
 ## erroring out at specific species need to troubleshoot that directly 
 ## "Vitis tiliifolia"

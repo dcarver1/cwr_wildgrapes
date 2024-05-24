@@ -49,7 +49,7 @@ print("Summary doc copied")
 
 ##################
 # vitis specific moves ----------------------------------------------------
-folder <- "~/Documents/GeospatialCentroid.github.io/vitis"
+folder <- "~/Documents/vitis"
 
 # vitis SDMS --------------------------------------------------------------
 genus <- "Vitis" 
