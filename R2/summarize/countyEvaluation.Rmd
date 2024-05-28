@@ -41,7 +41,7 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 
 ```{r testing_parameters, echo=FALSE, message=FALSE, warning=FALSE}
 # for testing
-# speciesName <- "Vitis baileyana"
+# speciesName <- "Vitis rupestris"
 # troubleshooting
 # speciesName <- species1
 ```
@@ -135,12 +135,25 @@ speciesList <- dplyr::left_join(x = plantsData1,
     # display layer 
     rCounty <- countyGathered |>
       dplyr::filter(CODE_LOCAL %in% reviewedCounty1$`GEOID for County`)|>
-      dplyr::left_join(reviewedCounty1, by = "CODE_LOCAL") |>
+      dplyr::left_join(reviewedCounty1, by = "CODE_LOCAL")|>
+      dplyr::mutate(
+    link = paste0("https://docs.google.com/forms/d/e/1FAIpQLScCTcg6ITFMXs9QpQEAvN92GI06wtSTiGSTcUBrOK6E2kChjw/viewform?usp=pp_url&entry.1016353547=",
+          Taxon,
+          "&entry.764274277=",
+          CODE_LOCAL,
+          "&entry.763749150=",
+          REGION,
+          "&entry.1585476570=",
+          NAME,
+          "&entry.1304312867=",
+          NA)) |> 
       dplyr::mutate(
             popup = paste0("<b>Suggested Action for this County:</b> ",`Suggested Action for this Occurrence: select one` , 
                          "<br/><b>Comments: </b> ", Comments,
-                         "<br/><b>Reviewers name:</b> ", `Reviewers name (Initials okay after first submission)`)  
-      )
+                         "<br/><b>Reviewers name:</b> ", `Reviewers name (Initials okay after first submission)`,
+                         "<br/> <b> Report Issue: </b>",  "<a target='_blank', href=\"", link , "\">", "click here", "</a>")
+            )  
+
     # filtered primary layer
     countyGathered <- countyGathered |>
       dplyr::filter(!CODE_LOCAL %in% reviewedCounty1$`GEOID for County`)
@@ -155,12 +168,23 @@ speciesList <- dplyr::left_join(x = plantsData1,
       dplyr::filter(
         recordID == reviewedPoints1$`Record ID for point`
       )|>
-      dplyr::left_join(reviewedCounty1, by = c("recordID" ="Record ID for point")) |>
+      dplyr::left_join(reviewedCounty1, by = c("recordID" ="Record ID for point")) |>      
+      dplyr::mutate(
+    link = paste0("https://docs.google.com/forms/d/e/1FAIpQLScCTcg6ITFMXs9QpQEAvN92GI06wtSTiGSTcUBrOK6E2kChjw/viewform?usp=pp_url&entry.1016353547=",
+          Taxon,
+          "&entry.764274277=",
+          countyFIPS,
+          "&entry.763749150=",
+          state.x,
+          "&entry.1585476570=",
+          county.x,
+          "&entry.1304312867=",
+          NA)) |> 
       dplyr::mutate(
             popup = paste0("<b>Suggested Action for this Observations:</b> ",`Suggested Action for this Occurrence: select one` , 
                          "<br/><b>Comments: </b> ", Comments,
-                         "<br/><b>Reviewers name:</b> ", `Reviewers name (Initials okay after first submission)`)  
-      )
+                         "<br/><b>Reviewers name:</b> ", `Reviewers name (Initials okay after first submission)`,
+                                                  "<br/> <b> Report Issue: </b>",  "<a target='_blank', href=\"", link , "\">", "click here", "</a>"))
     # remore this feature from the full dataset
     observationData <- observationData |>
       dplyr::filter(
@@ -365,8 +389,12 @@ countyState <- countyState |>
 
 ```
 
-<img src="logoBannner.png" alt="Supporting Organizations" style="width: 100%">
+<img src="logobanner.png" alt="Supporting Organizations" style="width: 100%">
 <br>
+
+<strong style="text-align: center;">This project is a collaboration among the [United States Botanic Garden](https://www.usbg.gov/), [San Diego Botanic Garden](https://sdbg.org/), [USDA ARS](https://www.ars.usda.gov/),  [Geospatial Centroid](https://gis.colostate.edu/) at Colorado State Univeristy, and [NatureServe](https://www.natureserve.org/). We are all grateful for your time and consideration in this evaluation effort. </strong>
+
+
 <a href="https://geospatialcentroid.github.io/vitis/home" target="_blank">Vitis Home Page</a>
 <!-- [Vitis Home Page](https://geospatialcentroid.github.io/vitis/home) -->
 <br>
@@ -378,7 +406,7 @@ countyState <- countyState |>
 *If you are evaluating these maps, please be sure to complete the initial <a href="https://docs.google.com/forms/d/e/1FAIpQLSeyoQC-Ta2-KP-rGiGVqcZ3jq5AnpN6FdFptGcoCuOAteKYuw/viewform?usp=sf_link" target="_blank">registration form</a>.*
 <br>
 []()
-<a href="https://docs.google.com/spreadsheets/d/1fROduCBuYkKUv9bd1_N9SJ8ijyaA0C5BqG9nKZHFigI/edit?usp=sharing" target="_blank">Listing of all occurrance records for all species</a>
+<a href="https://docs.google.com/spreadsheets/d/1fROduCBuYkKUv9bd1_N9SJ8ijyaA0C5BqG9nKZHFigI/edit?usp=sharing" target="_blank">Listing of all occurrence records for all species</a>
 <br> 
 <a href="https://docs.google.com/spreadsheets/d/1m6toqYmv49nz9A029p4DrkuQL7sis04wHZH1RzgsXdg/edit?usp=sharing" target="_blank">Listing of all USDA Plants and Bonap records</a>
 
@@ -450,18 +478,18 @@ Data was gathered at the Genus level from the following
 
 **public repositories**
 
-- Seinet 
-- Genesys
-- Wiews
-- GRIN 
-- USDA Plants 
-- Crop Wild Relative 2020 publication 
+- [Seinet](https://swbiodiversity.org/seinet/) 
+- [Genesys](https://www.genesys-pgr.org/)
+- [Wiews](https://www.fao.org/wiews/en/)
+- [GRIN](https://www.ars-grin.gov/) 
+- [USDA Plants](https://plants.usda.gov/home) 
+- [Crop Wild Relative 2020 publication](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/BV4I06) 
 
 **Sourced through communication with data owners** 
 
-- 2023 Botanical Garden Survey 
-- BONAP
-- IUNC 
+- [2023 Botanical Garden Survey](https://docs.google.com/spreadsheets/d/1fROduCBuYkKUv9bd1_N9SJ8ijyaA0C5BqG9nKZHFigI/edit?usp=sharing) -- available in the full source data 
+- [BONAP](http://www.bonap.org/)
+- [IUCN](https://www.iucnredlist.org/)
 
 #### Data Standardization and Taxonomy 
 
