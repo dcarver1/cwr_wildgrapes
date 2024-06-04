@@ -24,21 +24,28 @@ generateModelData <- function(speciesPoints,natArea,bioVars,b_Number){
     mutate("presence" = 0)|>
     dplyr::select(presence,"geometry" = x)|>
     filter(!geometry %in% sp1$geometry) # test for same coordinated between presence and background data
-  # bind datasets 
-  d1 <- bind_rows(sp1, bg1)
   
   # extract values from rasters 
   ## I don't know if I need this a spatial object at this point, I don't thin so
   ## Also this are no reference values for what points aligns with which input location. 
   d2 <- terra::extract(x = bioVars,
-                       y = vect(d1),
+                       y = vect(bg1),
                        bind= TRUE)|>
     st_as_sf()
-  
-  # convert to sf and drop NA values
-  drop <- st_drop_geometry(d2)|>
+  drop2 <- st_drop_geometry(d2)|>
     complete.cases()
-  ### might be some issues here with droping observations, but this step is a requirement.
-  d3 <- d2[drop, ]
-  return(d3) 
+  d2 <-d2[drop2, ]
+  
+  
+  d3 <- terra::extract(x = bioVars,
+                       y = vect(sp1),
+                       bind= TRUE)|>
+    st_as_sf()
+  drop3 <- st_drop_geometry(d3)|>
+    complete.cases()
+  d3 <-d3[drop3, ]
+  # bind datasets 
+  d1 <- bind_rows(d3, d2)
+  
+    return(d1) 
 }

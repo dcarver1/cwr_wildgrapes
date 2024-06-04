@@ -5,15 +5,26 @@
 #' @param ersex 
 #'
 #' @return
-fcs_exsitu <- function(srsex, grsex, ersex, noModel) {
+fcs_exsitu <- function(srsex, grsex, ersex, noModel, gPoints) {
     # 
+
     if(noModel==TRUE){
-      out_df <- data.frame(ID=srsex$ID,
-                           SRS=srsex$SRS,
-                           GRS=NA,
-                           ERS=NA,
-                           FCS=srsex$SRS/3,
-                           FCS_Score = NA)
+      if(gPoints > 0){
+        out_df <- data.frame(ID=srsex$ID,
+                             SRS=srsex$SRS,
+                             GRS= 0,
+                             ERS= 0,
+                             FCS= mean(c(srsex$SRS,0,0), na.rm=T),
+                             FCS_Score = NA)
+      }else{
+        out_df <- data.frame(ID=srsex$ID,
+                             SRS=srsex$SRS,
+                             GRS=NA,
+                             ERS=NA,
+                             FCS=srsex$SRS/3,
+                             FCS_Score = NA)
+      }
+   
     }else{
       # calculate the mean across the three measures 
       sp_fcs <- mean(c(srsex$SRS,grsex$GRS,ersex$ERS), na.rm=T)

@@ -43,19 +43,19 @@ generateRunSummaries <- function(dir1,runVersion, genus, protectedAreas, overwri
   }
   
   # generate ersex richness map
-  if(!file.exists(path3) | isTRUE(overwrite)){
-    # generate specific richness map 
-    ga50Richness <- generateSpeciesRichnessMap(directory = dir1,
-                                               runVersion = runVersion,
-                                               rasterFileName = "ga50_masked.tif")
-    terra::writeRaster(x = ga50Richness$richnessTif,
-                       filename = path3,
-                       overwrite  = TRUE)
-    # export the 
-    df <- data.frame(speciesUsed = ga50Richness$speciesUsed)
-    write_csv(x = df,
-              file = path4)
-  }
+  # if(!file.exists(path3) | isTRUE(overwrite)){
+    # # generate specific richness map 
+    # ga50Richness <- generateSpeciesRichnessMap(directory = dir1,
+    #                                            runVersion = runVersion,
+    #                                            rasterFileName = "ga50_masked.tif")
+    # terra::writeRaster(x = ga50Richness$richnessTif,
+    #                    filename = path3,
+    #                    overwrite  = TRUE)
+    # # export the 
+    # df <- data.frame(speciesUsed = ga50Richness$speciesUsed)
+    # write_csv(x = df,
+    #           file = path4)
+  # }
   
   
   
