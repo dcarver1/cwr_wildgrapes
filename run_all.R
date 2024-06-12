@@ -104,8 +104,8 @@ erroredSpecies <- list(noLatLon = c(),
 
 plan(strategy = "multisession", workers =8)
 
- 
-
+# rerun <- erroredSpecies$lessThenEight
+# species <- rerun 
 # testing 
 # species <- species[27:length(species)] # error on Vitis rufotomentosa, Vitis x champinii, "Vitis x doaniana related to no coordinates
 # # vitis subset 
@@ -358,6 +358,24 @@ for(i in genera){
                                  overwrite = overwrite,
                                  function1 = fcs_combine(fcsin = fcsin,
                                                          fcsex = fcsex))
+        # generate report data for species 
+        reportData <- write_RDS(path = allPaths$summaryDataPath,
+                                overwrite = TRUE,
+                                function1 = grabData(fscCombined = fcsCombined,
+                                                     ersex = NA,
+                                                     fcsex = fcsex,
+                                                     fcsin = fcsin,
+                                                     evalTable = NA,
+                                                     g_bufferCrop = NA,
+                                                     thres = NA,
+                                                     projectsResults = NA,
+                                                     occuranceData = sp1,
+                                                     v_data = NA,
+                                                     g_buffer = NA,
+                                                     natArea = natArea,
+                                                     protectedAreas = protectedAreas,
+                                                     countsData = c1,
+                                                     variableImportance = allPaths$variablbeSelectPath))
 
         }
       }
@@ -402,7 +420,23 @@ for(i in genera){
                                function1 = fcs_combine(fcsin = fcsin,
                                                        fcsex = fcsex))
       
-      
+      reportData <- write_RDS(path = allPaths$summaryDataPath,
+                              overwrite = TRUE,
+                              function1 = grabData(fscCombined = fcsCombined,
+                                                   ersex = NA,
+                                                   fcsex = fcsex,
+                                                   fcsin = fcsin,
+                                                   evalTable = NA,
+                                                   g_bufferCrop = NA,
+                                                   thres = NA,
+                                                   projectsResults = NA,
+                                                   occuranceData = sp1,
+                                                   v_data = NA,
+                                                   g_buffer = NA,
+                                                   natArea = natArea,
+                                                   protectedAreas = protectedAreas,
+                                                   countsData = c1,
+                                                   variableImportance = NA))
       
     } 
     # # temp leafletmap for QUAC
@@ -467,42 +501,42 @@ for(i in genera){
 
   # produce boxplot summaries -----------------------------------------------
   # renderBoxPlots  <- FALSE
-  # if(renderBoxPlots == TRUE){
-  #   # compile all modeling data
-  #   amd <- list.files(dir1, pattern = "allmodelData.csv", full.names = TRUE, recursive = TRUE)
-  #   amd2 <- amd[grepl(pattern = runVersion, x = amd)]
-  #   #empty df for storing data from the loop
-  #   df4 <- data.frame()
-  #   # loop over species
-  #   for(p in seq_along(species)){
-  #     p1 <- amd2[grepl(pattern = species[p],x = amd2)]
-  #     if(length(p1)==1){
-  #       p2 <- p1 |>
-  #         read.csv() |>
-  #         dplyr::filter(presence == 1)|>
-  #         dplyr::mutate(taxon = species[p])
-  #       df4 <- bind_rows(p2,df4)
-  #     }
-  #   }
-  #   # generate input data set
-  #   inputData <- list(
-  #     data = df4,
-  #     species = species,
-  #     names = bioNames
-  #   )
-  #   # produce the document
-  #   rmarkdown::render(input = "R2/summarize/boxplotSummaries.Rmd",
-  #                     output_format = "html_document",
-  #                     output_dir = file.path(dir1),
-  #                     output_file = paste0(runVersion,"_boxPlotSummary.html"),
-  #                     params = list(
-  #                       inputData = inputData),
-  #                     envir = new.env(parent = globalenv())
-  #                     # clean = F,
-  #                     # encoding = "utf-8"
-  #   )
-  #
-  } # end of Genus loop 
+  if(renderBoxPlots == TRUE){
+    # compile all modeling data
+    amd <- list.files(dir1, pattern = "allmodelData.csv", full.names = TRUE, recursive = TRUE)
+    amd2 <- amd[grepl(pattern = runVersion, x = amd)]
+    #empty df for storing data from the loop
+    df4 <- data.frame()
+    # loop over species
+    for(p in seq_along(species)){
+      p1 <- amd2[grepl(pattern = species[p],x = amd2)]
+      if(length(p1)==1){
+        p2 <- p1 |>
+          read.csv() |>
+          dplyr::filter(presence == 1)|>
+          dplyr::mutate(taxon = species[p])
+        df4 <- bind_rows(p2,df4)
+      }
+    }
+    # generate input data set
+    inputData <- list(
+      data = df4,
+      species = species,
+      names = bioNames
+    )
+    # produce the document
+    rmarkdown::render(input = "R2/summarize/boxplotSummaries.Rmd",
+                      output_format = "html_document",
+                      output_dir = file.path(dir1),
+                      output_file = paste0(runVersion,"_boxPlotSummary.html"),
+                      params = list(
+                        inputData = inputData),
+                      envir = new.env(parent = globalenv())
+                      # clean = F,
+                      # encoding = "utf-8"
+    )
+  }
+} # end of Genus loop 
   
 
 

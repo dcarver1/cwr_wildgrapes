@@ -37,6 +37,9 @@ for(i in seq_along(names$shortName)){
 
 ```
 
+All plots shown below are generate using all available records. The purple points shown on the figures represent the Germplasm records for the given species. 
+
+
 ## Temperature Related Variables {.tabset}
 
 ### Annual mean temperature     

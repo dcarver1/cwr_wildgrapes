@@ -72,7 +72,9 @@ Median models across MaxEnt replicates were evaluated using the area under the r
 
 ```{r, echo=FALSE, eval=TRUE}
 # set the sigfig in the table
-eval1 <- data$modelEvaluation %>%
+
+if(!is.na(data$modelEvaluation)){
+  eval1 <- data$modelEvaluation %>%
   dplyr::select(
     "AUC" = "AUCtest" ,
     "Normalized AUC" = "nAUC",
@@ -88,6 +90,10 @@ eval1 <- data$modelEvaluation %>%
 
 DT::datatable(eval1,
               class = "hover")
+}else{
+  "No model was generated for this species"
+}
+
 ```
 
 <br>
@@ -112,99 +118,100 @@ occData <- data$occuranceData %>%
   mutate(color = case_when(type == "H" ~ "#1184D4",
                            type == "G" ~ "#6300F0"))
 
+webMecOccData <- vect(st_transform(occData, crs = "epsg:3857")) # need to change project
 
-# predicted presence map
-threshold <- data$binaryMap
-thresColor <- colorNumeric(
-  palette = c("#cfcccc70", "#45B320"),
-  domain = values(threshold),
-  alpha = TRUE,
-  na.color = "transparent"
-)
-# generate a threshold mask
-mask1 <- ifel(test = threshold == 1, yes = 1, no = NA)
-
-# protected area
-protectedArea <- data$protectedArea
-protectColor <-
-  colorNumeric(
-    palette = "#B7B648",
-    domain = values(protectedArea),
+if(!is.na(data$binaryMap)){
+    # predicted presence map
+  threshold <- data$binaryMap
+  thresColor <- colorNumeric(
+    palette = c("#cfcccc70", "#45B320"),
+    domain = values(threshold),
     alpha = TRUE,
     na.color = "transparent"
   )
-# protected areas mask
-proMask <- ifel(test = protectedArea == 1, yes = 1, no = NA)
+  # generate a threshold mask
+  mask1 <- ifel(test = threshold == 1, yes = 1, no = NA)
+  # protected area
+  protectedArea <- data$protectedArea
+  protectColor <-
+    colorNumeric(
+      palette = "#B7B648",
+      domain = values(protectedArea),
+      alpha = TRUE,
+      na.color = "transparent"
+    )
+  # protected areas mask
+  proMask <- ifel(test = protectedArea == 1, yes = 1, no = NA)
+   # insitu map elements
+  ## SRSIN
+  ## total number of observations per cell of the threshold model masked against the protect areas layer 
+  # filter points outside of protected areas 
+  webMecOccData <- vect(st_transform(occData, crs = "epsg:3857")) # need to change project
+  # for the spatial operations with the layer. occData can't have the proj
+  # get all the points that are outside of a protected area
+  
+  
+  inThres <- terra::extract(x = mask1, y = webMecOccData)|>
+    dplyr::filter(Threshold==1)
+  inPro <- terra::extract(x = protectedArea, y = webMecOccData) |>
+    dplyr::filter(is.na(layer))
 
+  srs1 <- terra::rasterize(webMecOccData,
+                     threshold,
+                     fun = "sum",
+                     background = 0) |>
+    mask(mask1)
+  
+  totalObsinThres <- nrow(inThres)
+  ## total number of observations in protected areas
+  totalObsinPro <- nrow(inThres) - nrow(inPro)
 
-# insitu map elements
-## SRSIN
-## total number of observations per cell of the threshold model masked against the protect areas layer 
-# filter points outside of protected areas 
-webMecOccData <- vect(st_transform(occData, crs = "epsg:3857")) # need to change project
-# for the spatial operations with the layer. occData can't have the proj
-# get all the points that are outside of a protected area
-inThres <- terra::extract(x = mask1, y = webMecOccData)|>
-  dplyr::filter(Threshold==1)
-inPro <- terra::extract(x = protectedArea, y = webMecOccData) |>
-  dplyr::filter(is.na(layer))
+  ## GRSIN
+  ## reclassy protected area
+  proReclass <- ifel(test = is.na(protectedArea),
+                     yes = 0,
+                     no = 1)
+  ## add values
+  grs1 <- threshold + proReclass
+  exPal <- c("#cfcccc80", "#45b320", "#7570b3")
+  # for some reason passing the vector exPal to the palette arg does not maintain the alpha reference? 
+  grsinColor <- colorNumeric(palette = c("#cfcccc80", "#45b320", "#7570b3"),
+                 # purple is a little lighter so the point locations show up clearly
+                 domain = values(grs1),
+                 alpha = TRUE,
+                 na.color = "transparent")
+  ## ERSin
+  # used on the ERS visualization
+  allEcos <- data$naturalArea |>
+    dplyr::select("ECO_ID_U", "ECO_NAME")
+  # reproject for spatial operations
+  webMecAllEcos <- st_transform(allEcos, crs = "epsg:3857")
+  ## showcase ecoregions within the threshold model that do no have a protected area
+  ers1 <- terra::zonal(proReclass,
+                 vect(webMecAllEcos),
+                 fun = "sum",
+                 na.rm = TRUE)
+  ers1$ECO_ID_U <- allEcos$ECO_ID_U
+  ers1$ECO_NAME <- allEcos$ECO_NAME
+  
+  ## zonal Stats to determine overlap between the ecoregions and the threshold model
+  v1 <- terra::zonal(x = threshold,
+                 z = vect(webMecAllEcos),
+                 fun = "sum",
+                 na.rm = TRUE)# , exact = TRUE)
 
-srs1 <- terra::rasterize(webMecOccData,
-                   threshold,
-                   fun = "sum",
-                   background = 0) |>
-  mask(mask1)
-
-totalObsinThres <- nrow(inThres)
-## total number of observations in protected areas
-totalObsinPro <- nrow(inThres) - nrow(inPro)
-
-## GRSIN
-## reclassy protected area
-proReclass <- ifel(test = is.na(protectedArea),
-                   yes = 0,
-                   no = 1)
-## add values
-grs1 <- threshold + proReclass
-exPal <- c("#cfcccc80", "#45b320", "#7570b3")
-# for some reason passing the vector exPal to the palette arg does not maintain the alpha reference? 
-grsinColor <- colorNumeric(palette = c("#cfcccc80", "#45b320", "#7570b3"),
-               # purple is a little lighter so the point locations show up clearly
-               domain = values(grs1),
-               alpha = TRUE,
-               na.color = "transparent")
-## ERSin
-# used on the ERS visualization
-allEcos <- data$naturalArea |>
-  dplyr::select("ECO_ID_U", "ECO_NAME")
-# reproject for spatial operations
-webMecAllEcos <- st_transform(allEcos, crs = "epsg:3857")
-## showcase ecoregions within the threshold model that do no have a protected area
-ers1 <- terra::zonal(proReclass,
-               vect(webMecAllEcos),
-               fun = "sum",
-               na.rm = TRUE)
-ers1$ECO_ID_U <- allEcos$ECO_ID_U
-ers1$ECO_NAME <- allEcos$ECO_NAME
-
-## zonal Stats to determine overlap between the ecoregions and the threshold model
-v1 <- terra::zonal(x = threshold,
-               z = vect(webMecAllEcos),
-               fun = "sum",
-               na.rm = TRUE)# , exact = TRUE)
-
-## reassign the eco id record
-v1$ECO_ID_U <- webMecAllEcos$ECO_ID_U
-# get a list of ecoregions within the threshold model
-ecosInThres <- v1 |>
-  dplyr::filter(Threshold > 0) |>
-  dplyr::select(ECO_ID_U) |>
-  pull()
-
-## ID ecoregions in threshold model with no protected areas
-ers2 <- ers1 |>
-  dplyr::filter(ECO_ID_U %in% ecosInThres) |>
-  dplyr::filter(layer == 0)
+  ## reassign the eco id record
+  v1$ECO_ID_U <- webMecAllEcos$ECO_ID_U
+  # get a list of ecoregions within the threshold model
+  ecosInThres <- v1 |>
+    dplyr::filter(Threshold > 0) |>
+    dplyr::select(ECO_ID_U) |>
+    pull()
+  
+  ## ID ecoregions in threshold model with no protected areas
+  ers2 <- ers1 |>
+    dplyr::filter(ECO_ID_U %in% ecosInThres) |>
+    dplyr::filter(layer == 0)
 
 if(nrow(ers2) > 0) {
   ## use this list to generate a raster object masked to the
@@ -257,79 +264,86 @@ if (class(gBuf) != "character" & data$fcsex$GRS != 0) {
                  domain = values(grsexMap),
                  alpha = TRUE,
                  na.color = "transparent")
+  }
+  
+  
+  #ecoregions
+  ## grab the missing ecoregions
+  missingEcos <- data$ersex$missingEcos |> unlist()
+  ## filter the full set
+  ecoReg <- data$naturalArea |>
+    dplyr::filter(ECO_ID_U %in% missingEcos) |>
+    dplyr::mutate(ECO_NAME = as.factor(ECO_NAME))
+  
+  # need to generate a raster object ecoregions, this should be done as part of the modeling process
+  # then I can pass through a data frame of the ecoregion data, rather the spatial objects
+  
+  # Rasterize the ecoregions
+  webMecEcoReg <- st_transform(ecoReg,crs = 3857)
+  ecoRast <- terra::rasterize(x = webMecEcoReg, y = threshold, "ECO_ID_U")
+  
+  # apply the mask
+  ecoRast <- mask(ecoRast, mask1)
+  
+  
+  # set the palette
+  # this defines the color used, and can be called in the legend creation
+  ## set 3 has a cap of 12 unique colors
+  ### duplicating the values then subsetting base on the required number. 
+  ecoPal <-  rep(RColorBrewer::brewer.pal(n = 12, name = "Spectral"), 6)
+  ecoPal <- ecoPal[1:length(ecoReg$ECO_ID_U)]
+  
+  ecoReg$color <- ecoPal
+  ecoReg <- ecoReg |> arrange(desc(ECO_NAME))
+  ecoReg$ECO_ID_U <- factor(ecoReg$ECO_ID_U, ordered = TRUE, 
+                                  levels = c(ecoReg$ECO_ID_U))
+  
+  # define a palette option so that we can set a transparent NA value
+  ecoColor <- colorFactor(palette = ecoReg$color,
+                          domain = ecoReg$ECO_ID_U,
+                          na.color =  "#FF000000")
+  
+  
+  #distribution palette
+  distColor <- c("#ffffd4", "#fed98e", "#fe9929", "#d95f0e", "#993404")
+  # protect area palette
+  proColor <- c("#7570b3")
+  # srsin palete
+  srsPal1 <-  c("#cfcccc95",
+      "#7fcdbb",
+      "#41b6c4",
+      "#1d91c0",
+      "#225ea8",
+      "#0c2c84")
+  srsPal <- colorNumeric(palette = c("#cfcccc95","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#0c2c84"),
+                 domain = values(srs1),
+                 alpha = TRUE,
+                 na.color = "transparent")
+  
+  # Mean distribution map
+  meanDist <- data$projectedResults$mean
+  meanPal <- colorNumeric(palette = distColor,
+                 domain = values(meanDist),
+                 na.color = "transparent")
+  # Median distribution map
+  medianDist <- data$projectedResults$median
+  medianPal <-
+    colorNumeric(palette = distColor,
+                 domain = values(medianDist),
+                 na.color = "transparent")
+  
+  # standdard devation map
+  stdevDist <- data$projectedResults$stdev
+  stdevPal <- colorNumeric(palette = distColor,
+                 domain = values(stdevDist),
+                 na.color = "transparent")
 }
 
 
-#ecoregions
-## grab the missing ecoregions
-missingEcos <- data$ersex$missingEcos |> unlist()
-## filter the full set
-ecoReg <- data$naturalArea |>
-  dplyr::filter(ECO_ID_U %in% missingEcos) |>
-  dplyr::mutate(ECO_NAME = as.factor(ECO_NAME))
-
-# need to generate a raster object ecoregions, this should be done as part of the modeling process
-# then I can pass through a data frame of the ecoregion data, rather the spatial objects
-
-# Rasterize the ecoregions
-webMecEcoReg <- st_transform(ecoReg,crs = 3857)
-ecoRast <- terra::rasterize(x = webMecEcoReg, y = threshold, "ECO_ID_U")
-
-# apply the mask
-ecoRast <- mask(ecoRast, mask1)
 
 
-# set the palette
-# this defines the color used, and can be called in the legend creation
-## set 3 has a cap of 12 unique colors
-### duplicating the values then subsetting base on the required number. 
-ecoPal <-  rep(RColorBrewer::brewer.pal(n = 12, name = "Spectral"), 6)
-ecoPal <- ecoPal[1:length(ecoReg$ECO_ID_U)]
 
-ecoReg$color <- ecoPal
-ecoReg <- ecoReg |> arrange(desc(ECO_NAME))
-ecoReg$ECO_ID_U <- factor(ecoReg$ECO_ID_U, ordered = TRUE, 
-                                levels = c(ecoReg$ECO_ID_U))
-
-# define a palette option so that we can set a transparent NA value
-ecoColor <- colorFactor(palette = ecoReg$color,
-                        domain = ecoReg$ECO_ID_U,
-                        na.color =  "#FF000000")
-
-
-#distribution palette
-distColor <- c("#ffffd4", "#fed98e", "#fe9929", "#d95f0e", "#993404")
-# protect area palette
-proColor <- c("#7570b3")
-# srsin palete
-srsPal1 <-  c("#cfcccc95",
-    "#7fcdbb",
-    "#41b6c4",
-    "#1d91c0",
-    "#225ea8",
-    "#0c2c84")
-srsPal <- colorNumeric(palette = c("#cfcccc95","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#0c2c84"),
-               domain = values(srs1),
-               alpha = TRUE,
-               na.color = "transparent")
-
-# Mean distribution map
-meanDist <- data$projectedResults$mean
-meanPal <- colorNumeric(palette = distColor,
-               domain = values(meanDist),
-               na.color = "transparent")
-# Median distribution map
-medianDist <- data$projectedResults$median
-medianPal <-
-  colorNumeric(palette = distColor,
-               domain = values(medianDist),
-               na.color = "transparent")
-
-# standdard devation map
-stdevDist <- data$projectedResults$stdev
-stdevPal <- colorNumeric(palette = distColor,
-               domain = values(stdevDist),
-               na.color = "transparent")
+#
 ```
 
 
@@ -366,7 +380,9 @@ m1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3)) |>
              stroke = 1,
              popup = ~popup)
 
-## add rasters 
+
+if(!is.na(data$binaryMap)){
+  ## add rasters 
 m2 <- m1 |> 
   # threshold 
   addRasterImage(x = raster(threshold),
@@ -421,13 +437,19 @@ m3 <- m2 |>
                   "Median Distribution Model",
                   "SD of Distribution Model"))
 m3 
+}else{
+  m1
+}
+
 ```
 ### Predictors used in modeling process 
 
 The table below shows the ecogeographic variables listed in order of importance based on the occurrence dataset, including whether or not they were used for distribution modeling, following the variable selection process. Predictors were gather or processed based on [WorldClim2](https://www.worldclim.com/version2) source data. 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-varTable <- data$variableImportance |>
+
+if(!is.na(data$variableImportance)){
+  varTable <- data$variableImportance |>
   dplyr::select("Predictor variable name" = `Current title`,
                 "Relative importance to model" = importance,
                 "Included in the modeling process" = includeInFinal,
@@ -439,6 +461,10 @@ varTable <- data$variableImportance |>
 DT::datatable(varTable,
               rownames = FALSE,
               class = "compact")
+}else{
+  "No model was generated for this species"
+}
+
 
 ```
 
@@ -488,6 +514,9 @@ The **ERS ex situ** map features show ecoregions within the potential distributi
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+if(!is.na(data$binaryMap)){
+  
 if(exTables$`Total G with coordinates` == 0){
   # generate the GRSex map
 ex2 <- leaflet(width = "100%")|>
@@ -590,6 +619,10 @@ ex3 <- ex2 |>
 
 ## print the map
 ex3
+}else{
+  "No model was generate for this species "
+}
+
 ```
 
 
@@ -615,7 +648,8 @@ The column `ERS ex situ gap ecoregion` denotes (True) if an ecoregion overlaps w
 # identify if they
 ## have modeled habitat
 ## are within a 50km buffer of a germplasm collection
-eco2 <- data$naturalArea |>
+if(!is.na(data$binaryMap)){
+  eco2 <- data$naturalArea |>
   st_drop_geometry() |>
   dplyr::mutate(
     'ERSex Gap Ecoregion' = case_when(ECO_ID_U %in% missingEcos ~ TRUE,
@@ -635,6 +669,26 @@ DT::datatable(eco2,
               rownames = FALSE,
               class = "compact")
 
+}else{
+  eco2 <- data$naturalArea |>
+  st_drop_geometry() |>
+  dplyr::mutate(
+    'ERSex Gap Ecoregion' =  TRUE) |> 
+  # dplyr::left_join(misArea, by = c("ECO_ID_U"="value"))|>
+  dplyr::select(
+    'ERSex Gap Ecoregion',
+    # "Square KM missing" = area,
+    `Unique ID` = "ECO_ID_U",
+    `Ecoregion Name` = "ECO_NAME",
+    `Source Name` = "SOURCEDATA"
+  ) |>
+  arrange(desc(`ERSex Gap Ecoregion`))
+#visualize
+  DT::datatable(eco2,
+              rownames = FALSE,
+              class = "compact")
+}
+
 ``` 
 # *in situ* conservation gap analysis
 
@@ -647,8 +701,8 @@ inCounts <- data$countsData |>
   dplyr::select("Taxon" = species, 
                 "Total occurrences" = totalUseful,
                   "Total occurrences in protected area")
-  
-inScores <- data$fcsin |> 
+if(!is.na(data$binaryMap)){
+  inScores <- data$fcsin |> 
   dplyr::mutate("SRS in situ" = sigfig(SRS),
                 "GRS in situ" = sigfig(GRS),
                 "ERS in situ" = sigfig(ERS),
@@ -671,6 +725,32 @@ DT::datatable(inTables,
               rownames = FALSE,
               class = "compact",
               options = list(dom = 't'))
+}else{
+    inScores <- data$fcsin |> 
+  dplyr::mutate("SRS in situ" = sigfig(SRS),
+                "GRS in situ" = sigfig(GRS),
+                "ERS in situ" = sigfig(ERS),
+                "FCS in situ" = sigfig(FCS),
+                "Total occurrances in modeled area" = NA,
+                "Total occurrance in protected area" = inCounts$`Total occurrences in protected area`)|>
+  dplyr::select("SRS in situ","GRS in situ","ERS in situ","FCS in situ")|>
+  dplyr::mutate(
+    "FCS in situ priority category" = case_when(
+      `FCS in situ` >= 75 ~ "LP",
+      `FCS in situ` >=50 & `FCS in situ` < 75 ~ "MP",
+      `FCS in situ` >=25 & `FCS in situ` < 50 ~ "HP",
+      `FCS in situ` < 25 ~ "UP"
+    )
+  )
+# combine the data
+inTables <- bind_cols(inCounts,inScores)
+#visualize 
+DT::datatable(inTables,
+              rownames = FALSE,
+              class = "compact",
+              options = list(dom = 't'))
+}
+
 
 
 ```
@@ -686,7 +766,9 @@ The ERS in situ feature shows the potential distribution, highlighting ecoregion
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-uniqueSRSVals <- sort(unique(values(srs1)))
+
+if(!is.na(data$binaryMap)){
+  uniqueSRSVals <- sort(unique(values(srs1)))
 
 in1 <- leaflet(width = "100%")|>
   addTiles()|>
@@ -771,6 +853,10 @@ in3 <- in3|>
   hideGroup(group = c( "SRS in situ", "ERS in situ","All ecoregions"))
 
 in3
+}else{
+  "No model was generate for this species"
+}
+
 ```
 ### Table of unconserved ecoregions in *in situ* conservation
 
@@ -785,7 +871,8 @@ The column ‘ERS in situ gap ecoregion denotes (TRUE) if an ecoregion overlaps 
 # identify if they
 ## have modeled habitat
 ## are within a 50km buffer of a germplasm collection
-eco3 <- data$naturalArea |>
+if(!is.na(data$binaryMap)){
+  eco3 <- data$naturalArea |>
   st_drop_geometry() |>
   dplyr::mutate(
     'ERS in situ Gap Ecoregion' = case_when(ECO_ID_U %in% ers2$ECO_ID_U ~ TRUE,
@@ -804,6 +891,10 @@ eco3 <- data$naturalArea |>
 DT::datatable(eco3,
               rownames = FALSE,
               class = "compact")
+}else{
+  "No model was generated for this species"
+}
+
 
 ``` 
 

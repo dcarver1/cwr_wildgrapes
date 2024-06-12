@@ -10,10 +10,10 @@
 
 # Daucus ---------------------------------------------------
 ## specific reference to file paths 
-genus <- "daucus" 
-modelRun <- "run20240104"
+genus <- "Daucus" 
+modelRun <- "run20240603"
 # folder to move too
-folder <- "~/Documents/GeospatialCentroid.github.io/Daucus"
+folder <- "~/Documents/Daucus"
 
 
 
@@ -41,10 +41,10 @@ for(i in splist){
   }
 }
 # run summary assessments 
-file.copy(paste0("data/daucus/",modelRun,"_Summary.html"), folder, overwrite = TRUE)
+file.copy(paste0("data/Daucus/",modelRun,"_Summary.html"), folder, overwrite = TRUE)
 print("Summary doc copied")
-file.copy(paste0("data/daucus/",modelRun,"_boxPlotSummary.html"), folder, overwrite = TRUE)
-print("Summary doc copied")
+file.copy(paste0("data/Daucus/",modelRun,"_boxPlotSummary.html"), folder, overwrite = TRUE)
+print("box plot summary doc copied")
 
 
 ##################
