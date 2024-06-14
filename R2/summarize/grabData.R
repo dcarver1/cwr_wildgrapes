@@ -3,7 +3,7 @@
 #' @return RDS file with a nested list of all required file inputs 
 grabData <- function(ersex, fscCombined, fcsex, fcsin,evalTable,g_bufferCrop,thres, 
                      projectsResults, v_data, g_buffer,natArea,protectedAreas,
-                     occuranceData, countsData, variableImportance){
+                     occuranceData, countsData, variableImportance,NoModel){
   # crop protected areas 
   # mask protected areas layer 
   if(class(thres) == "SpatRaster"){
@@ -48,7 +48,8 @@ grabData <- function(ersex, fscCombined, fcsex, fcsin,evalTable,g_bufferCrop,thr
       fcsex= fcsex,
       fcsin = fcsin,
       countsData = countsData,
-      variableImportance = variableImportance
+      variableImportance = variableImportance,
+      NoModel = NoModel
     ) 
   }else{
     reportData <- list(
@@ -66,7 +67,8 @@ grabData <- function(ersex, fscCombined, fcsex, fcsin,evalTable,g_bufferCrop,thr
       fcsex= fcsex,
       fcsin = fcsin,
       countsData = countsData,
-      variableImportance = NA
+      variableImportance = NA,
+      NoModel = NoModel
     ) 
   }
   return(reportData)

@@ -21,8 +21,8 @@ sourceFiles(gapAnalysisOnly = FALSE)
 # input datasets ----------------------------------------------------------
 ## species observations 
 ### Daucus 
-speciesData <- read_csv("data/raw_occurances/daucusData_april_2024.csv")|>
-  dplyr::mutate(genus = "Daucus")
+# speciesData <- read_csv("data/raw_occurances/daucusData_april_2024.csv")|>
+#   dplyr::mutate(genus = "Daucus")
 # alter to get to the correct format
 # sp <- speciesData |>
 #   dplyr::select(taxon = "Name...1",
@@ -41,8 +41,15 @@ speciesData <- read_csv("data/raw_occurances/daucusData_april_2024.csv")|>
 ### sepecies with less then 8 D. biseriatus, D. carota subsp. annuus, D. carota subsp. fontanesii, D. carota subsp. parviflorus, D. carota subsp. rupestris , D. carota subsp. tenuissimus , D. della-cellae, D. edulis, D. gracilis, D. jordanicus, D. mauritii, D. microscias, D. mirabilis ,D. reboudii ,D. virgatus
 ### Vitis
 ## filtering the extra values coming from the data prep process 
-# speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv") |>
-#   dplyr::select(-c("geometry","index", "validLat","validLon","validLatLon"))
+speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv") |>
+  dplyr::select(-c("geometry","index", "validLat","validLon","validLatLon"))
+# using the data from the county maps for an reference run 
+speciesData1 <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.csv")|>
+  dplyr::filter(!is.na(taxon),
+                taxon %in% speciesData$taxon,
+                genus == "Vitis")|>
+  dplyr::select(-c(geometry))
+speciesData <- speciesData1
 
 ### Quercus 
 # speciesData <- read_csv("data/Quercus/QUAC_coord_ind.csv")
@@ -69,14 +76,14 @@ bufferDist <- 50000
 
 # run version 
 ## daucus 
-runVersion <- "run20240603"
+# runVersion <- "run20240603"
 #vitis run 
-# runVersion <- "run20231227"
+runVersion <- "run20240614"
 # Quercus and other IMLS species 
 # runVersion <- "run1"
 
 # overwrite 
-overwrite <- FALSE
+overwrite <- TRUE
 
   # set up environment  -----------------------------------------------------
 
@@ -95,7 +102,7 @@ species <- sort(unique(speciesData$taxon))
 
 # #testing
 i <- genera[1]
-j <- species[10]
+j <- species[3]
 
 erroredSpecies <- list(noLatLon = c(),
                        lessThenEight = c(),
@@ -105,7 +112,7 @@ erroredSpecies <- list(noLatLon = c(),
 plan(strategy = "multisession", workers =8)
 
 # rerun <- erroredSpecies$lessThenEight
-# species <- rerun 
+# species <- rerun
 # testing 
 # species <- species[27:length(species)] # error on Vitis rufotomentosa, Vitis x champinii, "Vitis x doaniana related to no coordinates
 # # vitis subset 
@@ -324,7 +331,8 @@ for(i in genera){
                                                   natArea = natArea,
                                                   protectedAreas = protectedAreas,
                                                   countsData = c1,
-                                                  variableImportance = allPaths$variablbeSelectPath))
+                                                  variableImportance = allPaths$variablbeSelectPath,
+                                                  NoModel = FALSE))
     }else{ # no sdm results 
       if(!file.exists(allPaths$sdmResults)){
         erroredSpecies$noSDM <- c(erroredSpecies$noSDM, j)
@@ -375,7 +383,8 @@ for(i in genera){
                                                      natArea = natArea,
                                                      protectedAreas = protectedAreas,
                                                      countsData = c1,
-                                                     variableImportance = allPaths$variablbeSelectPath))
+                                                     variableImportance = allPaths$variablbeSelectPath,
+                                                     NoModel = TRUE))
 
         }
       }
@@ -436,7 +445,8 @@ for(i in genera){
                                                    natArea = natArea,
                                                    protectedAreas = protectedAreas,
                                                    countsData = c1,
-                                                   variableImportance = NA))
+                                                   variableImportance = NA,
+                                                   NoModel = TRUE))
       
     } 
     # # temp leafletmap for QUAC

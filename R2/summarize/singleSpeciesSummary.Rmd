@@ -66,6 +66,11 @@ DT::datatable(c1,
 ```
 
 
+```{r, echo=FALSE, eval=TRUE}
+# build condition to test for NA in data$modelEvalation 
+```
+
+
 # Statistical Summary of the Models
 
 Median models across MaxEnt replicates were evaluated using the area under the receiver operating characteristic curve (AUC), the SD of the AUC across replicates, and the proportion of the potential distribution model with an SD of the replicates \>0.15.
@@ -73,7 +78,7 @@ Median models across MaxEnt replicates were evaluated using the area under the r
 ```{r, echo=FALSE, eval=TRUE}
 # set the sigfig in the table
 
-if(!is.na(data$modelEvaluation)){
+if(data$NoModel == FALSE){
   eval1 <- data$modelEvaluation %>%
   dplyr::select(
     "AUC" = "AUCtest" ,
@@ -120,7 +125,7 @@ occData <- data$occuranceData %>%
 
 webMecOccData <- vect(st_transform(occData, crs = "epsg:3857")) # need to change project
 
-if(!is.na(data$binaryMap)){
+if(data$NoModel == FALSE){
     # predicted presence map
   threshold <- data$binaryMap
   thresColor <- colorNumeric(
@@ -381,7 +386,7 @@ m1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3)) |>
              popup = ~popup)
 
 
-if(!is.na(data$binaryMap)){
+if(data$NoModel == FALSE){
   ## add rasters 
 m2 <- m1 |> 
   # threshold 
@@ -448,7 +453,7 @@ The table below shows the ecogeographic variables listed in order of importance 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-if(!is.na(data$variableImportance)){
+if(data$NoModel == FALSE){
   varTable <- data$variableImportance |>
   dplyr::select("Predictor variable name" = `Current title`,
                 "Relative importance to model" = importance,
@@ -515,7 +520,7 @@ The **ERS ex situ** map features show ecoregions within the potential distributi
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-if(!is.na(data$binaryMap)){
+if(data$NoModel == FALSE){
   
 if(exTables$`Total G with coordinates` == 0){
   # generate the GRSex map
@@ -648,7 +653,7 @@ The column `ERS ex situ gap ecoregion` denotes (True) if an ecoregion overlaps w
 # identify if they
 ## have modeled habitat
 ## are within a 50km buffer of a germplasm collection
-if(!is.na(data$binaryMap)){
+if(data$NoModel == FALSE){
   eco2 <- data$naturalArea |>
   st_drop_geometry() |>
   dplyr::mutate(
@@ -701,7 +706,7 @@ inCounts <- data$countsData |>
   dplyr::select("Taxon" = species, 
                 "Total occurrences" = totalUseful,
                   "Total occurrences in protected area")
-if(!is.na(data$binaryMap)){
+if(data$NoModel == FALSE){
   inScores <- data$fcsin |> 
   dplyr::mutate("SRS in situ" = sigfig(SRS),
                 "GRS in situ" = sigfig(GRS),
@@ -767,7 +772,7 @@ The ERS in situ feature shows the potential distribution, highlighting ecoregion
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-if(!is.na(data$binaryMap)){
+if(data$NoModel == FALSE){
   uniqueSRSVals <- sort(unique(values(srs1)))
 
 in1 <- leaflet(width = "100%")|>
@@ -871,7 +876,7 @@ The column ‘ERS in situ gap ecoregion denotes (TRUE) if an ecoregion overlaps 
 # identify if they
 ## have modeled habitat
 ## are within a 50km buffer of a germplasm collection
-if(!is.na(data$binaryMap)){
+if(data$NoModel == FALSE){
   eco3 <- data$naturalArea |>
   st_drop_geometry() |>
   dplyr::mutate(
