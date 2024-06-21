@@ -59,3 +59,61 @@ generateSpeciesRichnessMap <- function(directory, runVersion, rasterFileName){
   )
   return(output)
 }
+
+generateERSRichnessMap <- function(directory, runVersion, ersMap, species, thresholdMap){
+  # pull all the ERS gap maps 
+  ersFiles <- list.files( path = directory,
+                          pattern =  ersMap,
+                          full.names = TRUE,
+                          recursive = TRUE)
+  # subset 
+  ersFiles <- ersFiles[grepl(pattern = runVersion, x = ersFiles)]
+  
+  # pull all the threshold files 
+  thresholdFiles <- list.files( path = directory,
+                          pattern =  thresholdMap,
+                          full.names = TRUE,
+                          recursive = TRUE)
+  thresholdFiles <- thresholdFiles[grepl(pattern = runVersion, x = thresholdFiles)]
+  
+  # loop over species and mask the ERSlayer to the distribution 
+  maskedFeatures <- c()
+  for(i in species){
+    f1 <- ersFiles[grepl(pattern = i, x = ersFiles)]
+    if(length(f1)==1){
+      t1 <-  terra::rast(f1)
+      t2 <-  terra::rast(thresholdFiles[grepl(pattern = i, x = thresholdFiles)])
+      t3 <- t1 * t2 
+      maskedFeatures <- c(maskedFeatures, t3)
+    }
+  }
+  # 
+  # 
+  # # combined all the raster layers 
+  # print("reading in rasters")
+  # r1 <- map(.x = runFiles, .f = rast)
+  
+  # produce an extent raster template 
+  print("generating maximum extent")
+  r2 <- Reduce(extend, maskedFeatures)
+  
+  # extend all the raster in the stack
+  print("extenting all the objects. ")
+  r3 <- map(.x = maskedFeatures, .f = terra::extend, y = r2, fill = 0) ## still nan values being applied  
+  
+  # replace the NaN values 
+  r4 <- map(.x = r3, .f = replaceNAN)
+  
+  
+  # sum all the features 
+  print("bind to single object")
+  r5 <- Reduce("+", r4)
+  
+  output <- list(
+    richnessTif = r5,
+    speciesUsed = ersFiles
+  )
+  return(output)
+}
+
+

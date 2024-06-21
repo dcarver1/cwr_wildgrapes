@@ -22,9 +22,11 @@ sigfig <- function(vec, n=3){
 formatC(signif(vec,digits=n), digits=n,format="fg", flag="#") 
 
 } 
+```
 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-testing <- TRUE
+testing <- FALSE
 # transform data
 if(testing==TRUE){
   data <- conservationSummary$summaryData # testing only
@@ -35,6 +37,8 @@ if(testing==TRUE){
   p1 <- conservationSummary$proAreas
   ga50 <- conservationSummary$ga50Map
   protectCounts <- conservationSummary$protectAreasRichness
+  ersExGapMap <- conservationSummary$ersExRichness
+  ersInGapMap <- conservationSummary$ersInRichness
 }else{
   inputs <- params$reportData
   data <- inputs$summaryData
@@ -45,6 +49,8 @@ if(testing==TRUE){
   p1 <- inputs$proAreas
   ga50 <- inputs$ga50Map
   protectCounts <- inputs$protectAreasRichness
+  ersExGapMap <- inputs$ersExRichness
+  ersInGapMap <- inputs$ersInRichness
 }
 
 
@@ -208,7 +214,36 @@ g1
 <br>
 
 
-## add fig S6 from 2020 PNAS
+## Ecological *ex situ* gap richness
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
+ersExMap <- classify(ersExGapMap, cbind(0, NA)) |> raster()
+
+
+#distribution palette
+valsersExGap <- unique(values(ersExMap))
+# Mean distribution map
+ersExGapPal <- colorNumeric(palette = distColor,
+                        domain = values(ersExMap),
+                        na.color = "transparent")
+
+
+
+g2 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))%>%
+  addTiles()%>%
+  addRasterImage(x = ersExMap,
+                 colors = ersExGapPal,
+                 method = "ngb",
+                 group = "Species Richness")%>%
+  addLegend(position = "bottomright",
+            color = distColor,
+            title = "Number of taxa",
+            labels = c("1","","","",max(valsersExGap,na.rm = TRUE)),
+            group = "Mean Distribution Model")
+
+g2
+```
+
 
 *figure caption* : Predicted collecting priority hotspots map to resolve ecological gaps in current *ex situ*
 conservation. The map displays richness of ecoregions within the potential distributions of the
@@ -282,7 +317,33 @@ DT::datatable(pc1,
 
 
 ## add fig S8 from 2020 PNAS paper 
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
+ersInMap <- classify(ersInGapMap, cbind(0, NA)) |> raster()
 
+
+#distribution palette
+valsersINGap <- unique(values(ersInMap))
+# Mean distribution map
+ersINGapPal <- colorNumeric(palette = distColor,
+                        domain = values(ersInMap),
+                        na.color = "transparent")
+
+
+
+g3 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))%>%
+  addTiles()%>%
+  addRasterImage(x = ersInMap,
+                 colors = ersINGapPal,
+                 method = "ngb",
+                 group = "Species Richness")%>%
+  addLegend(position = "bottomright",
+            color = distColor,
+            title = "Number of taxa",
+            labels = c("1","","","",max(valsersINGap,na.rm = TRUE)),
+            group = "Mean Distribution Model")
+
+g3
+```
 
 *figure caption* :  Predicted habitat protection priorities map to resolve ecological gaps in current *in situ*
 conservation. The map displays richness of ecoregions within the potential distributions of the
@@ -294,7 +355,6 @@ same (ca. 5 km2) areas.
 <br>
 <br>
 <br> 
-*Note: Score values of zero will not appear on the chart.*
 
 
 ## Definitions of conservation gap analysis scores {.tabset}

@@ -9,6 +9,7 @@
 #'
 #' @return
 compileConservationData <- function(directory, runVersion, genus){
+  library(plotly)
   combined <- list.files( path = directory,
                           pattern =  "fcs_combined.csv",
                           full.names = TRUE,

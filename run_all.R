@@ -83,7 +83,7 @@ runVersion <- "run20240614"
 # runVersion <- "run1"
 
 # overwrite 
-overwrite <- TRUE
+overwrite <- FALSE
 
   # set up environment  -----------------------------------------------------
 
@@ -102,7 +102,7 @@ species <- sort(unique(speciesData$taxon))
 
 # #testing
 i <- genera[1]
-j <- species[3]
+j <- species[1]
 
 erroredSpecies <- list(noLatLon = c(),
                        lessThenEight = c(),
@@ -161,7 +161,7 @@ for(i in genera){
     }
   ## spatial object
   sp1 <- write_GPKG(path = allPaths$spatialDataPath,
-                    overwrite = overwrite, 
+                    overwrite = TRUE, 
                     function1 = createSF_Objects(speciesData = sd1) %>%
     removeDuplicates()
     )
@@ -510,7 +510,7 @@ for(i in genera){
 
 
   # produce boxplot summaries -----------------------------------------------
-  # renderBoxPlots  <- FALSE
+  renderBoxPlots  <- TRUE
   if(renderBoxPlots == TRUE){
     # compile all modeling data
     amd <- list.files(dir1, pattern = "allmodelData.csv", full.names = TRUE, recursive = TRUE)

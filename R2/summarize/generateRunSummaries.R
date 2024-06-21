@@ -3,7 +3,8 @@
 # genus = i
 
 
-generateRunSummaries <- function(dir1,runVersion, genus, protectedAreas, overwrite){
+generateRunSummaries <- function(dir1,runVersion,
+                                 genus, protectedAreas, overwrite){
   
   # generate summary of all the models --------------------------------------
   path1 <- paste0(dir1,"/speciesrichness.tif")
@@ -11,6 +12,11 @@ generateRunSummaries <- function(dir1,runVersion, genus, protectedAreas, overwri
   path3 <- paste0(dir1,"/ga50_speciesrichness.tif")
   path4 <- paste0(dir1, "/ga50speciesUsed_speciesrichness.csv")
   path5 <- paste0(dir1,"/protectedAreaSpeciesRichness.csv")
+  path6 <- paste0(dir1,"/ersexRichness.tif")
+  path7 <- paste0(dir1,"/ersex_speciesUsed_Richness.csv")
+  path8 <- paste0(dir1,"/ersinRichness.tif")
+  path9 <- paste0(dir1,"/ersin_speciesUsed_Richness.tif")
+  
   
   # this takes a while to run so be careful 
   ## generate the species richness file 
@@ -42,21 +48,42 @@ generateRunSummaries <- function(dir1,runVersion, genus, protectedAreas, overwri
               file = path4)
   }
   
-  # generate ersex richness map
-  # if(!file.exists(path3) | isTRUE(overwrite)){
-    # # generate specific richness map 
-    # ga50Richness <- generateSpeciesRichnessMap(directory = dir1,
-    #                                            runVersion = runVersion,
-    #                                            rasterFileName = "ga50_masked.tif")
-    # terra::writeRaster(x = ga50Richness$richnessTif,
-    #                    filename = path3,
-    #                    overwrite  = TRUE)
-    # # export the 
-    # df <- data.frame(speciesUsed = ga50Richness$speciesUsed)
-    # write_csv(x = df,
-    #           file = path4)
-  # }
+  ##
   
+  
+  # generate ersex richness map
+  if(!file.exists(path6) | isTRUE(overwrite)){
+    # # generate specific richness map 
+    ersExRichness <- generateERSRichnessMap(directory = dir1,
+                                               runVersion = runVersion,
+                                            ersMap = "ers_ex_gaps.tif",
+                                            species = species,
+                                            thresholdMap = "prj_threshold.tif")
+    terra::writeRaster(x = ersExRichness$richnessTif,
+                       filename = path6,
+                       overwrite  = TRUE)
+    # # export the 
+    df <- data.frame(speciesUsed = ersExRichness$speciesUsed)
+    write_csv(x = df,
+              file = path7)
+  }
+  
+  # generate ersin richness map
+  if(!file.exists(path8) | isTRUE(overwrite)){
+    # # generate specific richness map 
+    ersInRichness <- generateERSRichnessMap(directory = dir1,
+                                            runVersion = runVersion,
+                                            ersMap = "ers_in_gaps.tif",
+                                            species = species,
+                                            thresholdMap = "prj_threshold.tif")
+    terra::writeRaster(x = ersInRichness$richnessTif,
+                       filename = path8,
+                       overwrite  = TRUE)
+    # # export the 
+    df <- data.frame(speciesUsed = ersInRichness$speciesUsed)
+    write_csv(x = df,
+              file = path9)
+  }
   
   
   # generate species richness within protected areas ------------------------
@@ -79,6 +106,8 @@ generateRunSummaries <- function(dir1,runVersion, genus, protectedAreas, overwri
   conservationSummary$proAreas <- protectedAreas
   conservationSummary$ga50Map <- rast(path3)
   conservationSummary$protectAreasRichness <- read_csv(path5)
+  conservationSummary$ersExRichness <- terra::rast(path6)
+  conservationSummary$ersInRichness <- terra::rast(path8)
   
   
   
@@ -96,5 +125,4 @@ generateRunSummaries <- function(dir1,runVersion, genus, protectedAreas, overwri
                       # encoding = "utf-8"
     )
   )
-  
 }

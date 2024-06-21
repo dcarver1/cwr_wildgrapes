@@ -59,9 +59,10 @@ generateCounts <- function(speciesData){
 createSF_Objects <- function(speciesData){
 
   latLong <- speciesData |>
+    dplyr::filter(!is.na(latitude))|> 
+    dplyr::filter(!is.na(longitude))|>
     mutate(latitude = as.numeric(as.character(latitude)),
-           longitude = as.numeric(as.character(longitude)))|>
-    dplyr::filter(!is.na(latitude) | !is.na(longitude))
+           longitude = as.numeric(as.character(longitude)))
   
   if(nrow(latLong)>0){
     coord <- latLong |> 

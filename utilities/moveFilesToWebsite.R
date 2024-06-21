@@ -49,11 +49,11 @@ print("box plot summary doc copied")
 
 ##################
 # vitis specific moves ----------------------------------------------------
-folder <- "~/Documents/vitis"
+folder <- "~/Documents/vitis2"
 
 # vitis SDMS --------------------------------------------------------------
 genus <- "Vitis" 
-modelRun <- "run20231227"
+modelRun <- "run20240614"
 # species 
 splist <- read.csv("data/processed_occurrence/draft_model_data.csv")%>%
   dplyr::select(taxon)%>%
@@ -87,6 +87,8 @@ for(i in splist){
 # move the run summary 
 runsummary <- paste0("data/Vitis/",modelRun,"_Summary.html")
 file.copy(runsummary, folder, overwrite = TRUE)
+file.copy(paste0("data/Vitis/",modelRun,"_boxPlotSummary.html"), folder, overwrite = TRUE)
+print("box plot summary doc copied")
 
 # vits county maps --------------------------------------------------------
 files <- list.files("data/countyMaps",pattern = "Evaluation2.html",full.names = TRUE)
