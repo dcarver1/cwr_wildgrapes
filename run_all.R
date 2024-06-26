@@ -6,11 +6,11 @@
 ### 
 
 # local testing 
-pacman::p_load("terra", "dplyr", "sf", "purrr","randomForest","VSURF",
+pacman::p_load("dplyr", "sf","terra",  "purrr","randomForest","VSURF",
                "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo",
-               "leaflet", "tidyterra", "rmarkdown", "furrr","tmap", "stringr",
-               "tictoc","tigris")
-tmap_mode("view")
+               "leaflet", "tidyterra", "rmarkdown", "furrr", "stringr",
+               "tictoc","tigris", "tmap")
+tmap::tmap_mode("view")
 
 #source functions
 source("R2/helperFunctions.R")

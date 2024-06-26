@@ -208,9 +208,10 @@ speciesList <- dplyr::left_join(x = plantsData1,
   occData <- occData[!duplicated,]
   
 
-  
+  # filter the FNA data to exclude the NA values 
+  fnaData <- fnaData[!fnaData$`States from FNA`=="NA,", ]
 
-# gather the states listed within FNA
+  # gather the states listed within FNA
   if(speciesName %in% fnaData$`Taxon Name`){
       fna1 <- fnaData |> 
         dplyr::filter(`Taxon Name` == speciesName) |>
@@ -392,6 +393,9 @@ countyState <- countyState |>
 <img src="logobanner.png" alt="Supporting Organizations" style="width: 100%">
 <br>
 
+<h1 style="text-align: center;"> `r species1` </h1>
+
+
 <strong style="text-align: center;">This project is a collaboration among the [United States Botanic Garden](https://www.usbg.gov/), [San Diego Botanic Garden](https://sdbg.org/), [USDA ARS](https://www.ars.usda.gov/),  [Geospatial Centroid](https://gis.colostate.edu/) at Colorado State Univeristy, and [NatureServe](https://www.natureserve.org/). We are all grateful for your time and consideration in this evaluation effort. </strong>
 
 
@@ -416,7 +420,7 @@ countyState <- countyState |>
 
 
 <br>
-**Taxon** : `r speciesName` ,
+**Taxon** : `r speciesName`
 <br>
 **Accepted Synonym(s)** : `r s1$acceptedSynonym`
 <br> 
@@ -539,12 +543,21 @@ countyClass <- countyState |>
     NAME,
     "&entry.1304312867=",
     NA),
+    `USDAPlantsPop` = case_when(
+           `USDA Plants` == 1 ~ "Yes",
+           TRUE ~ "No"),
+        `BONAPPop` = case_when(
+           `BONAP` == 1 ~ "Yes",
+           TRUE ~ "No"),
+        `NatureServePop` = case_when(
+           `Nature Serve` == 1 ~ "Yes",
+           TRUE ~ "No"),
     popup = paste0(
         "<b>County Name: </b>", NAME,
         "<br/> <b>State: </b>", REGION,
-        "<br/> <b> Listed in USDA Plants: </b>", `USDA Plants`,
-        "<br/> <b> Listed in BONAP: </b>", `BONAP`,
-        "<br/> <b> Listed in Nature Serve: </b>", `Nature Serve`,
+        "<br/> <b> Listed in USDA Plants: </b>", `USDAPlantsPop`,
+        "<br/> <b> Listed in BONAP: </b>", `BONAPPop`,
+        "<br/> <b> Listed in Nature Serve: </b>", `NatureServePop`,
         "<br/> <b> Number of observations records: </b>", O,
         "<br/> <b> Number of herbarium records: </b>", H,
         "<br/> <b> Number of germplasm records: </b>", G,
@@ -715,7 +728,7 @@ m1 <- leaflet(width = "100%",
                 weight = 0.8,
                 fillOpacity = 1,
                 opacity = 0.8,
-                group = "Counties listed in USDA Plants and/or Bonap Only",
+                group = "Counties listed in USDA Plants and/or Bonap Only (No occurrence points)",
                 options = pathOptions(pane = "bpData"))|>
     addPolygons(data = hgData,
             color = "white",
@@ -724,7 +737,7 @@ m1 <- leaflet(width = "100%",
             weight = 0.8,
             fillOpacity = 1,
             opacity = 0.8,
-            group = "Counties with one or more Herbarium or Germplasm record",
+            group = "Counties with one or more Herbarium or Germplasm Occurrence",
             options = pathOptions(pane = "hgData"))|>
     addPolygons(data = oData,
             color = "white",
@@ -733,7 +746,7 @@ m1 <- leaflet(width = "100%",
             weight = 0.8,
             fillOpacity = 1,
             opacity = 0.8,
-            group = "Counties with observational records only",
+            group = "Counties with iNaturalist Observation only",
             options = pathOptions(pane = "hgData"))|>
     addCircleMarkers(data =  points |> filter(type =="O"),
              color = ~color,
@@ -741,7 +754,7 @@ m1 <- leaflet(width = "100%",
              radius = 2,
              stroke = 1,
              popup = ~popup,
-             group = "Location Based Observation data",
+             group = "iNaturalist observation data",
              options = pathOptions(pane = "points"))|>
     addCircleMarkers(data = h_no_url,
              color = "#fa9fb5",
@@ -749,7 +762,7 @@ m1 <- leaflet(width = "100%",
              radius = 2,
              stroke = 1,
              popup = ~popup,
-             group = "Location based Herbarium Records without web url",
+             group = "Herbarium Occurrences without web url",
              options = pathOptions(pane = "points")
                )|>
     addCircleMarkers(data = h_url,
@@ -758,7 +771,7 @@ m1 <- leaflet(width = "100%",
          radius = 2,
          stroke = 1,
          popup = ~popup,
-         group = "Location based Herbarium Records with web url",
+         group = "Herbarium Occurrences with web url",
          options = pathOptions(pane = "points")
            )|>
     addCircleMarkers(data = points[points$type =="G",],
@@ -767,7 +780,7 @@ m1 <- leaflet(width = "100%",
              radius = 2,
              stroke = 1,
              popup = ~popup,
-             group = "Location based Germplasm Records",
+             group = "Germplasm Occurrences",
              options = pathOptions(pane = "points")
                )
   ## add legends 
@@ -783,43 +796,43 @@ m3 <- m2 |>
               title = "Sum of records within County")|>
       # legend for the plants and bonap 
     addLegend(color = "#fec44f",
-              group = "Counties listed in USDA Plants and/or Bonap Only",
-              labels = "Counties listed in USDA Plants and/or Bonap Only")|>
+              group = "Counties listed in USDA Plants and/or Bonap Only (No occurrence points)",
+              labels = "Counties listed in USDA Plants and/or Bonap Only (No occurrence points)")|>
       # legend for the h or g 
     addLegend(color = "#fa9fb5",
-              group = "Counties with one or more Herbarium or Germplasm record",
-              label = "Counties with one or more Herbarium or Germplasm record")|>
+              group = "Counties with one or more Herbarium or Germplasm Occurrence",
+              label = "Counties with one or more Herbarium or Germplasm Occurrence")|>
       # legend for the observation only 
     addLegend(color = "#f03b20",
-              group = "Counties with observational records only",
-              labels = "Counties with observational records only")|>
+              group = "Counties with iNaturalist Observation only",
+              labels = "Counties with iNaturalist Observation only")|>
     # legend for the G
     addLegend(color = "#66c2a5",
-              group = "Location based Germplasm Records",
-              labels = "Location based Germplasm Records")|>
+              group = "Germplasm Occurrences",
+              labels = "Germplasm Occurrences")|>
     # legend for the H with
     addLegend(color = "#c51b8a",
-              group = "Location based Herbarium Records with web url",
-              labels = "Location based Herbarium Records with web url ")|>
+              group = "Herbarium Occurrences with web url",
+              labels = "Herbarium Occurrences with web url")|>
   # legend for the H without
     addLegend(color = "#fa9fb5",
-              group = "Location based Herbarium Records without web url",
-              labels =  "Location based Herbarium Records without web url ")|>
+              group = "Herbarium Occurrences without web url",
+              labels = "Herbarium Occurrences without web url")|>
   # legend for the O
     addLegend(color = "#fc8d62",
-              group = "Location Based Observation data",
-              labels = "Location Based Observation data")|>
+              group = "iNaturalist observation data",
+              labels = "iNaturalist observation data")|>
   addLayersControl(
       overlayGroups = c("Counties with a record", 
                         "Sum of records within County", 
-                        "Counties listed in USDA Plants and/or Bonap Only",
-                        "Counties with one or more Herbarium or Germplasm record",
-                        "Counties with observational records only",
+                        "Counties listed in USDA Plants and/or Bonap Only (No occurrence points)",
+                        "Counties with one or more Herbarium or Germplasm Occurrence",
+                        "Counties with iNaturalist Observation only",
                         "Counties removed during review",
-                        "Location based Germplasm Records", 
-                        "Location based Herbarium Records with web url",
-                        "Location based Herbarium Records without web url", 
-                        "Location Based Observation data",
+                        "Germplasm Occurrences", 
+                        "Herbarium Occurrences with web url",
+                        "Herbarium Occurrences without web url", 
+                        "iNaturalist observation data",
                         "Locations removed during review"),
       options = layersControlOptions(collapsed = FALSE)
     )|>
@@ -831,13 +844,13 @@ m3 <- m2 |>
     #     }
     # ")|>
   hideGroup(c("Sum of records within County",
-              "Counties listed in USDA Plants and/or Bonap Only",
-              "Counties with one or more Herbarium or Germplasm record",
-              "Counties with observational records only", 
-              "Location based Herbarium Records with web url",
-              "Location based Herbarium Records without web url",
-              "Location Based Observation data",
-              "Location based Germplasm Records"))
+              "Counties listed in USDA Plants and/or Bonap Only (No occurrence points)",
+              "Counties with one or more Herbarium or Germplasm Occurrence",
+              "Counties with iNaturalist Observation only", 
+              "Herbarium Occurrences with web url",
+              "Herbarium Occurrences without web url",
+              "iNaturalist observation data",
+              "Germplasm Occurrences"))
 # conditions for removed species 
   if(nrow(rCounty)> 0){
     m3a <- m3 |>
