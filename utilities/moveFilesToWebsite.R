@@ -55,12 +55,12 @@ folder <- "~/Documents/vitis2"
 genus <- "Vitis" 
 modelRun <- "run20240614"
 # species 
-splist <- read.csv("data/processed_occurrence/draft_model_data.csv")%>%
-  dplyr::select(taxon)%>%
-  dplyr::distinct()%>%
-  dplyr::pull()%>%
-  sort()
-
+splist <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.csv")|>
+  dplyr::filter(!is.na(taxon),
+                taxon %in% speciesData$taxon,
+                genus == "Vitis")|>
+  dplyr::select(taxon)|>
+  distinct()
 # # vitis subset 
 splist <- c("Vitis arizonica",
              "Vitis californica",

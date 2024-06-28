@@ -443,35 +443,29 @@ countyState <- countyState |>
 
 ### Details on the map elements 
 
-Written description of the features on the map. 
-
 #### County Level Features 
 
 All county level features report information that as aggregated to the county level. This include text reference to the county (state/county) and spatial point reference that occur within the county. 
 
-- <strong> Counties with a record </strong> : This is a binary presence absence map that shows if a specific county has at least one record of the the species from across all evaluated sources. 
+- <strong> Counties with a record: </strong> This presence absence map shows a county as green if it has at least one record from any of the evaluated sources.
 
-- <strong> Sum of records within County </strong> : This layer depicts the total number of unique records of a species across all sources within a county.
+- <strong> Sum of records within County: </strong> This layer depicts the total number of unique records of a species across all sources within a county.
 
-- <strong> Counties listed in USDA Plants and/or Bonap Only  </strong> : These counties only contain a reference from USDA Plants and/or BONAP. There are no identified observation, herberium, or germplasm records from these counties.  
+- <strong> Counties listed in USDA Plants and/or Bonap Only (No occurrence points) </strong> These counties only contain a reference from USDA Plants and/or BONAP. There are no identified iNaturalist, herbarium, or germplasm occurrences from these locations.
 
-- <strong> Counties with one or more Herbarium or Germplasm record </strong> : These counties has at least one herbarium and/or germplasm occurrence. There may be additional record sources within this county. 
+- <strong> Counties with one or more Herbarium or Germplasm Occurrence: </strong> : hese counties have at least one herbarium and/or germplasm occurrence. There may also be additional records within this county(iNaturalist, USDA Plants, BONAP, NatureServe).
 
-- <strong> Counties with observational records only </strong> : These counties only have species records from observational datasources such as INaturalist.  
+- <strong> Counties with iNaturalist Observation only:  </strong> These counties only have species observations from iNaturalist.
 
-#### Spatial Data Occurrence Features 
+#### Occurrence Features
 
-The spatial data occurrence features are location records with valid latitude and longitude values. As such, all these features are shown on the the map as point locations. 
+-  <strong>Germplasm Occurrences: </strong>: Occurrence data with living specimens stored in a Genebank or Botanical Garden.
 
+-  <strong>Herbarium Occurrences with web url: </strong> Occurrence data of herbarium specimens, which includes an url for the source herbarium data.  
 
--  <strong>Location based Germplasm Records </strong>: Occurrence data with living specimens stored in genebanks or 
-botanical gardens 
+-  <strong>Herbarium Occurrences without web url:</strong> Occurrence data of herbarium specimens.
 
--  <strong>Location based Herbarium Records with web url </strong>: Occurrence data with associated herbarium specimens. That includes a web visable reference for the herbarium records. 
-
--  <strong>Location based Herbarium Records without web url </strong>: Occurrence data with associated herbarium specimens. No web visable reference for the herbarium records is included. 
-
--  <strong>Location Based Observation data </strong>: Validated records from INaturalist. Only research grade observations are used. These observations are approve as correctly identified by at least two other member of the online community. 
+-  <strong>iNaturalist observation data:</strong>: Research grade observations from iNaturalist. 
 
 
 ### General Methods 
@@ -497,17 +491,16 @@ Data was gathered at the Genus level from the following
 
 #### Data Standardization and Taxonomy 
 
-**data standardization** : All data sets were altered to matched a standard data structure. The specific translation of data sets can be seen [here](https://github.com/dcarver1/cwr_wildgrapes/tree/main/preprocessing). The compileInputDatasets.r and the specific functions within the functions folder. 
-
+**data standardization** : All data sets were altered to matched a standard data structure. The specific translation of data sets can be seen [here](https://github.com/dcarver1/cwr_wildgrapes/tree/main/preprocessing). 
 
 
 **Taxonomy**: The full synonyms cross walk can be viewed [here](https://docs.google.com/spreadsheets/d/1ZzKUr2GI8wZe42G-nnMZ3iyhUnnqn3OUCMK_0sFKniQ/edit?usp=drive_link). 
 
 
 
-#### Spatial Reference 
+#### Assigning the State and County to each occurrence 
 
-When latitude and longitude data is present for a record this information was used to assign the state/country. When valid latitude and longitude values were not provide the state and county reference information was pulled from the attribute data associated with the record. If no valid county information was included in the attribute data, the record was not used within this analysis. 
+When latitude and longitude data was used to assign the state/country when possible. If no latitude and longitude data was provided, the state and county names were pulled from the attribute data associated with the record. If a state or county name could not be assigned by either method the record was excluded from this analysis. 
 
 
 #### Flora of North America 
@@ -516,7 +509,7 @@ If state level distribution information was provided for a given specific specie
 
 
 
-## Map of County and Point Records
+## Map of County and Occurrence Records
 
 ```{r produceMAP, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -887,8 +880,8 @@ m3 <- m2 |>
 ```
 
 
-## Summary of occurrence Data 
-This table includes all records not just those with valid latitude and longitude information. 
+## Summary of Occurrence Data 
+This table includes all records used to generate the map.
 
 ```{r occurrenceDataSummary, echo=FALSE, message=FALSE, warning=FALSE}
 occFiltered <- occData %>%
@@ -915,9 +908,9 @@ DT::datatable(occFiltered,
 
 ```
 
-## Summary Table of County Data 
+## Data summarized to each County 
 
-The table below display additional attribute data for all the counties with know observation on the the selected taxon. All columns can be filtered and sorted. The follows states are included in the FNA designation `r if(fna1[1] !=0){all_states$name}`
+The table below display additional attribute data for all the counties with known occurrences. Columns can be filtered and sorted. The following states are included in this FNA state designation `r if(fna1[1] !=0){all_states$name}`
 
 ```{r countyDataTable, echo=FALSE, message=FALSE, warning=FALSE}
 # 
@@ -930,9 +923,9 @@ df <- countyClass |>
     "County Name" = NAME,
     "GEOID" = "FIPS", 
     "State Abbrevation" = "REGION",
-    "Obersevation Records" = O,
-    "Heberium Records" = H,
-    "Germplasm  Records" = G,
+    "iNaturalist Observation" = O,
+    "Heberium Occurrence" = H,
+    "Germplasm  Occurrence" = G,
     "Pre 1970 Records" = pre1970,
     "USDA Plants" = `USDA Plants`,
     "BONAP" = BONAP,
@@ -947,15 +940,19 @@ DT::datatable(df,
               )
 
 ```
-## Data exluded by FNA state filter
+## Data exluded by Flora of North America state filter
 
-If the species state level range has been defined by the Flora of North America, then all spatial data has been clip to the that extent. The table below shows the occurrence data that has been removed by the FNA filter.
+The above map and table includes all occurrance data that falls within the established state range defined by Flora of North America.
+
+If the state range for a species was define by Flora of North America all the occurrence records will be shown on the map and above table. 
+
+The table below shows the occurrence data that falls outside the established Flora of North America states.
 
 **The following States are included in the FNA description** : `r if(fna1[1]!="no"){all_states$name}else{"Not included in FNA"}`
 
 ```{r fna exclusion, echo=FALSE, message=FALSE, warning=FALSE}
 if(fna1[1]=="no"){
-  print("This species is not present in the Flora of North America")
+  print("The state range for this species is not present in the Flora of North America")
 }else{
   fnaFiltered <- occFNAFilter |>
     dplyr::mutate(
