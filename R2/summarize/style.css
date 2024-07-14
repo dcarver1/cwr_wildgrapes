@@ -2,6 +2,9 @@ div.main-container {
   max-width: 1600px !important;
 }
 
+
+
+
 .footer {
   position: fixed;
   left: 0;
@@ -14,6 +17,7 @@ div.main-container {
 
 body {
   font-family: Roboto, sans-serif;
+  padding: 0 40px; /* 0 for top and bottom, 40px for left and right */
 }
 
 h1 {

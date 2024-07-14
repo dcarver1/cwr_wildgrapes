@@ -8,6 +8,66 @@
 
 
 
+
+
+##################
+# vitis specific moves ----------------------------------------------------
+folder <- "~/Documents/vitis2"
+
+# vits county maps --------------------------------------------------------
+files <- list.files("data/countyMaps",pattern = "Evaluation2.html",full.names = TRUE)
+print(files)
+# Find the files 
+for(i in seq_along(files)){
+  if(length(files)>0){
+    file.copy(files[i], folder,overwrite = TRUE)
+    print(paste0(i, " moved"))
+  }
+}
+
+
+# vitis SDMS --------------------------------------------------------------
+genus <- "Vitis" 
+modelRun <- "run20240614"
+# species 
+splist <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.csv")|>
+  dplyr::filter(!is.na(taxon),
+                taxon %in% speciesData$taxon,
+                genus == "Vitis")|>
+  dplyr::select(taxon)|>
+  distinct()
+# # vitis subset 
+splist <- c("Vitis arizonica",
+            "Vitis californica",
+            "Vitis rupestris",
+            "Vitis aestivalis",
+            "Vitis shuttleworthii",
+            "Vitis palmata",
+            "Vitis vulpina",
+            "Vitis acerifolia",
+            "Vitis riparia",
+            "Vitis rotundifolia")
+
+
+# loop to grab the files 
+for(i in splist){
+  path <- paste0("data/",genus,"/",i,"/",modelRun,"/results")
+  files <- list.files(path, pattern = ".html",full.names = TRUE)
+  if(length(files)>0){
+    file.copy(files[1], folder, overwrite = TRUE)
+    print(paste0(i, " moved"))
+  }
+}
+
+# move the run summary 
+runsummary <- paste0("data/Vitis/",modelRun,"_Summary.html")
+file.copy(runsummary, folder, overwrite = TRUE)
+file.copy(paste0("data/Vitis/",modelRun,"_boxPlotSummary.html"), folder, overwrite = TRUE)
+print("box plot summary doc copied")
+
+
+
+
 # Daucus ---------------------------------------------------
 ## specific reference to file paths 
 genus <- "Daucus" 
@@ -46,57 +106,3 @@ print("Summary doc copied")
 file.copy(paste0("data/Daucus/",modelRun,"_boxPlotSummary.html"), folder, overwrite = TRUE)
 print("box plot summary doc copied")
 
-
-##################
-# vitis specific moves ----------------------------------------------------
-folder <- "~/Documents/vitis2"
-
-# vitis SDMS --------------------------------------------------------------
-genus <- "Vitis" 
-modelRun <- "run20240614"
-# species 
-splist <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.csv")|>
-  dplyr::filter(!is.na(taxon),
-                taxon %in% speciesData$taxon,
-                genus == "Vitis")|>
-  dplyr::select(taxon)|>
-  distinct()
-# # vitis subset 
-splist <- c("Vitis arizonica",
-             "Vitis californica",
-             "Vitis rupestris",
-             "Vitis aestivalis",
-             "Vitis shuttleworthii",
-             "Vitis palmata",
-             "Vitis vulpina",
-            "Vitis acerifolia",
-            "Vitis riparia",
-            "Vitis rotundifolia")
-
-
-# loop to grab the files 
-for(i in splist){
-  path <- paste0("data/",genus,"/",i,"/",modelRun,"/results")
-  files <- list.files(path, pattern = ".html",full.names = TRUE)
-  if(length(files)>0){
-    file.copy(files[1], folder, overwrite = TRUE)
-    print(paste0(i, " moved"))
-  }
-}
-
-# move the run summary 
-runsummary <- paste0("data/Vitis/",modelRun,"_Summary.html")
-file.copy(runsummary, folder, overwrite = TRUE)
-file.copy(paste0("data/Vitis/",modelRun,"_boxPlotSummary.html"), folder, overwrite = TRUE)
-print("box plot summary doc copied")
-
-# vits county maps --------------------------------------------------------
-files <- list.files("data/countyMaps",pattern = "Evaluation2.html",full.names = TRUE)
-print(files)
-# Find the files 
-for(i in seq_along(files)){
-  if(length(files)>0){
-    file.copy(files[i], folder,overwrite = TRUE)
-    print(paste0(i, " moved"))
-  }
-}

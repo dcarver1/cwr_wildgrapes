@@ -68,7 +68,7 @@ compileConservationData <- function(directory, runVersion, genus){
           x = ~ FCSc_mean,
           y = ~ID,
           type = "scatter",
-          name = "FCS mean",
+          name = "FCSc-mean",
           marker = list(
             size = 16,
             color = "red",
@@ -190,7 +190,7 @@ compileConservationData <- function(directory, runVersion, genus){
                 x = ~ FCSc_mean,
                 y = ~ID,
                 type = "scatter",
-                name = "FCS mean",
+                name = "FCSc-mean",
                 marker = list(
                   size = 16,
                   color = "red",

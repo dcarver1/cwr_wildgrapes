@@ -41,7 +41,7 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 
 ```{r testing_parameters, echo=FALSE, message=FALSE, warning=FALSE}
 # for testing
-# speciesName <- "Vitis rupestris"
+# speciesName <- "Vitis baileyana"
 # troubleshooting
 # speciesName <- species1
 ```
@@ -133,9 +133,9 @@ speciesList <- dplyr::left_join(x = plantsData1,
     reviewedCounty1$CODE_LOCAL <- as.character(unlist(reviewedCounty1$`GEOID for County`))
 
     # display layer 
-    rCounty <- countyGathered |>
-      dplyr::filter(CODE_LOCAL %in% reviewedCounty1$`GEOID for County`)|>
-      dplyr::left_join(reviewedCounty1, by = "CODE_LOCAL")|>
+    rCounty <- countySHP |>
+      dplyr::filter(CODE_LOCAL %in% unlist(reviewedCounty1$`GEOID for County`))|>
+      dplyr::left_join(reviewedCounty1, by = "CODE_LOCAL")    |>
       dplyr::mutate(
     link = paste0("https://docs.google.com/forms/d/e/1FAIpQLScCTcg6ITFMXs9QpQEAvN92GI06wtSTiGSTcUBrOK6E2kChjw/viewform?usp=pp_url&entry.1016353547=",
           Taxon,
@@ -821,12 +821,12 @@ m3 <- m2 |>
                         "Counties listed in USDA Plants and/or Bonap Only (No occurrence points)",
                         "Counties with one or more Herbarium or Germplasm Occurrence",
                         "Counties with iNaturalist Observation only",
-                        "Counties removed during review",
+                        "counties changed during review",
                         "Germplasm Occurrences", 
                         "Herbarium Occurrences with web url",
                         "Herbarium Occurrences without web url", 
                         "iNaturalist observation data",
-                        "Locations removed during review"),
+                        "Locations changed during review"),
       options = layersControlOptions(collapsed = FALSE)
     )|>
     # This is good option for a single feature but it's not going to work for both
@@ -855,7 +855,7 @@ m3 <- m2 |>
               weight = 0.8,
               fillOpacity = 1,
               opacity = 0.8,
-              group = "Counties removed during review",
+              group = "counties changed during review",
               options = pathOptions(pane = "hgData"))
     m3 <- m3a
   }
@@ -869,7 +869,7 @@ m3 <- m2 |>
            radius = 2,
            stroke = 1,
            popup = ~popup,
-           group = "Locations removed during review",
+           group = "Locations changed during review",
            options = pathOptions(pane = "points")
              )
    m3 <- m3b

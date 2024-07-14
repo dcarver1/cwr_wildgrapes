@@ -21,8 +21,8 @@ sourceFiles(gapAnalysisOnly = FALSE)
 # input datasets ----------------------------------------------------------
 ## species observations 
 ### Daucus 
-# speciesData <- read_csv("data/raw_occurances/daucusData_april_2024.csv")|>
-#   dplyr::mutate(genus = "Daucus")
+speciesData <- read_csv("data/raw_occurances/daucusData_april_2024.csv")|>
+  dplyr::mutate(genus = "Daucus")
 # alter to get to the correct format
 # sp <- speciesData |>
 #   dplyr::select(taxon = "Name...1",
@@ -41,15 +41,15 @@ sourceFiles(gapAnalysisOnly = FALSE)
 ### sepecies with less then 8 D. biseriatus, D. carota subsp. annuus, D. carota subsp. fontanesii, D. carota subsp. parviflorus, D. carota subsp. rupestris , D. carota subsp. tenuissimus , D. della-cellae, D. edulis, D. gracilis, D. jordanicus, D. mauritii, D. microscias, D. mirabilis ,D. reboudii ,D. virgatus
 ### Vitis
 ## filtering the extra values coming from the data prep process 
-speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv") |>
-  dplyr::select(-c("geometry","index", "validLat","validLon","validLatLon"))
-# using the data from the county maps for an reference run 
-speciesData1 <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.csv")|>
-  dplyr::filter(!is.na(taxon),
-                taxon %in% speciesData$taxon,
-                genus == "Vitis")|>
-  dplyr::select(-c(geometry))
-speciesData <- speciesData1
+# speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv") |>
+#   dplyr::select(-c("geometry","index", "validLat","validLon","validLatLon"))
+# # using the data from the county maps for an reference run 
+# speciesData1 <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.csv")|>
+#   dplyr::filter(!is.na(taxon),
+#                 taxon %in% speciesData$taxon,
+#                 genus == "Vitis")|>
+#   dplyr::select(-c(geometry))
+# speciesData <- speciesData1
 
 ### Quercus 
 # speciesData <- read_csv("data/Quercus/QUAC_coord_ind.csv")
@@ -76,9 +76,9 @@ bufferDist <- 50000
 
 # run version 
 ## daucus 
-# runVersion <- "run20240603"
+runVersion <- "run20240603"
 #vitis run 
-runVersion <- "run20240614"
+# runVersion <- "run20240614"
 # Quercus and other IMLS species 
 # runVersion <- "run1"
 
@@ -466,7 +466,7 @@ for(i in genera){
 
     
     # generate summary html  
-    if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
+    # if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
     try(
         rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
                           output_format = "html_document",
@@ -479,10 +479,10 @@ for(i in genera){
                           # encoding = "utf-8"
         )
       )
-    }else{
-      if(!file.exists(allPaths$summaryHTMLPath)){
-        # erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
-      }
+    # }else{
+    #   if(!file.exists(allPaths$summaryHTMLPath)){
+    #     # erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
+    #   }
     # }
     # block here for testing. I want variable in local environment and don't want them written out.
     # stop()

@@ -53,12 +53,12 @@ if(testing==TRUE){
   ersInGapMap <- inputs$ersInRichness
 }
 
-
-
+# Grab the gensus name to use in plain text within the document 
+printGenus <- stringr::str_split(data$ID[1], pattern = " ")[[1]][1]
 
 ```
 
-## Conservation gap analysis results 
+## Conservation gap analysis results for `r printGenus`
 
 
 :::: {style="display: flex;"}
@@ -88,9 +88,10 @@ figure2  # might
 ::::
 
 Clicking the objects at the bottom of the figures will turn on and off elements on the figure.
-<br>
 
-*figure caption text* : Conservation scores per US native CWR (black circles), grouped by conservation assessment type—combined FCSc-mean, FCS ex situ, and FCS in situ — with the average score across taxa displayed as red circles. FCS scores are used to categorize taxa for further conservation action: UP (FCS <25), HP (25 ≤ FCS < 50), MP (50 ≤ FCS < 75), and LP (FCS ≥75).
+<br>
+Conservation scores per `r printGenus` taxon, grouped by conservation assessment type—combined FCSc-mean, FCS ex situ, and FCS in situ — with the average score across taxa displayed as red circles. FCSc-mean scores are used to categorize taxa for further conservation action: UP (FCSc-mean <25), HP (25 ≤ FCSc-mean < 50), MP (50 ≤ FCSc-mean < 75), and LP (FCSc-mean ≥75).
+
 
 
 <br>
@@ -118,8 +119,6 @@ c2 <- c1 |>
     "ERS in situ" = "ERSin",           
     "FCS ex situ" = "FCSex",           
     "FCS in situ" = "FCSin",
-    "FCSc min" = "FCSc_min",        
-    "FCSc max" = "FCSc_max",        
     "FCSc mean" = "FCSc_mean",   
     "FCSc class min" = "FCSc_min_class",  
     "FCSc class max" = "FCSc_max_class" , 
@@ -134,7 +133,8 @@ DT::datatable(c2,
               filter = "top")
 ```
 <br>
-<br>
+
+Table 1: Listing of all conservation scores present for each taxon. The FCSc_mean measure is created by taking the average of the FCSex and FCSin measure. The final conversation class is derive from the FCSc-mean measure. As in situ and ex situ conservation efforts require distinct actions, the table also lists the FCSc min class and the FCSc class max to highlight the different in in situ and ex situ conservation status. 
 <br>
 
 
@@ -179,9 +179,6 @@ Predicted taxonomic richness map for assessed taxa, combining `r length(unique(d
 
 ## Geographic *ex situ* gap richness
 
-Predicted collecting priority hotspots map to resolve geographic gaps in current *ex situ* conservation. The map displays richness of geographic areas within the potential distributions of the assessed taxa that have not been previously collected for *ex situ* conservation (i.e. that areas not within 50 km of an existing germplasm collection location). Darker colors indicate greater numbers of taxa potentially overlapping in the same (ca. 5 km2) areas.
-
-
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
 g50 <- classify(ga50, cbind(NaN, 0)) |> raster()
 exGap <- r1 - g50
@@ -209,6 +206,8 @@ g1 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))%>%
 
 g1
 ```
+
+Predicted collecting priority hotspots map to resolve geographic gaps in current *ex situ* conservation. The map displays richness of geographic areas within the potential distributions of the assessed taxa that have not been previously collected for *ex situ* conservation (i.e. that areas not within 50 km of an existing germplasm collection location). Darker colors indicate greater numbers of taxa potentially overlapping in the same (ca. 5 km2) areas.
 <br>
 <br>
 <br>
@@ -222,6 +221,7 @@ ersExMap <- classify(ersExGapMap, cbind(0, NA)) |> raster()
 
 #distribution palette
 valsersExGap <- unique(values(ersExMap))
+maxExsGap <- max(valsersExGap, na.rm = TRUE)
 # Mean distribution map
 ersExGapPal <- colorNumeric(palette = distColor,
                         domain = values(ersExMap),
@@ -244,11 +244,10 @@ g2 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))%>%
 g2
 ```
 
-
-*figure caption* : Predicted collecting priority hotspots map to resolve ecological gaps in current *ex situ*
+Predicted collecting priority hotspots map to resolve ecological gaps in current *ex situ*
 conservation. The map displays richness of ecoregions within the potential distributions of the
-assessed U.S. wild relatives and wild food plants that have not been previously collected for *ex
-situ* conservation, with up to **X** taxa in need of further collecting potentially found in the same
+assessed species within `r printGenus` that have not been previously collected for *ex
+situ* conservation, with up to `r maxExsGap` taxa in need of further collecting potentially found in the same
 areas. Darker colors indicate greater numbers of taxa potentially overlapping in the same (ca. 5
 km2) areas.
 
@@ -257,8 +256,6 @@ km2) areas.
 <br>
 
 ## Geographic *in situ* gap richness
-
-Predicted habitat protection priorities map to resolve geographic gaps in current *in situ* conservation. The map displays richness of geographic areas within the potential distributions of the assessed taxa that are outside of current protected areas. Darker colors indicate greater numbers of taxa potentially overlapping in the same (ca. 5 km2) areas.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE ,fig.align='center', out.width='90%'}
 # reclass to make the mask of the protect areas features
@@ -293,12 +290,12 @@ in1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3))%>%
 in1
 ```
 <br>
+Predicted habitat protection priorities map to resolve geographic gaps in current *in situ* conservation. The map displays richness of geographic areas within the potential distributions of the assessed taxa that are outside of current protected areas. Darker colors indicate greater numbers of taxa potentially overlapping in the same (ca. 5 km2) areas.
 <br>
 <br>
 
 
 ### Protected areas table
-This table lists all protected areas overlapping with the predicted distributions of four or more taxa. The total number of taxa potentially present in the protected area is shown in a column. A full list of protected areas can be found at (add a link once we have a location for hosting the data)
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', out.width='90%'}
 # probably want to process this outside of the rendering of the document. '
@@ -312,17 +309,21 @@ DT::datatable(pc1,
 ```
 
 <br>
+This table lists all protected areas overlapping with the predicted distributions of four or more taxa. The total number of taxa potentially present in the protected area is shown in a column. A full list of protected areas can be found at (add a link once we have a location for hosting the data)
+
 <br>
 <br>
 
 
-## add fig S8 from 2020 PNAS paper 
+## Ecological *in situ* gap richness
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
 ersInMap <- classify(ersInGapMap, cbind(0, NA)) |> raster()
 
 
 #distribution palette
 valsersINGap <- unique(values(ersInMap))
+maxERSin <- max(valsersINGap, na.rm = TRUE)
 # Mean distribution map
 ersINGapPal <- colorNumeric(palette = distColor,
                         domain = values(ersInMap),
@@ -344,15 +345,15 @@ g3 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))%>%
 
 g3
 ```
+<br>
 
-*figure caption* :  Predicted habitat protection priorities map to resolve ecological gaps in current *in situ*
+Predicted habitat protection priorities map to resolve ecological gaps in current *in situ*
 conservation. The map displays richness of ecoregions within the potential distributions of the
-assessed U.S. wild relatives and wild food plants that are not represented at all within current
-protected areas within those potential distributions, with up to 33 taxa inhabiting the same
+assessed species within the `r printGenus` that are not represented at all within current
+protected areas within those potential distributions, with up to `r maxERSin` taxa inhabiting the same
 unprotected lands. Darker colors indicate greater numbers of taxa potentially overlapping in the
 same (ca. 5 km2) areas.
 
-<br>
 <br>
 <br> 
 
@@ -385,7 +386,7 @@ same (ca. 5 km2) areas.
 
 **In situ** : The Final Conservation Score *in situ* (FCS in situ) in was derived by calculating the average of the three *in situ* conservation metrics.
 
-**FCSc-mean** : The Combined Final Conservation Score (FCSc-mean) was calculated for each taxon by averaging its final FCS ex situ and FCS in situ scores. Taxa were then categorized with regard to the two conservation strategies as well as in combination, with Urgent Priority (UP) for further conservation action assigned when FCS \<25, High Priority (HP) assigned when 25 ≤ FCS \< 50, Medium Priority (MP) when 50 ≤ FCS \< 75, and Low Priority (LP) when FCS ≥75.
+**FCSc-mean** : The Combined Final Conservation Score (FCSc-mean) was calculated for each taxon by averaging its final FCS ex situ and FCS in situ scores. Taxa were then categorized with regard to the two conservation strategies as well as in combination, with Urgent Priority (UP) for further conservation action assigned when FCSc-mean < 25, High Priority (HP) assigned when 25 ≤ FCSc-mean < 50, Medium Priority (MP) when 50 ≤ FCSc-mean < 75, and Low Priority (LP) when FCSc-mean ≥75.
 
 ## Definitions of occurrence data categories
 

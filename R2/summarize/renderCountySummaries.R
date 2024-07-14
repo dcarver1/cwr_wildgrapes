@@ -66,8 +66,10 @@ states <- codes %>%
 # filter out any of the accessed datasets. 
 reviewedData <- googlesheets4::read_sheet(as_id("https://docs.google.com/spreadsheets/d/1_BfJawocOnA-1m9_gl5qZvufXHBCCOacMZX69cQz2LY/edit#gid=139317771"))
   
-reviewedPoints <- reviewedData[reviewedData$`Record ID for point` != "NA", ]
-reviewedCounty <- reviewedData[!reviewedData$Timestamp %in% reviewedPoints$Timestamp, ] 
+reviewedPoints <- reviewedData[reviewedData$`Record ID for point` != "NA", ]|>
+  tidyr::drop_na(Taxon)
+reviewedCounty <- reviewedData[!reviewedData$Timestamp %in% reviewedPoints$Timestamp, ] |>
+  tidyr::drop_na(Taxon)
   
 
 # bind the plants and bonap layers 

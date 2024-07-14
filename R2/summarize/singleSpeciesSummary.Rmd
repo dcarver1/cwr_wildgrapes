@@ -73,7 +73,7 @@ DT::datatable(c1,
 
 # Statistical Summary of the Models
 
-Median models across MaxEnt replicates were evaluated using the area under the receiver operating characteristic curve (AUC), the SD of the AUC across replicates, and the proportion of the potential distribution model with an SD of the replicates \>0.15.
+Median models across MaxEnt replicates were evaluated using the area under the receiver operating characteristic curve (AUC), the SD of the AUC across replicates, and the proportion of the potential distribution model with an SD of the replicates > 0.15.
 
 ```{r, echo=FALSE, eval=TRUE}
 # set the sigfig in the table
@@ -697,7 +697,7 @@ DT::datatable(eco2,
 ``` 
 # *in situ* conservation gap analysis
 
-The table below shows the *in situ* conservation gap analysis summary. The sampling representativeness score *in situ* (SRS in situ) calculates the proportion of all occurrences of a taxon within its predicted distribution that fall within a protected area. The geographical representativeness score *in situ* (GRS in situ) compares the area (in km2) of the potential distribution model located within protected areas versus the total area of the model. The ecological representativeness score *in situ* (ERS in situ) calculates the proportion of ecoregions encompassed within the range of the taxon located inside protected areas to the ecoregions encompassed within the total area of the potential distribution model. A final conservation score for *in situ* (FCS in) was derived by calculating the average of the three in situ conservation metrics. All of the conservation metrics are on a scale from 0-100, with 0 = poor conservation and 100 = comprehensive conservation. The FCS *in situ* is used to categorize taxa, with urgent priority (UP) for further conservation action assigned when FCS in situ < 25, high priority (HP) where 25 ≤ FCS in situ < 50, medium priority (MP) where 50 ≤ FCS in situ < 75, and low priority (LP) for taxa whose FCS in situ ≥75.
+The table below shows the *in situ* conservation gap analysis summary. The sampling representativeness score *in situ* (SRS in situ) calculates the proportion of all occurrences of a taxon within its predicted distribution that fall within a protected area. The geographical representativeness score *in situ* (GRS in situ) compares the area (in km2) of the potential distribution model located within protected areas versus the total area of the model. The ecological representativeness score *in situ* (ERS in situ) calculates the proportion of ecoregions encompassed within the range of the taxon located inside protected areas to the ecoregions encompassed within the total area of the potential distribution model. A final conservation score for *in situ* (FCS in situ) was derived by calculating the average of the three in situ conservation metrics. All of the conservation metrics are on a scale from 0-100, with 0 = poor conservation and 100 = comprehensive conservation. The FCS *in situ* is used to categorize taxa, with urgent priority (UP) for further conservation action assigned when FCS in situ < 25, high priority (HP) where 25 ≤ FCS in situ < 50, medium priority (MP) where 50 ≤ FCS in situ < 75, and low priority (LP) for taxa whose FCS in situ ≥75.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -973,9 +973,9 @@ plot_ly(d3,
 
 ### Sampling Representativeness Score (SRS)
 
-**Exsitu** : The Sampling Representativeness Score *ex situ* (SRS ex) calculates the ratio of germplasm accessions (G) available in *ex situ* repositories to reference (H) records for each taxon, making use of all compiled records irrespective of whether they include coordinates.
+**Exsitu** : The Sampling Representativeness Score *ex situ* (SRS ex situ) calculates the ratio of germplasm accessions (G) available in *ex situ* repositories to reference (H) records for each taxon, making use of all compiled records irrespective of whether they include coordinates.
 
-**Insitu** : The Sampling Representativeness Score *in situ* (SRS in) calculates the proportion of all occurrences of a taxon within its native range that fall within a protected area.
+**Insitu** : The Sampling Representativeness Score *in situ* (SRS in situ) calculates the proportion of all occurrences of a taxon within its native range that fall within a protected area.
 
 ### Geographic Representativeness Score (GRS)
 
@@ -997,7 +997,7 @@ plot_ly(d3,
 
 **In situ** : The Final Conservation Score *in situ* (FCS in situ) in was derived by calculating the average of the three *in situ* conservation metrics.
 
-**FCSc-mean** : The Combined Final Conservation Score (FCSc-mean) was calculated for each taxon by averaging its final FCS ex situ and FCS in situ scores. Taxa were then categorized with regard to the two conservation strategies as well as in combination, with Urgent Priority (UP) for further conservation action assigned when FCS \<25, High Priority (HP) assigned when 25 ≤ FCS \< 50, Medium Priority (MP) when 50 ≤ FCS \< 75, and Low Priority (LP) when FCS ≥75.
+**FCSc-mean** : The Combined Final Conservation Score (FCSc-mean) was calculated for each taxon by averaging its final FCS ex situ and FCS in situ scores. Taxa were then categorized with regard to the two conservation strategies as well as in combination, with Urgent Priority (UP) for further conservation action assigned when FCSc-mean < 25, High Priority (HP) assigned when 25 ≤ FCSc-mean < 50, Medium Priority (MP) when 50 ≤ FCSc-mean < 75, and Low Priority (LP) when FCSc-mean ≥75.
 
 ## Definitions of occurrence data categories
 
