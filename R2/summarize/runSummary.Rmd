@@ -54,11 +54,18 @@ if(testing==TRUE){
 }
 
 # Grab the gensus name to use in plain text within the document 
-printGenus <- stringr::str_split(data$ID[1], pattern = " ")[[1]][1]
+printGenus <- paste0(inputs$genus, " L.") 
 
 ```
 
 ## Conservation gap analysis results for `r printGenus`
+
+
+
+Hover over features to see the scores. Clicking the objects at the bottom of the figures will turn on and off elements on the figure.
+
+Conservation scores per `r printGenus` taxon, grouped by conservation assessment type—combined FCSc-mean, FCS ex situ, and FCS in situ — with the average score across taxa displayed as red circles.  Like the FCS ex situ and FCS in situ scores, The FCSc-mean score is used to categorize taxa, with urgent priority (UP) for further conservation action assigned when FCSc-mean < 25, high priority (HP) where 25 ≤ FCSc-mean < 50, medium priority (MP) where 50 ≤ FCSc-mean < 75, and low priority (LP) for taxa whose FCSc-mean ≥75.
+
 
 
 :::: {style="display: flex;"}
@@ -87,11 +94,6 @@ figure2  # might
 
 ::::
 
-Clicking the objects at the bottom of the figures will turn on and off elements on the figure.
-
-<br>
-Conservation scores per `r printGenus` taxon, grouped by conservation assessment type—combined FCSc-mean, FCS ex situ, and FCS in situ — with the average score across taxa displayed as red circles. FCSc-mean scores are used to categorize taxa for further conservation action: UP (FCSc-mean <25), HP (25 ≤ FCSc-mean < 50), MP (50 ≤ FCSc-mean < 75), and LP (FCSc-mean ≥75).
-
 
 
 <br>
@@ -113,13 +115,13 @@ c2 <- c1 |>
     "Taxon",
     "SRS ex situ" = "SRSex",           
     "GRS ex situ" = "GRSex",   
-    "ERS ex situ" = "ERSex",           
+    "ERS ex situ" = "ERSex",
+    "FCS ex situ" = "FCSex",           
     "SRS in situ" = "SRSin",           
     "GRS in situ" = "GRSin",   
     "ERS in situ" = "ERSin",           
-    "FCS ex situ" = "FCSex",           
     "FCS in situ" = "FCSin",
-    "FCSc mean" = "FCSc_mean",   
+    "FCSc-mean" = "FCSc_mean",   
     "FCSc class min" = "FCSc_min_class",  
     "FCSc class max" = "FCSc_max_class" , 
     "FCSc class mean" = "FCSc_mean_class"
@@ -134,7 +136,8 @@ DT::datatable(c2,
 ```
 <br>
 
-Table 1: Listing of all conservation scores present for each taxon. The FCSc_mean measure is created by taking the average of the FCSex and FCSin measure. The final conversation class is derive from the FCSc-mean measure. As in situ and ex situ conservation efforts require distinct actions, the table also lists the FCSc min class and the FCSc class max to highlight the different in in situ and ex situ conservation status. 
+Table 1: Listing of all conservation scores present for each taxon. The FCSc-mean measure is created by taking the average of the FCSex and FCSin measure. The final conversation class is derived from the FCSc-mean measure. 
+
 <br>
 
 
@@ -207,7 +210,7 @@ g1 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))%>%
 g1
 ```
 
-Predicted collecting priority hotspots map to resolve geographic gaps in current *ex situ* conservation. The map displays richness of geographic areas within the potential distributions of the assessed taxa that have not been previously collected for *ex situ* conservation (i.e. that areas not within 50 km of an existing germplasm collection location). Darker colors indicate greater numbers of taxa potentially overlapping in the same (ca. 5 km2) areas.
+Predicted collecting priority hotspots map to resolve geographic gaps in current *ex situ* conservation. The map displays richness of geographic areas within the potential distributions of the assessed taxa that have not been previously collected for *ex situ* conservation (i.e. areas not within 50 km of an existing germplasm collection location). Darker colors indicate greater numbers of taxa potentially overlapping in the same (ca. 5 km2) areas.
 <br>
 <br>
 <br>
@@ -244,12 +247,9 @@ g2 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))%>%
 g2
 ```
 
-Predicted collecting priority hotspots map to resolve ecological gaps in current *ex situ*
-conservation. The map displays richness of ecoregions within the potential distributions of the
-assessed species within `r printGenus` that have not been previously collected for *ex
-situ* conservation, with up to `r maxExsGap` taxa in need of further collecting potentially found in the same
-areas. Darker colors indicate greater numbers of taxa potentially overlapping in the same (ca. 5
-km2) areas.
+<br>
+
+Predicted collecting priority hotspots map to resolve ecological gaps in current *ex situ* conservation. The map displays richness of ecoregions within the potential distributions of the assessed taxa that have not been previously collected for ex situ conservation (i.e. ecoregions within the potential distributions that have not been sampled for ex situ conservation). Darker colors indicate greater numbers of taxa potentially overlapping in the same (ca. 5 km2) areas.
 
 <br>
 <br>
@@ -309,7 +309,7 @@ DT::datatable(pc1,
 ```
 
 <br>
-This table lists all protected areas overlapping with the predicted distributions of four or more taxa. The total number of taxa potentially present in the protected area is shown in a column. A full list of protected areas can be found at (add a link once we have a location for hosting the data)
+This table lists all protected areas overlapping with the predicted distributions of four or more taxa. The total number of taxa potentially present in the protected area is shown in a column. A full list of protected areas can be found at this [link](https://drive.google.com/file/d/1zJRLjhtIK1Bl_gW6JDoQUhZO1tTCxeGt/view?usp=sharing). 
 
 <br>
 <br>
@@ -347,56 +347,51 @@ g3
 ```
 <br>
 
-Predicted habitat protection priorities map to resolve ecological gaps in current *in situ*
-conservation. The map displays richness of ecoregions within the potential distributions of the
-assessed species within the `r printGenus` that are not represented at all within current
-protected areas within those potential distributions, with up to `r maxERSin` taxa inhabiting the same
-unprotected lands. Darker colors indicate greater numbers of taxa potentially overlapping in the
-same (ca. 5 km2) areas.
+Predicted habitat protection priorities map to resolve ecological gaps in current in situ conservation. The map displays richness of ecoregions within the potential distributions of the assessed taxa that are not represented at all within current protected areas within those potential distributions. Darker colors indicate greater numbers of taxa potentially overlapping in the same (ca. 5 km2) areas.
 
 <br>
 <br> 
 
 
-## Definitions of conservation gap analysis scores {.tabset}
+## Definitions of conservation gap analysis scores
 
 ### Sampling Representativeness Score (SRS)
 
-**Exsitu** : The Sampling Representativeness Score *ex situ* (SRS ex) calculates the ratio of germplasm accessions (G) available in *ex situ* repositories to reference (H) records for each taxon, making use of all compiled records irrespective of whether they include coordinates.
+**Ex situ** : The Sampling Representativeness Score *ex situ* (SRS ex situ) calculates the ratio of germplasm accessions (G) available in *ex situ* repositories to reference/voucher (H) records for each taxon, making use of all compiled records irrespective of whether they include coordinates.
 
-**Insitu** : The Sampling Representativeness Score *in situ* (SRS in) calculates the proportion of all occurrences of a taxon within its native range that fall within a protected area.
+**In situ** : The Sampling Representativeness Score *in situ* (SRS in situ) calculates the proportion of all occurrences of a taxon within its native range that fall within a protected area.
 
 ### Geographic Representativeness Score (GRS)
 
-**Exsitu** : The Geographic Representativeness Score *ex situ* (GRS ex situ) uses 50-km-radius buffers created around each G collection coordinate point to estimate geographic areas already well collected within the potential distribution models of each taxon and then calculates the proportion of the potential distribution model covered by these buffers.
+**Ex situ** : The Geographic Representativeness Score *ex situ* (GRS ex situ) uses 50-km-radius buffers created around each G collection coordinate point to estimate geographic areas already well collected within the potential distribution models of each taxon and then calculates the proportion of the potential distribution model covered by these buffers.
 
-**Insitu** : The Geographic Representativeness Score *in situ* (GRS in situ) compares the area (in km2) of the potential distribution model located within protected areas versus the total area of the model.
-
+**In situ** : The Geographic Representativeness Score *in situ* (GRS in situ) compares the area (in km2) of the potential distribution model located within protected areas versus the total area of the model.
 
 ### Ecological Representativeness Score (ERS)
 
-**Exsitu** : The Ecological Representativeness Score *ex situ* (ERS ex situ) calculates the proportion of terrestrial ecoregions (25) represented within the G buffered areas out of the total number of ecoregions occupied by the potential distribution model.
+**Ex situ** : The Ecological Representativeness Score *ex situ* (ERS ex situ) calculates the proportion of terrestrial ecoregions represented within the G buffered areas out of the total number of ecoregions occupied by the potential distribution model. 
 
-**Insitu** : The Ecological Representativeness Score *in situ* (ERS in situ) calculates the proportion of ecoregions encompassed within the range of the taxon located inside protected areas to the ecoregions encompassed within the total area of the potential distribution model.
-
+**In situ** : The Ecological Representativeness Score *in situ* (ERS in situ) calculates the proportion of ecoregions encompassed within the range of the taxon located inside protected areas to the ecoregions encompassed within the total area of the potential distribution model. 
 
 ### Final Conservation Score (FCS)
 
-**Ex situ** : The  Final Conservation Score *ex situ* (FCS ex situ) was derived by calculating the average of the three *ex situ* conservation metrics.
+**Ex situ** : The Final Conservation Score *ex situ* (FCS ex situ) was derived by calculating the average of the three *ex situ* conservation metrics.
 
 **In situ** : The Final Conservation Score *in situ* (FCS in situ) in was derived by calculating the average of the three *in situ* conservation metrics.
 
-**FCSc-mean** : The Combined Final Conservation Score (FCSc-mean) was calculated for each taxon by averaging its final FCS ex situ and FCS in situ scores. Taxa were then categorized with regard to the two conservation strategies as well as in combination, with Urgent Priority (UP) for further conservation action assigned when FCSc-mean < 25, High Priority (HP) assigned when 25 ≤ FCSc-mean < 50, Medium Priority (MP) when 50 ≤ FCSc-mean < 75, and Low Priority (LP) when FCSc-mean ≥75.
+**FCSc-mean** : The Combined Final Conservation Score (FCSc-mean) was calculated for each taxon by averaging its final FCS ex situ and FCS in situ scores. 
+
+Taxa were further categorized with regard to the two conservation strategies as well as in combination, with Urgent Priority (UP) for further conservation action assigned when FCS < 25, High Priority (HP) assigned when 25 ≤ FCS < 50, Medium Priority (MP) when 50 ≤ FCS < 75, and Low Priority (LP) when FCS ≥75.
 
 ## Definitions of occurrence data categories
 
-**Occurrences** : The total number of records for the taxon that were evaluated for use within the study.
+**Occurrences** : The total number of observations or ex situ collections records for the taxon that were evaluated for use within the study.
 
 **Occurrences with lat/long**: The total number of records that had a valid latitude and longitude pair and were used for spatial analysis. Non valid latitude longitude pairs included but were not limited to: points not on land masses, and records with only one of the two values present.
 
-**Germplasm Records (G)** : Occurrences in which a living sample (via plant or seed) is present in an *ex situ* conservation system (i.e., botanical garden, seed bank, genebank, etc.). 
+**Germplasm Records (G)** : Occurrences in which a living sample (via plant or seed) is present in an *ex situ* conservation system (i.e., botanical garden, seed bank, genebank, etc.).
 
 
-**Reference Records (H)** : Occurrences that have a supporting herbarium or other reference record.
+**Reference/voucher Records (H)** : Occurrences that have a supporting herbarium or other reference record.
 
 **Unique Data Sources**: The number of unique database sources from which occurrences of the taxon were gathered.

@@ -398,4 +398,45 @@ visualizeAndSave(pcaplot = biplot,
 
 
 
+## Definitions of conservation gap analysis scores
 
+### Sampling Representativeness Score (SRS)
+
+**Ex situ** : The Sampling Representativeness Score *ex situ* (SRS ex situ) calculates the ratio of germplasm accessions (G) available in *ex situ* repositories to reference/voucher (H) records for each taxon, making use of all compiled records irrespective of whether they include coordinates.
+
+**In situ** : The Sampling Representativeness Score *in situ* (SRS in situ) calculates the proportion of all occurrences of a taxon within its native range that fall within a protected area.
+
+### Geographic Representativeness Score (GRS)
+
+**Ex situ** : The Geographic Representativeness Score *ex situ* (GRS ex situ) uses 50-km-radius buffers created around each G collection coordinate point to estimate geographic areas already well collected within the potential distribution models of each taxon and then calculates the proportion of the potential distribution model covered by these buffers.
+
+**In situ** : The Geographic Representativeness Score *in situ* (GRS in situ) compares the area (in km2) of the potential distribution model located within protected areas versus the total area of the model.
+
+### Ecological Representativeness Score (ERS)
+
+**Ex situ** : The Ecological Representativeness Score *ex situ* (ERS ex situ) calculates the proportion of terrestrial ecoregions represented within the G buffered areas out of the total number of ecoregions occupied by the potential distribution model. 
+
+**In situ** : The Ecological Representativeness Score *in situ* (ERS in situ) calculates the proportion of ecoregions encompassed within the range of the taxon located inside protected areas to the ecoregions encompassed within the total area of the potential distribution model. 
+
+### Final Conservation Score (FCS)
+
+**Ex situ** : The Final Conservation Score *ex situ* (FCS ex situ) was derived by calculating the average of the three *ex situ* conservation metrics.
+
+**In situ** : The Final Conservation Score *in situ* (FCS in situ) in was derived by calculating the average of the three *in situ* conservation metrics.
+
+**FCSc-mean** : The Combined Final Conservation Score (FCSc-mean) was calculated for each taxon by averaging its final FCS ex situ and FCS in situ scores. 
+
+Taxa were further categorized with regard to the two conservation strategies as well as in combination, with Urgent Priority (UP) for further conservation action assigned when FCS < 25, High Priority (HP) assigned when 25 ≤ FCS < 50, Medium Priority (MP) when 50 ≤ FCS < 75, and Low Priority (LP) when FCS ≥75.
+
+## Definitions of occurrence data categories
+
+**Occurrences** : The total number of observations or ex situ collections records for the taxon that were evaluated for use within the study.
+
+**Occurrences with lat/long**: The total number of records that had a valid latitude and longitude pair and were used for spatial analysis. Non valid latitude longitude pairs included but were not limited to: points not on land masses, and records with only one of the two values present.
+
+**Germplasm Records (G)** : Occurrences in which a living sample (via plant or seed) is present in an *ex situ* conservation system (i.e., botanical garden, seed bank, genebank, etc.).
+
+
+**Reference/voucher Records (H)** : Occurrences that have a supporting herbarium or other reference record.
+
+**Unique Data Sources**: The number of unique database sources from which occurrences of the taxon were gathered.

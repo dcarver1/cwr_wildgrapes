@@ -108,6 +108,7 @@ generateRunSummaries <- function(dir1,runVersion,
   conservationSummary$protectAreasRichness <- read_csv(path5)
   conservationSummary$ersExRichness <- terra::rast(path6)
   conservationSummary$ersInRichness <- terra::rast(path8)
+  conservationSummary$genus <- genus
   
   
   
