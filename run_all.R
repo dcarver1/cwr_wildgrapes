@@ -111,6 +111,7 @@ erroredSpecies <- list(noLatLon = c(),
 
 plan(strategy = "multisession", workers =8)
 
+
 # rerun <- erroredSpecies$lessThenEight
 # species <- rerun
 # testing 
@@ -334,7 +335,6 @@ for(i in genera){
                                                   variableImportance = allPaths$variablbeSelectPath,
                                                   NoModel = FALSE))
     }else{ # no sdm results 
-      if(!file.exists(allPaths$sdmResults)){
         erroredSpecies$noSDM <- c(erroredSpecies$noSDM, j)
         
       #Complete conservation assessments without models 
@@ -387,7 +387,6 @@ for(i in genera){
                                                      NoModel = TRUE))
 
         }
-      }
     
     }else{ # end of attempt to model 
       erroredSpecies$lessThenEight <- c(erroredSpecies$lessThenEight, j)
@@ -489,8 +488,6 @@ for(i in genera){
     
     # remove all reused variables ---------------------------------------------
     rm(c1,sp1,srsex,natArea,g_buffer, projectsResults,evalTable,thres)
-    
-      }
     }# end of species loop 
   errorDF <- erroredSpecies |> 
     bind_cols()

@@ -39,6 +39,7 @@ if(testing==TRUE){
   protectCounts <- conservationSummary$protectAreasRichness
   ersExGapMap <- conservationSummary$ersExRichness
   ersInGapMap <- conservationSummary$ersInRichness
+  genus <- conservationSummary$genus
 }else{
   inputs <- params$reportData
   data <- inputs$summaryData
@@ -51,10 +52,16 @@ if(testing==TRUE){
   protectCounts <- inputs$protectAreasRichness
   ersExGapMap <- inputs$ersExRichness
   ersInGapMap <- inputs$ersInRichness
+  genus <- inputs$genus
 }
 
 # Grab the gensus name to use in plain text within the document 
-printGenus <- paste0(inputs$genus, " L.") 
+if(genus == "Daucus"){
+  printGenus <- paste0(genus, " L.") 
+}else{
+  printGenus <- genus
+}
+
 
 ```
 
