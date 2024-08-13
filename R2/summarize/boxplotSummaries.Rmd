@@ -1,6 +1,6 @@
 ---
-title: Genus/genepool level visualization of species indicator distribution
-author: Daniel P. Carver and Colin K. Khoury 
+title: GGenus/genepool level visualization of ecogeographic characteristics of taxa
+author: Daniel P. Carver, Colin K. Khoury, and Najla Mezghani 
 output:
   html_document:
       css: style.css
@@ -41,7 +41,7 @@ for(i in seq_along(names$shortName)){
 
 ```
 
-All plots shown below are generate using all available records. The purple points shown on the figures represent the Germplasm records for the given species. 
+All plots shown below are generated using all available occurrences. The purple points shown on the figures represent the germplasm (G) occurrences for the given taxon. 
 
 
 ## Temperature Related Variables {.tabset}

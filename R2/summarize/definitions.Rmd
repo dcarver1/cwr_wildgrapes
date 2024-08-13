@@ -34,11 +34,11 @@ Taxa were further categorized with regard to the two conservation strategies as 
 
 ## Definitions of occurrence data categories
 
-**Occurrences** : The total number of observations or ex situ collections records for the taxon that were evaluated for use within the study.
+**Occurrences** : The total number of observations and ex situ collections records for the taxon that were evaluated for use within the study.
 
-**Occurrences with lat/long**: The total number of records that had a valid latitude and longitude pair and were used for spatial analysis. Non valid latitude longitude pairs included but were not limited to: points not on land masses, and records with only one of the two values present.
+**Occurrences with lat/long**: The total number of observations that had a valid latitude and longitude pair and were used for spatial analysis. Non valid latitude longitude pairs included but were not limited to points not on land masses, and records with only one of the two values present.
 
-**Germplasm Records (G)** : Occurrences in which a living sample (via plant or seed) is present in an *ex situ* conservation system (i.e., botanical garden, seed bank, genebank, etc.).
+**Germplasm Records (G)** : Occurrences in which a living sample (typically a live plant or seed) is present in an *ex situ* conservation system (i.e., botanical garden, seed bank, genebank, etc.).
 
 
 **Reference/voucher Records (H)** : Occurrences that have a supporting herbarium or other reference record.
