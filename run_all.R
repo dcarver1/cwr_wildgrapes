@@ -134,6 +134,9 @@ for(i in genera){
   if(!dir.exists(dir1)){dir.create(dir1)}
   
   
+  
+  ### errors at "Vitis rotundifolia var. pygmaea"  "Vitis x novae-angliae" 
+  
   # loop over species  ------------------------------------------------------
   ### this is probably the placee for a Furrr map function. Just the species being altered
   ### need to think about how to structure the code based from this part to best organize the process.
