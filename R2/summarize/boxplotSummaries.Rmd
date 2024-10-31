@@ -1,6 +1,6 @@
 ---
 title: GGenus/genepool level visualization of ecogeographic characteristics of taxa
-author: Daniel P. Carver, Colin K. Khoury, and Najla Mezghani 
+author: Daniel P. Carver, Colin K. Khoury 
 output:
   html_document:
       css: style.css

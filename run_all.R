@@ -22,7 +22,25 @@ sourceFiles(gapAnalysisOnly = FALSE)
 ## species observations 
 ### Daucus 
 # speciesData <- read_csv("data/raw_occurances/daucusData_april_2024.csv")|>
-#   dplyr::mutate(genus = "Daucus")
+#   dplyr::mutate(genus = "Daucus", 
+#                 indexVal = row_number()) 
+# 
+# # error correcting some issues with carota_subsp._azoricus
+# tempDaucus <- speciesData |>
+#   dplyr::filter(taxon == "Daucus_carota_subsp._azoricus")
+# 
+# fullData <- speciesData |>
+#   dplyr::filter(!indexVal %in% tempDaucus$indexVal)
+# 
+# # reformat data 
+# tempDaucus2 <- tempDaucus |> 
+#   dplyr::mutate(lat1 = longitude, lon1 = latitude)|>
+#   dplyr::mutate(longitude = lon1, latitude = lat1) |> 
+#   dplyr::select(-lat1, lon1)
+# 
+# speciesData <- dplyr::bind_rows(fullData, tempDaucus2)
+
+
 # alter to get to the correct format
 # sp <- speciesData |>
 #   dplyr::select(taxon = "Name...1",
@@ -39,7 +57,7 @@ sourceFiles(gapAnalysisOnly = FALSE)
 # write_csv(sp, "data/raw_occurances/daucusData_april_2024.csv")
 
 ### sepecies with less then 8 D. biseriatus, D. carota subsp. annuus, D. carota subsp. fontanesii, D. carota subsp. parviflorus, D. carota subsp. rupestris , D. carota subsp. tenuissimus , D. della-cellae, D. edulis, D. gracilis, D. jordanicus, D. mauritii, D. microscias, D. mirabilis ,D. reboudii ,D. virgatus
-## Vitis
+# Vitis
 # filtering the extra values coming from the data prep process
 speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv") |>
   dplyr::select(-c("geometry","index", "validLat","validLon","validLatLon"))
@@ -50,6 +68,10 @@ speciesData1 <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.c
                 genus == "Vitis")|>
   dplyr::select(-c(geometry))
 speciesData <- speciesData1
+# fnaData
+fnaData <- read_csv("data/source_data/FNA_stateClassification.csv")
+
+
 
 ### Quercus 
 # speciesData <- read_csv("data/Quercus/QUAC_coord_ind.csv")
@@ -78,18 +100,19 @@ bufferDist <- 50000
 ## daucus 
 # runVersion <- "run20240603"
 #vitis run 
-runVersion <- "run20240614"
+runVersion <- "run20241029"
 # Quercus and other IMLS species 
 # runVersion <- "run1"
 
 # overwrite 
 overwrite <- FALSE
 
-  # set up environment  -----------------------------------------------------
+# set up environment  -----------------------------------------------------
 
 # primary loop ------------------------------------------------------------
 genera <- unique(speciesData$genus)
 species <- sort(unique(speciesData$taxon))
+## somethings is going on with this one but it's going to require some run time 
 # species <- species[!grepl(pattern = "Daucus_glochidiatus", x = species)]
 # species <- species[!grepl(pattern = "Daucus_carota_subsp._azoricus", x = species)] # points in ocean
 # species <- species[!grepl(pattern = "Daucus_carota_subsp._fontanesii", x = species)] # no model
@@ -102,7 +125,7 @@ species <- sort(unique(speciesData$taxon))
 
 # #testing
 i <- genera[1]
-j <- species[1]
+j <- species[5]
 
 erroredSpecies <- list(noLatLon = c(),
                        lessThenEight = c(),
@@ -112,19 +135,6 @@ erroredSpecies <- list(noLatLon = c(),
 plan(strategy = "multisession", workers =8)
 
 
-# rerun <- erroredSpecies$lessThenEight
-# species <- rerun
-# testing 
-# species <- species[27:length(species)] # error on Vitis rufotomentosa, Vitis x champinii, "Vitis x doaniana related to no coordinates
-# # vitis subset 
-# species <- c("Vitis arizonica",
-#              "Vitis californica",
-#              "Vitis rupestris",
-#              "Vitis aestivalis",
-#              "Vitis shuttleworthii",
-#              "Vitis palmata",
-#              "Vitis vulpina"                        )
-
 
 # Daucus_aureus is species[1] is a reasonable one for troubleshooting
 for(i in genera){
@@ -132,10 +142,6 @@ for(i in genera){
   #create folder
   dir1 <- paste0("data/",i) 
   if(!dir.exists(dir1)){dir.create(dir1)}
-  
-  
-  
-  ### errors at "Vitis rotundifolia var. pygmaea"  "Vitis x novae-angliae" 
   
   # loop over species  ------------------------------------------------------
   ### this is probably the placee for a Furrr map function. Just the species being altered
@@ -163,7 +169,7 @@ for(i in genera){
     next
     print("next")
     }
-  ## spatial object
+  ## create the inital spatial object 
   sp1 <- write_GPKG(path = allPaths$spatialDataPath,
                     overwrite = TRUE, 
                     function1 = createSF_Objects(speciesData = sd1) %>%
@@ -175,6 +181,10 @@ for(i in genera){
   srsex <- write_CSV(path = allPaths$srsExPath,
                     overwrite = overwrite,
                     function1 = srs_exsitu(sp_counts = c1))
+  # apply FNA filter if possible. 
+  sp1 <- write_GPKG(path = allPaths$spatialDataPath,
+                    overwrite = TRUE, 
+                    function1 = applyFNA(speciesPoints = sp1, fnaData = fnaData)) 
   
   
   ## define natural area based on ecoregions
@@ -182,6 +192,9 @@ for(i in genera){
                        overwrite = overwrite,
                        function1 = nat_area_shp(speciesPoints = sp1,
                                                 ecoregions = ecoregions))
+  
+  
+  
   # condition for at least 8 observations 
   ## attempt to model the data
   if(nrow(sp1) >=8){
@@ -451,21 +464,6 @@ for(i in genera){
                                                    NoModel = TRUE))
       
     } 
-    # # temp leafletmap for QUAC
-    # thres2 <- thres |>
-    #   project("epsg:3857",method="near")
-    # 
-    # map1 <- leaflet() |>
-    #   addTiles() |>
-    #   leaflet::addRasterImage(x = raster(thres2),
-    #                           colors = c("#FFFFFF80", "#00FF00"))|>
-    #   leaflet::addCircleMarkers(data = sp1,
-    #                             color = "#7532a8",
-    #                             opacity = 1,
-    #                             radius = 1,
-    #                             group = "Occurrences",
-    #                             stroke = 1)
-
     
     # generate summary html  
     # if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
@@ -473,7 +471,7 @@ for(i in genera){
         rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
                           output_format = "html_document",
                           output_dir = file.path(allPaths$result),
-                          output_file = paste0(j,"_Summary.html"),
+                          output_file = paste0(j,"_Summary_fnaFilter.html"),
                           params = list(
                             reportData = reportData),
                           envir = new.env(parent = globalenv())
@@ -549,7 +547,18 @@ for(i in genera){
 } # end of Genus loop 
   
 
-
+### 20241031 run results 
+# $noLatLon
+# [1] "Vitis x champinii" "Vitis x doaniana" 
+# 
+# $lessThenEight
+# [1] "Vitis biformis"      "Vitis rufotomentosa"
+# 
+# $noSDM
+# NULL
+# 
+# $noHTML
+# NULL
 
 
 

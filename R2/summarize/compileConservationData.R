@@ -58,9 +58,10 @@ compileConservationData <- function(directory, runVersion, genus){
   # issues with a lot of species records 
   ## trying to split into two and display as a sub plot 
   size <- ceiling(nrow(tbl)/2)
+  size2 <- size+1
   # create two tables 
   tbl1 <- tbl[1:size,]
-  tbl2 <- tbl[size:nrow(tbl),]
+  tbl2 <- tbl[size2:nrow(tbl),]
 
 # figure 1 ----------------------------------------------------------------
   size1 <- nrow(tbl1)

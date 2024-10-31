@@ -1,6 +1,6 @@
 ---
 title: Genus/genepool level conservation gap analysis summary
-author: Daniel P. Carver, Colin K. Khoury, and Najla Mezghani 
+author: Daniel P. Carver, Colin K. Khoury
 output:
   html_document:
       css: style.css

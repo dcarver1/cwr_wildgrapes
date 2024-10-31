@@ -50,7 +50,7 @@ splist <- c("Vitis arizonica",
 
 
 # loop to grab the files 
-for(i in splist){
+for(i in splist$taxon){
   path <- paste0("data/",genus,"/",i,"/",modelRun,"/results")
   files <- list.files(path, pattern = ".html",full.names = TRUE)
   if(length(files)>0){
@@ -78,10 +78,10 @@ folder <- "~/Documents/Daucus"
 
 
 #grab species list 
-splist <- read.csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")%>%
-  dplyr::select(taxon)%>%
-  dplyr::distinct()%>%
-  dplyr::pull()%>%
+splist <- read.csv("data/raw_occurances/daucusData_BioClimatic_2.5arc_modified.csv")|>
+  dplyr::select(taxon)|>
+  dplyr::distinct()|>
+  dplyr::pull()|>
   sort()
 # or selected species 
 # splist <- c( "Daucus_aureus",
