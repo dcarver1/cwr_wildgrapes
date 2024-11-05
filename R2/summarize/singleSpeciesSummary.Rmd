@@ -1011,6 +1011,8 @@ plot_ly(d3,
 ```
 
 *Note: Score values of zero will not appear on the chart.*
+
+
 ## Definitions of conservation gap analysis scores
 
 ### Sampling Representativeness Score (SRS)

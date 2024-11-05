@@ -9,7 +9,7 @@
 pacman::p_load("dplyr", "sf","terra",  "purrr","randomForest","VSURF",
                "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo",
                "leaflet", "tidyterra", "rmarkdown", "furrr", "stringr",
-               "tictoc","tigris", "tmap")
+               "tictoc","tigris", "tmap", "googlesheet4")
 tmap::tmap_mode("view")
 
 #source functions
@@ -70,8 +70,17 @@ speciesData1 <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.c
 speciesData <- speciesData1
 # fnaData
 fnaData <- read_csv("data/source_data/FNA_stateClassification.csv")
+# read in the data from the spreadsheet 
+alteredData <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1_BfJawocOnA-1m9_gl5qZvufXHBCCOacMZX69cQz2LY/edit?gid=139317771#gid=139317771")
+a2 <- alteredData |>
+  dplyr::filter(nchar(alteredData$`Record ID for point`) > 2)|>
+  dplyr::filter(!is.na(Taxon)) 
 
 
+# exclude from the input datasets 
+speciesData3 <- speciesData[!c(speciesData$recordID %in% a2$`Record ID for point`), ]
+speciesData <- speciesData3
+rerunTaxon <-unique(a2$Taxon)
 
 ### Quercus 
 # speciesData <- read_csv("data/Quercus/QUAC_coord_ind.csv")
@@ -105,13 +114,16 @@ runVersion <- "run20241029"
 # runVersion <- "run1"
 
 # overwrite 
-overwrite <- FALSE
+overwrite <- TRUE
 
 # set up environment  -----------------------------------------------------
 
 # primary loop ------------------------------------------------------------
 genera <- unique(speciesData$genus)
+# species <- rerunTaxon
 species <- sort(unique(speciesData$taxon))
+
+
 ## somethings is going on with this one but it's going to require some run time 
 # species <- species[!grepl(pattern = "Daucus_glochidiatus", x = species)]
 # species <- species[!grepl(pattern = "Daucus_carota_subsp._azoricus", x = species)] # points in ocean
