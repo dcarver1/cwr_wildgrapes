@@ -4,7 +4,7 @@
 # 20230713
 ###
 
-
+pacman::p_load(dplyr,readr)
 
 
 
@@ -28,25 +28,23 @@ for(i in seq_along(files)){
 
 # vitis SDMS --------------------------------------------------------------
 genus <- "Vitis" 
-modelRun <- "run20240614"
+modelRun <- "run20241029"
 # species 
 splist <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.csv")|>
-  dplyr::filter(!is.na(taxon),
-                taxon %in% speciesData$taxon,
-                genus == "Vitis")|>
+  dplyr::filter(!is.na(taxon), genus == "Vitis")|>
   dplyr::select(taxon)|>
   distinct()
 # # vitis subset 
-splist <- c("Vitis arizonica",
-            "Vitis californica",
-            "Vitis rupestris",
-            "Vitis aestivalis",
-            "Vitis shuttleworthii",
-            "Vitis palmata",
-            "Vitis vulpina",
-            "Vitis acerifolia",
-            "Vitis riparia",
-            "Vitis rotundifolia")
+# splist <- c("Vitis arizonica",
+#             "Vitis californica",
+#             "Vitis rupestris",
+#             "Vitis aestivalis",
+#             "Vitis shuttleworthii",
+#             "Vitis palmata",
+#             "Vitis vulpina",
+#             "Vitis acerifolia",
+#             "Vitis riparia",
+#             "Vitis rotundifolia")
 
 
 # loop to grab the files 

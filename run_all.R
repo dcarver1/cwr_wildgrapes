@@ -9,7 +9,7 @@
 pacman::p_load("dplyr", "sf","terra",  "purrr","randomForest","VSURF",
                "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo",
                "leaflet", "tidyterra", "rmarkdown", "furrr", "stringr",
-               "tictoc","tigris", "tmap", "googlesheet4")
+               "tictoc","tigris", "tmap", "googlesheets4", "ggplot2", "plotly")
 tmap::tmap_mode("view")
 
 #source functions
@@ -556,7 +556,7 @@ for(i in genera){
                       # encoding = "utf-8"
     )
   }
-} # end of Genus loop 
+s} # end of Genus loop 
   
 
 ### 20241031 run results 
