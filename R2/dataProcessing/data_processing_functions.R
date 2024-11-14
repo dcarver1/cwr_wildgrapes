@@ -66,7 +66,7 @@ createSF_Objects <- function(speciesData){
   
   if(nrow(latLong)>0){
     coord <- latLong |> 
-      sf::st_as_sf(coords = c("longitude","latitude"), crs = 4326)|>
+      sf::st_as_sf(coords = c("longitude","latitude"), crs = 4326,remove = FALSE )|>
       removeDuplicates()
     
   }else{

@@ -341,19 +341,21 @@ m1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3)) |>
              radius = 1,
              group = "Occurrences",
              stroke = 1,
-             popup = ~popup)%>%
-  addLegend(position = "bottomleft",
-            color = c("#1184D4","#6300F0"),
-            labels = c("H (for herbaria) observations", "G (for genebank) samples"),
-            title = "Observation Type",
-            group = "Occurrences") |>
+             popup = ~popup) |> 
   addCircleMarkers(data = occData[occData$type=="G",],
              color = ~color,
              opacity = 1,
              radius = 1,
              group = "Occurrences",
              stroke = 1,
-             popup = ~popup)
+             popup = ~popup)|>
+    leaflet::addLegend(
+      position = "bottomright",
+      color = c("#1184D4","#6300F0"),
+      labels = c("H (for herbaria) observations", "G (for genebank) samples"),
+      title = "Observation Type",
+      group = "Occurrences")
+
 
 
 if(data$NoModel == FALSE){
@@ -364,7 +366,7 @@ m2 <- m1 |>
                  colors = thresColor, 
                  group = "Potential distribution model",
                  project = FALSE)|>
-    addLegend(position = "bottomright",
+    leaflet::addLegend(position = "bottomright",
             color = c( "#cfcccc","#45B320"),
             labels = c("Native Area", "Potential distribution model"),
             title = "Modeled Habitat",
@@ -374,7 +376,7 @@ m2 <- m1 |>
                  colors = meanPal,
                  group = "Mean Distribution Model",
                  project = FALSE)|>
-    addLegend(position = "bottomright",
+    leaflet::addLegend(position = "bottomright",
             color = distColor,
             title = "Mean Distribution Model",
             labels = c("low","","","","high"),
@@ -384,7 +386,7 @@ m2 <- m1 |>
                  colors = medianPal,
                  group = "Median Distribution Model",
                  project = FALSE) |>
-    addLegend(position = "bottomright",
+    leaflet::addLegend(position = "bottomright",
             color = distColor,
             title = "Median Distribution Model",
             labels = c("low","","","","high"),
@@ -394,7 +396,7 @@ m2 <- m1 |>
                  colors = stdevPal,
                  group = "SD of Distribution Model",
                  project = FALSE)|>
-    addLegend(position = "bottomright",
+    leaflet::addLegend(position = "bottomright",
             color = distColor,
             title = "SD of Distribution Model",
             labels = c("low","","","","high"),
@@ -568,7 +570,7 @@ ex2 <- leaflet(width = "100%")|>
     popup = ~ popup
   ) |>
   #add legend
-  addLegend(
+  leaflet::addLegend(
     position = "bottomright",
     color = exPal,
     title = "Ex Situ geographical representativeness",
@@ -597,7 +599,7 @@ if(ersex$ERS == 100){
                group = "ERS ex situ",
                colors = ecoColor,
                project = FALSE)|>
-  addLegend(colors = ecoReg$color,
+  leaflet::addLegend(colors = ecoReg$color,
             group = "ERS ex situ",
             labels = ecoReg$ECO_NAME) |>
   # Outline of all ecoregions
@@ -802,11 +804,11 @@ in1 <- leaflet(width = "100%")|>
     popup = allEcos$ECO_NAME,
     color = "#60616050"
   ) |>
-  addLegend(colors = srsPal1,
+  leaflet::addLegend(colors = srsPal1,
             group = "SRS in situ",
             title = "SRS in situ",
             labels = c(min(uniqueSRSVals),"", "","","",max(uniqueSRSVals)))|>
-  addLegend(colors = "#7570b3",
+  leaflet::addLegend(colors = "#7570b3",
             group = "SRS in situ",
             # title = "Protected Areas",
             labels = c("Protected Areas"))
@@ -827,7 +829,7 @@ in3 <- in1 |>
     group = "GRS in situ",
     project = FALSE
   )|>
-  addLegend(colors = exPal,
+  leaflet::addLegend(colors = exPal,
             group = "GRS in situ",
             labels = c("Background area", "Potential distribution model", "Potential distribution within a protected area"))
 
@@ -840,7 +842,7 @@ if(class(ersinMap) != "character"){
     group = "ERS in situ",
     project = FALSE
   )|>
-    addLegend(colors = ers2$color,
+    leaflet::addLegend(colors = ers2$color,
               group = "ERS in situ",
               labels = ers2$ECO_NAME)
 }

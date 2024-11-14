@@ -13,8 +13,8 @@ numberBackground <- function(natArea){
   
   ### 10 times the number of presence 
   
-  if( n >= 5000){
-    n <- 5000
+  if( n >= 10000){
+    n <- 10000
   }else{
     n <- n
   }

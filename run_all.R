@@ -76,11 +76,34 @@ a2 <- alteredData |>
   dplyr::filter(nchar(alteredData$`Record ID for point`) > 2)|>
   dplyr::filter(!is.na(Taxon)) 
 
+# FNA data 
+allRecords <- dim(speciesData)
+totalCount <-speciesData |>
+  dplyr::group_by(taxon) |> 
+  dplyr::summarise(allRecords = n())
+
+
+inatRecords <- speciesData[grepl(pattern = "https://www.inaturalist.org",  speciesData$sourceUniqueID ), ]
+# group by species 
+inatSp <- inatRecords |>
+  dplyr::group_by(taxon) |> 
+  dplyr::summarise(inatRecords = n())
+# join datasets 
+inatPercent <- dplyr::left_join(totalCount, inatSp, by = "taxon")|>
+  dplyr::mutate(percentINAT = (inatRecords/allRecords)*100)
+write.csv(inatPercent,file = "data/Vitis/inatPercentages.csv")
 
 # exclude from the input datasets 
 speciesData3 <- speciesData[!c(speciesData$recordID %in% a2$`Record ID for point`), ]
 speciesData <- speciesData3
 rerunTaxon <-unique(a2$Taxon)
+
+# assign a priority to the data based on source 
+speciesData <- assignPriority(speciesData)
+
+
+
+
 
 ### Quercus 
 # speciesData <- read_csv("data/Quercus/QUAC_coord_ind.csv")
@@ -137,7 +160,7 @@ species <- sort(unique(speciesData$taxon))
 
 # #testing
 i <- genera[1]
-j <- species[5]
+j <- species[1]
 
 erroredSpecies <- list(noLatLon = c(),
                        lessThenEight = c(),
@@ -180,7 +203,9 @@ for(i in genera){
     erroredSpecies$noLatLon <- c(erroredSpecies$noLatLon, j)
     next
     print("next")
-    }
+  }
+  
+
   ## create the inital spatial object 
   sp1 <- write_GPKG(path = allPaths$spatialDataPath,
                     overwrite = TRUE, 
@@ -232,6 +257,14 @@ for(i in genera){
     # exporting with type column now removing for consistenty 
     m_data <- m_data1 |>
       dplyr::select(-type)
+    
+    
+    # remove duplicated background data  
+    presence <- m_data[m_data$presence == 1,]
+    absence <- m_data[m_data$presence != 1,]
+    dubs <- duplicated(absence[,2:27])
+    absence <- absence[!dubs, ]
+    m_data <- bind_rows(presence, absence)
     
     ## perform variable selection
     v_data <- write_RDS(path = allPaths$variablbeSelectPath, 
@@ -556,7 +589,7 @@ for(i in genera){
                       # encoding = "utf-8"
     )
   }
-s} # end of Genus loop 
+} # end of Genus loop 
   
 
 ### 20241031 run results 

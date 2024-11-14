@@ -11,11 +11,59 @@
 generateModelData <- function(speciesPoints,natArea,bioVars,b_Number){
   
   # generate background points 
+  
+  # split into categories 
+  sg <- speciesPoints[speciesPoints$modelPriority == 1, ]
+  sh <- speciesPoints[speciesPoints$modelPriority == 2, ]
+  si <- speciesPoints[speciesPoints$modelPriority == 3, ]
+  
+  ## thin data if needed 
+  if(nrow(sh) > 50){
+    # thin to 5km 
+    thin1 <- spThin::thin(loc.data = sh,
+                          lat.col = "latitude",
+                          long.col = "longitude",
+                          spec.col = "taxon",
+                          thin.par = 5,
+                          reps = 1,
+                          locs.thinned.list.return = TRUE, 
+                          write.files = FALSE, 
+                          write.log.file = FALSE)[[1]] |> row.names()
+    shThin <- sh[as.numeric(thin1), ]
+    sh <- shThin
+  }
+  
+  # 
+  if(nrow(si) > 25){
+    # thin to 10k for i nat data  
+    thin2 <- spThin::thin(loc.data = si,
+                          lat.col = "latitude",
+                          long.col = "longitude",
+                          spec.col = "taxon",
+                          thin.par = 10,
+                          reps = 1,
+                          locs.thinned.list.return = TRUE, 
+                          write.files = FALSE, 
+                          write.log.file = FALSE)[[1]] |> row.names()
+    siThin2 <- si[as.numeric(thin2), ]
+    si <- siThin2
+  }
+  
+  # recombined data. Will run with any total data at this point. 
+  sp1 <- bind_rows(sg, sh)|>
+    bind_rows(si)
+  
+  
+  
   ## format species data
   sp1 <- speciesPoints |>
     mutate("presence" = 1)|>
     dplyr::select(presence, type)
-    # dplyr::select(presence,geometry)
+    # dplyr::select(presence,geometry
+  
+  
+  
+  
   
   
   ## this will need to be adjust if species if only present in a small area 
@@ -32,20 +80,22 @@ generateModelData <- function(speciesPoints,natArea,bioVars,b_Number){
                        y = vect(bg1),
                        bind= TRUE)|>
     st_as_sf()
+  # drop any na values 
   drop2 <- st_drop_geometry(d2)|>
     complete.cases()
   d2 <-d2[drop2, ]
   
-  
+  # extract values to the point data 
   d3 <- terra::extract(x = bioVars,
                        y = vect(sp1),
                        bind= TRUE)|>
     st_as_sf()
+  # 
   drop3 <- st_drop_geometry(d3)|>
     complete.cases()
   d3 <-d3[drop3, ]
   # bind datasets 
   d1 <- bind_rows(d3, d2)
   
-    return(d1) 
+  return(d1) 
 }
