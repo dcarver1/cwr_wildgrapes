@@ -8,8 +8,9 @@
 # local testing 
 pacman::p_load("dplyr", "sf","terra",  "purrr","randomForest","VSURF",
                "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo",
-               "leaflet", "tidyterra", "rmarkdown", "furrr", "stringr",
-               "tictoc","tigris", "tmap", "googlesheets4", "ggplot2", "plotly")
+               "leaflet", "tidyterra", "rmarkdown", "furrr", "stringr", "spThin",
+               "tictoc","tigris", "tmap", "googlesheets4", "ggplot2", "plotly",
+               "factoextra")
 tmap::tmap_mode("view")
 
 #source functions
@@ -132,12 +133,12 @@ bufferDist <- 50000
 ## daucus 
 # runVersion <- "run20240603"
 #vitis run 
-runVersion <- "run20241029"
+runVersion <- "run20241204"
 # Quercus and other IMLS species 
 # runVersion <- "run1"
 
 # overwrite 
-overwrite <- TRUE
+overwrite <- FALSE
 
 # set up environment  -----------------------------------------------------
 
@@ -247,7 +248,7 @@ for(i in genera){
                                                      bufferDist = bufferDist,
                                                      templateRast = templateRast))
     
-    ## associate observations with bioclim data
+    ## associate observations with bioclim data and spatial thin 
     m_data1 <- write_CSV(path = allPaths$allDataPath, 
                        overwrite = overwrite,
                        generateModelData(speciesPoints = sp1,
