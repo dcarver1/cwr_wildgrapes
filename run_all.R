@@ -8,8 +8,9 @@
 # local testing 
 pacman::p_load("dplyr", "sf","terra",  "purrr","randomForest","VSURF",
                "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo",
-               "leaflet", "tidyterra", "rmarkdown", "furrr", "stringr",
-               "tictoc","tigris", "tmap", "googlesheets4", "ggplot2", "plotly")
+               "leaflet", "tidyterra", "rmarkdown", "furrr", "stringr", "spThin",
+               "tictoc","tigris", "tmap", "googlesheets4", "ggplot2", "plotly",
+               "factoextra")
 tmap::tmap_mode("view")
 
 #source functions
@@ -137,7 +138,7 @@ runVersion <- "run20241204"
 # runVersion <- "run1"
 
 # overwrite 
-overwrite <- TRUE
+overwrite <- FALSE
 
 # set up environment  -----------------------------------------------------
 

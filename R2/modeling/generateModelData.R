@@ -29,9 +29,19 @@ generateModelData <- function(speciesPoints,natArea,bioVars,b_Number){
                           write.files = FALSE, 
                           write.log.file = FALSE)[[1]] |> row.names()
     shThin <- sh[as.numeric(thin1), ]
+<<<<<<< HEAD
   }
   # recombined data. Will run with any total data at this point. 
   sp1 <- bind_rows(sg, shThin)
+=======
+    # generate combined features 
+    sp1 <- bind_rows(sg, shThin)
+  }else{
+    # recombined data. Will run with any total data at this point. 
+    sp1 <- speciesPoints
+  }
+
+>>>>>>> 056e23672ab062ef2c756df3b47418091f67f30b
   
   
   ## format species data
