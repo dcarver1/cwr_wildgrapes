@@ -13,9 +13,8 @@ generateModelData <- function(speciesPoints,natArea,bioVars,b_Number){
   # generate background points 
   
   # split into categories 
-  sg <- speciesPoints[speciesPoints$modelPriority == 1, ]
-  sh <- speciesPoints[speciesPoints$modelPriority == 2, ]
-  si <- speciesPoints[speciesPoints$modelPriority == 3, ]
+  sg <- speciesPoints[speciesPoints$type == "G", ]
+  sh <- speciesPoints[speciesPoints$type == "H", ]
   
   ## thin data if needed 
   if(nrow(sh) > 50){
@@ -30,29 +29,9 @@ generateModelData <- function(speciesPoints,natArea,bioVars,b_Number){
                           write.files = FALSE, 
                           write.log.file = FALSE)[[1]] |> row.names()
     shThin <- sh[as.numeric(thin1), ]
-    sh <- shThin
   }
-  
-  # 
-  if(nrow(si) > 25){
-    # thin to 10k for i nat data  
-    thin2 <- spThin::thin(loc.data = si,
-                          lat.col = "latitude",
-                          long.col = "longitude",
-                          spec.col = "taxon",
-                          thin.par = 10,
-                          reps = 1,
-                          locs.thinned.list.return = TRUE, 
-                          write.files = FALSE, 
-                          write.log.file = FALSE)[[1]] |> row.names()
-    siThin2 <- si[as.numeric(thin2), ]
-    si <- siThin2
-  }
-  
   # recombined data. Will run with any total data at this point. 
-  sp1 <- bind_rows(sg, sh)|>
-    bind_rows(si)
-  
+  sp1 <- bind_rows(sg, shThin)
   
   
   ## format species data

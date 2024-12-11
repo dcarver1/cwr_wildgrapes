@@ -132,7 +132,7 @@ bufferDist <- 50000
 ## daucus 
 # runVersion <- "run20240603"
 #vitis run 
-runVersion <- "run20241029"
+runVersion <- "run20241204"
 # Quercus and other IMLS species 
 # runVersion <- "run1"
 
@@ -181,7 +181,7 @@ for(i in genera){
   # loop over species  ------------------------------------------------------
   ### this is probably the placee for a Furrr map function. Just the species being altered
   ### need to think about how to structure the code based from this part to best organize the process.
-  for(j in species){
+  for(j in species[1]){
     print(j)
   #generate paths for exporting data 
   allPaths <- definePaths(dir1 = dir1,
@@ -247,7 +247,7 @@ for(i in genera){
                                                      bufferDist = bufferDist,
                                                      templateRast = templateRast))
     
-    ## associate observations with bioclim data
+    ## associate observations with bioclim data and spatial thin 
     m_data1 <- write_CSV(path = allPaths$allDataPath, 
                        overwrite = overwrite,
                        generateModelData(speciesPoints = sp1,

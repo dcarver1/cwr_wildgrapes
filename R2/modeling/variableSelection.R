@@ -27,8 +27,10 @@ varaibleSelection <- function(modelData, parallel){
   #                           ntree = 100 )
   ### change for 30 arc second run 
   vsurfThres <- VSURF_thres(x=bioValues[,2:27] , 
-                            y=as.factor(bioValues$presence),
-                            parallel = parallel )
+                            y=as.factor(bioValues$presence)
+                            # ,
+                            #parallel = parallel
+                            )
   ###
   #correlation matrix
   ###

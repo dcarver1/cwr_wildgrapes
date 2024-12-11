@@ -28,7 +28,7 @@ for(i in seq_along(files)){
 
 # vitis SDMS --------------------------------------------------------------
 genus <- "Vitis" 
-modelRun <- "run20241029"
+modelRun <- "run20241229"
 # species 
 splist <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.csv")|>
   dplyr::filter(!is.na(taxon), genus == "Vitis")|>
