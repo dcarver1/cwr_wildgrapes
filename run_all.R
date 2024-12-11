@@ -161,7 +161,7 @@ species <- sort(unique(speciesData$taxon))
 
 # #testing
 i <- genera[1]
-j <- species[1]
+j <- species[33]
 
 erroredSpecies <- list(noLatLon = c(),
                        lessThenEight = c(),
@@ -182,7 +182,7 @@ for(i in genera){
   # loop over species  ------------------------------------------------------
   ### this is probably the placee for a Furrr map function. Just the species being altered
   ### need to think about how to structure the code based from this part to best organize the process.
-  for(j in species[1]){
+  for(j in species){
     print(j)
   #generate paths for exporting data 
   allPaths <- definePaths(dir1 = dir1,
@@ -199,6 +199,12 @@ for(i in genera){
   c1 <- write_CSV(path = allPaths$countsPaths,
                  overwrite = overwrite,
                  function1 = generateCounts(speciesData = sd1))
+  
+  #srsex
+  srsex <- write_CSV(path = allPaths$srsExPath,
+                     overwrite = overwrite,
+                     function1 = srs_exsitu(sp_counts = c1))
+  
   # check for no lat lon data
   if(c1$totalUseful == 0){
     erroredSpecies$noLatLon <- c(erroredSpecies$noLatLon, j)
@@ -214,11 +220,7 @@ for(i in genera){
     removeDuplicates()
     )
   
-  
-  #srsex
-  srsex <- write_CSV(path = allPaths$srsExPath,
-                    overwrite = overwrite,
-                    function1 = srs_exsitu(sp_counts = c1))
+
   # apply FNA filter if possible. 
   sp1 <- write_GPKG(path = allPaths$spatialDataPath,
                     overwrite = TRUE, 
@@ -592,6 +594,10 @@ for(i in genera){
   }
 } # end of Genus loop 
   
+
+# generate a summary CSV for vitis 
+summaryCSV <- summaryTable(species = species, runVersion = runVersion)
+write_csv(x = summaryCSV, file = paste0("data/Vitis/summaryTable_",runVersion,".csv"))
 
 ### 20241031 run results 
 # $noLatLon
