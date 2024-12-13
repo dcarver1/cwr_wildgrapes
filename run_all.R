@@ -117,23 +117,37 @@ speciesData <- assignPriority(speciesData)
 
 ## bioclim layers 
 ## commiting out for summary runs 
-bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames.csv")
-bioVars <- readRDS("data/geospatial_datasets/bioclim_layers/bioclim_2.5arcsec_terra.RDS")
-names(bioVars) <- bioNames$shortName
-templateRast <- bioVars[[1]]
-## ecoregions
-ecoregions <- sf::st_read("data/geospatial_datasets/ecoregions/tnc_terr_ecoregions.gpkg")
-## protect lands 
-protectedAreas <- terra::rast("data/geospatial_datasets/protectedLands/wdpa_rasterized_all.tif")
-## buffer distance 
-bufferDist <- 50000
+onekm <- TRUE 
+
+if(onekm == TRUE){
+  bioVars <- readRDS("data/geospatial_datasets/bioclim_layers/bioVar_1km.RDS")
+  templateRast <- bioVars[[1]]
+  ## ecoregions
+  ecoregions <- sf::st_read("data/geospatial_datasets/ecoregions/tnc_terr_ecoregions.gpkg")
+  ## protect lands 
+  protectedAreas <- terra::rast("data/geospatial_datasets/protectedLands/wdpa_1km_all_.tif")
+  ## buffer distance 
+  bufferDist <- 50000
+}else{
+  bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames.csv")
+  bioVars <- readRDS("data/geospatial_datasets/bioclim_layers/bioclim_2.5arcsec_terra.RDS")
+  names(bioVars) <- bioNames$shortName
+  templateRast <- bioVars[[1]]
+  ## ecoregions
+  ecoregions <- sf::st_read("data/geospatial_datasets/ecoregions/tnc_terr_ecoregions.gpkg")
+  ## protect lands 
+  protectedAreas <- terra::rast("data/geospatial_datasets/protectedLands/wdpa_rasterized_all.tif")
+  ## buffer distance 
+  bufferDist <- 50000
+}
+
 
 
 # run version 
 ## daucus 
 # runVersion <- "run20240603"
 #vitis run 
-runVersion <- "run20241204"
+runVersion <- "run20241212_1k"
 # Quercus and other IMLS species 
 # runVersion <- "run1"
 
@@ -161,16 +175,17 @@ species <- sort(unique(speciesData$taxon))
 
 # #testing
 i <- genera[1]
-j <- species[33]
+j <- species[12]
 
 erroredSpecies <- list(noLatLon = c(),
                        lessThenEight = c(),
                        noSDM = c(),
                        noHTML = c())
 
-plan(strategy = "multisession", workers =8)
+plan(strategy = "multisession", workers =4)
 
-
+# troubleshooting 
+species <- species[13:length(species)]
 
 # Daucus_aureus is species[1] is a reasonable one for troubleshooting
 for(i in genera){
@@ -514,19 +529,20 @@ for(i in genera){
     } 
     
     # generate summary html  
+    # this is not working with the 1k data do to size fo the rasters... need to reevaluate
     # if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
-    try(
-        rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
-                          output_format = "html_document",
-                          output_dir = file.path(allPaths$result),
-                          output_file = paste0(j,"_Summary_fnaFilter.html"),
-                          params = list(
-                            reportData = reportData),
-                          envir = new.env(parent = globalenv())
-                          # clean = F,
-                          # encoding = "utf-8"
-        )
-      )
+    # try(
+    #     rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
+    #                       output_format = "html_document",
+    #                       output_dir = file.path(allPaths$result),
+    #                       output_file = paste0(j,"_Summary_fnaFilter1k.html"),
+    #                       params = list(
+    #                         reportData = reportData),
+    #                       envir = new.env(parent = globalenv())
+    #                       # clean = F,
+    #                       # encoding = "utf-8"
+    #     )
+    #   )
     # }else{
     #   if(!file.exists(allPaths$summaryHTMLPath)){
     #     # erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
@@ -613,5 +629,18 @@ write_csv(x = summaryCSV, file = paste0("data/Vitis/summaryTable_",runVersion,".
 # NULL
 
 
+## 1km run 
+# made it through "Vitis cinerea"
+# $noLatLon
+# NULL
+# 
+# $lessThenEight
+# [1] "Vitis biformis"
+# 
+# $noSDM
+# [1] "Vitis cinerea"
+# 
+# $noHTML
+# NULL
 
 

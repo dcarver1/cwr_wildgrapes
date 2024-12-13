@@ -5,16 +5,16 @@
 #' @return A csv of occurance data that has been thinned to include on primary variables. 
 varaibleSelection <- function(modelData, parallel){
   # subset predictor data and presence column
-  varOnly <- modelData %>% 
-    st_drop_geometry() %>% 
+  varOnly <- modelData |> 
+    st_drop_geometry() |> 
     dplyr::select(-presence)
   # remove all na from dataframe
   test2 <-complete.cases(varOnly)
   # drop all column from bioValues set as well so the same data is used for maxnet modeling.
-  bioValues <- modelData %>%
-    st_drop_geometry()# [test2,] %>% st_drop_geometry()
+  bioValues <- modelData |>
+    st_drop_geometry()# [test2,] |> st_drop_geometry()
   # redefine var select to in
-  varSelect <- bioValues %>% 
+  varSelect <- bioValues |> 
     dplyr::select(-presence)
   # Maximum modelled data
   #write.csv(x = bioValues, file = paste0(sp_dir, "/modeling/maxent/bioValuesForPresencePoints.csv"))
@@ -26,10 +26,9 @@ varaibleSelection <- function(modelData, parallel){
   # vsurfThres <- VSURF_thres(x=bioValues[,1:26] , y=as.factor(bioValues$presence) ,
   #                           ntree = 100 )
   ### change for 30 arc second run 
-  vsurfThres <- VSURF_thres(x=bioValues[,2:27] , 
-                            y=as.factor(bioValues$presence)
-                            # ,
-                            #parallel = parallel
+  vsurfThres <- VSURF_thres(x=bioValues[,2:ncol(bioValues)] , 
+                            y=as.factor(bioValues$presence),
+                            parallel = parallel
                             )
   ###
   #correlation matrix
