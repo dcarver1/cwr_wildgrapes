@@ -16,7 +16,7 @@ summaryTable <- function(species, runVersion){
                     "Total G records" = totalGRecords,
                     "Total G records with coordinates" = totalGUseful,
                     "Total H Records" = totalHRecords,
-                    "Total H with coordinates" = numberOfUniqueSources
+                    "Total H with coordinates" = totalHUseful
                     )
     # model statistics summary
     # m1 <- read_csv(file = paste0(p1, "/results/evaluationTable.csv"))

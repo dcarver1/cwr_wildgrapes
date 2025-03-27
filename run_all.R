@@ -97,6 +97,8 @@ write.csv(inatPercent,file = "data/Vitis/inatPercentages.csv")
 # exclude from the input datasets 
 speciesData3 <- speciesData[!c(speciesData$recordID %in% a2$`Record ID for point`), ]
 speciesData <- speciesData3
+# export for gap r testing 
+write.csv(speciesData, file = "temp/allVitisData.csv")
 rerunTaxon <-unique(a2$Taxon)
 
 # assign a priority to the data based on source 
@@ -117,7 +119,7 @@ speciesData <- assignPriority(speciesData)
 
 ## bioclim layers 
 ## commiting out for summary runs 
-onekm <- TRUE 
+onekm <- TRUE
 
 if(onekm == TRUE){
   bioVars <- readRDS("data/geospatial_datasets/bioclim_layers/bioVar_1km.RDS")
@@ -146,8 +148,11 @@ if(onekm == TRUE){
 # run version 
 ## daucus 
 # runVersion <- "run20240603"
+
 #vitis run 
 runVersion <- "run20241212_1k"
+# runVersion <- "run20241204"
+
 # Quercus and other IMLS species 
 # runVersion <- "run1"
 
@@ -175,7 +180,7 @@ species <- sort(unique(speciesData$taxon))
 
 # #testing
 i <- genera[1]
-j <- species[12]
+j <- species[23]
 
 erroredSpecies <- list(noLatLon = c(),
                        lessThenEight = c(),
@@ -185,7 +190,7 @@ erroredSpecies <- list(noLatLon = c(),
 plan(strategy = "multisession", workers =4)
 
 # troubleshooting 
-species <- species[13:length(species)]
+# species <- species[13:length(species)]
 
 # Daucus_aureus is species[1] is a reasonable one for troubleshooting
 for(i in genera){
@@ -194,32 +199,35 @@ for(i in genera){
   dir1 <- paste0("data/",i) 
   if(!dir.exists(dir1)){dir.create(dir1)}
   
+  dir2 <- paste0(dir1, "/", runVersion)
+  if(!dir.exists(dir2)){dir.create(dir2)}
+  
   # loop over species  ------------------------------------------------------
   ### this is probably the placee for a Furrr map function. Just the species being altered
   ### need to think about how to structure the code based from this part to best organize the process.
   for(j in species){
     print(j)
-  #generate paths for exporting data 
-  allPaths <- definePaths(dir1 = dir1,
+    #generate paths for exporting data 
+    allPaths <- definePaths(dir1 = dir1,
                           j = j,
                           runVersion = runVersion) 
-  # create directories if needed 
-  generateFolders(allPaths)
+    # create directories if needed 
+    generateFolders(allPaths)
   
-  # process data 
-  ## species specific data
-  sd1 <- subsetSpecies(occuranceData =speciesData, species = j)
+    # process data 
+    ## species specific data
+    sd1 <- subsetSpecies(occuranceData = speciesData, species = j)
   
-  ## counts data
-  c1 <- write_CSV(path = allPaths$countsPaths,
-                 overwrite = overwrite,
-                 function1 = generateCounts(speciesData = sd1))
+    ## counts data
+    c1 <- write_CSV(path = allPaths$countsPaths,
+                   overwrite = TRUE,
+                   function1 = generateCounts(speciesData = sd1))
   
-  #srsex
-  srsex <- write_CSV(path = allPaths$srsExPath,
-                     overwrite = overwrite,
-                     function1 = srs_exsitu(sp_counts = c1))
-  
+    #srsex
+    srsex <- write_CSV(path = allPaths$srsExPath,
+                       overwrite = overwrite,
+                       function1 = srs_exsitu(sp_counts = c1))
+    
   # check for no lat lon data
   if(c1$totalUseful == 0){
     erroredSpecies$noLatLon <- c(erroredSpecies$noLatLon, j)
@@ -535,7 +543,7 @@ for(i in genera){
     #     rmarkdown::render(input = "R2/summarize/singleSpeciesSummary.Rmd",
     #                       output_format = "html_document",
     #                       output_dir = file.path(allPaths$result),
-    #                       output_file = paste0(j,"_Summary_fnaFilter1k.html"),
+    #                       output_file = paste0(j,"_Summary_fnaFilter"),
     #                       params = list(
     #                         reportData = reportData),
     #                       envir = new.env(parent = globalenv())
@@ -564,11 +572,11 @@ for(i in genera){
   # produce Run level Summaries ---------------------------------------------
   # need to set overwrite to true to produce most of the layers 
   ### big processing step... 
-  generateRunSummaries(dir1 = dir1,
-                       runVersion = runVersion,
-                       genus = i,
-                       protectedAreas = protectedAreas,
-                       overwrite = TRUE)
+  # generateRunSummaries(dir1 = dir1,
+  #                      runVersion = runVersion,
+  #                      genus = i,
+  #                      protectedAreas = protectedAreas,
+  #                      overwrite = FALSE)
 
 
   # produce boxplot summaries -----------------------------------------------

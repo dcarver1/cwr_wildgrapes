@@ -5,19 +5,19 @@
 
 generateRunSummaries <- function(dir1,runVersion,
                                  genus, protectedAreas, overwrite){
-  
+  # storing summaries data in run folders 
+  dir2 <- paste0(dir1, "/", runVersion)
   # generate summary of all the models --------------------------------------
-  path1 <- paste0(dir1,"/speciesrichness.tif")
-  path2 <- paste0(dir1,"/speciesUsed_speciesrichness.csv")
-  path3 <- paste0(dir1,"/ga50_speciesrichness.tif")
-  path4 <- paste0(dir1, "/ga50speciesUsed_speciesrichness.csv")
-  path5 <- paste0(dir1,"/protectedAreaSpeciesRichness.csv")
-  path6 <- paste0(dir1,"/ersexRichness.tif")
-  path7 <- paste0(dir1,"/ersex_speciesUsed_Richness.csv")
-  path8 <- paste0(dir1,"/ersinRichness.tif")
-  path9 <- paste0(dir1,"/ersin_speciesUsed_Richness.tif")
-  
-  
+  path1 <- paste0(dir2,"/speciesrichness.tif")
+  path2 <- paste0(dir2,"/speciesUsed_speciesrichness.csv")
+  path3 <- paste0(dir2,"/ga50_speciesrichness.tif")
+  path4 <- paste0(dir2, "/ga50speciesUsed_speciesrichness.csv")
+  path5 <- paste0(dir2,"/protectedAreaSpeciesRichness.csv")
+  path6 <- paste0(dir2,"/ersexRichness.tif")
+  path7 <- paste0(dir2,"/ersex_speciesUsed_Richness.csv")
+  path8 <- paste0(dir2,"/ersinRichness.tif")
+  path9 <- paste0(dir2,"/ersin_speciesUsed_Richness.tif")
+
   # this takes a while to run so be careful 
   ## generate the species richness file 
   if(!file.exists(path1) | isTRUE(overwrite)){
@@ -39,7 +39,12 @@ generateRunSummaries <- function(dir1,runVersion,
     ga50Richness <- generateSpeciesRichnessMap(directory = dir1,
                                            runVersion = runVersion,
                                            rasterFileName = "ga50_masked.tif")
-    terra::writeRaster(x = ga50Richness$richnessTif,
+    
+    # need to extend this file to matcht he extent of the richness image 
+    t1 <- terra::rast(path1)
+    extended_raster <- extend(ga50Richness, t1, fill = 0) 
+    
+    terra::writeRaster(x = extended_raster,
                        filename = path3,
                        overwrite  = TRUE)
     # export the 
@@ -91,7 +96,7 @@ generateRunSummaries <- function(dir1,runVersion,
     protectedAreaRichness(speciesRichness = path1,
                           pathToProGPKG =  "data/geospatial_datasets/protectedLands/WDPA_Mar2023_Public_shp",
                           countries = "data/geospatial_datasets/countries/ne_10m_admin_0_countries.gpkg",
-                          exportPath =dir1 )
+                          exportPath =dir2 )
   }
 
   
@@ -102,7 +107,7 @@ generateRunSummaries <- function(dir1,runVersion,
                                                  runVersion = runVersion,
                                                  genus = genus)
   # add additional object to the list to be passed to the rmd 
-  conservationSummary$map <- raster(path1)
+  conservationSummary$map <- rast(path1)
   conservationSummary$proAreas <- protectedAreas
   conservationSummary$ga50Map <- rast(path3)
   conservationSummary$protectAreasRichness <- read_csv(path5)

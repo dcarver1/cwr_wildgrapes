@@ -24,7 +24,7 @@ h1 {
   font-size: 24px;
   font-weight: 500;
   margin-bottom: 16px;
-  background-color: #92beee;
+  background-color: #243413;
   border-radius: 30px;
   padding: 10px;
   text-align: center;
@@ -35,7 +35,7 @@ h2 {
   font-size: 20px;
   font-weight: 500;
   margin-bottom: 12px;
-  background-color: #a5c2f0;
+  background-color:#f0f0f0;
   border-radius: 15px;
   padding: 8px;
 }
@@ -44,7 +44,7 @@ h3 {
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 8px;
-  background-color: #b9d6f2;
+  background-color: #f0f0f0;
   padding: 8px;
 }
 
