@@ -92,7 +92,12 @@ jun <- processJun() |>
 # write out data
 write_csv(x = jun, file = "data/processed_occurrence/jun_072025.csv")
 
-
+# update genesys data 
+gen <- processGenesysUpdate(path = "data/source_data/GenesysPGR_Vitis_subset.csv") |>
+  orderNames(names = standardColumnNames) |>
+  removeDuplicatesID()
+# write out data
+write_csv(x = gen, file = "data/processed_occurrence/genesys_072025.csv")
 
 # read in all other datasets ----------------------------------------------
 df <- readAndBind(run = TRUE)
@@ -112,8 +117,9 @@ df2 <- datasets$includedData
 
 
 # Checks on the lat lon  --------------------------------------------------
+
 # Lat long based quality checks  ------------------------------------------
-d6 <- checksOnLatLong(d5a)
+d3 <- checksOnLatLong(df2)
 d6_sum <- summarizeBySource(d6$validLatLon)
 ## grab the G records with no lat lon values
 d6_g <- d6$countycheck |>

@@ -79,6 +79,78 @@ pullGBIFFromDrive<-function(run = FALSE){
 print("loaded pull pullGBIFFromDrive")
 
 
+
+# process genesys  --------------------------------------------------------
+
+processGenesysUpdate <- function(path){
+  d1 <- read_csv(path)
+  
+  d2 <- d1 %>% 
+    dplyr::mutate(
+      type = case_when(
+        HISTORIC  == TRUE ~ "H",
+        TRUE ~ "G"
+      ),
+      species = paste0(SPECIES," ",SUBTAXA) %>%
+        stringr::str_replace(pattern = " NA", replacement = "")
+    )%>%
+    # SAMPSTATRemove non wild- exclude 300 and above (but include 999)
+    dplyr::filter(
+      SAMPSTAT  %in% c(999,100,110,120, 130, 200, 999, NA)
+    )%>%
+    # # COLLSRC- exclude 30, 40, 50
+    # dplyr::filter(
+    #   !collSrc %in% c(30, 40, 50)
+    # )%>%
+    # exclude USDA collection codes 
+    dplyr::filter(
+      !INSTCODE  %in%  c("USA003" ,"USA004", "USA005" ,"USA016" ,"USA020",
+                         "USA022", "USA026", "USA028", "USA029", "USA042" ,"USA047", "USA049",
+                         "USA074", "USA108", "USA133", "USA148", "USA151", "USA167", "USA176",
+                         "USA390", "USA955", "USA956", "USA970", "USA971", "USA995")
+    )
+  
+  
+  d3 <- d2 %>% 
+    dplyr::mutate(
+      taxon = paste0(GENUS ," ",SPECIES )
+    )  %>%
+    dplyr::select(
+      taxon,
+      genus = GENUS,
+      latitude =DECLATITUDE,
+      longitude = DECLONGITUDE,
+      institutionCode = INSTCODE,
+      sourceUniqueID = UUID,
+      sampleCategory = SAMPSTAT,
+      country = ORIGCTY,
+      type,
+      species)%>%
+    dplyr::mutate(
+      originalTaxon = taxon,
+      yearRecorded = NA,
+      state = NA,
+      county = NA,
+      localityInformation = NA,
+      collectionSource = NA,
+      databaseSource = "genesys",
+      iso3 = NA,
+      finalOriginStat = NA,
+      countyFIPS = NA,
+      biologicalStatus = NA, 
+      stateFIPS = NA,
+      observerName = NA,
+      coordinateUncertainty = NA,
+      recordID = paste0(databaseSource,"_",sourceUniqueID)
+    )
+  
+  
+  return(d3)
+}
+
+
+
+
 # read in and bind datasets -----------------------------------------------
 
 readAndBind <- function(run = FALSE){
@@ -95,7 +167,7 @@ readAndBind <- function(run = FALSE){
   wiews <- read_csv("data/processed_occurrence/wiews.csv",col_types = cols(.default = "c"))
   
   ## GENESYS
-  genesys <- read_csv("data/processed_occurrence/genesys.csv",col_types = cols(.default = "c"))
+  genesys <- read_csv("data/processed_occurrence/genesys_072025.csv",col_types = cols(.default = "c"))
   
   ## botanical garden Survey
   bgSurvey <- read_csv("data/processed_occurrence/bgSurvey.csv",col_types = cols(.default = "c"))

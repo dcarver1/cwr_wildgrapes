@@ -31,6 +31,7 @@
 /home/dune/trueNAS/work/cwr_wildgrapes/preprocessing/functions/evaluateForCounty.R="DC28F54E"
 /home/dune/trueNAS/work/cwr_wildgrapes/preprocessing/functions/helperFunctions.R="18D18D4F"
 /home/dune/trueNAS/work/cwr_wildgrapes/preprocessing/functions/process_gbif.R="38AEB308"
+/home/dune/trueNAS/work/cwr_wildgrapes/preprocessing/functions/process_genesys.R="6D5283AB"
 /home/dune/trueNAS/work/cwr_wildgrapes/preprocessing/functions/produceProtectedAreaRast.R="47A52141"
 /home/dune/trueNAS/work/cwr_wildgrapes/preprocessing/functions/spatialChecks.R="373811FC"
 /home/dune/trueNAS/work/cwr_wildgrapes/preprocessing/functions/speciesStandardization.R="466E8F84"
