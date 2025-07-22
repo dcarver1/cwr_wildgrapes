@@ -1,27 +1,27 @@
-bionumber,nmaeInRDS,shortName,Current title,metric,full_title
-1,wc2.0_bio_2.5m_01,bio_01,Annual mean temperature,ºC,Annual mean temperature (ºC)
-2,wc2.0_bio_2.5m_02,bio_02,Mean diurnal temperature range,ºC,Mean diurnal temperature range (ºC)
-3,wc2.0_bio_2.5m_03,bio_03,Isothermality,N/A,Isothermality
-4,wc2.0_bio_2.5m_04,bio_04,Temperature seasonality (standard deviation),ºC,Temperature seasonality (standard deviation) (ºC)
-5,wc2.0_bio_2.5m_05,bio_05,Maximum temperature of warmest month,ºC,Maximum temperature of warmest month (ºC)
-6,wc2.0_bio_2.5m_06,bio_06,Minimum temperature of coldest month,ºC,Minimum temperature of coldest month (ºC)
-7,wc2.0_bio_2.5m_07,bio_07,Temperature annual range,ºC,Temperature annual range (ºC)
-8,wc2.0_bio_2.5m_08,bio_08,Mean temperature of wettest quarter,ºC,Mean temperature of wettest quarter (ºC)
-9,wc2.0_bio_2.5m_09,bio_09,Mean temperature of driest quarter,ºC,Mean temperature of driest quarter (ºC)
-10,wc2.0_bio_2.5m_10,bio_10,Mean temperature of warmest quarter,ºC,Mean temperature of warmest quarter (ºC)
-11,wc2.0_bio_2.5m_11,bio_11,Mean temperature of coldest quarter,ºC,Mean temperature of coldest quarter (ºC)
-12,wc2.0_bio_2.5m_12,bio_12,Annual precipitation,mm,Annual precipitation (mm)
-13,wc2.0_bio_2.5m_13,bio_13,Precipitation of wettest month,mm,Precipitation of wettest month (mm)
-14,wc2.0_bio_2.5m_14,bio_14,Precipitation of driest month,mm,Precipitation of driest month (mm)
-15,wc2.0_bio_2.5m_15,bio_15,Precipitation seasonality (coefficient of variation),%,Precipitation seasonality (coefficient of variation) (%)
-16,wc2.0_bio_2.5m_16,bio_16,Precipitation of wettest quarter,mm,Precipitation of wettest quarter (mm)
-17,wc2.0_bio_2.5m_17,bio_17,Precipitation of driest quarter,mm,Precipitation of driest quarter (mm)
-18,wc2.0_bio_2.5m_18,bio_18,Precipitation of warmest quarter,mm,Precipitation of warmest quarter (mm)
-19,wc2.0_bio_2.5m_19,bio_19,Precipitation of coldest quarter,mm,Precipitation of coldest quarter (mm)
-20,wc2.0_bio_2.5m_20,bio_20,srad,kJ m-2 day-1,solar radiation (kJ m-2 day-1)
-21,wc2.0_bio_2.5m_21,bio_21,vapr,kPa,water vapor pressure (kPa)
-22,wc2.0_bio_2.5m_22,bio_22,wind,m s-1,wind speed (m s-1)
-23,wc2.0_bio_2.5m_23,bio_23,Altitude,m,Altitude (m)
-24,wc2.0_bio_2.5m_24,bio_24,Aspect (North-South),degrees,North-South Aspect (º)
-25,wc2.0_bio_2.5m_25,bio_25,Aspect (East-West) ,degrees,East-West Aspect (º)
-26,wc2.0_bio_2.5m_26,bio_26,Slope ,Degrees,Slope (º)
+bionumber,nmaeInRDS,shortName,Current title,metric,full_title,expression 
+1,wc2.0_bio_2.5m_01,bio_01,Annual mean temperature,ºC,Annual mean temperature (ºC),"""Annual mean temperature ("" * degree * ""C)"""
+2,wc2.0_bio_2.5m_02,bio_02,Mean diurnal temperature range,ºC,Mean diurnal temperature range (ºC),"""Mean diurnal temperature range ("" * degree * ""C)"""
+3,wc2.0_bio_2.5m_03,bio_03,Isothermality,N/A,Isothermality,"""Isothermality"""
+4,wc2.0_bio_2.5m_04,bio_04,Temperature seasonality (standard deviation),ºC,Temperature seasonality (standard deviation) (ºC),"""Temperature seasonality (standard deviation) ("" * degree * ""C)"""
+5,wc2.0_bio_2.5m_05,bio_05,Maximum temperature of warmest month,ºC,Maximum temperature of warmest month (ºC),"""Maximum temperature of warmest month ("" * degree * ""C)"""
+6,wc2.0_bio_2.5m_06,bio_06,Minimum temperature of coldest month,ºC,Minimum temperature of coldest month (ºC),"""Minimum temperature of coldest month ("" * degree * ""C)"""
+7,wc2.0_bio_2.5m_07,bio_07,Temperature annual range,ºC,Temperature annual range (ºC),"""Temperature annual range ("" * degree * ""C)"""
+8,wc2.0_bio_2.5m_08,bio_08,Mean temperature of wettest quarter,ºC,Mean temperature of wettest quarter (ºC),"""Mean temperature of wettest quarter ("" * degree * ""C)"""
+9,wc2.0_bio_2.5m_09,bio_09,Mean temperature of driest quarter,ºC,Mean temperature of driest quarter (ºC),"""Mean temperature of driest quarter ("" * degree * ""C)"""
+10,wc2.0_bio_2.5m_10,bio_10,Mean temperature of warmest quarter,ºC,Mean temperature of warmest quarter (ºC),"""Mean temperature of warmest quarter ("" * degree * ""C)"""
+11,wc2.0_bio_2.5m_11,bio_11,Mean temperature of coldest quarter,ºC,Mean temperature of coldest quarter (ºC),"""Annual mean temperature ("" * degree * ""C)"""
+12,wc2.0_bio_2.5m_12,bio_12,Annual precipitation,mm,Annual precipitation (mm),"""Annual precipitation (mm)"""
+13,wc2.0_bio_2.5m_13,bio_13,Precipitation of wettest month,mm,Precipitation of wettest month (mm),"""Precipitation of wettest month (mm)"""
+14,wc2.0_bio_2.5m_14,bio_14,Precipitation of driest month,mm,Precipitation of driest month (mm),"""Precipitation of driest month (mm)"""
+15,wc2.0_bio_2.5m_15,bio_15,Precipitation seasonality (coefficient of variation),%,Precipitation seasonality (coefficient of variation) (%),"""Precipitation seasonality (coefficient of variation) (%)"""
+16,wc2.0_bio_2.5m_16,bio_16,Precipitation of wettest quarter,mm,Precipitation of wettest quarter (mm),"""Precipitation of wettest quarter (mm)"""
+17,wc2.0_bio_2.5m_17,bio_17,Precipitation of driest quarter,mm,Precipitation of driest quarter (mm),"""Precipitation of driest quarter (mm)"""
+18,wc2.0_bio_2.5m_18,bio_18,Precipitation of warmest quarter,mm,Precipitation of warmest quarter (mm),"""Precipitation of warmest quarter (mm)"""
+19,wc2.0_bio_2.5m_19,bio_19,Precipitation of coldest quarter,mm,Precipitation of coldest quarter (mm),"""Precipitation of coldest quarter (mm)"""
+20,wc2.0_bio_2.5m_20,bio_20,srad,kJ m-2 day-1,solar radiation (kJ m-2 day-1),"""solar radiation (kJ m-2 day-1)"""
+21,wc2.0_bio_2.5m_21,bio_21,vapr,kPa,water vapor pressure (kPa),"""water vapor pressure (kPa)"""
+22,wc2.0_bio_2.5m_22,bio_22,wind,m s-1,wind speed (m s-1),"""wind speed (m s-1)"""
+23,wc2.0_bio_2.5m_23,bio_23,Altitude,m,Altitude (m),"""Elevation (m a.s.l.)"""
+24,wc2.0_bio_2.5m_24,bio_24,Aspect (North-South),degrees,North-South Aspect (º),"""North-South Aspect  ("" * degree * "")"""
+25,wc2.0_bio_2.5m_25,bio_25,Aspect (East-West) ,degrees,East-West Aspect (º),"""East-West Aspect ("" * degree * "")"""
+26,wc2.0_bio_2.5m_26,bio_26,Slope ,Degrees,Slope (º),"""Sloe ("" * degree * "")"""

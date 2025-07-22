@@ -1,6 +1,6 @@
 
 
-checksOnLatLong <- function(data){
+checksOnLatLong <- function(data, county){
   # convert datatypes. 
   df1 <- data  |> 
     dplyr::mutate(
@@ -24,7 +24,7 @@ checksOnLatLong <- function(data){
   
   export1 <- df1[!df1$index %in% df2$index, ]
   
-  write_csv(x = export1, file = "data/processed_occurrence/excludeOnIso3.csv")
+  # write_csv(x = export1, file = "data/processed_occurrence/excludeOnIso3.csv")
   
   # reassign longitude to negitive value based on country ISO3 
   ## this is turning up some weird results avoiding for now. 

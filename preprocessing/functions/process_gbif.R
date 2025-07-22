@@ -2,7 +2,7 @@
 
 processGBIF <- function(path){
   
-  d1a <- vroom(file = path)
+  d1a <- read_tsv(file = path)
   
   # grab and rename all features from gbif
   d1 <- d1a |> 
@@ -31,10 +31,11 @@ processGBIF <- function(path){
     # remove fossil records 
     filter(sampleCategory != "FOSSIL_SPECIMEN")|>
     # assign location value  and drop original 
-    dplyr::mutate(localityInformation = paste0(state, " -- ",locality ))|>
-    dplyr::filter(is.na(latitude) | latitude > 10,
-                  is.na(longitude) | longitude < -50)
-  
+    dplyr::mutate(localityInformation = paste0(state, " -- ",locality ))
+    # excluding the lat lon filter at this point |>
+    # dplyr::filter(is.na(latitude) | latitude > 10,
+    #               is.na(longitude) | longitude < -50)
+    # 
   # filter data based on institution code --- need to regenerate this list 
   
   

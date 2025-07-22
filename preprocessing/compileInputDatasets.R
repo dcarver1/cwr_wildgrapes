@@ -11,7 +11,8 @@ pacman::p_load("vroom",
                "stringr",
                "tigris",
                "sf",
-               "readr")
+               "readr",
+               "countrycode")
 
 # helps with the intersection processing time
 sf_use_s2(FALSE)
