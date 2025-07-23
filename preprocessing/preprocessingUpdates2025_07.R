@@ -119,10 +119,11 @@ df2 <- datasets$includedData
 # Checks on the lat lon  --------------------------------------------------
 
 # Lat long based quality checks  ------------------------------------------
+source("preprocessing/functions/checksOnLatLong.R")
 d3 <- checksOnLatLong(df2)
-d6_sum <- summarizeBySource(d6$validLatLon)
+
 ## grab the G records with no lat lon values
-d6_g <- d6$countycheck |>
+d3_g <- d3$countycheck |>
   dplyr::mutate(
     county = stringr::str_remove_all(string = county,pattern = " .Co"),
     county = stringr::str_remove_all(string = county,pattern = " Co."),
@@ -134,7 +135,65 @@ d6_g <- d6$countycheck |>
   )
 
 
+### has lat lon so can be used in both county and modeling products
+valLatLon <- d3$validLatLon
 
+# Spatial base data checks ------------------------------------------------
+countries <- st_read("data/geospatial_datasets/countries/ne_10m_admin_0_countries.gpkg")
+states <- st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")
+counties <- st_read("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg") ## US only
+
+source("preprocessing/functions/spatialChecks.R")
+d4 <- spatialChecks(
+  data = valLatLon,
+  countries = countries,
+  states = states,
+  counties = counties
+)
+
+valLatLon2 <- d4$validLatLon
+
+
+# assign FIPS codes -------------------------------------------------------
+source("preprocessing/functions/assignFIPS.R")
+## all the state and coutry 
+d5 <- assignFIPS(valLatLon2)
+
+
+# add the G records with no lat lon back to the modeling data---------------------------------------
+d6 <- d5 |> bind_rows(d6_g)
+
+
+
+# Remove duplicated data --------------------------------------------------
+uniqueTaxon <- unique(d6$taxon)
+source("preprocessing/functions/removeDupsAcrossDatasets.R")
+d7 <- uniqueTaxon |> purrr::map(.f = removeDups, data = d6) |> bind_rows()
+
+# export data 2023-10-24 --- All g points included and duplicates between sources are removed.
+write_csv(x = d7, file = "data/processed_occurrence/model_data072025.csv")
+
+
+
+
+# set up environment  -----------------------------------------------------
+
+# primary loop ------------------------------------------------------------
+genera <- unique(speciesData$genus)
+# species <- rerunTaxon
+species <- sort(unique(speciesData$taxon))
+
+
+# #testing
+i <- genera[1]
+j <- species[23]
+
+erroredSpecies <- list(noLatLon = c(),
+                       lessThenEight = c(),
+                       noSDM = c(),
+                       noHTML = c())
+
+plan(strategy = "multicore", workers =4)
 
 
 

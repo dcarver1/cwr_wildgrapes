@@ -1,6 +1,6 @@
 
 
-checksOnLatLong <- function(data, county){
+checksOnLatLong <- function(data){
   # convert datatypes. 
   df1 <- data  |> 
     dplyr::mutate(
