@@ -40,7 +40,7 @@ generateModelData <- function(speciesPoints,natArea,bioVars,b_Number){
   sp1 <- speciesPoints |>
     mutate("presence" = 1)|>
     dplyr::select(presence, type)
-    # dplyr::select(presence,geometry
+  # dplyr::select(presence,geometry
   
   
   

@@ -6,7 +6,7 @@
 pacman::p_load(furrr, dplyr, readr, sf, terra, htmltools, googledrive, googlesheets4)
 # set the parallel processing structure 
 # plan(strategy = sequential)
-plan(strategy = multisession, workers = 16) 
+# plan(strategy = multisession, workers = 16) 
 
 # multisessoin is in parallel works on windows -- sequential runs withour parallel
 # multicore is faster because there is less overhead, but it can not be ran on windows or thourgh R studio

@@ -29,7 +29,7 @@ varaibleSelection <- function(modelData, parallel){
   vsurfThres <- VSURF_thres(x=bioValues[,2:ncol(bioValues)] , 
                             y=as.factor(bioValues$presence),
                             parallel = parallel
-                            )
+  )
   ###
   #correlation matrix
   ###

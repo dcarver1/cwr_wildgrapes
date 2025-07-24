@@ -37,13 +37,13 @@ sourceFiles(gapAnalysisOnly = FALSE)
 # filtering the extra values coming from the data prep process
 speciesData <- read_csv("data/processed_occurrence/model_data072025.csv") |>
   dplyr::select(-c("geometry","index", "validLat","validLon","validLatLon"))
-# using the data from the county maps for an reference run
-speciesData1 <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.csv")|>
-  dplyr::filter(!is.na(taxon),
-                taxon %in% speciesData$taxon,
-                genus == "Vitis")|>
-  dplyr::select(-c(geometry))
-speciesData <- speciesData1
+# # using the data from the county maps for an reference run
+# speciesData1 <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.csv")|>
+#   dplyr::filter(!is.na(taxon),
+#                 taxon %in% speciesData$taxon,
+#                 genus == "Vitis")|>
+#   dplyr::select(-c(geometry))
+# speciesData <- speciesData1
 # fnaData
 fnaData <- read_csv("data/source_data/FNA_stateClassification.csv")
 # read in the data from the spreadsheet 
@@ -86,13 +86,21 @@ if(!dir.exists(dir1)){dir.create(dir1)}
 dir2 <- paste0(dir1, "/", runVersion)
 if(!dir.exists(dir2)){dir.create(dir2)}
 
-species <- unique(speciesData$taxon)
+species <- sort(unique(speciesData$taxon))
 # generate folder paths
+erroredSpecies <- list(noLatLon = c(),
+                       lessThenEight = c(),
+                       noSDM = c(),
+                       noHTML = c())
 
 # potentially run this whole process as a furrr function... 
 # only 9gb memory allocaiton 
 
-for(j in species[5]){
+# errors 
+# [1] "Vitis rotundifolia" # seems to stallout? 
+# [1] "Vitis riparia" : something going on 
+# [1] "Vitis vulpina" summary md 
+for(j in species){
   print(j)
   #generate paths for exporting data 
   allPaths <- definePaths(dir1 = dir1,
@@ -182,7 +190,7 @@ for(j in species[5]){
     
     ## perform variable selection
     v_data <- write_RDS(path = allPaths$variablbeSelectPath, 
-                        overwrite = TRUE,
+                        overwrite = overwrite,
                         function1 = varaibleSelection(modelData = m_data,
                                                       parallel = TRUE))
     
@@ -427,18 +435,18 @@ for(j in species[5]){
     # generate summary html  
     # this is not working with the 1k data do to size fo the rasters... need to reevaluate
     if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
-    try(
-        rmarkdown::render(input = "R2/summarize/singleSpeciesSummary_1k.Rmd",
-                          output_format = "html_document",
-                          output_dir = file.path(allPaths$result),
-                          output_file = paste0(j,"_Summary_fnaFilter"),
-                          params = list(
-                            reportData = reportData),
-                          envir = new.env(parent = globalenv())
-                          # clean = F,
-                          # encoding = "utf-8"
-        )
-      )
+    # try(
+    #     # rmarkdown::render(input = "R2/summarize/singleSpeciesSummary_1k.Rmd",
+    #     #                   output_format = "html_document",
+    #     #                   output_dir = file.path(allPaths$result),
+    #     #                   output_file = paste0(j,"_Summary_fnaFilter"),
+    #     #                   params = list(
+    #     #                     reportData = reportData),
+    #     #                   envir = new.env(parent = globalenv())
+    #     #                   # clean = F,
+    #     #                   # encoding = "utf-8"
+    #     )
+      # )
     }else{
       if(!file.exists(allPaths$summaryHTMLPath)){
         # erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
