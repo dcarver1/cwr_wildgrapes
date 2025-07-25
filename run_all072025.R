@@ -100,7 +100,17 @@ erroredSpecies <- list(noLatLon = c(),
 # [1] "Vitis rotundifolia" # seems to stallout? 
 # [1] "Vitis riparia" : something going on 
 # [1] "Vitis vulpina" summary md 
-for(j in species){
+#testing 
+# j <- "Vitis acerifolia"
+
+# species to test for FNA filter - maybe need to rerun if filter was not applied 
+fnaSpecies <- fnaData$`Taxon Name`[fnaData$`States from FNA`!= "NA,"]
+
+
+# species level runs  -----------------------------------------------------
+
+
+for(j in fnaSpecies){ # species 
   print(j)
   #generate paths for exporting data 
   allPaths <- definePaths(dir1 = dir1,
@@ -272,7 +282,7 @@ for(j in species){
       #exsitu
       ##ersex
       ersex <- write_CSV(path = allPaths$ersexPath,
-                         overwrite = overwrite,
+                         overwrite = TRUE,
                          function1 = ers_exsitu(speciesData = sd1,
                                                 thres = thres,
                                                 natArea = natArea,
@@ -286,7 +296,7 @@ for(j in species){
                                                 thres = thres))
       ##fcsex
       fcsex <- write_CSV(path = allPaths$fcsexPath,
-                         overwrite = overwrite,
+                         overwrite = TRUE,
                          function1 = fcs_exsitu(srsex = srsex,
                                                 grsex = grsex,
                                                 ersex = ersex,
@@ -294,7 +304,7 @@ for(j in species){
       
       #combined measure
       fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
-                               overwrite = overwrite,
+                               overwrite = TRUE,
                                function1 = fcs_combine(fcsin = fcsin,
                                                        fcsex = fcsex))
       
@@ -435,18 +445,18 @@ for(j in species){
     # generate summary html  
     # this is not working with the 1k data do to size fo the rasters... need to reevaluate
     if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
-    # try(
-    #     # rmarkdown::render(input = "R2/summarize/singleSpeciesSummary_1k.Rmd",
-    #     #                   output_format = "html_document",
-    #     #                   output_dir = file.path(allPaths$result),
-    #     #                   output_file = paste0(j,"_Summary_fnaFilter"),
-    #     #                   params = list(
-    #     #                     reportData = reportData),
-    #     #                   envir = new.env(parent = globalenv())
-    #     #                   # clean = F,
-    #     #                   # encoding = "utf-8"
-    #     )
-      # )
+    try(
+    rmarkdown::render(input = "R2/summarize/singleSpeciesSummary_1k.Rmd",
+                      output_format = "html_document",
+                      output_dir =  "data/Vitis/speciesSummaryHTML",  # file.path(allPaths$result),
+                      output_file = paste0(j,"_Summary_fnaFilter"),
+                      params = list(
+                        reportData = reportData),
+                      envir = new.env(parent = globalenv())
+                      # clean = F,
+                      # encoding = "utf-8"
+        )
+      )
     }else{
       if(!file.exists(allPaths$summaryHTMLPath)){
         # erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)

@@ -28,9 +28,9 @@ grabData <- function(ersex, fscCombined, fcsex, fcsin,evalTable,g_bufferCrop,thr
     
     # add variable importance data 
     var1 <- readRDS(variableImportance)$rankPredictors
-    names <- bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames.csv")
+    names <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames_072025.csv")
     variableImportance <- var1 |> 
-      dplyr::left_join(y = names, by = c("varNames" ="shortName"))
+      dplyr::left_join(y = names, by = c("varNames" ="vitisModelNames"))
     
     # bind to export object 
     reportData <- list(

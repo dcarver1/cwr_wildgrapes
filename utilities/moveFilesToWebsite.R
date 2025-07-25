@@ -12,7 +12,7 @@ pacman::p_load(dplyr,readr)
 
 ##################
 # vitis specific moves ----------------------------------------------------
-folder <- "~/Documents/vitis2"
+folder <- "~/trueNAS/work/vitis2"
 
 # vits county maps --------------------------------------------------------
 files <- list.files("data/countyMaps",pattern = "Evaluation2.html",full.names = TRUE)
@@ -28,9 +28,9 @@ for(i in seq_along(files)){
 
 # vitis SDMS --------------------------------------------------------------
 genus <- "Vitis" 
-modelRun <- "run20241229"
+modelRun <- "run072025_1k"
 # species 
-splist <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.csv")|>
+splist <- read_csv("data/processed_occurrence/model_data072025.csv")|>
   dplyr::filter(!is.na(taxon), genus == "Vitis")|>
   dplyr::select(taxon)|>
   distinct()

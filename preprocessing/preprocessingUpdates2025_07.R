@@ -1,4 +1,5 @@
-pacman::p_load(dplyr, readr, sf, terra, rgbif, googledrive, countrycode)
+pacman::p_load(dplyr, readr, sf, terra, rgbif, googledrive, countrycode,
+               stringr)
 
 
 # old taxonomy 
@@ -89,6 +90,21 @@ write_csv(x = gbif, file = "data/processed_occurrence/gbif_072025.csv")
 jun <- processJun() |>
   orderNames(names = standardColumnNames) |>
   removeDuplicatesID()
+# add single record 
+single <- data.frame(matrix(nrow = 1, ncol = length(standardColumnNames)))
+names(single) <- standardColumnNames
+single$taxon <- "Vitis bloodworthiana"
+single$observerName <-  "Facultad de Estudios Superiores Iztacala, UNAM, (FESI-UNAM), Mexico"
+single$originalTaxon <- "Vitis bloodworthiana"
+single$genus <- "Vitis"
+single$taxon <- "bloodworthiana"
+single$type <- "G"
+single$latitude <- "18.876888776" 
+single$longitude <- "-100.306249885"
+single$localityInformation <- "Generalized lat lon per curator's request"
+
+jun <- bind_rows(jun, single)
+
 # write out data
 write_csv(x = jun, file = "data/processed_occurrence/jun_072025.csv")
 
@@ -161,7 +177,7 @@ d5 <- assignFIPS(valLatLon2)
 
 
 # add the G records with no lat lon back to the modeling data---------------------------------------
-d6 <- d5 |> bind_rows(d6_g)
+d6 <- d5 |> bind_rows(d3_g)
 
 
 
@@ -193,7 +209,7 @@ erroredSpecies <- list(noLatLon = c(),
                        noSDM = c(),
                        noHTML = c())
 
-plan(strategy = "multicore", workers =4)
+# plan(strategy = "multicore", workers =4)
 
 
 
