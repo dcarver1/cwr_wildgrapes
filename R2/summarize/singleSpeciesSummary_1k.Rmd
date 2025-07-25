@@ -215,31 +215,31 @@ if(data$NoModel == FALSE){
     dplyr::filter(ECO_ID_U %in% ecosInThres) |>
     dplyr::filter(layer == 0)
 
-if(nrow(ers2) > 0) {
-  ## use this list to generate a raster object masked to the
-  ersinMap <- webMecAllEcos |>
-    dplyr::filter(ECO_ID_U %in% ers2$ECO_ID_U) |>
-    terra::rasterize(y = threshold, "ECO_ID_U") |>
-    mask(mask = mask1)
-  # generate palatte object for map 
-  ecoPal2 <-  rep(RColorBrewer::brewer.pal(n = 12, name = "Spectral"), 6)
-  ecoPal2 <- ecoPal2[1:length(ers2$ECO_ID_U)]
-  # need to order the names so they appear as expected 
-  ers2$color <- ecoPal2
-  ers2 <- ers2 |> arrange(desc(ECO_NAME))
-  ers2$color <- ecoPal2
-  
-  ers2$ECO_ID_U <- factor(ers2$ECO_ID_U , ordered = TRUE, 
-                                  levels = c(ers2$ECO_ID_U))
-  
-  
-  # define a palette option so that we can set a transparent NA value
-  ecoInColor <- colorFactor(palette =ers2$color,
-                            domain = ers2$ECO_ID_U,
-                            na.color =  "#FF000000")
-  
+  if(nrow(ers2) > 0) {
+    ## use this list to generate a raster object masked to the
+    ersinMap <- webMecAllEcos |>
+      dplyr::filter(ECO_ID_U %in% ers2$ECO_ID_U) |>
+      terra::rasterize(y = threshold, "ECO_ID_U") |>
+      mask(mask = mask1)
+    # generate palatte object for map 
+    ecoPal2 <-  rep(RColorBrewer::brewer.pal(n = 12, name = "Spectral"), 6)
+    ecoPal2 <- ecoPal2[1:length(ers2$ECO_ID_U)]
+    # need to order the names so they appear as expected 
+    ers2$color <- ecoPal2
+    ers2 <- ers2 |> arrange(desc(ECO_NAME))
+    ers2$color <- ecoPal2
     
-} else{
+    ers2$ECO_ID_U <- factor(ers2$ECO_ID_U , ordered = TRUE, 
+                                    levels = c(ers2$ECO_ID_U))
+    
+    
+    # define a palette option so that we can set a transparent NA value
+    ecoInColor <- colorFactor(palette =ers2$color,
+                              domain = ers2$ECO_ID_U,
+                              na.color =  "#FF000000")
+    
+    
+  } else{
   ersinMap <- "No values"
 }
 
@@ -248,10 +248,13 @@ if(nrow(ers2) > 0) {
 # exsitu map elements
 
 #buffered G area
-gBuf <- data$g_bufferCrop |>
-  resampleRast()
+gBuf <- data$g_bufferCrop 
   
 if (class(gBuf) != "character" & data$fcsex$GRS != 0) {
+  # resample 
+  gBuf <- gBuf |>
+    resampleRast()
+  
   bufColor <-
     colorNumeric(
       palette = "#6300F0",

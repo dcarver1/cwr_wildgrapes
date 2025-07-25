@@ -59,6 +59,12 @@ speciesData <- speciesData3
 write.csv(speciesData, file = "temp/allVitisData072025.csv")
 
 
+# order but n observations 
+nOrder <- speciesData |>
+  dplyr::group_by(taxon)|>
+  dplyr::count() |>
+  dplyr::arrange(n)
+
 
 
 # read in bioclim layers  -------------------------------------------------
@@ -103,14 +109,38 @@ erroredSpecies <- list(noLatLon = c(),
 #testing 
 # j <- "Vitis acerifolia"
 
+# 
+
 # species to test for FNA filter - maybe need to rerun if filter was not applied 
 fnaSpecies <- fnaData$`Taxon Name`[fnaData$`States from FNA`!= "NA,"]
 
 
 # species level runs  -----------------------------------------------------
 testSpecies <- c(species[c(1,5,12,31)])
-bworth <- species[10]
-for(j in bworth){ # species 
+one <- "Vitis x doaniana"
+# completed 
+completed <- c("Vitis arizonica", 
+               "Vitis biformis",
+               "Vitis blancoi",
+               "Vitis bloodworthiana",
+               "Vitis bourgaeana",
+               "Vitis californica",
+               "Vitis cinerea var. tomentosa",
+               "Vitis jaegeriana",
+               "Vitis lincecumii",
+               "Vitis nesbittiana", 
+               "Vitis peninsularis", 
+               "Vitis popenoei", 
+               "Vitis rufotomentosa", # no html, no lat lon         
+               "Vitis rotundifolia var. pygmaea",
+               "Vitis rupestris",
+               "Vitis x champinii", # no html                
+               "Vitis x doaniana", # no html 
+               "Vitis x novae-angliae")
+rest <- nOrder$taxon[!nOrder$taxon %in% completed]
+
+
+for(j in low){ # species 
   print(j)
   #generate paths for exporting data 
   allPaths <- definePaths(dir1 = dir1,
