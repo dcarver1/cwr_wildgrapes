@@ -14,16 +14,7 @@ pacman::p_load(dplyr,readr)
 # vitis specific moves ----------------------------------------------------
 folder <- "~/trueNAS/work/vitis2"
 
-# vits county maps --------------------------------------------------------
-files <- list.files("data/countyMaps",pattern = "Evaluation2.html",full.names = TRUE)
-print(files)
-# Find the files 
-for(i in seq_along(files)){
-  if(length(files)>0){
-    file.copy(files[i], folder,overwrite = TRUE)
-    print(paste0(i, " moved"))
-  }
-}
+
 
 
 # vitis SDMS --------------------------------------------------------------
@@ -34,34 +25,34 @@ splist <- read_csv("data/processed_occurrence/model_data072025.csv")|>
   dplyr::filter(!is.na(taxon), genus == "Vitis")|>
   dplyr::select(taxon)|>
   distinct()
-# # vitis subset 
-# splist <- c("Vitis arizonica",
-#             "Vitis californica",
-#             "Vitis rupestris",
-#             "Vitis aestivalis",
-#             "Vitis shuttleworthii",
-#             "Vitis palmata",
-#             "Vitis vulpina",
-#             "Vitis acerifolia",
-#             "Vitis riparia",
-#             "Vitis rotundifolia")
 
-
-# loop to grab the files 
-for(i in splist$taxon){
-  path <- paste0("data/",genus,"/",i,"/",modelRun,"/results")
-  files <- list.files(path, pattern = ".html",full.names = TRUE)
-  if(length(files)>0){
-    file.copy(files[1], folder, overwrite = TRUE)
-    print(paste0(i, " moved"))
-  }
+# files 
+files <- list.files("data/Vitis/speciesSummaryHTML",full.names = TRUE)
+for(i in files){
+  print(i)
+  file.copy(i, folder, overwrite = TRUE)
 }
+
 
 # move the run summary 
 runsummary <- paste0("data/Vitis/",modelRun,"_Summary.html")
 file.copy(runsummary, folder, overwrite = TRUE)
 file.copy(paste0("data/Vitis/",modelRun,"_boxPlotSummary.html"), folder, overwrite = TRUE)
 print("box plot summary doc copied")
+
+
+
+
+# vits county maps --------------------------------------------------------
+files <- list.files("data/countyMaps",pattern = "Evaluation2.html",full.names = TRUE)
+print(files)
+# Find the files 
+for(i in seq_along(files)){
+  if(length(files)>0){
+    file.copy(files[i], folder,overwrite = TRUE)
+    print(paste0(i, " moved"))
+  }
+}
 
 
 

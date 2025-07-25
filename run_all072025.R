@@ -108,9 +108,9 @@ fnaSpecies <- fnaData$`Taxon Name`[fnaData$`States from FNA`!= "NA,"]
 
 
 # species level runs  -----------------------------------------------------
-
-
-for(j in fnaSpecies){ # species 
+testSpecies <- c(species[c(1,5,12,31)])
+bworth <- species[10]
+for(j in bworth){ # species 
   print(j)
   #generate paths for exporting data 
   allPaths <- definePaths(dir1 = dir1,
@@ -153,16 +153,14 @@ for(j in fnaSpecies){ # species
   sp1 <- write_GPKG(path = allPaths$spatialDataPath,
                     overwrite = overwrite, 
                     function1 = applyFNA(speciesPoints = sp1, fnaData = fnaData)) 
-    
+  
     
   ## define natural area based on ecoregions
   natArea <- write_GPKG(path = allPaths$natAreaPath,
                         overwrite = overwrite,
                         function1 = nat_area_shp(speciesPoints = sp1,
                                                  ecoregions = ecoregions))
-  
-    
-    
+
   # condition for at least 8 observations 
   ## attempt to model the data
   if(nrow(sp1) >=8){
@@ -171,7 +169,6 @@ for(j in fnaSpecies){ # species
     b_Number <- numberBackground(natArea = natArea)
     
     ## generate GA50 objects
-    
     g_buffer <- write_Rast(path = allPaths$ga50Path, 
                            overwrite = overwrite,
                            function1 = create_buffers(speciesPoints = sp1,

@@ -97,14 +97,14 @@ single$taxon <- "Vitis bloodworthiana"
 single$observerName <-  "Facultad de Estudios Superiores Iztacala, UNAM, (FESI-UNAM), Mexico"
 single$originalTaxon <- "Vitis bloodworthiana"
 single$genus <- "Vitis"
-single$taxon <- "bloodworthiana"
+single$species <- "bloodworthiana"
 single$type <- "G"
 single$latitude <- "18.876888776" 
 single$longitude <- "-100.306249885"
 single$localityInformation <- "Generalized lat lon per curator's request"
-
+single$databaseSource <- "MBG"
+single$institutionCode <- "MBG"
 jun <- bind_rows(jun, single)
-
 # write out data
 write_csv(x = jun, file = "data/processed_occurrence/jun_072025.csv")
 
@@ -117,6 +117,8 @@ write_csv(x = gen, file = "data/processed_occurrence/genesys_072025.csv")
 
 # read in all other datasets ----------------------------------------------
 df <- readAndBind(run = TRUE)
+
+
 
 # Standardize names ( genus, species)  ------------------------------------
 source("preprocessing/functions/standardizeNames.R")
@@ -179,37 +181,22 @@ d5 <- assignFIPS(valLatLon2)
 # add the G records with no lat lon back to the modeling data---------------------------------------
 d6 <- d5 |> bind_rows(d3_g)
 
-
+# pull out single and re add 
+s1 <- d6[d6$index == 510393, ]
 
 # Remove duplicated data --------------------------------------------------
 uniqueTaxon <- unique(d6$taxon)
 source("preprocessing/functions/removeDupsAcrossDatasets.R")
-d7 <- uniqueTaxon |> purrr::map(.f = removeDups, data = d6) |> bind_rows()
+d7 <- uniqueTaxon |> 
+  purrr::map(.f = removeDups, data = d6) |>
+  bind_rows() |>
+  dplyr::bind_rows(s1)
+
 
 # export data 2023-10-24 --- All g points included and duplicates between sources are removed.
 write_csv(x = d7, file = "data/processed_occurrence/model_data072025.csv")
 
 
-
-
-# set up environment  -----------------------------------------------------
-
-# primary loop ------------------------------------------------------------
-genera <- unique(speciesData$genus)
-# species <- rerunTaxon
-species <- sort(unique(speciesData$taxon))
-
-
-# #testing
-i <- genera[1]
-j <- species[23]
-
-erroredSpecies <- list(noLatLon = c(),
-                       lessThenEight = c(),
-                       noSDM = c(),
-                       noHTML = c())
-
-# plan(strategy = "multicore", workers =4)
 
 
 
