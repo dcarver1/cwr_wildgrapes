@@ -387,7 +387,9 @@ countyState <- countyState |>
   rowwise() |>
   mutate(anyRecord = sum(O,H,G,`USDA Plants`, 
                          BONAP,`Nature Serve`, na.rm = T))
-
+# export 
+countyState$taxon <- speciesName
+write_csv(as.data.frame(countyState),paste0("~/trueNAS/work/cwr_wildgrapes/data/Vitis/countyMapTables/",speciesName,".csv"))
 ```
 
 <img src="logobanner.png" alt="Supporting Organizations" style="width: 100%">

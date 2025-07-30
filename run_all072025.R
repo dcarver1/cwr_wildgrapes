@@ -136,11 +136,21 @@ completed <- c("Vitis arizonica",
                "Vitis rupestris",
                "Vitis x champinii", # no html                
                "Vitis x doaniana", # no html 
-               "Vitis x novae-angliae")
+               "Vitis x novae-angliae",
+               # additional runs 
+               "Vitis cinerea var. cinerea","Vitis berlandieri","Vitis baileyana","Vitis shuttleworthii","Vitis munsoniana",
+               "Vitis acerifolia","Vitis monticola","Vitis simpsonii","Vitis tiliifolia","Vitis palmata",                   
+               "Vitis aestivalis var. bicolor","Vitis girdiana","Vitis aestivalis var. aestivalis")
 rest <- nOrder$taxon[!nOrder$taxon %in% completed]
 
 
-for(j in low){ # species 
+# errors [1] "Vitis labrusca", "Vitis aestivalis
+
+ 
+# start of for loop -------------------------------------------------------
+
+
+for(j in rest[6:length(rest)]){ # species 
   print(j)
   #generate paths for exporting data 
   allPaths <- definePaths(dir1 = dir1,
