@@ -159,12 +159,51 @@ data2 <- data |>
 # join to county data 
 c2 <- dplyr::left_join(countySHP, y = data2, by = "fips2" )
 
-library(leaflet)
-library(RColorBrewer)
+pacman::p_load(leaflet, RColorBrewer, tidyr, tigris)
 
+fips <- tigris::fips_codes |> 
+  dplyr::mutate(
+    county = gsub(" County", x = county, replacement = ""),
+    countyFIPS = paste0(state_code, county_code)
+  )
+
+
+# read in eddMAPS data  ---------------------------------------------------
+
+s1 <- read_csv("data/countyMaps/mappings.csv")|>
+  # drop most the stuff 
+  dplyr::select(objectid, Location)|>
+  # pull out punctiation 
+  dplyr::mutate(Location = gsub('"', "", Location)) |>
+  # split out location in county state country 
+  tidyr::separate(
+    Location,
+    into = c("county","state", "country"),
+    sep = ","
+  )|>
+  dplyr::mutate(
+    state = stringr::str_trim(state , side = "both"),
+    county = stringr::str_trim(county , side = "both")
+  )|>
+  # drop some stuff
+  dplyr::select(-country)
+# join data
+s2 <- dplyr::left_join(x = s1, y = fips, by = c("state" = "state_name", "county" = "county")) |>
+  group_by(countyFIPS)|>
+  count()
+
+# select unique fips 
+slf <- unique(s2$countyFIPS)
+# index county layers 
+slfCounties <- countySHP |>
+  dplyr::left_join(s2, by = c("fips2"= "countyFIPS"))|>
+  dplyr::filter(!is.na(n))
+
+# palette for the species counts 
 palette_colors <- colorNumeric(
-  palette = brewer.pal(n = 12 , name = "BuGn"), # Add more colors if you have more categories
-  domain = c2$count # The column containing the categories
+  palette = brewer.pal(n = 12 , name = "YlOrBr"), # Add more colors if you have more categories
+  domain = c2$count, # The column containing the categories
+  na.color = "#ddf0e9" # A common gray for NA values, or "transparent" if you want them invisible
 )
 
 m <- leaflet(c2) %>%
@@ -175,19 +214,56 @@ m <- leaflet(c2) %>%
     weight = 1, # Border weight
     opacity = 1,
     fillOpacity = 0.7,
+    group = "Vitis",
     popup = ~paste(
       "<b>", NAME_ALT, "</b> <br>",
-      "<b>Taxa:</b> ", taxa
+      "<b>Taxa :</b> ", taxa
     ), # Popup on click
     highlightOptions = highlightOptions(
       color = "white", weight = 2,
       bringToFront = TRUE
     )
-  ) %>%
+  ) |>
+  addPolygons(
+    data = slfCounties,
+    fillColor = "#18F5B4",       # Set the fill color to red
+    fillOpacity = 0.3,       # Set fill opacity to 30% (transparent red)
+    color = "#18F5B4",           # Set the outline color to solid red
+    weight = 3,              # Set the outline thickness (e.g., 3 pixels)
+    opacity = 1,   
+    group = "SLF",
+    popup = ~paste(
+      "<b>",NAME , "</b> <br>",
+      "<b>EDDMaps Count :</b> ", n
+    ), 
+  # Optional: add a label on hover
+    highlightOptions = highlightOptions(
+      weight = 5,
+      color = "darkred",
+      fillOpacity = 0.5,
+      bringToFront = TRUE
+    )
+  )|> 
   addLegend(
     pal = palette_colors,
     values = ~count,
-    title = "Polygon Categories",
-    position = "bottomright"
+    title = "Vitis Species Present",
+    position = "bottomright",
+    group = "Vitis"
+  ) |>
+  addLegend(
+    colors =  "#18F5B4",
+    labels = "Spotted Lanter Fly",
+    # opacity = my_polygon_fill_opacity, # Use the fill opacity for the legend swatch
+    title = "Legend", # Optional legend title
+    position = "bottomleft",
+    group = "SLF"
+  )|>
+  addLayersControl(
+    overlayGroups = c("SLF", "Vitis"), # These can be toggled on/off (checkboxes)
+    position = "topright", # Position of the control box
+    options = layersControlOptions(collapsed = TRUE) # TRUE collapses it to an icon, FALSE keeps it open
   )
+  
+  
   
