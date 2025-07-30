@@ -17,46 +17,112 @@ sigfig <- function(vec, n=4){
   
 } 
 
+# append the bonap data 
+bon <- read_csv("data/countyMaps/vitis_plants_bonap0730.csv") |>
+  dplyr::select(
+    "taxon","countyFIPS",
+    Bonap2 = "BONAP",           
+    USDA = "USDA Plants"
+  )|>
+  dplyr::mutate(
+    countyFIPS = as.character(countyFIPS)
+  )
+
+
 for(i in 1:length(files)){
   # read in 
-  d1 <- read_csv(files[i])
+  d1 <- read_csv(files[i])|>
+    dplyr::mutate(
+      fips2 = as.character(fips2)
+    )
   # select species 
   taxa <- d1$taxon[1]
+  # filter bonnap/plants 
+  bon2 <- bon |>
+    dplyr::filter(taxon == taxa)
+  
   # total Counties 
-  d2 <- d1 |> 
+  if(nrow(bon2) > 0){
+    d2 <- d1 |> 
+      dplyr::left_join(y = bon2, by = c("fips2" = "countyFIPS"))|>
+      dplyr::rowwise()|>
+      dplyr::mutate(
+        any = sum(c(anyRecord, USDA, Bonap2),na.rm = TRUE)
+      ) |>
+    dplyr::filter(any > 0)
+    # total Counties 
+    c1 <- nrow(d2)
+    # total H and G 
+    hg <- d2 |> 
+      dplyr::filter(!is.na(H) | !is.na(G)) |>
+      nrow()
+    # total i nat 
+    n1 <- d2 |>    
+      dplyr::filter(!is.na(O)) |>
+      nrow()
+    # total bonap
+    b1 <- d2 |>    
+      dplyr::filter(!is.na(Bonap2 )) |>
+      nrow()
+    # total plants 
+    p1 <- d2 |>    
+      dplyr::filter(!is.na(USDA)) |>
+      nrow()
+    # construct df 
+    df <- tibble(
+      taxon = taxa, 
+      totalCounties = c1,
+      `Counties with H or G` = hg,
+      `Percent Coverage H or G` = (hg/c1)*100,
+      `Counties with BONAP` = b1,
+      `Percent Coverage BONAP` = (b1/c1)*100,
+      `Counties with USDA Plants` = p1,
+      `Percent Coverage USDA Plants` = (p1/c1)*100,
+      `Counties with INaturalist` = n1,
+      `Percent Coverage INaturalist` = (n1/c1)*100
+    ) %>%
+      mutate(across(where(is.numeric), sigfig))
+    
+    
+  }else{
+    d2 <- d1 |> 
     dplyr::filter(anyRecord > 0)
-  # total Counties 
-  c1 <- nrow(d2)
-  # total H and G 
-  hg <- d2 |> 
-    dplyr::filter(!is.na(H) | !is.na(G)) |>
-    nrow()
-  # total i nat 
-  n1 <- d2 |>    
-    dplyr::filter(!is.na(O)) |>
-    nrow()
-  # total bonap
-  b1 <- d2 |>    
-    dplyr::filter(!is.na(BONAP )) |>
-    nrow()
-  # total plants 
-  p1 <- d2 |>    
-    dplyr::filter(!is.na(`USDA Plants`)) |>
-    nrow()
-  # construct df 
-  df <- tibble(
-    taxon = taxa, 
-    totalCounties = c1,
-    `Counties with H or G` = hg,
-    `Percent Coverage H or G` = (hg/c1)*100,
-    `Counties with BONAP` = hg,
-    `Percent Coverage BONAP` = (hg/c1)*100,
-    `Counties with USDA Plants` = p1,
-    `Percent Coverage USDA Plants` = (p1/c1)*100,
-    `Counties with INaturalist` = n1,
-    `Percent Coverage INaturalist` = (n1/c1)*100
-  ) %>%
-    mutate(across(where(is.numeric), sigfig))
+    # total Counties 
+    c1 <- nrow(d2)
+    # total H and G 
+    hg <- d2 |> 
+      dplyr::filter(!is.na(H) | !is.na(G)) |>
+      nrow()
+    # total i nat 
+    n1 <- d2 |>    
+      dplyr::filter(!is.na(O)) |>
+      nrow()
+    # total bonap
+    b1 <- d2 |>    
+      dplyr::filter(!is.na(BONAP )) |>
+      nrow()
+    # total plants 
+    p1 <- d2 |>    
+      dplyr::filter(!is.na(`USDA Plants`)) |>
+      nrow()
+    # construct df 
+    df <- tibble(
+      taxon = taxa, 
+      totalCounties = c1,
+      `Counties with H or G` = hg,
+      `Percent Coverage H or G` = (hg/c1)*100,
+      `Counties with BONAP` = b1,
+      `Percent Coverage BONAP` = (b1/c1)*100,
+      `Counties with USDA Plants` = p1,
+      `Percent Coverage USDA Plants` = (p1/c1)*100,
+      `Counties with INaturalist` = n1,
+      `Percent Coverage INaturalist` = (n1/c1)*100
+    ) %>%
+      mutate(across(where(is.numeric), sigfig))
+    
+  }
+
+ 
   if(i ==1 ){
     output = df
   }else{
@@ -66,6 +132,8 @@ for(i in 1:length(files)){
 write_csv(output, file = "data/countyMaps/countyCountsSummaryTable.csv")
 
 
+
+View(output)
 
 
 # Generate the species richies map at the county level --------------------
