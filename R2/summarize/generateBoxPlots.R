@@ -19,11 +19,11 @@ df <- data.frame(y, group)
 
 generateBoxPlot <- function(data,names,parameter){
   # grab the title
-  title <- names$`Current title`[names$shortName == parameter]
+  title <- names$`Current title`[names$vitisModelNames  == parameter]
   # assign the model param
   data2 <- data |> 
     # remove the glochidiatus row with the extreme outline 
-    dplyr::filter(bio_01 > -30)|> 
+    # dplyr::filter(bio_01 > -30)|> 
     dplyr::select(taxon, type, feature = parameter) |>
     dplyr::mutate(taxon = str_replace_all(taxon, "_", " ") )
   # only G points for the jitters

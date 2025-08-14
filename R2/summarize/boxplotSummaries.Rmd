@@ -23,8 +23,8 @@ names <- params$inputData$names
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 # generate the plots then append them to a named list
-for(i in seq_along(names$shortName)){
-  parameter <- names$shortName[i]
+for(i in seq_along(names$vitisModelNames )){
+  parameter <- names$vitisModelNames[i]
   box1 <- generateBoxPlot(data = data,
                 names = names,
                 parameter = parameter)
@@ -49,55 +49,55 @@ All plots shown below are generated using all available occurrences. The purple 
 ### Annual mean temperature     
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-plots$bio_01
+plots$bio_1
 ```
 
 ### Mean diurnal temperature range
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-plots$bio_02
+plots$bio_2
 ```
 
 ### Isothermality
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-plots$bio_03
+plots$bio_3
 ```
 
 ### Temperature seasonality (standard deviation)        
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-plots$bio_04
+plots$bio_4
 ```
 
 ### Maximum temperature of warmest month                
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-plots$bio_05
+plots$bio_5
 ```
 
 ### Minimum temperature of coldest month                
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-plots$bio_06
+plots$bio_6
 ```
 
 ### Temperature annual range                            
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-plots$bio_07
+plots$bio_7
 ```
 
 ### Mean temperature of wettest quarter                 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-plots$bio_08
+plots$bio_8
 ```
 
 ### Mean temperature of driest quarter
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-plots$bio_09
+plots$bio_9
 ```
 
 ### Mean temperature of warmest quarter                 
@@ -167,107 +167,100 @@ plots$bio_19
 ### srad                                               
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-plots$bio_20
+plots$srad
 ```
 
 ### vapr                                               
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-plots$bio_21
+plots$vapr
 ```
 
 ### wind                                              
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-plots$bio_22
+plots$wind
 ```
 
-### Altitude                                          
+### elevation                                          
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-plots$bio_23
+plots$elevation
 ```
 
-### Aspect (North-South)                             
+### Aspect                             
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-plots$bio_24
-```
-
-### Aspect (East-West)                                  
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-plots$bio_25
+plots$aspect
 ```
 
 ### Slope
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-plots$bio_26
+plots$slope
 ```
 
 
 
-## Principal Component Analysis  {.tabset}
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-library("factoextra")
-library("FactoMineR")
-
-# helper function  
-visualizeAndSave <- function(pcaplot, title, subtitle, tiltX = FALSE){
-  # more direct visualization of the plots 
-  p1 <- ggpubr::ggpar(pcaplot,
-                title = title,
-                subtitle = subtitle,
-                legend.title = "Taxon Group",
-                legend.position = "top",
-                ggtheme = theme_gray()
-                )
-  p1
-  #save result 
-  # ggexport(plotlist = p1, 
-  #          filename = paste0("outputs/pca/july2024exports/",subtitle,".png"))
-           # width = 1200,
-           # height = 800,
-           # res = 300)
-}
+## PCA work 
+# 
+# library("factoextra")
+# library("FactoMineR")
+# 
+# # helper function  
+# visualizeAndSave <- function(pcaplot, title, subtitle, tiltX = FALSE){
+#   # more direct visualization of the plots 
+#   p1 <- ggpubr::ggpar(pcaplot,
+#                 title = title,
+#                 subtitle = subtitle,
+#                 legend.title = "Taxon Group",
+#                 legend.position = "top",
+#                 ggtheme = theme_gray()
+#                 )
+#   p1
+#   #save result 
+#   # ggexport(plotlist = p1, 
+#   #          filename = paste0("outputs/pca/july2024exports/",subtitle,".png"))
+#            # width = 1200,
+#            # height = 800,
+#            # res = 300)
+# }
 ```
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-d2 <- data[,c(30, 3:28)]
-
-attData <- d2 |>
-    dplyr::mutate(Taxon = stringr::str_replace_all(string = taxon,
-                                                         pattern = "_",
-                                                         replace = " ")
-  )|>
-  dplyr::select(
-    Taxon,
-    "bio_01","bio_02","bio_03","bio_04","bio_05","bio_06","bio_07","bio_08",
-    "bio_09", "bio_10","bio_11","bio_12","bio_13","bio_14","bio_15","bio_16",
-    "bio_17","bio_18","bio_19","bio_20", "bio_21","bio_22","bio_23","bio_24",
-    "bio_25","bio_26" 
-  )
-names(attData) <- c("Taxon", names$`Current title`)
-
-# generate the PCA 
-pca <- PCA(attData[,-1],scale.unit = TRUE, graph = FALSE)
+# 
+# d2 <- data[,c(30, 3:28)]
+# 
+# attData <- d2 |>
+#     dplyr::mutate(Taxon = stringr::str_replace_all(string = taxon,
+#                                                          pattern = "_",
+#                                                          replace = " ")
+#   )|>
+#   dplyr::select(
+#     Taxon,
+#     "bio_01","bio_02","bio_03","bio_04","bio_05","bio_06","bio_07","bio_08",
+#     "bio_09", "bio_10","bio_11","bio_12","bio_13","bio_14","bio_15","bio_16",
+#     "bio_17","bio_18","bio_19","bio_20", "bio_21","bio_22","bio_23","bio_24",
+#     "bio_25","bio_26" 
+#   )
+# names(attData) <- c("Taxon", names$`Current title`)
+# 
+# # generate the PCA 
+# pca <- PCA(attData[,-1],scale.unit = TRUE, graph = FALSE)
 ```
 
-### Eigenvalues 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-# eigenvalues/ariance 
-eig <- fviz_eig(pca, addlabels = TRUE, ylim = c(0, 50))
-visualizeAndSave(pcaplot = eig,
-                 title = "Principal Component Analysis- Eigenvalues",
-                 subtitle = " ") |> 
-    ggplotly(height = 800, width = 1200) 
-
+# # eigenvalues/ariance 
+# eig <- fviz_eig(pca, addlabels = TRUE, ylim = c(0, 50))
+# visualizeAndSave(pcaplot = eig,
+#                  title = "Principal Component Analysis- Eigenvalues",
+#                  subtitle = " ") |> 
+#     ggplotly(height = 800, width = 1200) 
+# 
 
 ```
 
@@ -277,121 +270,117 @@ visualizeAndSave(pcaplot = eig,
 
 
 # correlation circle 
-var <- get_pca_var(pca)
-corCircle <- fviz_pca_var(pca, col.var = "black")
-visualizeAndSave(pcaplot = corCircle,
-                 title = "Principal Component Analysis - Correlation circle",
-                 subtitle = "") |>
-  ggplotly(height = 800, width = 1200) 
+# var <- get_pca_var(pca)
+# corCircle <- fviz_pca_var(pca, col.var = "black")
+# visualizeAndSave(pcaplot = corCircle,
+#                  title = "Principal Component Analysis - Correlation circle",
+#                  subtitle = "") |>
+#   ggplotly(height = 800, width = 1200) 
 
 
 ```
 
-### Quality of Representation 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-# quality of representation 
-fviz_cos2(pca, choice = "var", axes = 1:2)+
-  theme(axis.text.x = element_text(angle = 75))+
-  ggtitle("Principal Component Analysis - quality of representation")
+# # quality of representation 
+# fviz_cos2(pca, choice = "var", axes = 1:2)+
+#   theme(axis.text.x = element_text(angle = 75))+
+#   ggtitle("Principal Component Analysis - quality of representation")
 
 ```
 
-### Contribution of Variables 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-library(gridExtra)
-# contributino of variables 
-# Contributions of variables to PC1
-c1 <- fviz_contrib(pca, choice = "var", axes = 1, top = 10) + 
-  theme(axis.text.x = element_text(angle = 75))+
-  ggtitle("Contribution of Variables Dim-1")
-
-# Contributions of variables to PC2
-c2 <- fviz_contrib(pca, choice = "var", axes = 1, top = 10) + 
-  theme(axis.text.x = element_text(angle = 75))+
-  ggtitle("Contribution of Variables Dim-2")
-
-
-grid.arrange(c1, c2, ncol=2)
+# library(gridExtra)
+# # contributino of variables 
+# # Contributions of variables to PC1
+# c1 <- fviz_contrib(pca, choice = "var", axes = 1, top = 10) + 
+#   theme(axis.text.x = element_text(angle = 75))+
+#   ggtitle("Contribution of Variables Dim-1")
+# 
+# # Contributions of variables to PC2
+# c2 <- fviz_contrib(pca, choice = "var", axes = 1, top = 10) + 
+#   theme(axis.text.x = element_text(angle = 75))+
+#   ggtitle("Contribution of Variables Dim-2")
+# 
+# 
+# grid.arrange(c1, c2, ncol=2)
 
 ```
 
 ### Ellipse
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-# pca elispe with groups 
-pcaEllipse <- fviz_pca_ind(pca,
-             geom.ind = "point", # show points only (nbut not "text")
-             col.ind = attData$Taxon, # color by groups
-             addEllipses = TRUE, # Concentration ellipses
-             mean.point = FALSE,
-             legend.title = "Taxon Groups"
-)
-visualizeAndSave(pcaplot = pcaEllipse,
-                 title = "Principal Component Analysis - Ellipse",
-                 subtitle = "") |>
-  ggplotly(height = 800, width = 1200) 
+# # pca elispe with groups 
+# pcaEllipse <- fviz_pca_ind(pca,
+#              geom.ind = "point", # show points only (nbut not "text")
+#              col.ind = attData$Taxon, # color by groups
+#              addEllipses = TRUE, # Concentration ellipses
+#              mean.point = FALSE,
+#              legend.title = "Taxon Groups"
+# )
+# visualizeAndSave(pcaplot = pcaEllipse,
+#                  title = "Principal Component Analysis - Ellipse",
+#                  subtitle = "") |>
+#   ggplotly(height = 800, width = 1200) 
 
 ```
 
 
-### Confidence Ellipses
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-
-# Add confidence ellipses
-pcaEllipseConfidence <-fviz_pca_ind(pca, 
-             geom.ind = "point", 
-             col.ind = attData$Taxon, 
-             addEllipses = TRUE, 
-             ellipse.type = "confidence",
-             mean.point = FALSE,
-             legend.title = "Groups"
-)
-visualizeAndSave(pcaplot = pcaEllipseConfidence,
-                 title = "Principal Component Analysis - Confidence Ellipse",
-                 subtitle = "Confidence Ellipse")|>
-  ggplotly(height = 800, width = 1200) 
+# 
+# 
+# # Add confidence ellipses
+# pcaEllipseConfidence <-fviz_pca_ind(pca, 
+#              geom.ind = "point", 
+#              col.ind = attData$Taxon, 
+#              addEllipses = TRUE, 
+#              ellipse.type = "confidence",
+#              mean.point = FALSE,
+#              legend.title = "Groups"
+# )
+# visualizeAndSave(pcaplot = pcaEllipseConfidence,
+#                  title = "Principal Component Analysis - Confidence Ellipse",
+#                  subtitle = "Confidence Ellipse")|>
+#   ggplotly(height = 800, width = 1200) 
 ```
 
 
-### Convex Hull
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-# Convex hull
-convexHull <- fviz_pca_ind(pca,
-                           geom.ind = "point",
-             col.ind = attData$Taxon, # color by groups
-             addEllipses = TRUE,
-             ellipse.type = "convex",
-             legend.title = "Groups"
-)
-visualizeAndSave(pcaplot = convexHull,
-                 title = "Principal Component Analysis - Convex Hull Ellipse",
-                 subtitle = "")|>
-  ggplotly(height = 800, width = 1200) 
+# 
+# # Convex hull
+# convexHull <- fviz_pca_ind(pca,
+#                            geom.ind = "point",
+#              col.ind = attData$Taxon, # color by groups
+#              addEllipses = TRUE,
+#              ellipse.type = "convex",
+#              legend.title = "Groups"
+# )
+# visualizeAndSave(pcaplot = convexHull,
+#                  title = "Principal Component Analysis - Convex Hull Ellipse",
+#                  subtitle = "")|>
+#   ggplotly(height = 800, width = 1200) 
 ```
 
 
 ### Biplot
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-# biplot with elipse 
-biplot <- fviz_pca_biplot(pca, 
-                col.ind = attData$Taxon,
-                addEllipses = TRUE, 
-                label = "var",
-                col.var = "black",
-                repel = TRUE,
-                legend.title = "Species Group") 
-
-visualizeAndSave(pcaplot = biplot,
-                 title = "Principal Component Analysis - Biplot",
-                 subtitle = "" )|>
-  ggplotly(height = 800, width = 1200) 
+# # biplot with elipse 
+# biplot <- fviz_pca_biplot(pca, 
+#                 col.ind = attData$Taxon,
+#                 addEllipses = TRUE, 
+#                 label = "var",
+#                 col.var = "black",
+#                 repel = TRUE,
+#                 legend.title = "Species Group") 
+# 
+# visualizeAndSave(pcaplot = biplot,
+#                  title = "Principal Component Analysis - Biplot",
+#                  subtitle = "" )|>
+#   ggplotly(height = 800, width = 1200) 
 
 
 ```

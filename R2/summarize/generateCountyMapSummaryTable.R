@@ -201,24 +201,69 @@ slfCounties <- countySHP |>
 
 # palette for the species counts 
 palette_colors <- colorNumeric(
-  palette = brewer.pal(n = 12 , name = "YlOrBr"), # Add more colors if you have more categories
+  palette = brewer.pal(n = 9 , name = "Oranges"), # Add more colors if you have more categories
   domain = c2$count, # The column containing the categories
-  na.color = "#ddf0e9" # A common gray for NA values, or "transparent" if you want them invisible
+  na.color = "#FF000000" # A common gray for NA values, or "transparent" if you want them invisible
 )
+
+# update the popup 
+library(stringr)
+c2$taxa2 <- stringr::str_remove_all(string = c2$taxa, pattern = "c\\")
+c2$taxa2 <-  stringr::str_remove_all(string = c2$taxa, "^c\\(|\\)$")
+c2$taxa2 <-  stringr::str_remove_all(string = c2$taxa,  '"')
+
+# The str_replace_all() function may leave a leading or trailing space
+# on some strings. Use str_trim() to remove them.
+c2$taxaShort <- stringr::str_replace_all(string = c2$taxa, pattern = "Vitis", replacement = "V.")
+
+
+c2$popup <- NA
+for(i in 1:nrow(c2)){
+  text <- str_remove_all(c2$taxaShort[i], "[\\\\\"]")|>
+    stringr::str_remove_all( "^c\\(|\\)$")
+  
+  # convert to vector for lenght '
+  vect <- stringr::str_split(string = text, pattern = ",") |>
+     unlist()
+  v2 <- 
+  if(length(text)>1){
+    text2 <- vect
+  }else{
+    text2 <- text
+  }
+  
+  
+  name <- c2$NAME_ALT[i]
+  if(!is.na(text)){
+    c2$popup[i] <- paste0(
+      "<b>", name, "</b> <br>",
+      paste("Total Vitis Species:", length(vect)),
+      "<br>" ,
+      text
+      )
+  }
+}
 
 m <- leaflet(c2) %>%
   addTiles() %>% # Add default OpenStreetMap tiles
+  #state outline 
   addPolygons(
+    data = stateSHP, 
+    fillColor = "#FFFFFF", # Symbolize by 'category' using the defined palette
+    color = "black", # Border color
+    weight = 1, # Border weight
+    opacity = 1,
+    fillOpacity = 0.8
+    ) |> 
+  addPolygons(
+    data = c2,
     fillColor = ~palette_colors(count), # Symbolize by 'category' using the defined palette
     color = "black", # Border color
     weight = 1, # Border weight
     opacity = 1,
     fillOpacity = 0.7,
     group = "Vitis",
-    popup = ~paste(
-      "<b>", NAME_ALT, "</b> <br>",
-      "<b>Taxa :</b> ", taxa
-    ), # Popup on click
+    popup = ~popup, # Popup on click
     highlightOptions = highlightOptions(
       color = "white", weight = 2,
       bringToFront = TRUE
@@ -227,7 +272,7 @@ m <- leaflet(c2) %>%
   addPolygons(
     data = slfCounties,
     fillColor = "#18F5B4",       # Set the fill color to red
-    fillOpacity = 0.3,       # Set fill opacity to 30% (transparent red)
+    fillOpacity = 0,       # Set fill opacity to 30% (transparent red)
     color = "#18F5B4",           # Set the outline color to solid red
     weight = 3,              # Set the outline thickness (e.g., 3 pixels)
     opacity = 1,   
@@ -261,9 +306,10 @@ m <- leaflet(c2) %>%
   )|>
   addLayersControl(
     overlayGroups = c("SLF", "Vitis"), # These can be toggled on/off (checkboxes)
-    position = "topright", # Position of the control box
-    options = layersControlOptions(collapsed = TRUE) # TRUE collapses it to an icon, FALSE keeps it open
+    position = "topleft", # Position of the control box
+    options = layersControlOptions(collapsed = FALSE) # TRUE collapses it to an icon, FALSE keeps it open
   )
-  
+m
+
   
   

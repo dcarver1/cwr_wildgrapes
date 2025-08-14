@@ -76,6 +76,7 @@ ecoregions <- sf::st_read("data/geospatial_datasets/ecoregions/tnc_terr_ecoregio
 protectedAreas <- terra::rast("data/geospatial_datasets/protectedLands/wdpa_1km_all_.tif")
 ## buffer distance 
 bufferDist <- 50000
+bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames_072025.csv")
 
 
 #vitis run 
@@ -525,44 +526,45 @@ for(j in rest[6:length(rest)]){ # species
 #   
 #   
 # produce boxplot summaries -----------------------------------------------
-# renderBoxPlots  <- TRUE
-# if(renderBoxPlots == TRUE){
-#   # compile all modeling data
-#   amd <- list.files(dir1, pattern = "allmodelData.csv", full.names = TRUE, recursive = TRUE)
-#   amd2 <- amd[grepl(pattern = runVersion, x = amd)]
-#   #empty df for storing data from the loop
-#   df4 <- data.frame()
-#   # loop over species
-#   for(p in seq_along(species)){
-#     p1 <- amd2[grepl(pattern = species[p],x = amd2)]
-#     if(length(p1)==1){
-#       p2 <- p1 |>
-#         read.csv() |>
-#         dplyr::filter(presence == 1)|>
-#         dplyr::mutate(taxon = species[p])
-#       df4 <- bind_rows(p2,df4)
-#     }
-#   }
-#   # generate input data set
-#   inputData <- list(
-#     data = df4,
-#     species = species,
-#     names = bioNames
-#   )
-#   # produce the document
-#   rmarkdown::render(input = "R2/summarize/boxplotSummaries.Rmd",
-#                     output_format = "html_document",
-#                     output_dir = file.path(dir1),
-#                     output_file = paste0(runVersion,"_boxPlotSummary.html"),
-#                     params = list(
-#                       inputData = inputData),
-#                     envir = new.env(parent = globalenv())
-#                     # clean = F,
-#                     # encoding = "utf-8"
-#   )
-# }
+renderBoxPlots  <- TRUE
+if(renderBoxPlots == TRUE){
+  # compile all modeling data
+  amd <- list.files(dir1, pattern = "allmodelData.csv", full.names = TRUE, recursive = TRUE)
+  amd2 <- amd[grepl(pattern = runVersion, x = amd)]
+  #empty df for storing data from the loop
+  df4 <- data.frame()
+  # loop over species
+  for(p in seq_along(species)){
+    p1 <- amd2[grepl(pattern = species[p],x = amd2)]
+    if(length(p1)==1){
+      p2 <- p1 |>
+        read.csv() |>
+        dplyr::filter(presence == 1)|>
+        dplyr::mutate(taxon = species[p])
+      df4 <- bind_rows(p2,df4)
+    }
+  }
+  # generate input data set
+  inputData <- list(
+    data = df4,
+    species = species,
+    names = bioNames
+  )
+  # produce the document
+  rmarkdown::render(input = "R2/summarize/boxplotSummaries.Rmd",
+                    output_format = "html_document",
+                    output_dir = file.path(dir1),
+                    output_file = paste0(runVersion,"_boxPlotSummary.html"),
+                    params = list(
+                      inputData = inputData),
+                    envir = new.env(parent = globalenv())
+                    # clean = F,
+                    # encoding = "utf-8"
+  )
+}
 
 # 
 # # generate a summary CSV for vitis 
-# summaryCSV <- summaryTable(species = species, runVersion = runVersion)
-# write_csv(x = summaryCSV, file = paste0("data/Vitis/summaryTable_",runVersion,".csv"))
+source("R2/summarize/summaryTable.R")
+summaryCSV <- summaryTable(species = species, runVersion = runVersion)
+write_csv(x = summaryCSV, file = paste0("data/Vitis/summaryTable_",runVersion,".csv"))
