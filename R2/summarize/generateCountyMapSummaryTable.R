@@ -203,7 +203,7 @@ slfCounties <- countySHP |>
 palette_colors <- colorNumeric(
   palette = brewer.pal(n = 9 , name = "Oranges"), # Add more colors if you have more categories
   domain = c2$count, # The column containing the categories
-  na.color = "#FF000000" # A common gray for NA values, or "transparent" if you want them invisible
+  na.color = "#14A1D920" # A common gray for NA values, or "transparent" if you want them invisible
 )
 
 # update the popup 
@@ -311,5 +311,82 @@ m <- leaflet(c2) %>%
   )
 m
 
-  
-  
+
+
+# Summary stats for slf ---------------------------------------------------
+library(tidyr)
+sum1 <- slfCounties |>
+  mutate(
+    stateFIPS = str_sub(FIPS, 1, 4)
+  )
+
+statesSel <- stateSHP[stateSHP$code_local %in% sum1$stateFIPS, ]
+uniqueStates <- unique(statesSel$name)
+# counties with SLF 
+countySel <- unique(sum1$FIPS)
+# counties with vitis 
+vitisC <- c2 |>
+  mutate(
+    stateFIPS = str_sub(FIPS, 1, 4)
+  )|>
+  dplyr::filter(!is.na(count))
+countyVit <- vitisC |> 
+  dplyr::filter(FIPS %in% countySel)
+
+dim(vitisC)
+
+# join the SLF and vitis county records into single dataframe 
+slf1 <- as.data.frame(slfCounties)|>
+  dplyr::mutate(type = "SLF")|>
+  dplyr::select(
+    "FIPS",
+    type,
+    "NAME",
+    "NAME_ALT", 
+    "totalSLF_obs" = "n",
+    -geom
+  )
+v1 <- vitisC |> 
+  dplyr::mutate(type = "vitis") |>
+  dplyr::select(
+    FIPS,
+    "totalVitis_obs" = "count",
+    "taxa", 
+    "stateFIPS",
+    -geom
+  )
+slfV <- slf1 |> 
+  dplyr::full_join(y = v1, by = "FIPS")|>
+  dplyr::select(
+    -geom
+  )
+# export full summary data 
+write_csv(slfV, file = "temp/slf/slf_vitis_countyJoin.csv")
+
+
+# test for presence of VITIS in states with SLF 
+d1 <- slfV |> 
+  dplyr::group_by(stateFIPS)|>
+  dplyr::summarise(
+    slfCount = sum(totalSLF_obs, na.rm = TRUE),
+    vitisCount = sum(totalVitis_obs, na.rm = TRUE)
+  ) |> 
+  dplyr::filter(slfCount > 0)
+# write_csv(x = d1 ,file = "temp/slf/slf_vitis_stateOverlap.csv")
+
+# which species overlap the most with SLF 
+d2 <- slfV |>
+  dplyr::filter(totalSLF_obs  > 0)
+# list of unique taxa 
+taxa <- output$taxon
+# storage dataframe 
+out1 <- data.frame(taxon = taxa, slfCounties = NA, totalCounties = output$totalCounties)
+
+for(i in 1:length(taxa)){
+  # grepl select from join 
+  v1 <- d2[grepl(pattern = taxa[i], x = d2$taxa), ]
+  # assign value 
+  out1$slfCounties[i] <- nrow(v1)
+}
+# export 
+write_csv(x = out1, file = "temp/slf/slfCountiesPerTaxa.csv")

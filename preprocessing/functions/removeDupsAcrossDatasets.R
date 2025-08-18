@@ -7,6 +7,8 @@ removeDups <- function(taxon1,data){
   d1 <- data
   # for each species 
   d2 <- d1 |> dplyr::filter(taxon == taxon1)
+  # export temp
+  write_csv(x = d2, "temp/vArizonicaAllSources.csv")
   
   # compare datasets where there is expect overlap 
   grin <- c("USDA_NPGS_GRINGlobal","USDA ARS NPGS 2019a") 
@@ -22,7 +24,7 @@ removeDups <- function(taxon1,data){
   sourceID_Check <- function(sources,data){
     d1 <- data |>
       dplyr::filter(databaseSource %in% sources ) |> # subset to features of interest
-      arrange(match(databaseSource, sources)) |> # order so the dulicate test will work 
+      arrange(match(databaseSource, sources))|> # order so the dulicate test will work 
       dplyr::filter(!duplicated(`sourceUniqueID`))
     return(d1)
   }
@@ -60,6 +62,6 @@ removeDups <- function(taxon1,data){
   df2a <- df2[!duplicated(df2[,c("latitude","longitude","institutionCode")]),]
   # bind back to na data 
   df3 <- bind_rows(dfna, df2a)
-  
+  write_csv(df3, file = "temp/vArizonica_afterDupRemoved.csv")
   return(df3)  
 }
