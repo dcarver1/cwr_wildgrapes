@@ -56,7 +56,7 @@ a2 <- alteredData |>
 speciesData3 <- speciesData[!c(speciesData$recordID %in% a2$`Record ID for point`), ]
 speciesData <- speciesData3
 # export for gap r testing 
-write.csv(speciesData, file = "temp/allVitisData072025.csv")
+# write.csv(speciesData, file = "temp/allVitisData072025.csv")
 
 
 # order but n observations 
@@ -72,6 +72,7 @@ bioVars <- readRDS("data/geospatial_datasets/bioclim_layers/bioVar_1km.RDS")
 templateRast <- bioVars[[1]]
 ## ecoregions
 ecoregions <- sf::st_read("data/geospatial_datasets/ecoregions/tnc_terr_ecoregions.gpkg")
+
 ## protect lands 
 protectedAreas <- terra::rast("data/geospatial_datasets/protectedLands/wdpa_1km_all_.tif")
 ## buffer distance 
@@ -80,7 +81,7 @@ bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames_0720
 
 
 #vitis run 
-runVersion <- "run072025_1k"
+runVersion <- "run082025_1k"
 # overwrite 
 overwrite <- FALSE
 
@@ -115,43 +116,33 @@ erroredSpecies <- list(noLatLon = c(),
 # species to test for FNA filter - maybe need to rerun if filter was not applied 
 fnaSpecies <- fnaData$`Taxon Name`[fnaData$`States from FNA`!= "NA,"]
 
-
-# species level runs  -----------------------------------------------------
-testSpecies <- c(species[c(1,5,12,31)])
-one <- "Vitis x doaniana"
-# completed 
-completed <- c("Vitis arizonica", 
-               "Vitis biformis",
-               "Vitis blancoi",
-               "Vitis bloodworthiana",
-               "Vitis bourgaeana",
-               "Vitis californica",
-               "Vitis cinerea var. tomentosa",
-               "Vitis jaegeriana",
-               "Vitis lincecumii",
-               "Vitis nesbittiana", 
-               "Vitis peninsularis", 
-               "Vitis popenoei", 
-               "Vitis rufotomentosa", # no html, no lat lon         
-               "Vitis rotundifolia var. pygmaea",
-               "Vitis rupestris",
-               "Vitis x champinii", # no html                
-               "Vitis x doaniana", # no html 
-               "Vitis x novae-angliae",
-               # additional runs 
-               "Vitis cinerea var. cinerea","Vitis berlandieri","Vitis baileyana","Vitis shuttleworthii","Vitis munsoniana",
-               "Vitis acerifolia","Vitis monticola","Vitis simpsonii","Vitis tiliifolia","Vitis palmata",                   
-               "Vitis aestivalis var. bicolor","Vitis girdiana","Vitis aestivalis var. aestivalis")
-rest <- nOrder$taxon[!nOrder$taxon %in% completed]
-
-
 # errors [1] "Vitis labrusca", "Vitis aestivalis
+stable <- c()
+for(s in species){
+  # test specific to the 08 run 
+  srsex08 <- read_csv(paste0(paste0("data/Vitis/",s,"/run082025_1k/gap_analysis/srs_ex.csv")))
+  
+  # test specific to the 08 run 
+  srsex07 <- read_csv(paste0(paste0("data/Vitis/",s,"/run072025_1k/gap_analysis/srs_ex.csv")))
+  if(srsex07$NTOTAL == srsex08$NTOTAL){
+    print(s)
+    stable <- c(stable, s)
+  }
+}
+# 
+
+# summary table of species 
+s2 <- speciesData |>
+  dplyr::group_by(taxon)|>
+  dplyr::summarise(count = n())|>
+  dplyr::arrange(count)
+
+# View(s2)
 
  
+ 
 # start of for loop -------------------------------------------------------
-
-
-for(j in rest[6:length(rest)]){ # species 
+for(j in s2$taxon[26:30]){ # species 
   print(j)
   #generate paths for exporting data 
   allPaths <- definePaths(dir1 = dir1,
@@ -166,7 +157,7 @@ for(j in rest[6:length(rest)]){ # species
   
   ## counts data
   c1 <- write_CSV(path = allPaths$countsPaths,
-                  overwrite = TRUE,
+                  overwrite = overwrite,
                   function1 = generateCounts(speciesData = sd1))
   
   #srsex
@@ -174,88 +165,90 @@ for(j in rest[6:length(rest)]){ # species
                      overwrite = overwrite,
                      function1 = srs_exsitu(sp_counts = c1))
     
+  
+  
   # check for no lat lon data
   if(c1$totalUseful == 0){
     erroredSpecies$noLatLon <- c(erroredSpecies$noLatLon, j)
     next
     print("next")
   }
-  
-  
-  ## create the inital spatial object 
+
+
+  ## create the inital spatial object
   sp1 <- write_GPKG(path = allPaths$spatialDataPath,
-                    overwrite = overwrite, 
+                    overwrite = overwrite,
                     function1 = createSF_Objects(speciesData = sd1) %>%
                       removeDuplicates()
   )
-  
-  
-  # apply FNA filter if possible. 
+
+
+  # apply FNA filter if possible.
   sp1 <- write_GPKG(path = allPaths$spatialDataPath,
-                    overwrite = overwrite, 
-                    function1 = applyFNA(speciesPoints = sp1, fnaData = fnaData)) 
-  
-    
+                    overwrite = overwrite,
+                    function1 = applyFNA(speciesPoints = sp1, fnaData = fnaData))
+
+
   ## define natural area based on ecoregions
   natArea <- write_GPKG(path = allPaths$natAreaPath,
                         overwrite = overwrite,
                         function1 = nat_area_shp(speciesPoints = sp1,
                                                  ecoregions = ecoregions))
 
-  # condition for at least 8 observations 
+  # condition for at least 8 observations
   ## attempt to model the data
   if(nrow(sp1) >=8){
     print("Modeling")
-    ## define number of background points 
+    ## define number of background points
     b_Number <- numberBackground(natArea = natArea)
-    
+
     ## generate GA50 objects
-    g_buffer <- write_Rast(path = allPaths$ga50Path, 
+    g_buffer <- write_Rast(path = allPaths$ga50Path,
                            overwrite = overwrite,
                            function1 = create_buffers(speciesPoints = sp1,
                                                       natArea = natArea,
                                                       bufferDist = bufferDist,
                                                       templateRast = templateRast))
-    
-    ## associate observations with bioclim data and spatial thin 
-    m_data1 <- write_CSV(path = allPaths$allDataPath, 
-                         overwrite = overwrite,
+
+    ## associate observations with bioclim data and spatial thin
+    m_data1 <- write_CSV(path = allPaths$allDataPath,
+                         overwrite = TRUE,
                          generateModelData(speciesPoints = sp1,
                                            natArea = natArea,
                                            bioVars = bioVars,
                                            b_Number = b_Number))
-    # exporting with type column now removing for consistenty 
+    # exporting with type column now removing for consistenty
     m_data <- m_data1 |>
       dplyr::select(-type)
-    
-    
-    # remove duplicated background data  
+
+
+    # remove duplicated background data
     presence <- m_data[m_data$presence == 1,]
     absence <- m_data[m_data$presence != 1,]
     dubs <- duplicated(absence[,2:27])
     absence <- absence[!dubs, ]
     m_data <- bind_rows(presence, absence)
-    
+
     ## perform variable selection
-    v_data <- write_RDS(path = allPaths$variablbeSelectPath, 
+    v_data <- write_RDS(path = allPaths$variablbeSelectPath,
                         overwrite = overwrite,
                         function1 = varaibleSelection(modelData = m_data,
                                                       parallel = TRUE))
-    
-    ## prepare data for maxent model 
+
+    ## prepare data for maxent model
     rasterInputs <- write_Rast(path = allPaths$prepRasters,
                                overwrite = overwrite,
                                function1 = cropRasters(natArea = natArea,
                                                        bioVars = bioVars,
                                                        selectVars = v_data))
-    
-    ## perform maxent model 
-    ### tabular data 
+
+    ## perform maxent model
+    ### tabular data
     sdm_results <- write_RDS(path = allPaths$sdmResults,
-                             overwrite = overwrite, 
+                             overwrite = overwrite,
                              function1 = runMaxnet(selectVars = v_data,
                                                    rasterData = rasterInputs))
-    
+
     ## condition to test if model was suscessfull produced.
     if(!is.null(sdm_results)){
       print("conservation metrics")
@@ -263,27 +256,27 @@ for(j in rest[6:length(rest)]){ # species
       projectsResults <- write_RDS(path = allPaths$modeledRasters,
                                    overwrite = overwrite,
                                    function1 = rasterResults(sdm_result))
-      
+
       ## generate evaluationTable
       evalTable <- write_CSV(path = allPaths$evalTablePath,
                              overwrite = overwrite,
                              function1 = evaluateTable(sdm_result = sdm_results))
-      
+
       ## generate threshold rasters
       thres <- write_Rast(path =  allPaths$thresPath,
                           overwrite = overwrite,
                           function1 = generateThresholdModel(evalTable = evalTable,
                                                              rasterResults = projectsResults))
-      
+
       ## generate a mess map
       ## generate a kernal density map
-      
+
       ## crop GA50 to threshold area
       g_bufferCrop <- write_Rast(path = allPaths$g50_bufferPath,
                                  overwrite = overwrite,
                                  function1 = cropG_Buffer(ga50 = g_buffer,
                                                           thres = thres))
-      
+
       # Gap Analysis Methods  ---------------------------------------------------
       # insitu
       ## srsin
@@ -300,7 +293,7 @@ for(j in rest[6:length(rest)]){ # species
                                                 protectedArea = protectedAreas,
                                                 thres = thres,
                                                 rasterPath = allPaths$ersinRast))
-      
+
       ## grsin
       grsin <-  write_CSV(path = allPaths$grsinPath,
                           overwrite = overwrite ,
@@ -315,12 +308,12 @@ for(j in rest[6:length(rest)]){ # species
                                                 ersin = ersin,
                                                 noModel = FALSE
                          ))
-      
-      
+
+
       #exsitu
       ##ersex
       ersex <- write_CSV(path = allPaths$ersexPath,
-                         overwrite = TRUE,
+                         overwrite = overwrite,
                          function1 = ers_exsitu(speciesData = sd1,
                                                 thres = thres,
                                                 natArea = natArea,
@@ -334,22 +327,22 @@ for(j in rest[6:length(rest)]){ # species
                                                 thres = thres))
       ##fcsex
       fcsex <- write_CSV(path = allPaths$fcsexPath,
-                         overwrite = TRUE,
+                         overwrite = overwrite,
                          function1 = fcs_exsitu(srsex = srsex,
                                                 grsex = grsex,
                                                 ersex = ersex,
                                                 noModel = FALSE))
-      
+
       #combined measure
       fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
-                               overwrite = TRUE,
+                               overwrite = overwrite,
                                function1 = fcs_combine(fcsin = fcsin,
                                                        fcsex = fcsex))
-      
+
       #gather features for RMD
       ## just a helper function to reduce the number of input for the RMD
       reportData <- write_RDS(path = allPaths$summaryDataPath,
-                              overwrite = TRUE,
+                              overwrite = overwrite,
                               function1 = grabData(fscCombined = fcsCombined,
                                                    ersex = ersex,
                                                    fcsex = fcsex,
@@ -366,25 +359,25 @@ for(j in rest[6:length(rest)]){ # species
                                                    countsData = c1,
                                                    variableImportance = allPaths$variablbeSelectPath,
                                                    NoModel = FALSE))
-    }else{ # no sdm results 
+    }else{ # no sdm results
       erroredSpecies$noSDM <- c(erroredSpecies$noSDM, j)
       print("conservation Metrics")
-      #Complete conservation assessments without models 
+      #Complete conservation assessments without models
       ## srsin
       srsin <- write_CSV(path = allPaths$srsinPath,
                          overwrite = overwrite,
-                         function1 = srs_insitu(occuranceData = sp1, 
+                         function1 = srs_insitu(occuranceData = sp1,
                                                 thres = NA,
                                                 protectedArea =protectedAreas ))
-      ## fcsin 
+      ## fcsin
       fcsin <- write_CSV(path = allPaths$fcsinPath,
                          overwrite = overwrite,
                          function1 = fcs_insitu(srsin = srsin,
                                                 grsin = grsin,
                                                 ersin = ersin,
                                                 noModel = TRUE))
-      
-      
+
+
       ##fcsex
       fcsex <- write_CSV(path = allPaths$fcsexPath,
                          overwrite = overwrite,
@@ -392,15 +385,15 @@ for(j in rest[6:length(rest)]){ # species
                                                 grsex = grsex,
                                                 ersex = ersex,
                                                 noModel = TRUE))
-      
-      #combined measure 
+
+      #combined measure
       fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
                                overwrite = overwrite,
                                function1 = fcs_combine(fcsin = fcsin,
                                                        fcsex = fcsex))
-      # generate report data for species 
+      # generate report data for species
       reportData <- write_RDS(path = allPaths$summaryDataPath,
-                              overwrite = TRUE,
+                              overwrite = overwrite,
                               function1 = grabData(fscCombined = fcsCombined,
                                                    ersex = NA,
                                                    fcsex = fcsex,
@@ -417,33 +410,34 @@ for(j in rest[6:length(rest)]){ # species
                                                    countsData = c1,
                                                    variableImportance = allPaths$variablbeSelectPath,
                                                    NoModel = TRUE))
-      
+
      }
-    }else{ # end of attempt to model 
+    }else{ # end of attempt to model
       erroredSpecies$lessThenEight <- c(erroredSpecies$lessThenEight, j)
-      ### need the FCS summary data for the full run summary 
-      ## srsin can be calculated for all species with at least one lat lon value 
+      ### need the FCS summary data for the full run summary
+      ## srsin can be calculated for all species with at least one lat lon value
       ## if no model is present (GRSin and ERSin are NA)
       ## if no G points are present (srsex, grsex, and ersex are 0)
       ## if g Points present but no model (srsex is calculated, grsex, and ersex are NA )
-      
-      # pull n G points from 
-      gPoints <- c1$totalGUseful 
-      # 
+
+      # pull n G points from
+      gPoints <- c1$totalGUseful
+      #
       srsin <- write_CSV(path = allPaths$srsinPath,
                          overwrite = overwrite,
-                         function1 = srs_insitu(occuranceData = sp1, 
+                         function1 = srs_insitu(occuranceData = sp1,
                                                 thres = NA,
                                                 protectedArea =protectedAreas ))
-      
+
+
       fcsin <- write_CSV(path = allPaths$fcsinPath,
                          overwrite = overwrite,
                          function1 = fcs_insitu(srsin = srsin,
                                                 grsin = grsin,
                                                 ersin = ersin,
                                                 noModel = TRUE))
-      
-      
+
+
       ##fcsex
       fcsex <- write_CSV(path = allPaths$fcsexPath,
                          overwrite = overwrite,
@@ -452,15 +446,15 @@ for(j in rest[6:length(rest)]){ # species
                                                 ersex = ersex,
                                                 noModel = TRUE,
                                                 gPoints = gPoints))
-      
-      #combined measure 
+
+      #combined measure
       fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
                                overwrite = overwrite,
                                function1 = fcs_combine(fcsin = fcsin,
                                                        fcsex = fcsex))
-      
+
       reportData <- write_RDS(path = allPaths$summaryDataPath,
-                              overwrite = TRUE,
+                              overwrite = overwrite,
                               function1 = grabData(fscCombined = fcsCombined,
                                                    ersex = NA,
                                                    fcsex = fcsex,
@@ -477,10 +471,10 @@ for(j in rest[6:length(rest)]){ # species
                                                    countsData = c1,
                                                    variableImportance = NA,
                                                    NoModel = TRUE))
-      
-    } 
-    
-    # generate summary html  
+
+    }
+
+    # generate summary html
     # this is not working with the 1k data do to size fo the rasters... need to reevaluate
     if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
     try(
@@ -518,11 +512,11 @@ for(j in rest[6:length(rest)]){ # species
 # # produce Run level Summaries ---------------------------------------------
 # need to set overwrite to true to produce most of the layers
 ### big processing step...
-# generateRunSummaries(dir1 = dir1,
-#                      runVersion = runVersion,
-#                      genus = i,
-#                      protectedAreas = protectedAreas,
-#                      overwrite = FALSE)
+generateRunSummaries(dir1 = dir1,
+                     runVersion = runVersion,
+                     genus = i,
+                     protectedAreas = protectedAreas,
+                     overwrite = FALSE)
 #   
 #   
 # produce boxplot summaries -----------------------------------------------

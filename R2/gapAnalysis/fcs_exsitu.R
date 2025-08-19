@@ -10,17 +10,19 @@ fcs_exsitu <- function(srsex, grsex, ersex, noModel, gPoints) {
 
     if(noModel==TRUE){
       if(gPoints > 0){
+        # points are present but no modle so can't generate GRS, ERS 
         out_df <- data.frame(ID=srsex$ID,
                              SRS=srsex$SRS,
-                             GRS= 0,
-                             ERS= 0,
-                             FCS= mean(c(srsex$SRS,0,0), na.rm=T),
+                             GRS= NA,
+                             ERS= NA,
+                             FCS= mean(c(srsex$SRS,NA,NA), na.rm=T),
                              FCS_Score = NA)
       }else{
+        # no go points so values are assigned as zero 
         out_df <- data.frame(ID=srsex$ID,
                              SRS=srsex$SRS,
-                             GRS=NA,
-                             ERS=NA,
+                             GRS=0,
+                             ERS=0,
                              FCS=srsex$SRS/3,
                              FCS_Score = NA)
       }

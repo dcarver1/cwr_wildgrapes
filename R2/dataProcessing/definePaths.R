@@ -55,8 +55,7 @@ definePaths <- function(dir1, j, runVersion){
   g50_bufferPath=paste0(path$results, "/ga50_masked.tif"),
   # data for summary data 
   summaryDataPath = paste0(path$results, "/",j,"_Summary.RDS"), 
-  # summary html path
-  summaryHTMLPath = paste0(path$results, "/",j,"_Summary.html"),
+
   # third level -- occurrences -----------------------------------------------
   # counts data 
   countsPaths = paste0(path$occurances, "/counts.csv"),
@@ -86,7 +85,9 @@ definePaths <- function(dir1, j, runVersion){
   # fcsin
   fcsinPath = paste0(path$gap_analysis,"/fcs_in.csv"),
   #fcsCombined 
-  fcsCombinedPath = paste0(path$gap_analysis,"/fcs_combined.csv")
+  fcsCombinedPath = paste0(path$gap_analysis,"/fcs_combined.csv"),
+  # summary html path
+  summaryHTMLPath = paste0("data/Vitis/speciesSummaryHTML/",j,"_Summary_fnaFilter.html")
   )
   return(path)
 }

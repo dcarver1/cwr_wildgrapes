@@ -2,30 +2,8 @@ pacman::p_load(dplyr, readr, sf, terra, rgbif, googledrive, countrycode,
                stringr)
 
 
-# old taxonomy 
-# synonymList <- read_csv("data/source_data/taxonomy20231212.csv") |>
-#   dplyr::filter(modelSpecies == "Y") 
-# 
-# 
-# 
-# speciesOld <- unique(synonymList$taxon)
-
-# # Species with model results currently 
-# modelDirs <- list.dirs("data/Vitis",
-#                           recursive = FALSE)
-# modeledOld <- c()
-# missingOld <- c()
-# for(i in speciesOld){
-#   val <- grepl(pattern = i, modelDirs)
-#   if(TRUE %in% val){
-#     modeledOld <- c(modeledOld, i)
-#   }else{
-#     missingOld <- c(missingOld, i)
-#   }
-# }
-
 # new vitis data 
-vitis2 <- read_csv("data/newWorldVitis.csv")|> 
+vitis2 <- read_csv("data/New World Vitis.csv")|> 
   dplyr::select(
     "taxon" = "Scientific Name", 
     "acceptedSynonym" = "Names to include in this concept (Homotypic synonyms)",
@@ -33,19 +11,6 @@ vitis2 <- read_csv("data/newWorldVitis.csv")|>
     "modelSpecies"    =  "Include in gap analysis?"
   )
 
-
-
-# speciesNew <- vitis2$`Taxon Name`
-# modeled <- c()
-# missing <- c()
-# for(i in speciesNew){
-#   val <- grepl(pattern = i, modelDirs)
-#   if(TRUE %in% val){
-#     modeled <- c(modeled, i)
-#   }else{
-#     missing <- c(missing, i)
-#   }
-# }
 
 # General changes to taxonomy 
 # include data for missing species 
@@ -82,6 +47,8 @@ pullGBIFFromDrive(run=FALSE)
 gbif <- processGBIF(path = "data/source_data/vitisGBIFDownload_20250721.csv") |>
   orderNames(names = standardColumnNames) |>
   removeDuplicatesID()
+
+
 # write out data
 write_csv(x = gbif, file = "data/processed_occurrence/gbif_072025.csv")
 
@@ -108,6 +75,14 @@ jun <- bind_rows(jun, single)
 # write out data
 write_csv(x = jun, file = "data/processed_occurrence/jun_072025.csv")
 
+
+# processing Mexico accessions  -------------------------------------------
+mex <- processMex()
+# write out data
+write_csv(x = mex, file = "data/processed_occurrence/mexicoRecords_082025.csv")
+
+
+
 # update genesys data 
 gen <- processGenesysUpdate(path = "data/source_data/GenesysPGR_Vitis_subset.csv") |>
   orderNames(names = standardColumnNames) |>
@@ -116,8 +91,19 @@ gen <- processGenesysUpdate(path = "data/source_data/GenesysPGR_Vitis_subset.csv
 write_csv(x = gen, file = "data/processed_occurrence/genesys_072025.csv")
 
 # read in all other datasets ----------------------------------------------
-df <- readAndBind(run = TRUE)
+df <- readAndBind(run = TRUE) |>
+  dplyr::select(-`Collecting number`)
 
+
+
+# drop specific datasets based on source  ---------------------------------
+df <- df |> 
+  dplyr::filter(
+    !databaseSource %in% c("FAO 2019 (WIEWS)", "GBIF 2019","Global Crop Diversity Trust 2019a (Genesys)",
+                           "Global Crop Diversity Trust 2019b  (Cwr Occ)", "USDA ARS NPGS 2019a")
+  )
+
+# View(df)
 
 
 # Standardize names ( genus, species)  ------------------------------------
@@ -133,6 +119,16 @@ source("preprocessing/functions/speciesStandardization.R")
 datasets <- speciesCheck(data = df1, synonymList = vitis2)
 df2 <- datasets$includedData
 
+
+# export the dataset to be used in the SRSex 
+# Remove duplicated data --------------------------------------------------
+uniqueTaxon <- unique(df2$taxon)
+source("preprocessing/functions/removeDupsAcrossDatasets.R")
+df2_a <- uniqueTaxon |> 
+  purrr::map(.f = removeDups, data = df2) |>
+  bind_rows() 
+write_csv(x = df2, file = "data/processed_occurrence/allEvaluated_data072025.csv")
+write_csv(x = df2_a, file = "data/processed_occurrence/allEvaluated_data_removedDups_072025.csv")
 
 # Checks on the lat lon  --------------------------------------------------
 
@@ -182,7 +178,10 @@ d5 <- assignFIPS(valLatLon2)
 d6 <- d5 |> bind_rows(d3_g)
 
 # pull out single and re add 
+## don't know what this is maybe the single object from above
 s1 <- d6[d6$index == 510393, ]
+single$latitude <- as.numeric(single$latitude)
+single$longitude <- as.numeric(single$longitude)
 
 # Remove duplicated data --------------------------------------------------
 uniqueTaxon <- unique(d6$taxon)
@@ -190,7 +189,7 @@ source("preprocessing/functions/removeDupsAcrossDatasets.R")
 d7 <- uniqueTaxon |> 
   purrr::map(.f = removeDups, data = d6) |>
   bind_rows() |>
-  dplyr::bind_rows(s1)
+  dplyr::bind_rows(single)
 
 
 # export data 2023-10-24 --- All g points included and duplicates between sources are removed.

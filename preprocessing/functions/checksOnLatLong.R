@@ -39,13 +39,15 @@ checksOnLatLong <- function(data){
   df3 <- df2 |> 
     # Test the lat long values based on generalized bounding box. 
     dplyr::mutate(
+      ## altering the lat lon filters to include of of the americas 
       validLat = case_when(
-        latitude >= 14 ~ TRUE,
-        is.na(latitude) ~ NA, 
-        latitude < 14 ~ FALSE
+      #   latitude >= 14 ~ TRUE,
+      #   latitude < 14 ~ FALSE
+        is.na(latitude) ~ NA,
+        TRUE ~ TRUE
         ),
       validLon = case_when(
-        longitude <= -50 ~ TRUE,
+        longitude <= -30 ~ TRUE,
         is.na(longitude) ~ NA, 
         TRUE ~ FALSE
       ),

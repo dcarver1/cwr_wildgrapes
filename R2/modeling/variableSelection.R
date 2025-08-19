@@ -12,7 +12,8 @@ varaibleSelection <- function(modelData, parallel){
   test2 <-complete.cases(varOnly)
   # drop all column from bioValues set as well so the same data is used for maxnet modeling.
   bioValues <- modelData |>
-    st_drop_geometry()# [test2,] |> st_drop_geometry()
+    st_drop_geometry() 
+    # dplyr::select(-geometry)# [test2,] |> st_drop_geometry()
   # redefine var select to in
   varSelect <- bioValues |> 
     dplyr::select(-presence)
@@ -87,7 +88,7 @@ varaibleSelection <- function(modelData, parallel){
   # write.csv(x = rankPredictors, file = paste0(sp_dir, "/modeling/maxent/predictorImportance.csv"))
   
   # filter the input sf object based on rank order of selected variables. 
-  variblesToModel <- modelData[,c("presence",varNames)]
+  variblesToModel <- modelData[,c("presence",varNames, "geometry")]
   
   return(list(
     rankPredictors = rankPredictors,

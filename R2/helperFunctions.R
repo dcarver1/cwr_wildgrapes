@@ -7,7 +7,7 @@ sourceFiles <- function(gapAnalysisOnly, furrr=FALSE){
       recursive = TRUE )
     f2 <- f1[grepl(pattern = "/furrr/", x = f1)]
     for(i in f2){
-      print(i)
+      cat(i)
       source(i)
     }
   }else{
@@ -16,10 +16,16 @@ sourceFiles <- function(gapAnalysisOnly, furrr=FALSE){
       pattern = "\\.R$", # \\ensure file extension. $ensures ends with. Avoids .Rmd
       full.names = TRUE,
       recursive = TRUE )
+    
+    # drop the county files that are causing errors 
     f2 <- f1[!grepl(pattern = "/furrr/", x = f1)]
-    for(i in f2){
-      print(i)
-      source(i)
+    f2 <- f2[!grepl(pattern =  "R2/summarize/generateCountyMapSummaryTable.R", f2)]
+    f2 <- f2[!grepl(pattern =  "R2/summarize/renderCountySummaries.R", f2)]
+    
+    for(f123 in 1:length(f2)){
+      print(f123)
+      
+      source(f2[f123])
     }
   }
   if(gapAnalysisOnly == TRUE){

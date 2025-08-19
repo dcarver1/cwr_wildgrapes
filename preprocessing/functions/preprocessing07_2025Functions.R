@@ -1,5 +1,52 @@
 
 
+
+# process the mexican taxon data  -----------------------------------------
+
+processMex <- function(){
+  file <- read_csv("data/source_data/mexicoRecords_ck.csv")
+  # 
+  d1 <- file |> 
+    dplyr::select(
+      taxon = "Taxon",
+      originalTaxon = "Possible Species ID",
+      # genus = "Vitis",
+      "latitude"  = Latitude,
+      "longitude" = Longitude,
+      sourceUniqueID = Genotype,
+      type = Type,
+      state  = State,
+      localityInformation = Locality, 
+      collectionSource = "Holding Institute",
+      observerName = Source,
+      "Collecting number"
+    ) |>
+    tidyr::separate( col = taxon, into = c("genus", "species"), sep = " ", remove = FALSE) 
+  # ID correction 
+  d1[d1$taxon == "Vitis novogranatensis", "sourceUniqueID"] <- d1[d1$taxon == "Vitis novogranatensis", "Collecting number"]
+  d1$latitude <- as.numeric(d1$latitude)
+  d1$longitude <- as.numeric(d1$longitude)
+  
+  # format data 
+  output <- data.frame(matrix(nrow = 0, ncol = 25))
+  names <- c(
+    "taxon","originalTaxon","genus","species","latitude", "longitude","databaseSource",
+    "institutionCode","type","sourceUniqueID", "sampleCategory","country","iso3",
+    "localityInformation","biologicalStatus","collectionSource","finalOriginStat",
+    "yearRecorded","county","countyFIPS","state","stateFIPS","coordinateUncertainty",
+    "observerName","recordID"  
+  )
+  output <- data.frame(setNames(lapply(names, function(x) character()), names), stringsAsFactors = FALSE)
+  output$latitude <- as.numeric(output$latitude)
+  output$longitude <- as.numeric(output$longitude)
+  
+  # bind data together 
+  output <- output |>
+    bind_rows(d1)
+  return(output)
+}
+
+
 # process Dataset from june Wen  ------------------------------------------
 processJun <- function(){
   files <- list.files("data/jWen_data2025",
@@ -187,13 +234,19 @@ readAndBind <- function(run = FALSE){
   # jun wen mexico 
   jun  <- read_csv("data/processed_occurrence/jun_072025.csv",col_types = cols(.default = "c"))
   
+  # more mexico records 
+  mex  <- read_csv("data/processed_occurrence/mexicoRecords_082025.csv",col_types = cols(.default = "c"))
   
-  d2 <-  bind_rows(gbif, grin, seinet, wiews, genesys, bgSurvey, pnas2020, ucdavis, jun) 
+  
+  d2 <-  bind_rows(gbif, grin, seinet, wiews, genesys, bgSurvey, pnas2020, ucdavis, jun, mex) 
   d2 <- d2 |> 
     dplyr::mutate( index = dplyr::row_number())
   # reorder
   d2 <- d2 |>
     dplyr::select(index, everything())
+  # exclude some of the older observational data 
+
+  
   return(d2)
 }
 

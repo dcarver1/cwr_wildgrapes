@@ -40,7 +40,7 @@ processGBIF <- function(path){
   
   
   # mutate the taxon 
-  d1 <- d1 |> mutate( taxon =  case_when(
+  d2 <- d1 |> mutate( taxon =  case_when(
     taxonRank == "SPECIES" ~ d1$species,
     taxonRank == "GENUS" ~ d1$genus,
     taxonRank == "VARIETY" ~ paste0(d1$species, " var. ", d1$infraspecificEpithet),
@@ -52,23 +52,23 @@ processGBIF <- function(path){
   
   # define the type
   ## GBIF has a perserved specimen class as well, could be good   
-  d1 <- d1 |>
+  d3 <- d2 |>
     mutate(type = case_when(
       sampleCategory != "LIVING_SPECIMEN" ~ "H",
       sampleCategory == "LIVING_SPECIMEN" ~ "G"
     ))
   
   # county
-  d1$country <- countrycode(sourcevar = d1$countryCode, 
+  d3$country <- countrycode(sourcevar = d3$countryCode, 
                             origin = "iso2c", 
                             destination = "country.name.en")
   
   # iso3 
-  d1$iso3 <- countrycode(sourcevar = d1$countryCode,
+  d3$iso3 <- countrycode(sourcevar = d3$countryCode,
                          origin = "iso2c",
                          destination = "iso3c")
   # add elements not define in data and select for correct order 
-  d1 <- d1|> mutate(
+  d4 <- d3|> mutate(
     county = NA,
     countyFIPS = NA,
     stateFIPS  = NA,
@@ -101,5 +101,5 @@ processGBIF <- function(path){
     recordID
   )
   
-  return(d1)
+  return(d4)
 }

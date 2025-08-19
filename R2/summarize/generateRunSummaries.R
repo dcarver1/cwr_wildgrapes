@@ -42,7 +42,7 @@ generateRunSummaries <- function(dir1,runVersion,
     
     # need to extend this file to matcht he extent of the richness image 
     t1 <- terra::rast(path1)
-    extended_raster <- extend(ga50Richness, t1, fill = 0) 
+    extended_raster <- extend(ga50Richness$richnessTif, t1, fill = 0) 
     
     terra::writeRaster(x = extended_raster,
                        filename = path3,

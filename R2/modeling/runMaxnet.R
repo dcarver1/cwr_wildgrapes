@@ -5,11 +5,15 @@
 #'
 #' @return : A complex list object with a variety of results and evaluation metrics 
 runMaxnet <- function(selectVars,rasterData){
-  points <- selectVars$variblesToModel %>%
-    dplyr::mutate(lon = sf::st_coordinates(.)[,1],
-                  lat = sf::st_coordinates(.)[,2])%>%
-    st_drop_geometry()
-  
+  points <- selectVars$variblesToModel |>
+    as.data.frame() |> 
+    mutate(geometry = gsub("c\\(|\\)", "", geometry)) %>%
+    separate(
+      col = geometry,
+      into = c("lon", "lat"),
+      sep = ",\\s*",
+      convert = TRUE
+    )
   rasters <- rasterData
   
   variblesToModel <- names(rasterData)

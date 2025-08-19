@@ -24,7 +24,7 @@ generateModelData <- function(speciesPoints,natArea,bioVars,b_Number){
                           long.col = "longitude",
                           spec.col = "taxon",
                           thin.par = 5,
-                          reps = 1,
+                          reps = 5,
                           locs.thinned.list.return = TRUE, 
                           write.files = FALSE, 
                           write.log.file = FALSE)[[1]] |> row.names()
