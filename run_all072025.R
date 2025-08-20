@@ -10,7 +10,7 @@ pacman::p_load("dplyr", "sf","terra",  "purrr","randomForest","VSURF",
                "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo",
                "leaflet", "tidyterra", "rmarkdown", "furrr", "stringr", "spThin",
                "tictoc","tigris", "tmap", "googlesheets4", "ggplot2", "plotly",
-               "factoextra")
+               "factoextra", "tidyr")
 tmap::tmap_mode("view")
 
 #source functions
@@ -36,7 +36,7 @@ sourceFiles(gapAnalysisOnly = FALSE)
 # Vitis
 # filtering the extra values coming from the data prep process
 speciesData <- read_csv("data/processed_occurrence/model_data072025.csv") |>
-  dplyr::select(-c("geometry","index", "validLat","validLon","validLatLon"))
+  dplyr::select(-c("index", "validLat","validLon","validLatLon")) # "geometry",
 # # using the data from the county maps for an reference run
 # speciesData1 <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.csv")|>
 #   dplyr::filter(!is.na(taxon),
@@ -83,7 +83,8 @@ bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames_0720
 #vitis run 
 runVersion <- "run082025_1k"
 # overwrite 
-overwrite <- FALSE
+overwrite <- TRUE
+
 
 
 # create folder structure 
@@ -137,12 +138,14 @@ s2 <- speciesData |>
   dplyr::summarise(count = n())|>
   dplyr::arrange(count)
 
-# View(s2)
 
+# rerun FNA species
+fna2 <- fnaData[nchar(fnaData$`States from FNA`) != 3, ]
+rerun <- s2[s2$taxon %in% fna2$`Taxon Name`, ]
  
  
 # start of for loop -------------------------------------------------------
-for(j in s2$taxon[26:30]){ # species 
+for(j in s2$taxon[24]){ # species 
   print(j)
   #generate paths for exporting data 
   allPaths <- definePaths(dir1 = dir1,
@@ -185,7 +188,7 @@ for(j in s2$taxon[26:30]){ # species
 
   # apply FNA filter if possible.
   sp1 <- write_GPKG(path = allPaths$spatialDataPath,
-                    overwrite = overwrite,
+                    overwrite = TRUE,
                     function1 = applyFNA(speciesPoints = sp1, fnaData = fnaData))
 
 

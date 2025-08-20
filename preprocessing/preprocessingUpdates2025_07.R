@@ -103,7 +103,7 @@ df <- df |>
                            "Global Crop Diversity Trust 2019b  (Cwr Occ)", "USDA ARS NPGS 2019a")
   )
 
-# View(df)
+View(df)
 
 
 # Standardize names ( genus, species)  ------------------------------------
@@ -153,33 +153,35 @@ d3_g <- d3$countycheck |>
 valLatLon <- d3$validLatLon
 
 # Spatial base data checks ------------------------------------------------
-countries <- st_read("data/geospatial_datasets/countries/ne_10m_admin_0_countries.gpkg")
-states <- st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")
-counties <- st_read("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg") ## US only
 
-source("preprocessing/functions/spatialChecks.R")
-d4 <- spatialChecks(
-  data = valLatLon,
-  countries = countries,
-  states = states,
-  counties = counties
-)
-
-valLatLon2 <- d4$validLatLon
+## skipping this for the current model runs 
+# countries <- st_read("data/geospatial_datasets/countries/ne_10m_admin_0_countries.gpkg")
+# states <- st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")
+# counties <- st_read("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg") ## US only
+# 
+# source("preprocessing/functions/spatialChecks.R")
+# d4 <- spatialChecks(
+#   data = valLatLon,
+#   countries = countries,
+#   states = states,
+#   counties = counties
+# )
+# 
+# valLatLon2 <- d4$validLatLon
 
 
 # assign FIPS codes -------------------------------------------------------
-source("preprocessing/functions/assignFIPS.R")
+# source("preprocessing/functions/assignFIPS.R")
 ## all the state and coutry 
-d5 <- assignFIPS(valLatLon2)
+# d5 <- assignFIPS(valLatLon2)
 
 
 # add the G records with no lat lon back to the modeling data---------------------------------------
-d6 <- d5 |> bind_rows(d3_g)
+d6 <- valLatLon |> bind_rows(d3_g)
 
 # pull out single and re add 
 ## don't know what this is maybe the single object from above
-s1 <- d6[d6$index == 510393, ]
+# s1 <- d6[d6$index == 510393, ]
 single$latitude <- as.numeric(single$latitude)
 single$longitude <- as.numeric(single$longitude)
 

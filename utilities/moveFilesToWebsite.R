@@ -12,14 +12,14 @@ pacman::p_load(dplyr,readr)
 
 ##################
 # vitis specific moves ----------------------------------------------------
-folder <- "~/trueNAS/work/vitis2"
+folder <- "~/trueNAS/work/vitis2/m"
 
 
 
 
 # vitis SDMS --------------------------------------------------------------
 genus <- "Vitis" 
-modelRun <- "run072025_1k"
+modelRun <- "run082025_1k"
 # species 
 splist <- read_csv("data/processed_occurrence/model_data072025.csv")|>
   dplyr::filter(!is.na(taxon), genus == "Vitis")|>
