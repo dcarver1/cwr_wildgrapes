@@ -4,10 +4,10 @@
 #'
 #' @return dataframe of all unfiltered input datasets
 #' 
-#' 
-subsetSpecies <- function(occuranceData, species){
-  occuranceData[occuranceData$taxon == species, ]
-}
+#' #' 
+#' subsetSpecies <- function(occuranceData, species){
+#'   occuranceData[occuranceData$taxon == species, ]
+#' }
 
 
 

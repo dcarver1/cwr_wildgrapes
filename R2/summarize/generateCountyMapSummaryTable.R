@@ -18,17 +18,23 @@ sigfig <- function(vec, n=4){
 }
 
 # append the bonap data
-bon <- read_csv("data/countyMaps/vitis_plants_bonap0730.csv") |>
-  dplyr::select(
-    "taxon","countyFIPS",
-    Bonap2 = "BONAP",
-    USDA = "USDA Plants"
-  )|>
+bonPlant <- bon |>
   dplyr::mutate(
-    countyFIPS = as.character(countyFIPS)
-  )
+    fips = case_when(
+      nchar(countyFIPS) ==  4 ~ paste0("0", countyFIPS),
+      TRUE ~ countyFIPS
+    ))
+# select the sources
+bon1 <- bonPlant |> 
+  dplyr::filter(Bonap2 == 1) |>
+  dplyr::select(fips, taxon, bonap = Bonap2)
+u1 <- bonPlant |> 
+  dplyr::filter(USDA == 1) |>
+  dplyr::select(fips, taxon, USDA)
+# join back 
+bonPlant <- dplyr::full_join(bon1, u1)
 
-
+# summarized by species  --------------------------------------------------
 for(i in 1:length(files)){
   # read in
   d1 <- read_csv(files[i])|>
@@ -38,16 +44,17 @@ for(i in 1:length(files)){
   # select species
   taxa <- d1$taxon[1]
   # filter bonnap/plants
-  bon2 <- bon |>
+  bon2 <- bonPlant |>
     dplyr::filter(taxon == taxa)
 
   # total Counties
   if(nrow(bon2) > 0){
     d2 <- d1 |>
-      dplyr::left_join(y = bon2, by = c("fips2" = "countyFIPS"))|>
+      dplyr::select(fips = fips2, NAME, REGION, O,     H,     G, pre1970 )|>
+      dplyr::left_join(y = bon2, by = "fips") |>
       dplyr::rowwise()|>
       dplyr::mutate(
-        any = sum(c(anyRecord, USDA, Bonap2),na.rm = TRUE)
+        any = sum(c(O, H, G, bonap, USDA),na.rm = TRUE)
       ) |>
     dplyr::filter(any > 0)
     # total Counties
@@ -62,7 +69,7 @@ for(i in 1:length(files)){
       nrow()
     # total bonap
     b1 <- d2 |>
-      dplyr::filter(!is.na(Bonap2 )) |>
+      dplyr::filter(!is.na(bonap )) |>
       nrow()
     # total plants
     p1 <- d2 |>
@@ -131,9 +138,102 @@ for(i in 1:length(files)){
 }
 write_csv(output, file = "data/countyMaps/countyCountsSummaryTable.csv")
 
-
-
 View(output)
+
+
+# Summarized by county  ---------------------------------------------------
+## prep all county data 
+counties <- sf::st_read("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg") |>
+  dplyr::select(name = NAME_ALT,
+                state = REGION ,
+                fips = CODE_LOCAL)|>
+  dplyr::mutate(fips = as.character(fips))
+## prep the bonap/usda plants data 
+bonPlant <- bon |>
+  dplyr::mutate(
+    fips = case_when(
+      nchar(countyFIPS) ==  4 ~ paste0("0", countyFIPS),
+      TRUE ~ countyFIPS
+    ))
+# select the sources
+bon1 <- bonPlant |> 
+  dplyr::filter(Bonap2 == 1) |>
+  dplyr::select(fips, taxon, bonap = Bonap2)
+u1 <- bonPlant |> 
+  dplyr::filter(USDA == 1) |>
+  dplyr::select(fips, taxon, USDA)
+# join back 
+bonPlant <- dplyr::full_join(bon1, u1)
+
+for(i in 1:length(files)){
+  # read in
+  d1 <- read_csv(files[i])|>
+    dplyr::mutate(
+      fips2 = as.character(fips2)
+    ) |> 
+    dplyr::filter(
+      anyRecord > 1
+    ) |> 
+    dplyr::select(taxon, fips = fips2,O,H,G)
+  # select species
+  taxa <- d1$taxon[1]
+  # filter bonnap/plants
+  bon2 <- bonPlant |>
+    dplyr::filter(taxon == taxa) |>
+    dplyr::select(-taxon)
+  # join to d1 
+  d2 <- dplyr::left_join(d1, bon2, by = "fips")
+  if(i ==1 ){
+    results <- d2
+  }else{
+    results <- bind_rows(results, d2)
+  }
+}
+# aggregate values by species 
+r2 <- results |>
+  group_by(fips) |>
+  summarise(across(
+    .cols = !taxon,  # Selects all columns except for 'fips'
+    .fns = ~sum(., na.rm = TRUE) # Applies the sum function, ignoring NA values
+  ))
+# join this to the county data 
+allCounts <- dplyr::left_join(counties, r2, by = "fips")  |>
+  rowwise() |>
+  mutate(total_sum = sum(c_across(O:USDA))) |>
+  ungroup()
+
+# export 
+write_csv(allCounts, "data/countyMaps/vitisSummarizedByCounty.csv")
+
+# questions for the paper 
+## us counties with some vitis records 
+allCounts |>
+  dplyr::filter(!is.na(total_sum)) |>
+  nrow()
+
+## summaries the total count or example, ___ % of county-level occurrences were lacking herbarium specimens (available online) and 
+allCounts |> 
+  dplyr::filter(!is.na(total_sum) & H == 0 & bonap == 0 & USDA ==0 & G == 0) |>
+  nrow()
+
+## Counties where plants or bonap is noted but no G or H 
+allCounts |> 
+  dplyr::filter(!is.na(total_sum) & H == 0 & G ==0) |>
+  dplyr::filter(bonap == 1 | USDA ==1 ) |>
+  dplyr::filter(O ==0)|>
+  nrow()
+
+# sum of all observations  
+f1 <- allCounts |>
+  dplyr::filter(!is.na(total_sum))
+sum(f1$O, na.rm = TRUE)
+sum(f1$H, na.rm = TRUE)
+sum(f1$G, na.rm = TRUE)
+sum(f1$bonap, na.rm = TRUE)
+sum(f1$USDA, na.rm = TRUE)
+
+# distribution of G points 
+
 
 
 # Generate the species richies map at the county level --------------------

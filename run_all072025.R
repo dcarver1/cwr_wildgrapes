@@ -35,7 +35,7 @@ sourceFiles(gapAnalysisOnly = FALSE)
 
 # Vitis
 # filtering the extra values coming from the data prep process
-speciesData <- read_csv("data/processed_occurrence/model_data072025.csv") |>
+speciesData <- read_csv("data/processed_occurrence/model_data072025_edit.csv") |>
   dplyr::select(-c("index", "validLat","validLon","validLatLon")) # "geometry",
 # # using the data from the county maps for an reference run
 # speciesData1 <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.csv")|>
@@ -56,7 +56,7 @@ a2 <- alteredData |>
 speciesData3 <- speciesData[!c(speciesData$recordID %in% a2$`Record ID for point`), ]
 speciesData <- speciesData3
 # export for gap r testing 
-# write.csv(speciesData, file = "temp/allVitisData072025.csv")
+write.csv(speciesData, file = "temp/allVitisData082025.csv")
 
 
 # order but n observations 
@@ -81,7 +81,7 @@ bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames_0720
 
 
 #vitis run 
-runVersion <- "run082025_1k"
+runVersion <- "run08282025_1k"
 # overwrite 
 overwrite <- TRUE
 
@@ -117,35 +117,25 @@ erroredSpecies <- list(noLatLon = c(),
 # species to test for FNA filter - maybe need to rerun if filter was not applied 
 fnaSpecies <- fnaData$`Taxon Name`[fnaData$`States from FNA`!= "NA,"]
 
-# errors [1] "Vitis labrusca", "Vitis aestivalis
-stable <- c()
-for(s in species){
-  # test specific to the 08 run 
-  srsex08 <- read_csv(paste0(paste0("data/Vitis/",s,"/run082025_1k/gap_analysis/srs_ex.csv")))
-  
-  # test specific to the 08 run 
-  srsex07 <- read_csv(paste0(paste0("data/Vitis/",s,"/run072025_1k/gap_analysis/srs_ex.csv")))
-  if(srsex07$NTOTAL == srsex08$NTOTAL){
-    print(s)
-    stable <- c(stable, s)
-  }
-}
 # 
 
 # summary table of species 
 s2 <- speciesData |>
   dplyr::group_by(taxon)|>
   dplyr::summarise(count = n())|>
-  dplyr::arrange(count)
+  dplyr::arrange(count) |>
+  dplyr::filter(taxon != "NA")
 
 
 # rerun FNA species
 fna2 <- fnaData[nchar(fnaData$`States from FNA`) != 3, ]
 rerun <- s2[s2$taxon %in% fna2$`Taxon Name`, ]
- 
- 
+
+# issue with califorina 
+
+
 # start of for loop -------------------------------------------------------
-for(j in s2$taxon[24]){ # species 
+for(j in s2$taxon){ # species 
   print(j)
   #generate paths for exporting data 
   allPaths <- definePaths(dir1 = dir1,
@@ -156,7 +146,8 @@ for(j in s2$taxon[24]){ # species
     
   # process data 
   ## species specific data
-  sd1 <- subsetSpecies(occuranceData = speciesData, species = j)
+  sd1 <- speciesData |>
+    dplyr::filter(taxon == j )
   
   ## counts data
   c1 <- write_CSV(path = allPaths$countsPaths,
@@ -188,7 +179,7 @@ for(j in s2$taxon[24]){ # species
 
   # apply FNA filter if possible.
   sp1 <- write_GPKG(path = allPaths$spatialDataPath,
-                    overwrite = TRUE,
+                    overwrite = TRUE, # this needs to stay true otherwise the call above will be used.
                     function1 = applyFNA(speciesPoints = sp1, fnaData = fnaData))
 
 
@@ -215,7 +206,7 @@ for(j in s2$taxon[24]){ # species
 
     ## associate observations with bioclim data and spatial thin
     m_data1 <- write_CSV(path = allPaths$allDataPath,
-                         overwrite = TRUE,
+                         overwrite = overwrite,
                          generateModelData(speciesPoints = sp1,
                                            natArea = natArea,
                                            bioVars = bioVars,
@@ -499,7 +490,7 @@ for(j in s2$taxon[24]){ # species
     }
     # block here for testing. I want variable in local environment and don't want them written out.
     # stop()
-    
+
     # remove all reused variables ---------------------------------------------
     rm(c1,sp1,srsex,natArea,g_buffer, projectsResults,evalTable,thres)
   }# end of species loop

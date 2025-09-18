@@ -208,7 +208,8 @@ readAndBind <- function(run = FALSE){
   grin <- read_csv("data/processed_occurrence/grin.csv",col_types = cols(.default = "c"))
   
   ## seinet
-  seinet <- read_csv("data/processed_occurrence/seinet.csv",col_types = cols(.default = "c"))
+  ### 20250828 -- droping scient as they report to gbif
+  # seinet <- read_csv("data/processed_occurrence/seinet.csv",col_types = cols(.default = "c"))s
   
   ## WEIWS
   wiews <- read_csv("data/processed_occurrence/wiews.csv",col_types = cols(.default = "c"))
@@ -238,7 +239,7 @@ readAndBind <- function(run = FALSE){
   mex  <- read_csv("data/processed_occurrence/mexicoRecords_082025.csv",col_types = cols(.default = "c"))
   
   
-  d2 <-  bind_rows(gbif, grin, seinet, wiews, genesys, bgSurvey, pnas2020, ucdavis, jun, mex) 
+  d2 <-  bind_rows(gbif, grin,  wiews, genesys, bgSurvey, pnas2020, ucdavis, jun, mex) #seinet,
   d2 <- d2 |> 
     dplyr::mutate( index = dplyr::row_number())
   # reorder

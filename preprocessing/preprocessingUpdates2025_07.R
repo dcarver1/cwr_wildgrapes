@@ -100,7 +100,8 @@ df <- readAndBind(run = TRUE) |>
 df <- df |> 
   dplyr::filter(
     !databaseSource %in% c("FAO 2019 (WIEWS)", "GBIF 2019","Global Crop Diversity Trust 2019a (Genesys)",
-                           "Global Crop Diversity Trust 2019b  (Cwr Occ)", "USDA ARS NPGS 2019a")
+                           "Global Crop Diversity Trust 2019b  (Cwr Occ)", "USDA ARS NPGS 2019a",
+                           "Midwest Herbaria 2019","BGCI 2019 (PlantSearch)")
   )
 
 View(df)
@@ -119,7 +120,7 @@ source("preprocessing/functions/speciesStandardization.R")
 datasets <- speciesCheck(data = df1, synonymList = vitis2)
 df2 <- datasets$includedData
 
-
+novogranatensis <- df2[df2$taxon == "Vitis novogranatensis" ,]
 # export the dataset to be used in the SRSex 
 # Remove duplicated data --------------------------------------------------
 uniqueTaxon <- unique(df2$taxon)
@@ -127,6 +128,9 @@ source("preprocessing/functions/removeDupsAcrossDatasets.R")
 df2_a <- uniqueTaxon |> 
   purrr::map(.f = removeDups, data = df2) |>
   bind_rows() 
+# add back in novo 
+df2_a <- bind_rows(df2_a, novogranatensis)
+
 write_csv(x = df2, file = "data/processed_occurrence/allEvaluated_data072025.csv")
 write_csv(x = df2_a, file = "data/processed_occurrence/allEvaluated_data_removedDups_072025.csv")
 
@@ -185,17 +189,60 @@ d6 <- valLatLon |> bind_rows(d3_g)
 single$latitude <- as.numeric(single$latitude)
 single$longitude <- as.numeric(single$longitude)
 
-# Remove duplicated data --------------------------------------------------
-uniqueTaxon <- unique(d6$taxon)
-source("preprocessing/functions/removeDupsAcrossDatasets.R")
-d7 <- uniqueTaxon |> 
-  purrr::map(.f = removeDups, data = d6) |>
-  bind_rows() |>
-  dplyr::bind_rows(single)
-
 
 # export data 2023-10-24 --- All g points included and duplicates between sources are removed.
-write_csv(x = d7, file = "data/processed_occurrence/model_data072025.csv")
+
+#more duplicate checks 
+d <- d6[!duplicated(d6[,c("taxon", "databaseSource" , "sourceUniqueID")]), ]
+
+
+# conflict between gbif and sienet 
+d1 <- d |>
+  dplyr::filter(databaseSource  %in% c("GBIF")) |>
+  tidyr::separate(
+      col = localityInformation,               # The column to split
+      into = c("temp", "gbifLoc"),    # The names for the new columns
+      sep = " -- " ,
+      remove = FALSE # The separator to split on
+    )
+  
+d2 <- d |>
+  dplyr::filter(!databaseSource  %in% c("GBIF")) 
+
+# row by row exclusion 
+for(row in 1:nrow(d2)){
+  print(row)
+  
+  feat <- d2[row,]
+  taxon <- feat$taxon
+  lat <- feat$latitude
+  lon <- feat$longitude
+  loc <- feat$localityInformation
+  year <- feat$yearRecorded
+  
+  # test for presence in gbif 
+  test <- d1 |>
+    dplyr::filter(
+      taxon == taxon,
+      latitude == lat,
+      longitude == lon,
+      gbifLoc == loc,
+      yearRecorded == year
+    )
+  if(nrow(test) >0 ){
+    print(paste0("removed", row))
+    d1 <- d1[!d1$index == test$index, ]
+  }
+}
+
+# bind the data back in 
+d7 <- bind_rows(d1,d2)
+
+# remove midwest herb 
+d8 <- d7[!d7$databaseSource == "Midwest Herbaria 2019", ]
+
+
+write_csv(x = d8, file = "data/processed_occurrence/model_data072025_edit.csv")
 
 
 
