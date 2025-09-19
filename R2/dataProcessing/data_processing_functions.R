@@ -25,7 +25,10 @@ createSF_Objects <- function(speciesData){
     dplyr::filter(!is.na(longitude))|>
     mutate(latitude = as.numeric(as.character(latitude)),
            longitude = as.numeric(as.character(longitude))) |>
-    dplyr::filter(!(latitude == 0 & longitude == 0))
+    dplyr::filter(!(latitude == 0 & longitude == 0))|>
+    dplyr::filter(!(latitude > 90 | latitude < -90))|>
+    dplyr::filter(!(longitude > 180 | longitude < -180))
+  
   
   
   

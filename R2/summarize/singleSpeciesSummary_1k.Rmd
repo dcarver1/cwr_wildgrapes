@@ -28,6 +28,7 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 # transform data
 
 testing <- FALSE
+# testing <- TRUE
 if(testing == TRUE){
   data <- reportData # testing only
   species <- reportData$countsData$species # testing
@@ -298,7 +299,8 @@ if (class(gBuf) != "character" & data$fcsex$GRS != 0) {
   ## set 3 has a cap of 12 unique colors
   ### duplicating the values then subsetting base on the required number. 
   ecoPal <-  rep(RColorBrewer::brewer.pal(n = 12, name = "Spectral"), 6)
-  ecoPal <- ecoPal[1:length(ecoReg$ECO_ID_U)]
+  if(length(ecoReg$ECO_ID_U)>0){
+     ecoPal <- ecoPal[1:length(ecoReg$ECO_ID_U)]
   
   ecoReg$color <- ecoPal
   ecoReg <- ecoReg |> arrange(desc(ECO_NAME))
@@ -309,6 +311,10 @@ if (class(gBuf) != "character" & data$fcsex$GRS != 0) {
   ecoColor <- colorFactor(palette = ecoReg$color,
                           domain = ecoReg$ECO_ID_U,
                           na.color =  "#FF000000")
+  }else{
+    ecoColor <- "#FF000000"
+  }
+ 
   
   
   #distribution palette
@@ -578,51 +584,50 @@ The ERS ex situ map feature shows ecoregions within the potential distribution m
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-  if(data$NoModel == FALSE){
-    
+if(data$NoModel == FALSE){
   if(exTables$`Total G with coordinates` == 0){
     # generate the GRSex map
-  ex2 <- leaflet(width = "100%")|>
-    addProviderTiles(providers$Esri.WorldGrayCanvas)|>
-    # Outline of all ecoregions
-    addPolygons(
-      data = allEcos,
-      group = "All ecoregions",
-      weight = 2,
-      stroke = TRUE,
-      fill = TRUE,
-      fillOpacity = 0.2,
-      popup = allEcos$ECO_NAME,
-      color = "#60616050"
-    ) 
+    ex2 <- leaflet(width = "100%")|>
+      addProviderTiles(providers$Esri.WorldGrayCanvas)|>
+      # Outline of all ecoregions
+      addPolygons(
+        data = allEcos,
+        group = "All ecoregions",
+        weight = 2,
+        stroke = TRUE,
+        fill = TRUE,
+        fillOpacity = 0.2,
+        popup = allEcos$ECO_NAME,
+        color = "#60616050"
+      ) 
   }else{ # G points with valid lat lon are present
     # generate the GRSex map
     ex1 <- leaflet(width = "100%")|>
-    addProviderTiles(providers$Esri.WorldGrayCanvas)|>
-    #GRSex raster
-    addRasterImage(
-      x = raster(grsexMap),
-      colors = grsexColor,
-      group = "GRS ex situ",
-      project = FALSE)   |>
-    #G points
-    addCircleMarkers(
-      data = occData[occData$type == "G",],
-      color = ~ color,
-      opacity = 1,
-      radius = 1,
-      group = "GRS ex situ",
-      stroke = 1,
-      popup = ~ popup
-    ) |>
-    #add legend
-    leaflet::addLegend(
-      position = "bottomright",
-      color = exPal,
-      title = "Ex Situ geographical representativeness",
-      labels = c("Native country-ecoregion area", "Potential distribution model", "Areas < 50 km from an ex situ collection"),
-      group = "GRS ex situ"
-    )
+      addProviderTiles(providers$Esri.WorldGrayCanvas)|>
+      #GRSex raster
+      addRasterImage(
+        x = raster(grsexMap),
+        colors = grsexColor,
+        group = "GRS ex situ",
+        project = FALSE)   |>
+      #G points
+      addCircleMarkers(
+        data = occData[occData$type == "G",],
+        color = ~ color,
+        opacity = 1,
+        radius = 1,
+        group = "GRS ex situ",
+        stroke = 1,
+        popup = ~ popup
+      ) |>
+      #add legend
+      leaflet::addLegend(
+        position = "bottomright",
+        color = exPal,
+        title = "Ex Situ geographical representativeness",
+        labels = c("Native country-ecoregion area", "Potential distribution model", "Areas < 50 km from an ex situ collection"),
+        group = "GRS ex situ"
+      )
     
   # generate the ERSex map
   if(ersex$ERS == 100){

@@ -23,9 +23,9 @@ sourceFiles <- function(gapAnalysisOnly, furrr=FALSE){
     f2 <- f2[!grepl(pattern =  "R2/summarize/renderCountySummaries.R", f2)]
     
     for(f123 in 1:length(f2)){
-      print(f123)
-      
+      print(paste0(f123," ",f2[f123]))
       source(f2[f123])
+
     }
   }
   if(gapAnalysisOnly == TRUE){

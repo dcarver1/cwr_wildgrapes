@@ -1,10 +1,20 @@
 
 # speciesPoints <- sp1
 # fnaData <- fnaData
-applyFNA <- function(speciesPoints, fnaData) {
+applyFNA <- function(speciesPoints, fnaData, states) {
   
   # grab species name
   species <- speciesPoints$taxon[1]
+  
+  # spatial check for features that does
+  noState <- speciesPoints[is.na(speciesPoints$state),]
+  state <- speciesPoints[!is.na(speciesPoints$state),]
+  # extract data to states 
+  s1 <- terra::extract( terra::vect(states),vect(noState))
+  noState$state <- s1$name
+  noState$iso3 <- s1$adm0_a3 
+  # joining 
+  speciesPoints <- bind_rows(state, noState)
   
   # filter fna to exclude states with no measures 
   ## nchar because it's not a true NA value 
@@ -22,8 +32,8 @@ applyFNA <- function(speciesPoints, fnaData) {
       stringr::str_remove_all(",")
     
     # filter points based on name in states 
-    nonUS <- sp1 |> dplyr::filter(iso3 != "USA")
-    us <- sp1 |> 
+    nonUS <- speciesPoints |> dplyr::filter(iso3 != "USA")
+    us <- speciesPoints |> 
       dplyr::filter(iso3 == "USA") |>
       dplyr::filter(state %in% states_to_filter)
 
@@ -39,15 +49,4 @@ applyFNA <- function(speciesPoints, fnaData) {
     speciesPoints <- sf::st_transform(x = speciesPoints, crs = crs(ecoregions))
   }
   
-  
-  ids <- speciesPoints |>
-    sf::st_intersection(ecoregions)|>
-    sf::st_drop_geometry()|>
-    dplyr::select("ECO_ID_U")|>
-    dplyr::distinct()|>
-    pull()
-  natArea <- ecoregions[ecoregions$ECO_ID_U %in% ids, ]|>
-    sf::st_make_valid()
-  
-  return(natArea)
 }

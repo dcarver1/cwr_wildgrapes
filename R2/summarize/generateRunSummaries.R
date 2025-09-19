@@ -61,9 +61,9 @@ generateRunSummaries <- function(dir1,runVersion,
     # # generate specific richness map 
     ersExRichness <- generateERSRichnessMap(directory = dir1,
                                                runVersion = runVersion,
-                                            ersMap = "ers_ex_gaps.tif",
-                                            species = species,
-                                            thresholdMap = "prj_threshold.tif")
+                                               ersMap = "ers_ex_gaps.tif",
+                                               species = species,
+                                               thresholdMap = "prj_threshold.tif")
     terra::writeRaster(x = ersExRichness$richnessTif,
                        filename = path6,
                        overwrite  = TRUE)

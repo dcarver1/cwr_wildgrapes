@@ -26,7 +26,7 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-testing <- TRUE
+testing <- FALSE
 # transform data
 if(testing==TRUE){
   data <- conservationSummary$summaryData # testing only

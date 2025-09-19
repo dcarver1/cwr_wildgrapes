@@ -10,8 +10,14 @@ pacman::p_load("dplyr", "sf","terra",  "purrr","randomForest","VSURF",
                "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo",
                "leaflet", "tidyterra", "rmarkdown", "furrr", "stringr", "spThin",
                "tictoc","tigris", "tmap", "googlesheets4", "ggplot2", "plotly",
-               "factoextra", "tidyr")
+               "factoextra", "tidyr","rnaturalearth")
 tmap::tmap_mode("view")
+
+
+# Download the states and provinces for North America
+naStates <- ne_states(country =  c("mexico", "canada", "united states of america"), returnclass = "sf")|>
+  dplyr::select(name,adm0_a3)
+
 
 #source functions
 source("R2/helperFunctions.R")
@@ -22,12 +28,8 @@ sourceFiles(gapAnalysisOnly = FALSE)
 # # source global objects 
 # numPoint <- 2000
 # bufferDist <- 0.45
-# set.seed(1234)
-# runVersion <- "test1"
-# 
-# ## overwrite Parameter 
-# overwrite <- FALSE
-# 
+set.seed(1234)
+#
 # # define species data 
 # speciesData <- read_csv("data/processed_occurrence/draft_model_data.csv")
 # species <- unique(speciesData$taxon)
@@ -56,8 +58,10 @@ a2 <- alteredData |>
 speciesData3 <- speciesData[!c(speciesData$recordID %in% a2$`Record ID for point`), ]
 speciesData <- speciesData3
 # export for gap r testing 
-write.csv(speciesData, file = "temp/allVitisData082025.csv")
+# write.csv(speciesData, file = "temp/allVitisData082025.csv")
 
+# datan
+datasourceSummary <- databaseSourcesSummary(speciesData)
 
 # order but n observations 
 nOrder <- speciesData |>
@@ -132,10 +136,20 @@ fna2 <- fnaData[nchar(fnaData$`States from FNA`) != 3, ]
 rerun <- s2[s2$taxon %in% fna2$`Taxon Name`, ]
 
 # issue with califorina 
-
+## what species have been modeled 
+f1 <- list.files("data/Vitis",
+                 full.names = TRUE,
+                 recursive = TRUE)
+f2 <- f1[grepl(pattern = "run08282025_1k", x = f1)]
+f3 <- f2[grepl(pattern = "sdm_results.RDS", x = f2)]
 
 # start of for loop -------------------------------------------------------
-for(j in s2$taxon){ # species 
+for(j in s2$taxon[21]){ # species 
+  # create unique path for summary HTML docs 
+  p1 <- paste0("data/Vitis/speciesSummaryHTML/",runVersion)
+  if(!dir.exists(p1)){
+    dir.create(p1)
+  }
   print(j)
   #generate paths for exporting data 
   allPaths <- definePaths(dir1 = dir1,
@@ -148,7 +162,7 @@ for(j in s2$taxon){ # species
   ## species specific data
   sd1 <- speciesData |>
     dplyr::filter(taxon == j )
-  
+  write_csv(sd1, "temp/doania.csv" )
   ## counts data
   c1 <- write_CSV(path = allPaths$countsPaths,
                   overwrite = overwrite,
@@ -179,8 +193,10 @@ for(j in s2$taxon){ # species
 
   # apply FNA filter if possible.
   sp1 <- write_GPKG(path = allPaths$spatialDataPath,
-                    overwrite = TRUE, # this needs to stay true otherwise the call above will be used.
-                    function1 = applyFNA(speciesPoints = sp1, fnaData = fnaData))
+                    overwrite = overwrite, # this needs to stay true otherwise the call above will be used.
+                    function1 = applyFNA(speciesPoints = sp1,
+                                         fnaData = fnaData,
+                                         states = naStates))
 
 
   ## define natural area based on ecoregions
@@ -336,7 +352,7 @@ for(j in s2$taxon){ # species
       #gather features for RMD
       ## just a helper function to reduce the number of input for the RMD
       reportData <- write_RDS(path = allPaths$summaryDataPath,
-                              overwrite = overwrite,
+                              overwrite = TRUE,
                               function1 = grabData(fscCombined = fcsCombined,
                                                    ersex = ersex,
                                                    fcsex = fcsex,
@@ -470,11 +486,11 @@ for(j in s2$taxon){ # species
 
     # generate summary html
     # this is not working with the 1k data do to size fo the rasters... need to reevaluate
-    if(!file.exists(allPaths$summaryHTMLPath)| isTRUE(overwrite)){
-    try(
+    # if(!file.exists(p1)| isTRUE(overwrite)){
+    # try(
     rmarkdown::render(input = "R2/summarize/singleSpeciesSummary_1k.Rmd",
                       output_format = "html_document",
-                      output_dir =  "data/Vitis/speciesSummaryHTML",  # file.path(allPaths$result),
+                      output_dir =  p1,  # file.path(allPaths$result),
                       output_file = paste0(j,"_Summary_fnaFilter"),
                       params = list(
                         reportData = reportData),
@@ -482,12 +498,12 @@ for(j in s2$taxon){ # species
                       # clean = F,
                       # encoding = "utf-8"
         )
-      )
-    }else{
-      if(!file.exists(allPaths$summaryHTMLPath)){
-        # erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
-      }
-    }
+      # )
+    # }else{
+    #   if(!file.exists(allPaths$summaryHTMLPath)){
+    #     # erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
+    #   }
+    # }
     # block here for testing. I want variable in local environment and don't want them written out.
     # stop()
 
@@ -508,7 +524,7 @@ for(j in s2$taxon){ # species
 ### big processing step...
 generateRunSummaries(dir1 = dir1,
                      runVersion = runVersion,
-                     genus = i,
+                     genus = "Vitis",
                      protectedAreas = protectedAreas,
                      overwrite = FALSE)
 #   
