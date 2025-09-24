@@ -9,8 +9,9 @@
 pacman::p_load("dplyr", "sf","terra",  "purrr","randomForest","VSURF",
                "modelr","maxnet","pROC","DT", "readr", "vroom", "readr", "dismo",
                "leaflet", "tidyterra", "rmarkdown", "furrr", "stringr", "spThin",
-               "tictoc","tigris", "tmap", "googlesheets4", "ggplot2", "plotly",
+               "tictoc","tigris", "tmap","ggplot2", "plotly",
                "factoextra", "tidyr","rnaturalearth")
+# library( "googlesheets4") # not always needed and generates a 
 tmap::tmap_mode("view")
 
 
@@ -49,16 +50,18 @@ speciesData <- read_csv("data/processed_occurrence/model_data072025_edit.csv") |
 # fnaData
 fnaData <- read_csv("data/source_data/FNA_stateClassification.csv")
 # read in the data from the spreadsheet 
-alteredData <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1_BfJawocOnA-1m9_gl5qZvufXHBCCOacMZX69cQz2LY/edit?gid=139317771#gid=139317771")
-a2 <- alteredData |>
-  dplyr::filter(nchar(alteredData$`Record ID for point`) > 2)|>
-  dplyr::filter(!is.na(Taxon)) 
-
-# exclude from the input datasets 
-speciesData3 <- speciesData[!c(speciesData$recordID %in% a2$`Record ID for point`), ]
-speciesData <- speciesData3
+# alteredData <- googlesheets4::read_sheet("https://docs.google.com/spreadsheets/d/1_BfJawocOnA-1m9_gl5qZvufXHBCCOacMZX69cQz2LY/edit?gid=139317771#gid=139317771")
+# a2 <- alteredData |>
+#   dplyr::filter(nchar(alteredData$`Record ID for point`) > 2)|>
+#   dplyr::filter(!is.na(Taxon)) 
+# 
+# # exclude from the input datasets 
+# speciesData3 <- speciesData[!c(speciesData$recordID %in% a2$`Record ID for point`), ]
+# speciesData <- speciesData3
 # export for gap r testing 
 # write.csv(speciesData, file = "temp/allVitisData082025.csv")
+speciesData <- read_csv("temp/allVitisData082025.csv")
+
 
 # datan
 datasourceSummary <- databaseSourcesSummary(speciesData)
@@ -87,7 +90,7 @@ bioNames <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames_0720
 #vitis run 
 runVersion <- "run08282025_1k"
 # overwrite 
-overwrite <- TRUE
+overwrite <- FALSE
 
 
 
@@ -109,14 +112,7 @@ erroredSpecies <- list(noLatLon = c(),
 # potentially run this whole process as a furrr function... 
 # only 9gb memory allocaiton 
 
-# errors 
-# [1] "Vitis rotundifolia" # seems to stallout? 
-# [1] "Vitis riparia" : something going on 
-# [1] "Vitis vulpina" summary md 
-#testing 
-# j <- "Vitis acerifolia"
 
-# 
 
 # species to test for FNA filter - maybe need to rerun if filter was not applied 
 fnaSpecies <- fnaData$`Taxon Name`[fnaData$`States from FNA`!= "NA,"]
@@ -143,8 +139,18 @@ f1 <- list.files("data/Vitis",
 f2 <- f1[grepl(pattern = "run08282025_1k", x = f1)]
 f3 <- f2[grepl(pattern = "sdm_results.RDS", x = f2)]
 
+#  aestivalis
+# errors 
+# [1] "Vitis rotundifolia" 39 # seems to stallout? 
+# [1] "Vitis riparia" 38 : something going on 
+# [1] "Vitis vulpina" 35 summary md 
+#testing 
+# j <- "Vitis acerifolia"
+
+# 
+
 # start of for loop -------------------------------------------------------
-for(j in s2$taxon[21]){ # species 
+for(j in s2$taxon[c(38,39)]){ # species 
   # create unique path for summary HTML docs 
   p1 <- paste0("data/Vitis/speciesSummaryHTML/",runVersion)
   if(!dir.exists(p1)){
@@ -162,7 +168,7 @@ for(j in s2$taxon[21]){ # species
   ## species specific data
   sd1 <- speciesData |>
     dplyr::filter(taxon == j )
-  write_csv(sd1, "temp/doania.csv" )
+  # write_csv(sd1, "temp/doania.csv" )
   ## counts data
   c1 <- write_CSV(path = allPaths$countsPaths,
                   overwrite = overwrite,
@@ -488,6 +494,7 @@ for(j in s2$taxon[21]){ # species
     # this is not working with the 1k data do to size fo the rasters... need to reevaluate
     # if(!file.exists(p1)| isTRUE(overwrite)){
     # try(
+    print(j)
     rmarkdown::render(input = "R2/summarize/singleSpeciesSummary_1k.Rmd",
                       output_format = "html_document",
                       output_dir =  p1,  # file.path(allPaths$result),
@@ -522,14 +529,15 @@ for(j in s2$taxon[21]){ # species
 # # produce Run level Summaries ---------------------------------------------
 # need to set overwrite to true to produce most of the layers
 ### big processing step...
+## might need to revisit how these are being generated... 
 generateRunSummaries(dir1 = dir1,
                      runVersion = runVersion,
                      genus = "Vitis",
                      protectedAreas = protectedAreas,
                      overwrite = FALSE)
-#   
-#   
-# produce boxplot summaries -----------------------------------------------
+# #   
+# #   
+# # produce boxplot summaries -----------------------------------------------
 renderBoxPlots  <- TRUE
 if(renderBoxPlots == TRUE){
   # compile all modeling data
@@ -566,9 +574,9 @@ if(renderBoxPlots == TRUE){
                     # encoding = "utf-8"
   )
 }
-
 # 
-# # generate a summary CSV for vitis 
-source("R2/summarize/summaryTable.R")
-summaryCSV <- summaryTable(species = species, runVersion = runVersion)
-write_csv(x = summaryCSV, file = paste0("data/Vitis/summaryTable_",runVersion,".csv"))
+# # 
+# # # generate a summary CSV for vitis 
+# source("R2/summarize/summaryTable.R")
+# summaryCSV <- summaryTable(species = species, runVersion = runVersion)
+# write_csv(x = summaryCSV, file = paste0("data/Vitis/summaryTable_",runVersion,".csv"))

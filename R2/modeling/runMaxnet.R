@@ -37,6 +37,9 @@ runMaxnet <- function(selectVars,rasterData){
       feat <- "lqph"
     }
     
+    # setting kfold to 6 for big models to handle the memory allocation 
+    kfold <- 6
+    
     
     # select needed raster bands
     # rastersToModel <<- bioVars %>%

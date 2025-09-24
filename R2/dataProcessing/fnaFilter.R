@@ -6,16 +6,28 @@ applyFNA <- function(speciesPoints, fnaData, states) {
   # grab species name
   species <- speciesPoints$taxon[1]
   
-  # spatial check for features that does
-  noState <- speciesPoints[is.na(speciesPoints$state),]
-  state <- speciesPoints[!is.na(speciesPoints$state),]
-  # extract data to states 
-  s1 <- terra::extract( terra::vect(states),vect(noState))
-  noState$state <- s1$name
-  noState$iso3 <- s1$adm0_a3 
-  # joining 
-  speciesPoints <- bind_rows(state, noState)
+  # spatial check for features and assign county/iso3 
+  s1 <- terra::extract( terra::vect(states),vect(speciesPoints))
   
+  # remove NA values 
+  speciesPoints$stateTest <- s1$name
+  speciesPoints$iso3Test <- s1$adm0_a3 
+  # reassign the state based on the lat lon when possible 
+  speciesPoints <- speciesPoints |>
+    dplyr::mutate(iso3 = case_when(
+      is.na(iso3Test) ~ iso3,
+      !is.na(iso3Test) ~ iso3Test
+    ),
+    state = case_when(
+      is.na(stateTest) ~ state,
+      !is.na(stateTest) ~ stateTest
+    )
+  )|>
+    dplyr::filter(
+      !is.na(iso3) & !is.na(state) , 
+      longitude < 0 ,
+      latitude < 70
+    )
   # filter fna to exclude states with no measures 
   ## nchar because it's not a true NA value 
   fna<- fnaData |> 
@@ -32,21 +44,19 @@ applyFNA <- function(speciesPoints, fnaData, states) {
       stringr::str_remove_all(",")
     
     # filter points based on name in states 
-    nonUS <- speciesPoints |> dplyr::filter(iso3 != "USA")
-    us <- speciesPoints |> 
-      dplyr::filter(iso3 == "USA") |>
+    nonNA <- speciesPoints |>
+      dplyr::filter(!iso3 %in% c("USA", "MEX","CAN"))
+    pointsNA <- speciesPoints |> 
       dplyr::filter(state %in% states_to_filter)
 
-    # combine together 
-    bindData <- dplyr::bind_rows(us, nonUS)
+    if(nrow(nonNA) > 0){
+      # combine together 
+      bindData <- dplyr::bind_rows(pointsNA, nonNA)
+    }else{
+      bindData <- pointsNA
+    }
     return(bindData)  
   }else{
     return(speciesPoints)
   }
-  
-  
-  if(!crs(speciesPoints) == crs(ecoregions)){
-    speciesPoints <- sf::st_transform(x = speciesPoints, crs = crs(ecoregions))
-  }
-  
 }
