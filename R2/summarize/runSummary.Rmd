@@ -62,13 +62,15 @@ if(genus == "Daucus"){
   printGenus <- genus
 }
 
+# reproject protected areas raster to threshold image
+p1 <- terra::resample(x = p1, y = image, method = 'near')
 
 ```
 
 ## Conservation gap analysis results for wild North American Vitis taxa
 
 
-All conservation gap analysis scores per Daucus_aureus taxon, with ex situ scores as circles, in situ scores as triangles, and the combined FCSc-mean score as diamonds. Scores are used to categorize taxa, with urgent priority (UP) for further conservation action assigned when score < 25, high priority (HP) where 25 ≤ score < 50, medium priority (MP) where 50 ≤ score < 75, and low priority (LP) for taxa whose score ≥75
+All conservation gap analysis scores per Vitis taxa, with ex situ scores as circles, in situ scores as triangles, and the combined FCSc-mean score as diamonds. Scores are used to categorize taxa, with urgent priority (UP) for further conservation action assigned when score < 25, high priority (HP) where 25 ≤ score < 50, medium priority (MP) where 50 ≤ score < 75, and low priority (LP) for taxa whose score ≥75
 
 
 

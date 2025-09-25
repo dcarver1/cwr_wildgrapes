@@ -3,6 +3,28 @@
 
 
 
+
+#' Rescale a raster based on a template feature 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+resampleRast <- function(rast, resampleFactor = 5, fun = "mean"){
+  thresAgg <- matrix(c(
+    -Inf, 0.5, 0,  # All values from -Infinity up to (but not including) 0.5 become 0
+    0.5,  Inf, 1   # All values from 0.5 (including 0.5) up to +Infinity become 1
+  ), ncol = 3, byrow = TRUE)
+  
+  
+  r1 <- rast |> 
+    terra::aggregate(fact = resampleFactor, fun = fun) |>
+    terra::classify(thresAgg, include.lowest = TRUE)
+  return(r1)
+}
+
+
+
 #' replace NAN 
 #' @description Helper funtion to replace all nan values within a raster. 
 #' @param raster 
@@ -35,15 +57,15 @@ generateSpeciesRichnessMap <- function(directory, runVersion, rasterFileName){
     
   # combined all the raster layers 
   print("reading in rasters")
-  r1 <- map(.x = runFiles, .f = rast)
+  r1 <- map(.x = runFiles, .f = terra::rast)
   
   # produce an extent raster template 
   print("generating maximum extent")
-  r2 <- Reduce(extend, r1)
+  r2 <- Reduce(terra::extend, r1)
   
   # extend all the raster in the stack
   print("extenting all the objects. ")
-  r3 <- map(.x = r1, .f = terra::extend, y = r2, fill = 0) ## still nan values being applied  
+  r3 <- map(.x = r1, .f = terra::resample, y = r2, method = 'near') ## still nan values being applied  
   
   # replace the NaN values 
   r4 <- map(.x = r3, .f = replaceNAN)
@@ -99,8 +121,8 @@ generateERSRichnessMap <- function(directory, runVersion, ersMap, species, thres
   
   # extend all the raster in the stack
   print("extenting all the objects. ")
-  r3 <- map(.x = maskedFeatures, .f = terra::extend, y = r2, fill = 0) ## still nan values being applied  
-  
+  r3 <- map(.x = maskedFeatures, .f = terra::resample, y = r2, method = 'near') ## still nan values being applied  
+
   # replace the NaN values 
   r4 <- map(.x = r3, .f = replaceNAN)
   

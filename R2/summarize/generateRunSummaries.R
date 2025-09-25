@@ -18,13 +18,38 @@ generateRunSummaries <- function(dir1,runVersion,
   path8 <- paste0(dir2,"/ersinRichness.tif")
   path9 <- paste0(dir2,"/ersin_speciesUsed_Richness.tif")
 
+
+  # Rescale all the imagery for the 1km runs  -------------------------------
+  ##   "prj_threshold.tif", "ga50_masked.tif","ers_ex_gaps.tif","ers_in_gaps.tif"
+  for(i in c("prj_threshold.tif", "ga50_masked.tif","ers_ex_gaps.tif","ers_in_gaps.tif")){
+    # grap all files 
+    allFiles <- list.files( path = dir1,
+                            pattern =  i,
+                            full.names = TRUE,
+                            recursive = TRUE)
+    # filter to current run version 
+    files2 <- allFiles[grepl(pattern = runVersion, x = allFiles)]
+    for(file in files2){
+      # generate export name 
+      export <-sub("\\.tif$", "_5.tif", file)
+      # resample if needed 
+      if(!file.exists(export)){
+        print(file)
+        r2 <- resampleRast(rast = terra::rast(file))
+        terra::writeRaster(x = r2, filename = export)
+      }
+    }
+  }
+  
+    
+    
   # this takes a while to run so be careful 
   ## generate the species richness file 
   if(!file.exists(path1) | isTRUE(overwrite)){
     # generate specific richness map 
     richness <- generateSpeciesRichnessMap(directory = dir1,
                                            runVersion = runVersion,
-                                           rasterFileName = "prj_threshold.tif")
+                                           rasterFileName = "prj_threshold_5.tif")
     terra::writeRaster(x = richness$richnessTif,
                        filename = path1,
                        overwrite  = TRUE)
@@ -38,7 +63,7 @@ generateRunSummaries <- function(dir1,runVersion,
     # generate specific richness map 
     ga50Richness <- generateSpeciesRichnessMap(directory = dir1,
                                            runVersion = runVersion,
-                                           rasterFileName = "ga50_masked.tif")
+                                           rasterFileName = "ga50_masked_5.tif")
     
     # need to extend this file to matcht he extent of the richness image 
     t1 <- terra::rast(path1)
@@ -61,9 +86,9 @@ generateRunSummaries <- function(dir1,runVersion,
     # # generate specific richness map 
     ersExRichness <- generateERSRichnessMap(directory = dir1,
                                                runVersion = runVersion,
-                                               ersMap = "ers_ex_gaps.tif",
+                                               ersMap = "ers_ex_gaps_5.tif",
                                                species = species,
-                                               thresholdMap = "prj_threshold.tif")
+                                               thresholdMap = "prj_threshold_5.tif")
     terra::writeRaster(x = ersExRichness$richnessTif,
                        filename = path6,
                        overwrite  = TRUE)
@@ -78,9 +103,9 @@ generateRunSummaries <- function(dir1,runVersion,
     # # generate specific richness map 
     ersInRichness <- generateERSRichnessMap(directory = dir1,
                                             runVersion = runVersion,
-                                            ersMap = "ers_in_gaps.tif",
+                                            ersMap = "ers_in_gaps_5.tif",
                                             species = species,
-                                            thresholdMap = "prj_threshold.tif")
+                                            thresholdMap = "prj_threshold_5.tif")
     terra::writeRaster(x = ersInRichness$richnessTif,
                        filename = path8,
                        overwrite  = TRUE)
