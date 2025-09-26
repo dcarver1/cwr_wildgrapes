@@ -180,8 +180,8 @@ richness1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3)) |>
             title = "Species Richness",
             labels = c("1","","","",max(vals,na.rm = TRUE)),
             group = "Mean Distribution Model"
-            )
-
+            )|>
+    setView(lng = -95.7190, lat = 39.976, zoom = 3)
 richness1
 ```
 <br>
@@ -219,7 +219,8 @@ g1 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))|>
             title = "Number of taxa",
             labels = c("1","","","",max(valsexGap,na.rm = TRUE)),
             group = "Mean Distribution Model"
-            )
+            )|>
+    setView(lng = -95.7190, lat = 39.976, zoom = 3)
 
 g1
 ```
@@ -256,7 +257,8 @@ g2 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))|>
             colors = distColor,
             title = "Number of taxa",
             labels = c("1","","","",max(valsersExGap,na.rm = TRUE)),
-            group = "Mean Distribution Model")
+            group = "Mean Distribution Model")|>
+    setView(lng = -95.7190, lat = 39.976, zoom = 3)
 
 g2
 ```
@@ -301,7 +303,8 @@ in1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3))|>
             colors = distColor,
             title = "Number of taxa",
             labels = c("1","","","",max(valsInGAP,na.rm = TRUE)),
-            group = "Mean Distribution Model")
+            group = "Mean Distribution Model")|>
+    setView(lng = -95.7190, lat = 39.976, zoom = 3)
 
 in1
 ```
@@ -367,7 +370,8 @@ g3 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))|>
             colors = distColor,
             title = "Number of taxa",
             labels = c("1","","","",max(valsersINGap,na.rm = TRUE)),
-            group = "Mean Distribution Model")
+            group = "Mean Distribution Model")|>
+    setView(lng = -95.7190, lat = 39.976, zoom = 3)
 
 g3
 ```

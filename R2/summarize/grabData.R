@@ -23,14 +23,19 @@ grabData <- function(ersex, fscCombined, fcsex, fcsin,evalTable,g_bufferCrop,thr
       g_buffer <- terra::project(x = g_buffer, y = "epsg:3857", method = "near")
       g_bufferCrop <- terra::project(x = g_bufferCrop, y = "epsg:3857", method = "near")
     }
-    projectsResults <- projectsResults |> map(raster::projectRaster, crs = "epsg:3857", method = "ngb" )
+    if(length(projectsResults)>1){
+      projectsResults <- projectsResults |> map(raster::projectRaster, crs = "epsg:3857", method = "ngb" )
+    }
     thres <- terra::project(x = thres, y = "epsg:3857", method = "near")
     
     # add variable importance data 
-    var1 <- readRDS(variableImportance)$rankPredictors
-    names <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames_072025.csv")
-    variableImportance <- var1 |> 
-      dplyr::left_join(y = names, by = c("varNames" ="vitisModelNames"))
+    if(!is.na(variableImportance)){
+      var1 <- readRDS(variableImportance)$rankPredictors
+      names <- read_csv("data/geospatial_datasets/bioclim_layers/variableNames_072025.csv")
+      variableImportance <- var1 |> 
+        dplyr::left_join(y = names, by = c("varNames" ="vitisModelNames"))
+    }
+
     
     # bind to export object 
     reportData <- list(

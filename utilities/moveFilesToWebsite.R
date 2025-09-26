@@ -26,11 +26,24 @@ splist <- read_csv("data/processed_occurrence/model_data072025.csv")|>
   dplyr::select(taxon)|>
   distinct()
 
+
+
 # files 
-files <- list.files("data/Vitis/speciesSummaryHTML",full.names = TRUE)
+files <- list.files("data/Vitis/speciesSummaryHTML/run08282025_1k",full.names = TRUE)
+
+# what species are missing 
+for(i in splist$taxon){
+  vals <- grepl(pattern = i, x = files)
+  if(length(unique(vals)) != 2){
+    print(i)
+  }
+}
+
+# transfer the files 
 for(i in files){
   print(i)
   file.copy(i, folder, overwrite = TRUE)
+  
 }
 
 
@@ -43,7 +56,6 @@ print("box plot summary doc copied")
 
 
 
-# vits county maps --------------------------------------------------------
 files <- list.files("data/countyMaps",pattern = "Evaluation2.html",full.names = TRUE)
 print(files)
 # Find the files 
