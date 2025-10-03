@@ -123,6 +123,11 @@ generateRunSummaries <- function(dir1,runVersion,
                           countries = "data/geospatial_datasets/countries/ne_10m_admin_0_countries.gpkg",
                           exportPath =dir2 )
   }
+  
+
+  # points in protected areas Richness  -------------------------------------
+  
+  
 
   
 

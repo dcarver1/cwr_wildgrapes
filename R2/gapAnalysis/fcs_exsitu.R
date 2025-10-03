@@ -15,7 +15,7 @@ fcs_exsitu <- function(srsex, grsex, ersex, noModel, gPoints) {
                              SRS=srsex$SRS,
                              GRS= NA,
                              ERS= NA,
-                             FCS= srsex$SRS,
+                             FCS= srsex$SRS/3,
                              FCS_Score = NA)
       }else{
         # no go points so values are assigned as zero 
@@ -29,7 +29,7 @@ fcs_exsitu <- function(srsex, grsex, ersex, noModel, gPoints) {
    
     }else{
       # calculate the mean across the three measures 
-      sp_fcs <- mean(c(srsex$SRS,grsex$GRS,ersex$ERS), na.rm=T)
+      sp_fcs <- sum(c(srsex$SRS,grsex$GRS,ersex$ERS), na.rm=T)/3
 
       out_df <- data.frame(ID=srsex$ID,
                            SRS=srsex$SRS,

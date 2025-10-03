@@ -38,7 +38,7 @@ runMaxnet <- function(selectVars,rasterData){
     }
     
     # setting kfold to 6 for big models to handle the memory allocation 
-    kfold <- 6
+    # kfold <- 6
     
     
     # select needed raster bands

@@ -99,9 +99,12 @@ df <- readAndBind(run = TRUE) |>
 # drop specific datasets based on source  ---------------------------------
 df <- df |> 
   dplyr::filter(
-    !databaseSource %in% c("FAO 2019 (WIEWS)", "GBIF 2019","Global Crop Diversity Trust 2019a (Genesys)",
-                           "Global Crop Diversity Trust 2019b  (Cwr Occ)", "USDA ARS NPGS 2019a",
-                           "Midwest Herbaria 2019","BGCI 2019 (PlantSearch)")
+    !databaseSource %in% c("FAO 2019 (WIEWS)",
+                           "GBIF 2019",
+                           "Global Crop Diversity Trust 2019a (Genesys)",
+                           "Global Crop Diversity Trust 2019b  (Cwr Occ)",
+                           "USDA ARS NPGS 2019a",
+                           "Midwest Herbaria 2019")
   )
 
 View(df)

@@ -36,10 +36,25 @@ set.seed(1234)
 # species <- unique(speciesData$taxon)
 # 
 
+# funciton to show counts per species 
+cPerSpec <- function(data){
+  data |> 
+    dplyr::group_by(taxon, type)|>
+    count()%>%
+    pivot_wider(
+      names_from = type,   # The new column names will come from the 'type' column
+      values_from = n,     # The values for those new columns will come from the 'n' column
+      values_fill = 0      # If a species is missing a G or H, fill it with 0
+    )
+}
+
 # Vitis
-# filtering the extra values coming from the data prep process
-speciesData <- read_csv("data/processed_occurrence/model_data072025_edit.csv") |>
-  dplyr::select(-c("index", "validLat","validLon","validLatLon")) # "geometry",
+# # filtering the extra values coming from the data prep process
+# speciesData <- read_csv("data/processed_occurrence/allEvaluated_data_removedDups_072025.csv")
+# s1 <- cPerSpec(speciesData)
+# names(s1) <- c("taxon", "g1","h1")
+# |>
+#   dplyr::select(-c("index", "validLat","validLon","validLatLon")) # "geometry",
 # # using the data from the county maps for an reference run
 # speciesData1 <- read_csv("data/processed_occurrence/DataForCountyMaps_20230320.csv")|>
 #   dplyr::filter(!is.na(taxon),
@@ -60,10 +75,18 @@ fnaData <- read_csv("data/source_data/FNA_stateClassification.csv")
 # speciesData <- speciesData3
 # export for gap r testing 
 # write.csv(speciesData, file = "temp/allVitisData082025.csv")
+## doubled check and this data seems to have less duplication of G values 
 speciesData <- read_csv("temp/allVitisData082025.csv")
+s2 <- cPerSpec(speciesData)
 
 
-# datan
+# adding back in Vitis tiliifolia records  --------------------------------
+vt <- read_csv("data/processed_occurrence/allEvaluated_data_removedDups_072025.csv") |>
+  dplyr::filter(taxon %in% c("Vitis tiliifolia", "Vitis popenoei"))
+
+sd2 <- speciesData[!speciesData$taxon %in% c("Vitis tiliifolia", "Vitis popenoei"), ]
+speciesData <- bind_rows(sd2, vt)
+# join features
 datasourceSummary <- databaseSourcesSummary(speciesData)
 
 # order but n observations 
@@ -92,7 +115,7 @@ runVersion <- "run08282025_1k"
 # overwrite 
 overwrite <- FALSE
 
-
+# Vitis popenoei
 
 # create folder structure 
 #create folder
@@ -109,11 +132,6 @@ erroredSpecies <- list(noLatLon = c(),
                        noSDM = c(),
                        noHTML = c())
 
-# potentially run this whole process as a furrr function... 
-# only 9gb memory allocaiton 
-
-
-
 # species to test for FNA filter - maybe need to rerun if filter was not applied 
 fnaSpecies <- fnaData$`Taxon Name`[fnaData$`States from FNA`!= "NA,"]
 
@@ -127,30 +145,12 @@ s2 <- speciesData |>
   dplyr::filter(taxon != "NA")
 
 
-# rerun FNA species
-fna2 <- fnaData[nchar(fnaData$`States from FNA`) != 3, ]
-rerun <- s2[s2$taxon %in% fna2$`Taxon Name`, ]
-
-# issue with califorina 
-## what species have been modeled 
-f1 <- list.files("data/Vitis",
-                 full.names = TRUE,
-                 recursive = TRUE)
-f2 <- f1[grepl(pattern = "run08282025_1k", x = f1)]
-f3 <- f2[grepl(pattern = "sdm_results.RDS", x = f2)]
-
-#  aestivalis
-# errors 
-# [1] "Vitis rotundifolia" 39 # seems to stallout? 
-# [1] "Vitis riparia" 38 : something going on 
-# [1] "Vitis vulpina" 35 summary md 
 #testing 
-# j <- "Vitis acerifolia"
+# j <- "Vitis popenoei"
 
-# 
 
 # start of for loop -------------------------------------------------------
-for(j in s2$taxon[c(39)]{ # species 
+for(j in s2$taxon[c(11:39)]){ # species 
   # create unique path for summary HTML docs 
   p1 <- paste0("data/Vitis/speciesSummaryHTML/",runVersion)
   if(!dir.exists(p1)){
@@ -297,13 +297,13 @@ for(j in s2$taxon[c(39)]{ # species
       # insitu
       ## srsin
       srsin <- write_CSV(path = allPaths$srsinPath,
-                         overwrite = overwrite,
+                         overwrite = TRUE,
                          function1 = srs_insitu(occuranceData = sp1,
                                                 thres = thres,
                                                 protectedArea =protectedAreas ))
       ## ersin
       ersin <- write_CSV(path = allPaths$ersinPath,
-                         overwrite = overwrite,
+                         overwrite = TRUE,
                          function1 = ers_insitu(occuranceData = sp1,
                                                 nativeArea = natArea,
                                                 protectedArea = protectedAreas,
@@ -312,13 +312,13 @@ for(j in s2$taxon[c(39)]{ # species
 
       ## grsin
       grsin <-  write_CSV(path = allPaths$grsinPath,
-                          overwrite = overwrite ,
+                          overwrite = TRUE ,
                           function1 = grs_insitu(occuranceData = sp1,
                                                  protectedArea = protectedAreas,
                                                  thres = thres))
       ## fcsin
       fcsin <- write_CSV(path = allPaths$fcsinPath,
-                         overwrite = overwrite ,
+                         overwrite = TRUE ,
                          function1 = fcs_insitu(srsin = srsin,
                                                 grsin = grsin,
                                                 ersin = ersin,
@@ -337,13 +337,13 @@ for(j in s2$taxon[c(39)]{ # species
                                                 rasterPath = allPaths$ersexRast))
       ##grsex
       grsex <- write_CSV(path = allPaths$grsexPath,
-                         overwrite = overwrite,
+                         overwrite = TRUE,
                          function1 = grs_exsitu(speciesData = sd1,
                                                 ga50 = g_bufferCrop,
                                                 thres = thres))
       ##fcsex
       fcsex <- write_CSV(path = allPaths$fcsexPath,
-                         overwrite = overwrite,
+                         overwrite = TRUE,
                          function1 = fcs_exsitu(srsex = srsex,
                                                 grsex = grsex,
                                                 ersex = ersex,
@@ -351,7 +351,7 @@ for(j in s2$taxon[c(39)]{ # species
 
       #combined measure
       fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
-                               overwrite = overwrite,
+                               overwrite = TRUE,
                                function1 = fcs_combine(fcsin = fcsin,
                                                        fcsex = fcsex))
 
@@ -616,8 +616,7 @@ generateRunSummaries(dir1 = dir1,
                      genus = "Vitis",
                      protectedAreas = protectedAreas,
                      overwrite = FALSE)
-# # #   
-# #   
+
 # # produce boxplot summaries -----------------------------------------------
 renderBoxPlots  <- TRUE
 if(renderBoxPlots == TRUE){

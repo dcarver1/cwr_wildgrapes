@@ -14,7 +14,7 @@ fcs_combine <- function(fcsin, fcsex) {
   
   data_comb$FCSc_min <- min(c(data_comb$FCSex,data_comb$FCSin),na.rm=T)
   data_comb$FCSc_max <- max(c(data_comb$FCSex,data_comb$FCSin),na.rm=T)
-  data_comb$FCSc_mean <- mean(c(data_comb$FCSex,data_comb$FCSin),na.rm=T)
+  data_comb$FCSc_mean <- sum(c(data_comb$FCSex,data_comb$FCSin),na.rm=T)/2
   
   #assign classes (min)
   if (data_comb$FCSc_min < 25) {

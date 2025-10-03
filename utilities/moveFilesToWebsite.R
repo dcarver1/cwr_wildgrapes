@@ -19,9 +19,9 @@ folder <- "~/trueNAS/work/vitis2/m"
 
 # vitis SDMS --------------------------------------------------------------
 genus <- "Vitis" 
-modelRun <- "run082025_1k"
+modelRun <- "run08282025_1k"
 # species 
-splist <- read_csv("data/processed_occurrence/model_data072025.csv")|>
+splist <- read_csv("temp/allVitisData082025.csv")|>
   dplyr::filter(!is.na(taxon), genus == "Vitis")|>
   dplyr::select(taxon)|>
   distinct()

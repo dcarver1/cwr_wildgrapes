@@ -16,7 +16,7 @@ fcs_insitu <- function(srsin, grsin, ersin, noModel){
                          FCS_Score = NA)
   }else{
     # calculate the mean across the three measures 
-    sp_fcs <- mean(c(srsin$SRS,grsin$GRS,ersin$ERS), na.rm=T)
+    sp_fcs <- sum(c(srsin$SRS,grsin$GRS,ersin$ERS), na.rm=T) /3
 
     out_df <- data.frame(ID=srsin$ID, 
                          SRS=srsin$SRS, 
