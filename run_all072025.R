@@ -77,7 +77,7 @@ fnaData <- read_csv("data/source_data/FNA_stateClassification.csv")
 # write.csv(speciesData, file = "temp/allVitisData082025.csv")
 ## doubled check and this data seems to have less duplication of G values 
 speciesData <- read_csv("temp/allVitisData082025.csv")
-s2 <- cPerSpec(speciesData)
+# s2 <- cPerSpec(speciesData)
 
 
 # adding back in Vitis tiliifolia records  --------------------------------
@@ -613,6 +613,7 @@ for(j in s2$taxon[c(11:39)]){ # species
 ## might need to revisit how these are being generated... 
 generateRunSummaries(dir1 = dir1,
                      runVersion = runVersion,
+                     species = s2$taxon, 
                      genus = "Vitis",
                      protectedAreas = protectedAreas,
                      overwrite = FALSE)

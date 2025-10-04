@@ -3,7 +3,7 @@
 # genus = i
 
 
-generateRunSummaries <- function(dir1,runVersion,
+generateRunSummaries <- function(dir1,runVersion, species,
                                  genus, protectedAreas, overwrite){
   # storing summaries data in run folders 
   dir2 <- paste0(dir1, "/", runVersion)
@@ -17,6 +17,7 @@ generateRunSummaries <- function(dir1,runVersion,
   path7 <- paste0(dir2,"/ersex_speciesUsed_Richness.csv")
   path8 <- paste0(dir2,"/ersinRichness.tif")
   path9 <- paste0(dir2,"/ersin_speciesUsed_Richness.tif")
+  path10 <- paste0(dir2,"/protectedAreaSpeciesPointRichness.csv")
 
 
   # Rescale all the imagery for the 1km runs  -------------------------------
@@ -126,6 +127,24 @@ generateRunSummaries <- function(dir1,runVersion,
   
 
   # points in protected areas Richness  -------------------------------------
+  wdpaVectExport <-paste0("data/geospatial_datasets/protectedLands/vect_",genus,"_",runVersion,".gpkg")
+  if(!file.exists(wdpaVectExport)){
+    wdpaVect <- wdpaVect(species = species, runVersion = runVersion)
+    terra::writeVector(wdpaVect, wdpaVectExport)
+  }else{
+    wdpaVect <- terra::vect(wdpaVectExport)
+  }
+  
+  
+  if(overwrite == TRUE){
+    
+    proPoints <- protectedAreaPoints(species = s2$taxon,
+                                     runVersion = runVersion,
+                                     genus = "Vitis",
+                                     wdpaVect = wdpaVect
+                                     )
+    write_csv(proPoints, path10)
+  }
   
   
 
