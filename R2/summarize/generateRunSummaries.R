@@ -137,12 +137,34 @@ generateRunSummaries <- function(dir1,runVersion, species,
   
   
   if(overwrite == TRUE){
-    
     proPoints <- protectedAreaPoints(species = s2$taxon,
                                      runVersion = runVersion,
                                      genus = "Vitis",
                                      wdpaVect = wdpaVect
                                      )
+    
+    # read in all files 
+    proP <- list.files(paste0("data/",genus,"/",runVersion, "/proPoints"), 
+                       pattern = ".csv",
+                       full.names = TRUE) |>
+      read_csv()|>
+      group_by(name) %>%
+      summarise(
+        total_count = sum(count, na.rm = TRUE),
+        taxa_list = list(unique(taxon))
+      )|>
+      dplyr::select(
+        WDPAID = name,
+        total_count,
+        taxa_list
+      )
+    # select names and id from pro area 
+    wdpaDF <-as_tibble(wdpaVect)|>
+      dplyr::left_join(proP, by = "WDPAID") |>
+      dplyr::filter(!is.na(total_count ))
+      
+
+    
     write_csv(proPoints, path10)
   }
   

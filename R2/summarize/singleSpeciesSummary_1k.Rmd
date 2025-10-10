@@ -71,7 +71,7 @@ DT::datatable(c1,
 ```
 
 
-```{r, echo=FALSE, eval=TRUE}
+```{r, echo=FALSE,  message=FALSE, warning=FALSE}
 # resample the raster datasets to 5km for visualization 
 ## threshold maps 
 thresAgg <- matrix(c(
@@ -87,18 +87,12 @@ resampleRast <- function(rast, resampleFactor = 5){
     terra::classify(thresAgg, include.lowest = TRUE)
   return(r1)
 }
-
-
 ```
-
-
-
-
 
 <br>
 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE, include = FALSE}
 # Generate all the map data
 # point data
 occData <- data$occuranceData |>
@@ -358,11 +352,6 @@ if (class(gBuf) != "character" & data$fcsex$GRS != 0) {
                  na.color = "transparent")
 }
 
-
-
-
-
-#
 ```
 
 

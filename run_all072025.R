@@ -86,6 +86,11 @@ vt <- read_csv("data/processed_occurrence/allEvaluated_data_removedDups_072025.c
 
 sd2 <- speciesData[!speciesData$taxon %in% c("Vitis tiliifolia", "Vitis popenoei"), ]
 speciesData <- bind_rows(sd2, vt)
+# one off removals based on summayr map reviews 
+source("temp/clearNewErrors.R")
+speciesData<- clearNewErrors(speciesData)
+
+
 # join features
 datasourceSummary <- databaseSourcesSummary(speciesData)
 
@@ -146,11 +151,12 @@ s2 <- speciesData |>
 
 
 #testing 
-# j <- "Vitis popenoei"
-
+j <- "Vitis cinerea"
+# species to regenerate nat area and SRSex measures 
+rerun<- c("Vitis tiliifolia")
 
 # start of for loop -------------------------------------------------------
-for(j in s2$taxon[c(11:39)]){ # species 
+for(j in s2$taxon[7:]){ # species 
   # create unique path for summary HTML docs 
   p1 <- paste0("data/Vitis/speciesSummaryHTML/",runVersion)
   if(!dir.exists(p1)){
@@ -176,7 +182,7 @@ for(j in s2$taxon[c(11:39)]){ # species
   
   #srsex
   srsex <- write_CSV(path = allPaths$srsExPath,
-                     overwrite = overwrite,
+                     overwrite = TRUE,
                      function1 = srs_exsitu(sp_counts = c1))
     
   
@@ -191,7 +197,7 @@ for(j in s2$taxon[c(11:39)]){ # species
 
   ## create the inital spatial object
   sp1 <- write_GPKG(path = allPaths$spatialDataPath,
-                    overwrite = overwrite,
+                    overwrite = TRUE,
                     function1 = createSF_Objects(speciesData = sd1) %>%
                       removeDuplicates()
   )
@@ -199,7 +205,7 @@ for(j in s2$taxon[c(11:39)]){ # species
 
   # apply FNA filter if possible.
   sp1 <- write_GPKG(path = allPaths$spatialDataPath,
-                    overwrite = overwrite, # this needs to stay true otherwise the call above will be used.
+                    overwrite = TRUE, # this needs to stay true otherwise the call above will be used.
                     function1 = applyFNA(speciesPoints = sp1,
                                          fnaData = fnaData,
                                          states = naStates))
@@ -207,7 +213,7 @@ for(j in s2$taxon[c(11:39)]){ # species
 
   ## define natural area based on ecoregions
   natArea <- write_GPKG(path = allPaths$natAreaPath,
-                        overwrite = overwrite,
+                        overwrite = TRUE,
                         function1 = nat_area_shp(speciesPoints = sp1,
                                                  ecoregions = ecoregions))
 
@@ -355,6 +361,18 @@ for(j in s2$taxon[c(11:39)]){ # species
                                function1 = fcs_combine(fcsin = fcsin,
                                                        fcsex = fcsex))
 
+      # crop everything with the riparia to the native area for riparia 
+      # na <- terra::vect(natArea)
+      # g_bufferCrop <- g_bufferCrop |> terra::crop(na) |> terra::mask(na)
+      # thres <-  thres |> terra::crop(na) |> terra::mask(na)
+      # 
+      # projectsResults$all <-  terra::rast(projectsResults$all) |> terra::crop(na) |> terra::mask(na) |> raster()
+      # projectsResults$mean <-  terra::rast(projectsResults$mean) |> terra::crop(na) |> terra::mask(na)|> raster()
+      # projectsResults$median <-  terra::rast(projectsResults$median) |> terra::crop(na) |> terra::mask(na)|> raster()
+      # projectsResults$stdev <-  terra::rast(projectsResults$stdev) |> terra::crop(na) |> terra::mask(na)|> raster()
+      # g_buffer <- g_buffer|> terra::crop(na) |> terra::mask(na)
+      
+      
       #gather features for RMD
       ## just a helper function to reduce the number of input for the RMD
       reportData <- write_RDS(path = allPaths$summaryDataPath,
@@ -433,7 +451,7 @@ for(j in s2$taxon[c(11:39)]){ # species
     #                                                evalTable = NA,
     #                                                g_bufferCrop = NA,
     #                                                thres = NA,
-    #                                                projectsResults = NA,
+    #                                                 = NA,
     #                                                occuranceData = sp1,
     #                                                v_data = NA,
     #                                                g_buffer = NA,
@@ -537,6 +555,8 @@ for(j in s2$taxon[c(11:39)]){ # species
                                function1 = fcs_combine(fcsin = fcsin,
                                                        fcsex = fcsex))
 
+
+      
       reportData <- write_RDS(path = allPaths$summaryDataPath,
                               overwrite = TRUE,
                               function1 = grabData(fscCombined = fcsCombined,
@@ -555,6 +575,8 @@ for(j in s2$taxon[c(11:39)]){ # species
                                                    countsData = c1,
                                                    variableImportance = NA,
                                                    NoModel = FALSE))
+      
+      
 
       # generate the report with 
       rmarkdown::render(input = "R2/summarize/singleSpeciesSummaryBuffer_1k.Rmd",
@@ -572,7 +594,12 @@ for(j in s2$taxon[c(11:39)]){ # species
 
     # generate summary html
     # this is not working with the 1k data do to size fo the rasters... need to reevaluate
-    if(!file.exists(p1)| isTRUE(overwrite)){
+  
+  
+
+
+    # rmd with Model ----------------------------------------------------------
+    # if(!file.exists(p1)| isTRUE(overwrite)){
     try(
       print(j),
       if(!j %in% erroredSpecies$lessThenEight){
@@ -588,16 +615,16 @@ for(j in s2$taxon[c(11:39)]){ # species
         )
       }
     )
-    }else{
-      if(!file.exists(allPaths$summaryHTMLPath)){
-        # erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
-      }
-    }
+    # }else{
+    #   if(!file.exists(allPaths$summaryHTMLPath)){
+    #     # erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
+    #   }
+    # }
     # # block here for testing. I want variable in local environment and don't want them written out.
     # # stop()
     # 
     # # remove all reused variables ---------------------------------------------
-    # rm(c1,sp1,srsex,natArea,g_buffer, projectsResults,evalTable,thres)
+    # rm(c1,sp1,srsex,natArea,g_buffer, ,evalTable,thres)
   }# end of species loop
 
 # errorDF <- erroredSpecies |> 
