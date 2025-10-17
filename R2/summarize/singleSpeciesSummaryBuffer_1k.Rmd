@@ -511,7 +511,7 @@ The ERS ex situ map feature shows ecoregions within the potential distribution m
 
 if(exTables$`Total G with coordinates` == 0){
   # generate the GRSex map
-  ex2 <- leaflet(width = "100%")|>
+  ex1 <- leaflet(width = "100%")|>
     addProviderTiles(providers$Esri.WorldGrayCanvas)|>
     # Outline of all ecoregions
     addPolygons(
@@ -552,7 +552,7 @@ if(exTables$`Total G with coordinates` == 0){
         labels = c("Native country-ecoregion area", "Potential distribution model", "Areas < 50 km from an ex situ collection"),
         group = "GRS ex situ"
       )
-    
+  }
   # generate the ERSex map
   if(ersex$ERS == 100){
     ex2 <- ex1 |>
@@ -589,7 +589,7 @@ if(exTables$`Total G with coordinates` == 0){
         color = "#60616050"
       ) 
     }
-  }
+
   
   
   

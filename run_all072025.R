@@ -153,10 +153,31 @@ s2 <- speciesData |>
 #testing 
 j <- "Vitis cinerea"
 # species to regenerate nat area and SRSex measures 
-rerun<- c("Vitis tiliifolia")
-
+rerun<- c(
+"Vitis martineziana"
+,"Vitis rubriflora"
+# ,"Vitis rufotomentosa"
+,"Vitis cinerea var. tomentosa"
+,"Vitis munsoniana"
+,"Vitis jaegeriana"
+,"Vitis biformis"
+,"Vitis nesbittiana"
+,"Vitis peninsularis"
+,"Vitis lincecumii"
+,"Vitis blancoi"
+,"Vitis popenoei"
+,"Vitis x novae-angliae"
+,"Vitis baileyana"
+,"Vitis cinerea var. cinerea"
+,"Vitis bourgaeana"
+,"Vitis simpsonii"
+,"Vitis shuttleworthii"
+,"Vitis palmata"
+,"Vitis aestivalis var. bicolor"
+,"Vitis aestivalis var. aestivalis"
+,"Vitis tiliifolia")
 # start of for loop -------------------------------------------------------
-for(j in s2$taxon[7:]){ # species 
+for(j in rerun){ # species 
   # create unique path for summary HTML docs 
   p1 <- paste0("data/Vitis/speciesSummaryHTML/",runVersion)
   if(!dir.exists(p1)){
@@ -303,13 +324,13 @@ for(j in s2$taxon[7:]){ # species
       # insitu
       ## srsin
       srsin <- write_CSV(path = allPaths$srsinPath,
-                         overwrite = TRUE,
+                         overwrite  = overwrite,
                          function1 = srs_insitu(occuranceData = sp1,
                                                 thres = thres,
                                                 protectedArea =protectedAreas ))
       ## ersin
       ersin <- write_CSV(path = allPaths$ersinPath,
-                         overwrite = TRUE,
+                         overwrite  = overwrite,
                          function1 = ers_insitu(occuranceData = sp1,
                                                 nativeArea = natArea,
                                                 protectedArea = protectedAreas,
@@ -318,13 +339,13 @@ for(j in s2$taxon[7:]){ # species
 
       ## grsin
       grsin <-  write_CSV(path = allPaths$grsinPath,
-                          overwrite = TRUE ,
+                          overwrite  = overwrite ,
                           function1 = grs_insitu(occuranceData = sp1,
                                                  protectedArea = protectedAreas,
                                                  thres = thres))
       ## fcsin
       fcsin <- write_CSV(path = allPaths$fcsinPath,
-                         overwrite = TRUE ,
+                         overwrite  = overwrite ,
                          function1 = fcs_insitu(srsin = srsin,
                                                 grsin = grsin,
                                                 ersin = ersin,
@@ -335,7 +356,7 @@ for(j in s2$taxon[7:]){ # species
       #exsitu
       ##ersex
       ersex <- write_CSV(path = allPaths$ersexPath,
-                         overwrite = TRUE,
+                         overwrite  = TRUE,
                          function1 = ers_exsitu(speciesData = sd1,
                                                 thres = thres,
                                                 natArea = natArea,
@@ -343,13 +364,13 @@ for(j in s2$taxon[7:]){ # species
                                                 rasterPath = allPaths$ersexRast))
       ##grsex
       grsex <- write_CSV(path = allPaths$grsexPath,
-                         overwrite = TRUE,
+                         overwrite  = overwrite,
                          function1 = grs_exsitu(speciesData = sd1,
                                                 ga50 = g_bufferCrop,
                                                 thres = thres))
       ##fcsex
       fcsex <- write_CSV(path = allPaths$fcsexPath,
-                         overwrite = TRUE,
+                         overwrite  = TRUE,
                          function1 = fcs_exsitu(srsex = srsex,
                                                 grsex = grsex,
                                                 ersex = ersex,
@@ -357,7 +378,7 @@ for(j in s2$taxon[7:]){ # species
 
       #combined measure
       fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
-                               overwrite = TRUE,
+                               overwrite  = TRUE,
                                function1 = fcs_combine(fcsin = fcsin,
                                                        fcsex = fcsex))
 
@@ -601,8 +622,8 @@ for(j in s2$taxon[7:]){ # species
     # rmd with Model ----------------------------------------------------------
     # if(!file.exists(p1)| isTRUE(overwrite)){
     try(
-      print(j),
-      if(!j %in% erroredSpecies$lessThenEight){
+      # print(j),
+      # if(!j %in% erroredSpecies$lessThenEight){
         rmarkdown::render(input = "R2/summarize/singleSpeciesSummary_1k.Rmd",
                           output_format = "html_document",
                           output_dir =  p1,  # file.path(allPaths$result),
@@ -613,7 +634,7 @@ for(j in s2$taxon[7:]){ # species
                           # clean = F,
                           # encoding = "utf-8"
         )
-      }
+      # }
     )
     # }else{
     #   if(!file.exists(allPaths$summaryHTMLPath)){
@@ -626,6 +647,20 @@ for(j in s2$taxon[7:]){ # species
     # # remove all reused variables ---------------------------------------------
     # rm(c1,sp1,srsex,natArea,g_buffer, ,evalTable,thres)
   }# end of species loop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # errorDF <- erroredSpecies |> 
 #   bind_cols()
@@ -685,6 +720,6 @@ if(renderBoxPlots == TRUE){
 # 
 # # 
 # # # generate a summary CSV for vitis 
-# source("R2/summarize/summaryTable.R")
-# summaryCSV <- summaryTable(species = species, runVersion = runVersion)
-# write_csv(x = summaryCSV, file = paste0("data/Vitis/summaryTable_",runVersion,".csv"))
+source("R2/summarize/summaryTable.R")
+summaryCSV <- summaryTable(species = species, runVersion = runVersion)
+write_csv(x = summaryCSV, file = paste0("data/Vitis/summaryTable_",runVersion,".csv"))

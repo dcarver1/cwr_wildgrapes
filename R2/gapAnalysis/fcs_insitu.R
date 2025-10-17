@@ -12,7 +12,7 @@ fcs_insitu <- function(srsin, grsin, ersin, noModel){
                          SRS=srsin$SRS, 
                          GRS=NA,
                          ERS=NA, 
-                         FCS=srsin$SRS, # this might issues when zero... 
+                         FCS=srsin$SRS,
                          FCS_Score = NA)
   }else{
     # calculate the mean across the three measures 

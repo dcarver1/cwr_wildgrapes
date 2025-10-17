@@ -15,7 +15,7 @@ fcs_exsitu <- function(srsex, grsex, ersex, noModel, gPoints) {
                              SRS=srsex$SRS,
                              GRS= NA,
                              ERS= NA,
-                             FCS= srsex$SRS/3,
+                             FCS= srsex$SRS,
                              FCS_Score = NA)
       }else{
         # no go points so values are assigned as zero 
