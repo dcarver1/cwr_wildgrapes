@@ -37,7 +37,7 @@ generateRunSummaries <- function(dir1,runVersion, species,
       if(!file.exists(export)){
         print(file)
         r2 <- resampleRast(rast = terra::rast(file))
-        terra::writeRaster(x = r2, filename = export)
+        terra::writeRaster(x = r2, filename = export, overwrite = TRUE)
       }
     }
   }
@@ -59,6 +59,7 @@ generateRunSummaries <- function(dir1,runVersion, species,
     write_csv(x = df,
               file = path2)
   }
+  
   # generate grsex richness map
   if(!file.exists(path3) | isTRUE(overwrite)){
     # generate specific richness map 

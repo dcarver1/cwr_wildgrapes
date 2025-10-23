@@ -177,7 +177,7 @@ rerun<- c(
 ,"Vitis aestivalis var. aestivalis"
 ,"Vitis tiliifolia")
 # start of for loop -------------------------------------------------------
-for(j in rerun){ # species 
+for(j in rerun[21]){ # species 
   # create unique path for summary HTML docs 
   p1 <- paste0("data/Vitis/speciesSummaryHTML/",runVersion)
   if(!dir.exists(p1)){
