@@ -459,7 +459,7 @@ m3
 
 ### Evaluation Metrics 
 
-For each taxon with at least 25 distinct coordinates in the target spatial area, the modeled distribution was calculated as the median of ten MaxEnt model replicates (K = 10), using linear, quadratic, product, and hinge features, with a regularization parameter ß=1.0. For taxa with 8-24 distinct coordinates, the median of six replicates (K = 6) was calculated, and for taxa with 3-7 distinct coordinates, the median of three replicates (K = 3) was calculated. Model runs for taxa where MaxEnt failed within these established groupings were rerun in fewer replicate categories. Taxa with fewer than 3 distinct coordinates were not modeled. The table below shows the statistical results for each replicate.
+For each taxon with at least 25 distinct coordinates in the target spatial area, the modeled distribution was calculated as the median of ten MaxEnt model replicates (K = 10), using linear, quadratic, product, and hinge features, with a regularization parameter ß=1.0. For taxa with 12-24 distinct coordinates, the median of six replicates (K = 6) was calculated, and for taxa with 8-12 distinct coordinates, the median of three replicates (K = 3) was calculated. Model runs for taxa where MaxEnt failed within these established groupings were rerun in fewer replicate categories. Taxa with fewer than 8 distinct coordinates were not modeled. The table below shows the statistical results for each replicate.
 
 
 ```{r, echo=FALSE, eval=TRUE}

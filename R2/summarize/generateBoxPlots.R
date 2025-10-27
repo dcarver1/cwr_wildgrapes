@@ -6,15 +6,15 @@
 
 # d1 <- read.csv("C:/Users/carverd/Downloads/daucusData_BioClimatic_2.5arc_modified_forTesting.csv")
 # n1 <- read.csv("C:/Users/carverd/Downloads/variableNames2.csv")
+# 
+# 
+# set.seed(8)
+# y <- rnorm(200)
+# group <- sample(LETTERS[1:3], size = 200,
+#                 replace = TRUE)
+# df <- data.frame(y, group)
 
-
-set.seed(8)
-y <- rnorm(200)
-group <- sample(LETTERS[1:3], size = 200,
-                replace = TRUE)
-df <- data.frame(y, group)
-
-
+library(forcats)
 
 
 generateBoxPlot <- function(data,names,parameter){
@@ -25,7 +25,9 @@ generateBoxPlot <- function(data,names,parameter){
     # remove the glochidiatus row with the extreme outline 
     # dplyr::filter(bio_01 > -30)|> 
     dplyr::select(taxon, type, feature = parameter) |>
-    dplyr::mutate(taxon = str_replace_all(taxon, "_", " ") )
+    dplyr::mutate(taxon = str_replace_all(taxon, "_", " ") ,
+                  taxon = fct_rev(taxon)
+    )
   # only G points for the jitters
   data3 <- data2 |>
     dplyr::filter(type == "G")
@@ -42,6 +44,7 @@ generateBoxPlot <- function(data,names,parameter){
     scale_fill_manual(values = setPalette  ) +  # Set manual colors for boxplots based on taxon levels
     # scale_fill_grey()+ # this works pretty well
     geom_jitter(data = data3, fill ="#6300f0", alpha = 0.5, shape = 21, size = 1, position = position_jitter(width = 0.3))+
+    # scale_x_discrete(limits = rev) + 
     # Set manual colors for points based on type levels
     coord_flip() +
     labs(title = title)+

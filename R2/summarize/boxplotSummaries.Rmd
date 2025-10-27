@@ -17,6 +17,15 @@ species <- params$inputData$species
 data <- params$inputData$data
 names <- params$inputData$names
 # change to params$inputData$species
+testing <- FALSE 
+if(isTRUE(testing)){
+  species <- inputData$species
+  data <- inputData$data
+  names <- inputData$names
+}
+
+
+
 ```
 
 
@@ -264,10 +273,10 @@ plots$slope
 
 ```
 
-### Correlation Circle
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-
+### Correlation Circle
 
 # correlation circle 
 # var <- get_pca_var(pca)
@@ -308,9 +317,10 @@ plots$slope
 
 ```
 
-### Ellipse
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
+### Ellipse
 # # pca elispe with groups 
 # pcaEllipse <- fviz_pca_ind(pca,
 #              geom.ind = "point", # show points only (nbut not "text")
@@ -365,9 +375,10 @@ plots$slope
 ```
 
 
-### Biplot
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
+### Biplot
 # # biplot with elipse 
 # biplot <- fviz_pca_biplot(pca, 
 #                 col.ind = attData$Taxon,

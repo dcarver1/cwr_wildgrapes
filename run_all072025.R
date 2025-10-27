@@ -124,7 +124,7 @@ overwrite <- FALSE
 
 # create folder structure 
 #create folder
-dir1 <- paste0("data/Vitis") 
+
 if(!dir.exists(dir1)){dir.create(dir1)}
 
 dir2 <- paste0(dir1, "/", runVersion)
@@ -154,30 +154,9 @@ s2 <- speciesData |>
 j <- "Vitis cinerea"
 # species to regenerate nat area and SRSex measures 
 rerun<- c(
-"Vitis martineziana"
-,"Vitis rubriflora"
-# ,"Vitis rufotomentosa"
-,"Vitis cinerea var. tomentosa"
-,"Vitis munsoniana"
-,"Vitis jaegeriana"
-,"Vitis biformis"
-,"Vitis nesbittiana"
-,"Vitis peninsularis"
-,"Vitis lincecumii"
-,"Vitis blancoi"
-,"Vitis popenoei"
-,"Vitis x novae-angliae"
-,"Vitis baileyana"
-,"Vitis cinerea var. cinerea"
-,"Vitis bourgaeana"
-,"Vitis simpsonii"
-,"Vitis shuttleworthii"
-,"Vitis palmata"
-,"Vitis aestivalis var. bicolor"
-,"Vitis aestivalis var. aestivalis"
-,"Vitis tiliifolia")
+"Vitis martineziana") 
 # start of for loop -------------------------------------------------------
-for(j in rerun[21]){ # species 
+for(j in s2$taxon){ # species 
   # create unique path for summary HTML docs 
   p1 <- paste0("data/Vitis/speciesSummaryHTML/",runVersion)
   if(!dir.exists(p1)){
@@ -673,13 +652,14 @@ for(j in rerun[21]){ # species
 # need to set overwrite to true to produce most of the layers
 ### big processing step...
 ## might need to revisit how these are being generated... 
-generateRunSummaries(dir1 = dir1,
-                     runVersion = runVersion,
-                     species = s2$taxon, 
-                     genus = "Vitis",
-                     protectedAreas = protectedAreas,
-                     overwrite = FALSE)
-
+runSummaries <- FALSE
+if(runSummaries == TRUE){
+  generateRunSummaries(dir1 = dir1,
+                       runVersion = runVersion,
+                       species = s2$taxon, 
+                       genus = "Vitis",
+                       protectedAreas = protectedAreas,
+                       overwrite = FALSE)}
 # # produce boxplot summaries -----------------------------------------------
 renderBoxPlots  <- TRUE
 if(renderBoxPlots == TRUE){
@@ -702,7 +682,7 @@ if(renderBoxPlots == TRUE){
   # generate input data set
   inputData <- list(
     data = df4,
-    species = species,
+    species = sort(species),
     names = bioNames
   )
   # produce the document

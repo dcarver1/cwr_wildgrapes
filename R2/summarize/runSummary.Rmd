@@ -60,6 +60,45 @@ if(genus == "Daucus"){
   printGenus <- paste0(genus, " L.") 
 }else{
   printGenus <- genus
+  # add new records for the two missing species 
+  vr <- data.frame(
+     "ID" = "Vitis rufotomentosa",
+     "SRSex"= 100,
+     "GRSex"= NA,
+     "ERSex"= NA,
+     "SRSin"= 0,
+     "GRSin"= NA,
+     "ERSin"= NA,          
+     "FCSex"= 33.333,
+     "FCSin"= 0,
+     "FCSc_min"= 0,
+     "FCSc_max"= 33.333,
+     "FCSc_mean"= 16.6666,
+     "FCSc_min_class"= "UP",
+     "FCSc_max_class"= "UP",
+     "FCSc_mean_class"= "UP"
+  )
+  vn <- data.frame(
+     "ID" = "Vitis novogranatensis",
+     "SRSex"= 0,
+     "GRSex"= NA,
+     "ERSex"= NA,
+     "SRSin"= 0,
+     "GRSin"= NA,
+     "ERSin"= NA,          
+     "FCSex"= 0,
+     "FCSin"= 0,
+     "FCSc_min"= 0,
+     "FCSc_max"= 0,
+     "FCSc_mean"= 0,
+     "FCSc_min_class"= "UP",
+     "FCSc_max_class"= "UP",
+     "FCSc_mean_class"= "UP"
+  )
+  data <- bind_rows(data, vr)|>
+    bind_rows(vn)
+  # arrange by ID for visualization 
+  data <- dplyr::arrange(data, ID)
 }
 
 # reproject protected areas raster to threshold image
@@ -197,6 +236,7 @@ Predicted taxonomic richness map for assessed taxa, combining `r length(unique(d
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
 g50 <- classify(ga50, cbind(NaN, 0)) #|> raster()
+
 exGap <- r1 - g50
 
 #distribution palette
