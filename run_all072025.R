@@ -11,6 +11,9 @@ pacman::p_load("dplyr", "sf","terra",  "purrr","randomForest","VSURF",
                "leaflet", "tidyterra", "rmarkdown", "furrr", "stringr", "spThin",
                "tictoc","tigris", "tmap","ggplot2", "plotly",
                "factoextra", "tidyr","rnaturalearth")
+# install the gap R functions 
+library(GapAnalysis)
+
 # library( "googlesheets4") # not always needed and generates a 
 tmap::tmap_mode("view")
 
@@ -124,7 +127,7 @@ overwrite <- FALSE
 
 # create folder structure 
 #create folder
-
+dir1 <- "data/Vitis"
 if(!dir.exists(dir1)){dir.create(dir1)}
 
 dir2 <- paste0(dir1, "/", runVersion)
@@ -151,7 +154,7 @@ s2 <- speciesData |>
 
 
 #testing 
-j <- "Vitis cinerea"
+j <- "Vitis arizonica"
 # species to regenerate nat area and SRSex measures 
 rerun<- c(
 "Vitis martineziana") 
@@ -177,12 +180,12 @@ for(j in s2$taxon){ # species
   # write_csv(sd1, "temp/doania.csv" )
   ## counts data
   c1 <- write_CSV(path = allPaths$countsPaths,
-                  overwrite = TRUE,
+                  overwrite = overwrite,
                   function1 = generateCounts(speciesData = sd1))
   
   #srsex
   srsex <- write_CSV(path = allPaths$srsExPath,
-                     overwrite = TRUE,
+                     overwrite = overwrite,
                      function1 = srs_exsitu(sp_counts = c1))
     
   
@@ -197,7 +200,7 @@ for(j in s2$taxon){ # species
 
   ## create the inital spatial object
   sp1 <- write_GPKG(path = allPaths$spatialDataPath,
-                    overwrite = TRUE,
+                    overwrite = overwrite,
                     function1 = createSF_Objects(speciesData = sd1) %>%
                       removeDuplicates()
   )
@@ -205,7 +208,7 @@ for(j in s2$taxon){ # species
 
   # apply FNA filter if possible.
   sp1 <- write_GPKG(path = allPaths$spatialDataPath,
-                    overwrite = TRUE, # this needs to stay true otherwise the call above will be used.
+                    overwrite = overwrite, # this needs to stay true otherwise the call above will be used.
                     function1 = applyFNA(speciesPoints = sp1,
                                          fnaData = fnaData,
                                          states = naStates))
@@ -231,7 +234,8 @@ for(j in s2$taxon){ # species
                                                       natArea = natArea,
                                                       bufferDist = bufferDist,
                                                       templateRast = templateRast))
-
+    
+    
     ## associate observations with bioclim data and spatial thin
     m_data1 <- write_CSV(path = allPaths$allDataPath,
                          overwrite = overwrite,
@@ -250,16 +254,25 @@ for(j in s2$taxon){ # species
     dubs <- duplicated(absence[,2:27])
     absence <- absence[!dubs, ]
     m_data <- bind_rows(presence, absence)
-
+    
+    # write out the total data used in modeling effort 
+    modelDataSummary <- data.frame(
+      species = j,
+      presenceRecords = nrow(m_data[m_data$presence == 1, ]),
+      backgroudRecords = nrow(m_data[m_data$presence == 0, ]),
+      totalRecords = nrow(m_data)
+    )
+    write_csv(x = modelDataSummary, file = paste0(allPaths$occurances, "/modelDataSummary.csv"))
+    
     ## perform variable selection
     v_data <- write_RDS(path = allPaths$variablbeSelectPath,
-                        overwrite = overwrite,
+                        overwrite = TRUE,
                         function1 = varaibleSelection(modelData = m_data,
                                                       parallel = TRUE))
 
     ## prepare data for maxent model
     rasterInputs <- write_Rast(path = allPaths$prepRasters,
-                               overwrite = overwrite,
+                               overwrite = TRUE,
                                function1 = cropRasters(natArea = natArea,
                                                        bioVars = bioVars,
                                                        selectVars = v_data))
@@ -267,7 +280,7 @@ for(j in s2$taxon){ # species
     ## perform maxent model
     ### tabular data
     sdm_results <- write_RDS(path = allPaths$sdmResults,
-                             overwrite = overwrite,
+                             overwrite = TRUE,
                              function1 = runMaxnet(selectVars = v_data,
                                                    rasterData = rasterInputs))
 
@@ -289,13 +302,43 @@ for(j in s2$taxon){ # species
                           overwrite = overwrite,
                           function1 = generateThresholdModel(evalTable = evalTable,
                                                              rasterResults = projectsResults))
-
+      # GapAnalysis functions
+      ## organize data for work  
+      ocData <- sp1 |>
+        as.data.frame() |> 
+        dplyr::select(
+          species = "taxon", type, latitude, longitude
+        )
+      # alter the Thres data 
+      thres2 <- terra::subst(x = thres, from = 0, to = NA )
+      
+      ## generate the gbuffer
+      g_buffer2 <- GapAnalysis::generateGBuffers(taxon = j, 
+                                                 occurrenceData = ocData,
+                                                 bufferDistM = bufferDist)
+      ## generate the ERSex 
+      ersex2 <- GapAnalysis::ERSex(taxon = j,
+                                   sdm = thres2,
+                                   occurrenceData = ocData,
+                                   gBuffer = g_buffer2,
+                                   ecoregions = terra::vect(natArea),
+                                   idColumn = "ECO_CODE")
+      # ersin 
+      ersin2 <- GapAnalysis::ERSin(
+        taxon = j,
+        sdm = thres2,
+        occurrenceData = ocData,
+        protectedAreas = protectedAreas,
+        ecoregions = terra::vect(natArea),
+        idColumn = "ECO_CODE"
+      )
+      
       ## generate a mess map
       ## generate a kernal density map
 
       ## crop GA50 to threshold area
       g_bufferCrop <- write_Rast(path = allPaths$g50_bufferPath,
-                                 overwrite = overwrite,
+                                 overwrite = TRUE,
                                  function1 = cropG_Buffer(ga50 = g_buffer,
                                                           thres = thres))
 
@@ -309,7 +352,7 @@ for(j in s2$taxon){ # species
                                                 protectedArea =protectedAreas ))
       ## ersin
       ersin <- write_CSV(path = allPaths$ersinPath,
-                         overwrite  = overwrite,
+                         overwrite  = TRUE,
                          function1 = ers_insitu(occuranceData = sp1,
                                                 nativeArea = natArea,
                                                 protectedArea = protectedAreas,
@@ -324,7 +367,7 @@ for(j in s2$taxon){ # species
                                                  thres = thres))
       ## fcsin
       fcsin <- write_CSV(path = allPaths$fcsinPath,
-                         overwrite  = overwrite ,
+                         overwrite  = TRUE ,
                          function1 = fcs_insitu(srsin = srsin,
                                                 grsin = grsin,
                                                 ersin = ersin,
@@ -336,15 +379,15 @@ for(j in s2$taxon){ # species
       ##ersex
       ersex <- write_CSV(path = allPaths$ersexPath,
                          overwrite  = TRUE,
-                         function1 = ers_exsitu(speciesData = sd1,
+                         function1 = ers_exsitu(speciesData = sp1,
                                                 thres = thres,
                                                 natArea = natArea,
                                                 ga50 = g_bufferCrop,
                                                 rasterPath = allPaths$ersexRast))
       ##grsex
       grsex <- write_CSV(path = allPaths$grsexPath,
-                         overwrite  = overwrite,
-                         function1 = grs_exsitu(speciesData = sd1,
+                         overwrite  = TRUE,
+                         function1 = grs_exsitu(speciesData = sp1,
                                                 ga50 = g_bufferCrop,
                                                 thres = thres))
       ##fcsex
@@ -376,7 +419,7 @@ for(j in s2$taxon){ # species
       #gather features for RMD
       ## just a helper function to reduce the number of input for the RMD
       reportData <- write_RDS(path = allPaths$summaryDataPath,
-                              overwrite = TRUE,
+                              overwrite = overwrite,
                               function1 = grabData(fscCombined = fcsCombined,
                                                    ersex = ersex,
                                                    fcsex = fcsex,
@@ -392,7 +435,8 @@ for(j in s2$taxon){ # species
                                                    protectedAreas = protectedAreas,
                                                    countsData = c1,
                                                    variableImportance = allPaths$variablbeSelectPath,
-                                                   NoModel = FALSE))
+                                                   NoModel = FALSE,
+                                                   modelDataCounts = paste0(allPaths$occurances, "/modelDataSummary.csv")))
     }else{ # no sdm results
     #   erroredSpecies$noSDM <- c(erroredSpecies$noSDM, j)
     #   print("conservation Metrics")
@@ -483,7 +527,7 @@ for(j in s2$taxon){ # species
       names(buffer_rs) <- "Threshold"
       # try to generate g buffer
       g_buffer <- write_Rast(path = allPaths$ga50Path,
-                             overwrite = TRUE,
+                             overwrite = overwrite,
                              function1 = create_buffers(speciesPoints = sp1,
                                                         natArea = natArea,
                                                         bufferDist = bufferDist,
@@ -498,12 +542,12 @@ for(j in s2$taxon){ # species
       gPoints <- c1$totalGUseful
       #
       srsin <- write_CSV(path = allPaths$srsinPath,
-                         overwrite = TRUE,
+                         overwrite = overwrite,
                          function1 = srs_insitu(occuranceData = sp1,
                                                 thres = buffer_rs,
                                                 protectedArea =protectedAreas))
       ersin <- write_CSV(path = allPaths$ersinPath,
-                         overwrite = TRUE,
+                         overwrite = overwrite,
                          function1 = ers_insitu(occuranceData = sp1,
                                                 nativeArea = natArea,
                                                 protectedArea = protectedAreas,
@@ -512,13 +556,13 @@ for(j in s2$taxon){ # species
       
       ## grsin
       grsin <-  write_CSV(path = allPaths$grsinPath,
-                          overwrite = TRUE ,
+                          overwrite = overwrite ,
                           function1 = grs_insitu(occuranceData = sp1,
                                                  protectedArea = protectedAreas,
                                                  thres = buffer_rs))
 
       fcsin <- write_CSV(path = allPaths$fcsinPath,
-                         overwrite = TRUE,
+                         overwrite = overwrite,
                          function1 = fcs_insitu(srsin = srsin,
                                                 grsin = grsin,
                                                 ersin = ersin,
@@ -542,7 +586,7 @@ for(j in s2$taxon){ # species
 
       ##fcsex
       fcsex <- write_CSV(path = allPaths$fcsexPath,
-                         overwrite = TRUE,
+                         overwrite = overwrite,
                          function1 = fcs_exsitu(srsex = srsex,
                                                 grsex = grsex,
                                                 ersex = ersex,
@@ -551,14 +595,14 @@ for(j in s2$taxon){ # species
 
       #combined measure
       fcsCombined <- write_CSV(path = allPaths$fcsCombinedPath,
-                               overwrite = TRUE,
+                               overwrite = overwrite,
                                function1 = fcs_combine(fcsin = fcsin,
                                                        fcsex = fcsex))
 
 
       
       reportData <- write_RDS(path = allPaths$summaryDataPath,
-                              overwrite = TRUE,
+                              overwrite = overwrite,
                               function1 = grabData(fscCombined = fcsCombined,
                                                    ersex = ersex,
                                                    fcsex = fcsex,
@@ -703,3 +747,237 @@ if(renderBoxPlots == TRUE){
 source("R2/summarize/summaryTable.R")
 summaryCSV <- summaryTable(species = species, runVersion = runVersion)
 write_csv(x = summaryCSV, file = paste0("data/Vitis/summaryTable_",runVersion,".csv"))
+
+
+
+
+# comparison between the two methods  -------------------------------------
+
+
+# Gap R inputs 
+taxon <- j 
+sdm <- thres2
+occurrenceData <- ocData
+gBuffer <- g_buffer2
+writeRaster(b1, "temp/gapR_buffer.tif")
+ecoregions <- terra::vect(natArea)
+idColumn <- "ECO_ID_U"
+## vitis inputs 
+speciesData <- sp1
+thres <- thres
+natArea <- natArea
+ga50 <- g_bufferCrop
+writeRaster(g_buffer, "temp/vitis_buffer.tif")
+writeRaster(g_bufferCrop, "temp/vitis_buffer_crop.tif")
+writeRaster(thres, "temp/vitis_dist.tif")
+
+rasterPath = NULL
+
+# do the inputs differ 
+#occurrence data 
+## same number of features 
+# threshold 
+## gap R requires 1,NA vitis using 1,0 
+# ecoregions 
+## same feature 
+# g buffer 
+## gap R - vect of buffered points, vitis : masked gbuffers to the sdm 
+
+
+# steps 
+# varability is in the G buffer methods between the two proceses 
+
+## Gap R buffer 
+## create spatial object, buffer to distance 
+d1 <- terra::vect(dplyr::filter(occurrenceData, species == 
+                                  taxon & type == "G"), geom = c("longitude", "latitude"))
+terra::crs(d1) <- "epsg:4326"
+d2 <- terra::buffer(d1, width = bufferDistM)
+## within the ers function we call 
+terra::mask(
+  terra::rasterize(x = gBuffer$data,y = sdm),
+  sdm)
+
+# vitis 
+p1 <- speciesPoints |> filter(type == "G")
+
+buffer <- p1 |> 
+  vect()|>
+  terra::buffer(width = bufferDist)
+
+# set extent equal to native area - template raster is the same as the thres rast 
+r1 <- templateRast %>%
+  terra::crop(natArea) %>%
+  terra::mask(natArea)
+  
+##rasterizing and matching cells to predictor layers
+buffer_rs <- terra::rasterize(buffer, r1)%>%
+  terra::crop(natArea)%>%
+  terra::mask(natArea)
+
+### so this generates a layer with reference to the SDM... 
+vg <- ga50
+vg[is.na(vg),] <- 0
+gb <- b1
+gb[is.na(gb), ]<- 0
+gb[gb>0, ]<- 2
+
+t2 <- thres
+t2[t2 ==1, ]<- 5
+
+bind <- gb + vg
+bind2 <- bind + t2
+writeRaster(x = bind2, filename = "temp/buffDist.tif")
+
+# gap r -------------------------------------------------------------------
+
+d1 <- terra::vect(dplyr::filter(occurrenceData, occurrenceData$species == 
+                                  taxon), geom = c("longitude", "latitude"), crs = "+proj=longlat +datum=WGS84")
+d1$color <- ifelse(d1$type == "H", yes = "#1184d4", no = "#6300f0")
+# prep the ecoregions 
+ecoregions$id_column <- as.character(as.data.frame(ecoregions)[[idColumn]])
+ecoregions <- terra::aggregate(x = ecoregions, by = "id_column") # does change anything at the moment
+ecoregions <- terra::crop(ecoregions, sdm) # does change anything at the moment, but it would if we were passing a non filtered datasets
+# only considering ecoregions that have SDM present in them 
+
+# sooo I think the aggregate is required because the crop could split ecoregions into two feautres,
+# the trouble then becomes that the it renames the column name of the 
+# the ass characted addation can help 
+
+# 15 of 17 
+ecoregions$sdmSum <- terra::zonal(x = sdm, z = ecoregions, 
+                                  fun = "sum", na.rm = TRUE)
+ecoSelect <- ecoregions[ecoregions$sdmSum > 0, ]
+eco2 <- dplyr::select(terra::as.data.frame(ecoSelect), ecoID = id_column, 
+                      count = sdmSum)
+
+if (is.character(gBuffer$data)) {
+  ers <- 0
+  gEco <- NA
+  gEcoCounts <- 0
+  totalEcosCount <- nrow(ecoSelect)
+  missingEcos <- eco2$ecoID
+}else {
+  b1 <- terra::mask(terra::rasterize(x = gBuffer$data, 
+                                     y = sdm), sdm)
+  # 5 na and 1 Nan 
+  eco2$bufferEcos <- unlist(terra::zonal(x = b1, z = ecoSelect, 
+                                         fun = "sum", na.rm = TRUE))
+  # this is where the variance is occuring 
+  
+  ecoGrouped <- dplyr::summarise(dplyr::group_by(dplyr::mutate(eco2, 
+                                                               bufferEcos = dplyr::case_when(is.na(bufferEcos) ~ 
+                                                                                               0, is.nan(bufferEcos) ~ 0, TRUE ~ bufferEcos)), 
+                                                 ecoID), inDistribution = sum(count, na.rm = TRUE), 
+                                 inGBuffer = sum(bufferEcos, na.rm = TRUE))
+  totalEcosCount <- nrow(ecoGrouped)
+  gEcoIds <- pull(ecoGrouped[ecoGrouped$inGBuffer > 0, 
+                             "ecoID"])
+  gEcoCounts <- length(gEcoIds)
+  missingEcos <- ecoSelect[!ecoSelect$id_column %in% gEcoIds, 
+  ]
+  ers <- min(c(100, (gEcoCounts/totalEcosCount) * 100))
+}
+out_df = dplyr::tibble(Taxon = taxon, `Ecoregions with records` = totalEcosCount, 
+                       `Ecoregions within G buffer` = gEcoCounts, `ERS exsitu` = ers)
+map_title <- "<h3 style='text-align:center; background-color:rgba(255,255,255,0.7); padding:2px;'>Ecoregions outside of the G Buffer areas</h3>"
+map <- leaflet::addControl(leaflet::addLegend(leaflet::addPolygons(leaflet::addTiles(leaflet()), 
+                                                                   data = ecoSelect, color = "#444444", weight = 1, opacity = 1, 
+                                                                   fillOpacity = 0.1, popup = ~ECO_NAME, fillColor = NA), 
+                                              position = "topright", title = "ERS ex situ", colors = c("#47ae24", 
+                                                                                                       "#746fae", "#f0a01f", "#44444440"), labels = c("Distribution", 
+                                                                                                                                                      "G buffer", "Eco gaps", "All Ecos"), opacity = 1), 
+                           html = map_title, position = "bottomleft")
+if (ers > 0) {
+  map <- leaflet::addCircleMarkers(leaflet::addRasterImage(leaflet::addRasterImage(leaflet::addPolygons(map, 
+                                                                                                        data = missingEcos, color = "#444444", weight = 1, 
+                                                                                                        opacity = 1, popup = ~ECO_NAME, fillOpacity = 0.5, 
+                                                                                                        fillColor = "#f0a01f"), x = sdm, colors = "#47ae24"), 
+                                                           x = b1, colors = "#746fae"), data = d1, color = ~color, 
+                                   radius = 2, opacity = 1)
+}else {
+  map <- leaflet::addCircleMarkers(map, data = d1, color = ~color, 
+                                   radius = 2, opacity = 1)
+}
+output <- list(results = out_df, ecoGaps = missingEcos, map = map)
+
+
+
+
+# vitis -------------------------------------------------------------------
+
+
+# convert natural area object in a vect feature
+## 17 features 
+n1 <- natArea %>% 
+  dplyr::select(ECO_ID_U)%>% 
+  vect()
+
+# 15 ecos within the sdm 
+v1 <- terra::zonal(x = thres,z = n1,fun="sum",na.rm=TRUE)
+v1$ECO_ID_U <- n1$ECO_ID_U
+
+# Number of ecoregions considered. 
+v2 <- v1 |> 
+  dplyr::filter(Threshold > 0)
+nEco <- nrow(v2)
+
+if(class(ga50)[[1]] != "SpatRaster"){
+  ers <- 0
+  gEco <- NA
+  missingEcos <- v1$ECO_ID_U
+}else{
+  # limit ecoregions to features within the sdm 
+  n2 <- n1[n1$ECO_ID_U %in% v2$ECO_ID_U, ]
+  
+  # determine ecoregions in ga50 area 
+  v2 <- terra::zonal(x = ga50,z = n2,fun="sum",na.rm=TRUE)
+  # test against the other buffer oject 
+  v2g <- terra::zonal(x = b1,z = n2,fun="sum",na.rm=TRUE)
+  v2g$ECO_ID_U <- n2$ECO_ID_U
+  
+  
+  v2$ECO_ID_U <- n2$ECO_ID_U
+  v2 <- v2[, c("ECO_ID_U", "layer") ]
+  # determine the ecoregions that are not being considered 
+  areasWithGBuffer <- v2 |> 
+    filter(layer >0) |>
+    filter(!is.nan(layer)) 
+  # get the total number number of eco regions with a g buffer area
+  gEco <- areasWithGBuffer |> 
+    nrow()
+  # generate a list of the ecoregions ID that are inside the threshold but have no g buffer 
+  missingEcos <- v1 |> 
+    dplyr::filter(Threshold >0) |>
+    dplyr::filter(!ECO_ID_U %in% areasWithGBuffer$ECO_ID_U)|>
+    dplyr::select(ECO_ID_U)|>
+    pull()
+  
+  # ERs calculation 
+  ers <- min(c(100, (gEco/nEco)*100))
+  
+}
+if(!is.null(rasterPath)){
+  # produce threshold map excluding collected eco regions. 
+  n2 <- n1 |>
+    dplyr::filter(ECO_ID_U %in% missingEcos)|>
+    terra::rasterize(y = thres)
+  terra::writeRaster(x = n2, filename = rasterPath,overwrite=TRUE)
+}
+
+# generate filter 
+
+out_df = data.frame(ID=speciesData$taxon[1],
+                    SPP_N_ECO=nEco,
+                    G_N_ECO=gEco, 
+                    ERS=ers)
+out_df$missingEcos <- list(missingEcos)
+
+# generate dataframe
+return(out_df
+
+
+
+
+
+
