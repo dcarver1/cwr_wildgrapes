@@ -55,6 +55,46 @@ compileConservationData <- function(directory, runVersion, genus){
     mutate(ID = str_replace_all(string = ID, pattern = "_", replacement = " ")) |>
     sort("ID")
   
+  # add two missing species 
+  # add new records for the two missing species 
+  vr <- data.frame(
+    "ID" = "Vitis rufotomentosa",
+    "SRSex"= 100,
+    "GRSex"= NA,
+    "ERSex"= NA,
+    "SRSin"= 0,
+    "GRSin"= NA,
+    "ERSin"= NA,          
+    "FCSex"= 33.333,
+    "FCSin"= 0,
+    "FCSc_min"= 0,
+    "FCSc_max"= 33.333,
+    "FCSc_mean"= 16.6666,
+    "FCSc_min_class"= "UP",
+    "FCSc_max_class"= "UP",
+    "FCSc_mean_class"= "UP"
+  )
+  vn <- data.frame(
+    "ID" = "Vitis novogranatensis",
+    "SRSex"= 0,
+    "GRSex"= NA,
+    "ERSex"= NA,
+    "SRSin"= 0,
+    "GRSin"= NA,
+    "ERSin"= NA,          
+    "FCSex"= 0,
+    "FCSin"= 0,
+    "FCSc_min"= 0,
+    "FCSc_max"= 0,
+    "FCSc_mean"= 0,
+    "FCSc_min_class"= "UP",
+    "FCSc_max_class"= "UP",
+    "FCSc_mean_class"= "UP"
+  )
+  tbl <- bind_rows(tbl, vr)|>
+    bind_rows(vn)
+  
+  
   # issues with a lot of species records 
   ## trying to split into two and display as a sub plot 
   size <- ceiling(nrow(tbl)/2)

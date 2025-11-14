@@ -10,7 +10,7 @@ params:
 ---
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-pacman::p_load("leaflet","data.table", "tidyr", "dplyr","plotly","DT","RColorBrewer")
+pacman::p_load("leaflet","data.table", "tidyr", "dplyr","plotly","DT","RColorBrewer","htmltools")
 
 ### function for control number of character after the decimal place 
 sigfig <- function(vec, n=3){ 
@@ -27,7 +27,7 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # transform data
 
-testing <- FALSE
+testing <- TRUE
 # testing <- TRUE
 if(testing == TRUE){
   data <- reportData # testing only
@@ -59,11 +59,20 @@ c1 <- data$countsData |>
     'Reference Records(H)' = totalHRecords,
     'Reference Records(H) with Lat/Long' = totalHUseful,
     'Unique Data Sources' = numberOfUniqueSources
-  ) |>
-  dplyr::mutate(Taxon = stringr::str_replace_all(Taxon, pattern = "_", replacement = " "))
+  ) 
+# add in the model data counts 
+c2 <- data$modelDataCounts|>
+  dplyr::select(
+    Taxon = species,
+    'Presence Occurrences' = presenceRecords,
+    'Background Occurrences' = backgroudRecords,
+    'Total Occurrences Used in Model' = totalRecords
+  ) 
+# join 
+cj <- dplyr::left_join(c1,c2,by = "Taxon")|>
+  dplyr::mutate(Taxon = stringr::str_replace_all(Taxon, pattern = "_", replacement = " "))  
 
-
-DT::datatable(c1,
+DT::datatable(cj,
               rownames = FALSE,
               class = "compact",
               options = list(dom = 't'))
@@ -503,19 +512,21 @@ The table below shows the ecogeographic variables listed in order of importance 
 
 if(data$NoModel == FALSE){
   varTable <- data$variableImportance |> 
-    dplyr::mutate(across(c('importance'), round, 3))|>
+    # This line is now fixed
+    dplyr::mutate(across(c('importance'), \(x) round(x, 3))) |>
     dplyr::select("Predictor variable name" = `Current title`,
-                "Relative importance to model" =  importance,
-                "Included in the modeling process" = includeInFinal,
-                "Abbrevaition" = varNames
-                )|>
-  dplyr::arrange(desc(`Relative importance to model`))|>
-  dplyr::arrange(desc(`Included in the modeling process`))
-# display table 
-DT::datatable(varTable,
-              rownames = FALSE,
-              class = "compact")
-}else{
+                  "Relative importance to model" =  importance,
+                  "Included in the modeling process" = includeInFinal,
+                  "Abbrevaition" = varNames
+                  ) |>
+    dplyr::arrange(desc(`Relative importance to model`)) |>
+    dplyr::arrange(desc(`Included in the modeling process`))
+  
+  # display table 
+  DT::datatable(varTable,
+                rownames = FALSE,
+                class = "compact")
+} else {
   "No model was generated for this species"
 }
 
@@ -573,11 +584,9 @@ The ERS ex situ map feature shows ecoregions within the potential distribution m
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-if(data$NoModel == FALSE){
-  # with No G points avoid adding the point features 
-  if(exTables$`Total G with coordinates` == 0){
-    # generate the GRSex map
-    ex1 <- leaflet(width = "100%")|>
+# start with a map of the distribution and ecoregions 
+
+ex1 <- leaflet(width = "100%")|>
       addProviderTiles(providers$Esri.WorldGrayCanvas)|>
       # Outline of all ecoregions
       addPolygons(
@@ -589,11 +598,42 @@ if(data$NoModel == FALSE){
         fillOpacity = 0.2,
         popup = allEcos$ECO_NAME,
         color = "#60616050"
-      ) 
+      ) |>
+    leaflet::addRasterImage(x = raster(threshold),
+                 colors = thresColor, 
+                 group = "Potential distribution model",
+                 project = FALSE)
+
+
+# Add the GRSex maps 
+if(data$NoModel == FALSE){
+  # with No G points avoid adding the point features 
+  if(exTables$`Total G with coordinates` == 0){
+        grs_html <- HTML(
+      "<div style='
+        background: white; 
+        padding: 6px 8px; 
+        border-radius: 5px; 
+        box-shadow: 0 1px 5px rgba(0,0,0,0.4); 
+        font-family: sans-serif;
+      '>
+        <strong>GRS Score: 0</strong> <br> No Map Elements
+      </div>"
+    )
+    
+    exG <- ex1|>
+    leaflet::addLegend(position = "bottomright",
+            color = c( "#cfcccc","#45B320"),
+            labels = c("Native Area", "Potential distribution model"),
+            title = "Modeled Habitat",
+            group = "Potential distribution model")|>
+              addControl(
+    html = grs_html,
+    position = "bottomleft"  # You can change this position
+  )     
   }else{ # G points with valid lat lon are present
     # generate the GRSex map
-    ex1 <- leaflet(width = "100%")|>
-      addProviderTiles(providers$Esri.WorldGrayCanvas)|>
+    exG <- ex1 |>
       #GRSex raster
       addRasterImage(
         x = raster(grsexMap),
@@ -619,22 +659,30 @@ if(data$NoModel == FALSE){
         group = "GRS ex situ"
       )
   } 
+}
+
+# Add the ERSex maps 
+if(data$NoModel == FALSE){
   # generate the ERSex map
   if(ersex$ERS == 100){
-    ex2 <- ex1 |>
-      # Outline of all ecoregions
-    addPolygons(
-      data = allEcos,
-      group = "All ecoregions",
-      weight = 2,
-      stroke = TRUE,
-      fill = TRUE,
-      fillOpacity = 0.2,
-      popup = allEcos$ECO_NAME,
-      color = "#60616050"
-    ) 
+    ers_html <- HTML(
+      "<div style='
+        background: white; 
+        padding: 6px 8px; 
+        border-radius: 5px; 
+        box-shadow: 0 1px 5px rgba(0,0,0,0.4); 
+        font-family: sans-serif;
+      '>
+        <strong>ERS Score: 100 </strong> <br> No Map Elements
+      </div>"
+    )
+
+    exE <- exG|>
+      addControl(
+    html = ers_html,
+    position = "bottomleft")
     }else{
-      ex2 <- ex1 |>
+      exE <- exG |>
       # Ecoregion Raster Layers
       addRasterImage(raster(ecoRast),
                    group = "ERS ex situ",
@@ -645,22 +693,18 @@ if(data$NoModel == FALSE){
                 labels = ecoReg$ECO_NAME)|>
       # Outline of all ecoregions
       addPolygons(
-        data = allEcos,
-        group = "All ecoregions",
-        weight = 2,
-        stroke = TRUE,
-        fill = TRUE,
-        fillOpacity = 0.2,
-        popup = allEcos$ECO_NAME,
-        color = "#60616050"
-      ) 
+        data = ecoReg,
+        group = "Missing ecoregions",
+        color = "#f0a01f",  # This sets the outline color
+        weight = 0.5,         # Outline width
+        opacity = 0.5,        # Outline opacity
+        fillOpacity = 0,    # Set to 0 for no fill
+        popup = ~ECO_NAME)
     }
   }
   
-  
-  
   # add controls for the layout
-  ex3 <- ex2 |>
+  ex3 <- exE |>
     addLayersControl(
       position = "topleft",
       options = list(collapsed = FALSE,
@@ -668,6 +712,7 @@ if(data$NoModel == FALSE){
       overlayGroups = c(
         "GRS ex situ",
         "ERS ex situ",
+        "Missing ecoregions",
         "All ecoregions"
       )
     ) |>
@@ -691,14 +736,6 @@ The column ERS ex situ gap ecoregion denotes (True) if an ecoregion overlaps wit
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
-# # process some area measure of missing ecoregions 
-### this is going to take a lot of conditional testing so I'm not sure I want it in now.
-### with the eco regions visualized properly I think it's ok without. 
-# aveCellSize <- mean(values(cellSize(ecoRast,unit="km")))
-# misArea <- ecoRast |>
-#   terra::freq() |>
-#   dplyr::mutate(area = sigfig(count * aveCellSize, n=3))|>
-#   dplyr::select(value, area)
 
 # All ecoregions considered
 # identify if they
@@ -824,11 +861,50 @@ The SRS in situ map feature shows occurrences within the potential distribution 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
+
+# generate the base map 
+in1 <- leaflet(width = "100%")|>
+      addProviderTiles(providers$Esri.WorldGrayCanvas)|>
+      # Outline of all ecoregions
+      addPolygons(
+        data = allEcos,
+        group = "All ecoregions",
+        weight = 2,
+        stroke = TRUE,
+        fill = TRUE,
+        fillOpacity = 0.2,
+        popup = allEcos$ECO_NAME,
+        color = "#60616050"
+      ) |>
+    leaflet::addRasterImage(x = raster(threshold),
+                 colors = thresColor, 
+                 group = "Potential distribution model",
+                 project = FALSE)
+
+# srsin map 
 if(data$NoModel == FALSE){
   uniqueSRSVals <- sort(unique(values(srs1)))
+  # condition for no values 
+  if(length(uniqueSRSVals) == 1){
+    srs_html <- HTML(
+      "<div style='
+        background: white; 
+        padding: 6px 8px; 
+        border-radius: 5px; 
+        box-shadow: 0 1px 5px rgba(0,0,0,0.4); 
+        font-family: sans-serif;
+      '>
+        <strong>SRS Score: 0 </strong> <br> No Map Elements
+      </div>"
+    )
 
-in1 <- leaflet(width = "100%")|>
-  addTiles()|>
+    inS <- in1|>
+      addControl(
+    html = srs_html,
+    position = "bottomleft")
+  }else{
+
+inS <- in1 |> 
   # SRSin 
   addRasterImage(
     x = raster(srs1),
@@ -841,17 +917,6 @@ in1 <- leaflet(width = "100%")|>
     colors = "#7570b3",
     group = "SRS in situ",
     project = FALSE )|>
-  # Outline of all ecoregions
-  addPolygons(
-    data = allEcos,
-    group = "All ecoregions",
-    weight = 2,
-    stroke = TRUE,
-    fill = TRUE,
-    fillOpacity = 0.2,
-    popup = allEcos$ECO_NAME,
-    color = "#60616050"
-  ) |>
   leaflet::addLegend(colors = srsPal1,
             group = "SRS in situ",
             title = "SRS in situ",
@@ -860,31 +925,70 @@ in1 <- leaflet(width = "100%")|>
             group = "SRS in situ",
             # title = "Protected Areas",
             labels = c("Protected Areas"))
+  }
+}
 
-## removing for now 2023-11-30 -- not sure what it tells that srsin does not 
-# in2 <- in1 |>
-#    addRasterImage(
-#     x = raster(pro1),
-#     colors = proColor,
-#     group = "Observation within Protected Areas",
-#     project = FALSE
-#   )
-##GRSin map 
-in3 <- in1 |>
-  addRasterImage(
-    x = raster(grs1),
-    colors = grsinColor,
-    group = "GRS in situ",
-    project = FALSE
-  )|>
-  leaflet::addLegend(colors = exPal,
-            group = "GRS in situ",
-            labels = c("Background area", "Potential distribution model", "Potential distribution within a protected area"))
+# GRS map 
+if(data$NoModel == FALSE){
+uniqueSRSVals <- sort(unique(values(srs1)))
+  # condition for no values 
+  if(data$fcsin$GRS == 0){
+    grs_html <- HTML(
+      "<div style='
+        background: white; 
+        padding: 6px 8px; 
+        border-radius: 5px; 
+        box-shadow: 0 1px 5px rgba(0,0,0,0.4); 
+        font-family: sans-serif;
+      '>
+        <strong>GRS Score: 0 </strong> <br> No Map Elements
+      </div>"
+    )
 
+    inG <- inS|>
+      addControl(
+    html = grs_html,
+    position = "bottomleft")
+  }else{
 
-## ERS in map 
-if(class(ersinMap) != "character"){
-  in3 <- in3 |>
+  ##GRSin map 
+  inG <- inS |>
+    addRasterImage(
+      x = raster(grs1),
+      colors = grsinColor,
+      group = "GRS in situ",
+      project = FALSE
+    )|>
+    leaflet::addLegend(colors = exPal,
+              group = "GRS in situ",
+              labels = c("Background area", "Potential distribution model", "Potential distribution within a protected area"))
+  }
+}
+
+# ERS map 
+if(data$NoModel == FALSE){
+  # condition for no values 
+  if(data$fcsin$ERS == 100){
+    ers_html <- HTML(
+      "<div style='
+        background: white; 
+        padding: 6px 8px; 
+        border-radius: 5px; 
+        box-shadow: 0 1px 5px rgba(0,0,0,0.4); 
+        font-family: sans-serif;
+      '>
+        <strong>ERS Score: 100 </strong> <br> No Map Elements
+      </div>"
+    )
+
+    inE <- inG|>
+      addControl(
+    html = ers_html,
+    position = "bottomleft")
+  }else{
+  missEcoIn <- allEcos[allEcos$ECO_ID_U %in% ersin$missingEcos, ]
+  ##ERSin map 
+  inE <- inG |>
   addRasterImage(x = raster(ersinMap),
     colors = ecoInColor,
     group = "ERS in situ",
@@ -892,12 +996,21 @@ if(class(ersinMap) != "character"){
   )|>
     leaflet::addLegend(colors = ers2$color,
               group = "ERS in situ",
-              labels = ers2$ECO_NAME)
+              labels = ers2$ECO_NAME)|>
+                      # Outline of all ecoregions
+      addPolygons(
+        data = missEcoIn,
+        group = "Missing ecoregions",
+        color = "#f0a01f",  # This sets the outline color
+        weight = 0.5,         # Outline width
+        opacity = 0.5,        # Outline opacity
+        fillOpacity = 0,    # Set to 0 for no fill
+        popup = ~ECO_NAME)
+  }
 }
 
-
 # add control groups 
-in3 <- in3|> 
+inMap <- inE |> 
   addLayersControl(
     position = "topleft",
     options = list(collapsed = FALSE,
@@ -906,13 +1019,11 @@ in3 <- in3|>
       "SRS in situ",
       "GRS in situ",
       "ERS in situ",
+      "Missing ecoregions",
       "All ecoregions"))|>
   hideGroup(group = c( "SRS in situ", "ERS in situ","All ecoregions"))
 
-in3
-}else{
-  "No model was generate for this species"
-}
+inMap
 
 ```
 <br>

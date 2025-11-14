@@ -104,6 +104,7 @@ generateERSRichnessMap <- function(directory, runVersion, ersMap, species, thres
     f1 <- ersFiles[grepl(pattern = i, x = ersFiles)]
     if(length(f1)==1){
       t1 <-  terra::rast(f1)
+      
       t2 <- NA 
       try(t2 <-  terra::rast(thresholdFiles[grepl(pattern = i, x = thresholdFiles)]))
       if(class(t2)== "SpatRaster"){

@@ -2,6 +2,9 @@
 # runVersion = runVersion
 # genus = i
 
+# this script sources a lot of functions from speciesRichnessMap.R
+    
+
 
 generateRunSummaries <- function(dir1,runVersion, species,
                                  genus, protectedAreas, overwrite){
@@ -19,7 +22,11 @@ generateRunSummaries <- function(dir1,runVersion, species,
   path9 <- paste0(dir2,"/ersin_speciesUsed_Richness.tif")
   path10 <- paste0(dir2,"/protectedAreaSpeciesPointRichness.csv")
 
-
+  # Testing the presense of species in the summary maps 
+  t1 <- read_csv(path10)
+  
+  
+  
   # Rescale all the imagery for the 1km runs  -------------------------------
   ##   "prj_threshold.tif", "ga50_masked.tif","ers_ex_gaps.tif","ers_in_gaps.tif"
   for(i in c("prj_threshold.tif", "ga50_masked.tif","ers_ex_gaps.tif","ers_in_gaps.tif")){
@@ -34,11 +41,11 @@ generateRunSummaries <- function(dir1,runVersion, species,
       # generate export name 
       export <-sub("\\.tif$", "_5.tif", file)
       # resample if needed 
-      if(!file.exists(export)){
+      # if(!file.exists(export)){
         print(file)
         r2 <- resampleRast(rast = terra::rast(file))
         terra::writeRaster(x = r2, filename = export, overwrite = TRUE)
-      }
+      # }
     }
   }
   
@@ -149,24 +156,27 @@ generateRunSummaries <- function(dir1,runVersion, species,
                        pattern = ".csv",
                        full.names = TRUE) |>
       read_csv()|>
-      group_by(name) %>%
+      as_tibble() |>
+      group_by(name) |>
       summarise(
-        total_count = sum(count, na.rm = TRUE),
+        total_observation = sum(count, na.rm = TRUE),
+        total_unique_taxa = length(unique(taxon)),
         taxa_list = list(unique(taxon))
       )|>
       dplyr::select(
         WDPAID = name,
-        total_count,
+        total_observation,
+        total_unique_taxa,
         taxa_list
       )
     # select names and id from pro area 
     wdpaDF <-as_tibble(wdpaVect)|>
-      dplyr::left_join(proP, by = "WDPAID") |>
-      dplyr::filter(!is.na(total_count ))
+      dplyr::filter(WDPAID  %in% proP$WDPAID) |>
+      dplyr::left_join(y = proP, by = "WDPAID")
       
 
     
-    write_csv(proPoints, path10)
+    write_csv(wdpaDF, path10)
   }
   
   
@@ -187,7 +197,7 @@ generateRunSummaries <- function(dir1,runVersion, species,
   conservationSummary$ersInRichness <- terra::rast(path8)
   conservationSummary$genus <- genus
   
-  
+  # 
   
   
   # run summary html 
