@@ -123,6 +123,12 @@ speciesData <- bind_rows(sd2, vt)
 source("temp/clearNewErrors.R")
 speciesData <- clearNewErrors(speciesData)
 
+# export the 
+allData <- "data/datasetsForPublication/allSpeciesOccurrences.csv"
+if(!file.exists(allData)){
+  write_csv(x = speciesData, file = allData)
+}
+
 
 # join features
 datasourceSummary <- databaseSourcesSummary(speciesData)
@@ -198,31 +204,31 @@ s2 <- speciesData |>
 j <- "Vitis baileyana"
 j <- s2$taxon[6]
 # species to regenerate nat area and SRSex measures
-rerun <- c(
-  "Vitis acerifolia",
-  "Vitis aestivalis",
-  "Vitis berlandieri",
-  "Vitis bloodworthiana",
-  "Vitis riparia",
-  "Vitis baileyana",
-  "Vitis californica",
-  "Vitis simpsonii",
-  "Vitis aestivalis var. aestivalis",
-  "Vitis aestivalis var. bicolor",
-  "Vitis arizonica",
-  "Vitis cinerea var. cinerea",
-  "Vitis rotundifolia",
-  "Vitis bourgaeana",
-  "Vitis cinerea",
-  "Vitis vulpina",
-  "Vitis tiliifolia"
-)
+# rerun <- c(
+#   "Vitis acerifolia",
+#   "Vitis aestivalis",
+#   "Vitis berlandieri",
+#   "Vitis bloodworthiana",
+#   "Vitis riparia",
+#   "Vitis baileyana",
+#   "Vitis californica",
+#   "Vitis simpsonii",
+#   "Vitis aestivalis var. aestivalis",
+#   "Vitis aestivalis var. bicolor",
+#   "Vitis arizonica",
+#   "Vitis cinerea var. cinerea",
+#   "Vitis rotundifolia",
+#   "Vitis bourgaeana",
+#   "Vitis cinerea",
+#   "Vitis vulpina",
+#   "Vitis tiliifolia"
+# )
 # all that were not just created 
-r2 <- s2$taxon[!s2$taxon %in% rerun]
+# r2 <- s2$taxon[!s2$taxon %in% rerun]
 
-j <-   "Vitis arizonica"
+j <-   "Vitis acerifolia"
 # start of for loop -------------------------------------------------------
-for (j in r2) {
+for (j in s2$taxon[7:nrow(s2)]) {
   # species
   # create unique path for summary HTML docs
   p1 <- paste0("data/Vitis/speciesSummaryHTML/", runVersion)
@@ -243,7 +249,7 @@ for (j in r2) {
   ## counts data
   c1 <- write_CSV(
     path = allPaths$countsPaths,
-    overwrite = overwrite,
+    overwrite = TRUE,
     function1 = generateCounts(speciesData = sd1)
   )
 
@@ -335,18 +341,23 @@ for (j in r2) {
       backgroudRecords = nrow(m_data[m_data$presence == 0, ]),
       totalRecords = nrow(m_data)
     )
-    write_csv(
-      x = modelDataSummary,
-      file = paste0(allPaths$occurances, "/modelDataSummary.csv")
-    )
+    # write_csv(
+    #   x = modelDataSummary,
+    #   file = paste0(allPaths$occurances, "/modelDataSummary.csv")
+    # )
 
     ## perform variable selection
     v_data <- write_RDS(
       path = allPaths$variablbeSelectPath,
-      overwrite = overwrite,
+      overwrite = TRUE,
       function1 = varaibleSelection(modelData = m_data, parallel = TRUE)
     )
-
+    ## had to re-export the variable selection data. I expect that I was attepting to write a list object as a csv  
+    # message(paste0("exporting data for ", j))
+    # # adding in a export for the variable selection data 
+    # write_csv(x = v_data$rankPredictors, file = allPaths$variablbeSelectPath)
+    # next()
+    
     ## prepare data for maxent model
     rasterInputs <- write_Rast(
       path = allPaths$prepRasters,
@@ -415,7 +426,7 @@ for (j in r2) {
       ## ersin
       ersin <- write_CSV(
         path = allPaths$ersinPath,
-        overwrite = TRUE,
+        overwrite = overwrite,
         function1 = ers_insitu(
           occuranceData = sp1,
           nativeArea = natArea,
@@ -438,7 +449,7 @@ for (j in r2) {
       ## fcsin
       fcsin <- write_CSV(
         path = allPaths$fcsinPath,
-        overwrite = TRUE,
+        overwrite = overwrite,
         function1 = fcs_insitu(
           srsin = srsin,
           grsin = grsin,
@@ -451,7 +462,7 @@ for (j in r2) {
       ##ersex
       ersex <- write_CSV(
         path = allPaths$ersexPath,
-        overwrite = overwrite,
+        overwrite = TRUE,
         function1 = ers_exsitu(
           speciesData = sp1,
           thres = thres,
@@ -473,7 +484,7 @@ for (j in r2) {
       ##fcsex
       fcsex <- write_CSV(
         path = allPaths$fcsexPath,
-        overwrite = overwrite,
+        overwrite = TRUE,
         function1 = fcs_exsitu(
           srsex = srsex,
           grsex = grsex,
@@ -488,17 +499,6 @@ for (j in r2) {
         overwrite = TRUE,
         function1 = fcs_combine(fcsin = fcsin, fcsex = fcsex)
       )
-
-      # crop everything with the riparia to the native area for riparia
-      # na <- terra::vect(natArea)
-      # g_bufferCrop <- g_bufferCrop |> terra::crop(na) |> terra::mask(na)
-      # thres <-  thres |> terra::crop(na) |> terra::mask(na)
-      #
-      # projectsResults$all <-  terra::rast(projectsResults$all) |> terra::crop(na) |> terra::mask(na) |> raster()
-      # projectsResults$mean <-  terra::rast(projectsResults$mean) |> terra::crop(na) |> terra::mask(na)|> raster()
-      # projectsResults$median <-  terra::rast(projectsResults$median) |> terra::crop(na) |> terra::mask(na)|> raster()
-      # projectsResults$stdev <-  terra::rast(projectsResults$stdev) |> terra::crop(na) |> terra::mask(na)|> raster()
-      # g_buffer <- g_buffer|> terra::crop(na) |> terra::mask(na)
 
       #gather features for RMD
       ## just a helper function to reduce the number of input for the RMD
@@ -772,29 +772,21 @@ for (j in r2) {
   # this is not working with the 1k data do to size fo the rasters... need to reevaluate
 
   # rmd with Model ----------------------------------------------------------
-  # if(!file.exists(p1)| isTRUE(overwrite)){
-  try(
-    # print(j),
-    # if(!j %in% erroredSpecies$lessThenEight){
-    # rmarkdown::render(
-    #   input = "R2/summarize/singleSpeciesSummary_1k.Rmd",
-    #   output_format = "html_document",
-    #   output_dir = p1, # file.path(allPaths$result),
-    #   output_file = paste0(j, "_Summary_fnaFilter"),
-    #   params = list(
-    #     reportData = reportData
-    #   ),
-    #   envir = new.env(parent = globalenv())
-    #   # clean = F,
-    #   # encoding = "utf-8"
-    # )
-    # }
-  )
-  # }else{
-  #   if(!file.exists(allPaths$summaryHTMLPath)){
-  #     # erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
-  #   }
-  # }
+  htmlExport <- paste0(p1, "/", j, "_Summary_fnaFilter.html")
+  if(!file.exists(htmlExport)){
+      rmarkdown::render(
+        input = "R2/summarize/singleSpeciesSummary_1k.Rmd",
+        output_format = "html_document",
+        output_dir = p1, # file.path(allPaths$result),
+        output_file = paste0(j, "_Summary_fnaFilter"),
+        params = list(
+          reportData = reportData
+        ),
+        envir = new.env(parent = globalenv())
+        # clean = F,
+        # encoding = "utf-8"
+    )
+  }
   # # block here for testing. I want variable in local environment and don't want them written out.
   # # stop()
   #
@@ -812,17 +804,17 @@ for (j in r2) {
 # produce Run level Summaries ---------------------------------------------
 ## big processing step...
 # might need to revisit how these are being generated...
-runSummaries <- FALSE
-if (runSummaries == TRUE) {
-  generateRunSummaries(
-    dir1 = dir1,
-    runVersion = runVersion,
-    species = s2$taxon,
-    genus = "Vitis",
-    protectedAreas = protectedAreas,
-    overwrite = FALSE
-  )
-}
+# runSummaries <- FALSE
+# if (runSummaries == TRUE) {
+#   generateRunSummaries(
+#     dir1 = dir1,
+#     runVersion = runVersion,
+#     species = s2$taxon,
+#     genus = "Vitis",
+#     protectedAreas = protectedAreas,
+#     overwrite = FALSE
+#   )
+# }
 # # produce boxplot summaries -----------------------------------------------
 # renderBoxPlots <- TRUE
 # if (renderBoxPlots == TRUE) {

@@ -27,7 +27,7 @@ formatC(signif(vec,digits=n), digits=n,format="fg", flag="#")
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # transform data
 
-testing <- TRUE
+testing <- FALSE
 # testing <- TRUE
 if(testing == TRUE){
   data <- reportData # testing only
