@@ -1,14 +1,11 @@
 # data = read_csv("data/processed_occurrence/draft_model_data_withG.csv")
-# taxon1 = "Vitis palmata"
-# 
+# taxon1 = "Vitis martineziana"
+# data <- df2
 # t1 <- removeDups(data = data, taxon1 = taxon1)
-
 removeDups <- function(taxon1,data){
   d1 <- data
   # for each species 
   d2 <- d1 |> dplyr::filter(taxon == taxon1)
-  # export temp
-  write_csv(x = d2, "temp/vArizonicaAllSources.csv")
   
   # compare datasets where there is expect overlap 
   grin <- c("USDA_NPGS_GRINGlobal","USDA ARS NPGS 2019a") 
@@ -41,9 +38,13 @@ removeDups <- function(taxon1,data){
   d2e <- sourceID_Check(mwh, d2)
   # wiews
   d2f <- sourceID_Check(wiews, d2)
+  # if data based source is not one tested above 
+  df_additional <- d2[d2$databaseSource %in% c("bg_survey",NA, "MBG","Personal Communication with Jun Wen"), ]
+   
+  
   
   # combined back to single df 
-  df <-bind_rows(list(d2a,d2b,d2c,d2d,d2e,d2f))
+  df <-bind_rows(list(d2a,d2b,d2c,d2d,d2e,d2f,df_additional))
   
   # gbif_mdh 
   ## exclude NA from any of the filtering columns 
@@ -62,6 +63,5 @@ removeDups <- function(taxon1,data){
   df2a <- df2[!duplicated(df2[,c("latitude","longitude","institutionCode")]),]
   # bind back to na data 
   df3 <- bind_rows(dfna, df2a)
-  write_csv(df3, file = "temp/vArizonica_afterDupRemoved.csv")
   return(df3)  
 }

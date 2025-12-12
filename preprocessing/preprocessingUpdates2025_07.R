@@ -57,6 +57,7 @@ write_csv(x = gbif, file = "data/processed_occurrence/gbif_072025.csv")
 jun <- processJun() |>
   orderNames(names = standardColumnNames) |>
   removeDuplicatesID()
+
 # add single record 
 single <- data.frame(matrix(nrow = 1, ncol = length(standardColumnNames)))
 names(single) <- standardColumnNames
@@ -66,8 +67,8 @@ single$originalTaxon <- "Vitis bloodworthiana"
 single$genus <- "Vitis"
 single$species <- "bloodworthiana"
 single$type <- "G"
-single$latitude <- "18.876888776" 
-single$longitude <- "-100.306249885"
+single$latitude <-  "18.00"# "18.876888776" 
+single$longitude <- "-100.00"  # "-100.306249885"
 single$localityInformation <- "Generalized lat lon per curator's request"
 single$databaseSource <- "MBG"
 single$institutionCode <- "MBG"
@@ -93,7 +94,7 @@ write_csv(x = gen, file = "data/processed_occurrence/genesys_072025.csv")
 # read in all other datasets ----------------------------------------------
 df <- readAndBind(run = TRUE) |>
   dplyr::select(-`Collecting number`)
-
+# martineziana present 
 
 
 # drop specific datasets based on source  ---------------------------------
@@ -108,6 +109,7 @@ df <- df |>
   )
 
 View(df)
+# martineziana present 
 
 
 # Standardize names ( genus, species)  ------------------------------------
@@ -115,6 +117,7 @@ source("preprocessing/functions/standardizeNames.R")
 ## does not filter out data
 ## preforms text check steps. Structure, capilatization, etc 
 df1 <- standardizeNames(df)
+# martineziana present 
 
 # species filter and synonym check  ---------------------------------------
 source("preprocessing/functions/speciesStandardization.R")
@@ -122,11 +125,14 @@ source("preprocessing/functions/speciesStandardization.R")
 ## exclude any species not used in either the county or sdm appoach
 datasets <- speciesCheck(data = df1, synonymList = vitis2)
 df2 <- datasets$includedData
+# martineziana present 
+
 
 novogranatensis <- df2[df2$taxon == "Vitis novogranatensis" ,]
 # export the dataset to be used in the SRSex 
 # Remove duplicated data --------------------------------------------------
 uniqueTaxon <- unique(df2$taxon)
+# 40 taxon here 
 source("preprocessing/functions/removeDupsAcrossDatasets.R")
 df2_a <- uniqueTaxon |> 
   purrr::map(.f = removeDups, data = df2) |>
@@ -152,36 +158,11 @@ d3_g <- d3$countycheck |>
       grepl("County", county) ~ county, 
       is.na(county) ~ NA,
       TRUE ~ paste0(county," County")
-    )
-  )
+    ))
 
 
 ### has lat lon so can be used in both county and modeling products
 valLatLon <- d3$validLatLon
-
-# Spatial base data checks ------------------------------------------------
-
-## skipping this for the current model runs 
-# countries <- st_read("data/geospatial_datasets/countries/ne_10m_admin_0_countries.gpkg")
-# states <- st_read("data/geospatial_datasets/states/ne_10m_admin_1_states_provinces.gpkg")
-# counties <- st_read("data/geospatial_datasets/counties/ne_10m_admin_2_counties.gpkg") ## US only
-# 
-# source("preprocessing/functions/spatialChecks.R")
-# d4 <- spatialChecks(
-#   data = valLatLon,
-#   countries = countries,
-#   states = states,
-#   counties = counties
-# )
-# 
-# valLatLon2 <- d4$validLatLon
-
-
-# assign FIPS codes -------------------------------------------------------
-# source("preprocessing/functions/assignFIPS.R")
-## all the state and coutry 
-# d5 <- assignFIPS(valLatLon2)
-
 
 # add the G records with no lat lon back to the modeling data---------------------------------------
 d6 <- valLatLon |> bind_rows(d3_g)
@@ -197,61 +178,77 @@ single$longitude <- as.numeric(single$longitude)
 
 #more duplicate checks 
 d <- d6[!duplicated(d6[,c("taxon", "databaseSource" , "sourceUniqueID")]), ]
+View(d)
 
-
-# conflict between gbif and sienet 
-d1 <- d |>
-  dplyr::filter(databaseSource  %in% c("GBIF")) |>
-  tidyr::separate(
-      col = localityInformation,               # The column to split
-      into = c("temp", "gbifLoc"),    # The names for the new columns
-      sep = " -- " ,
-      remove = FALSE # The separator to split on
-    )
-  
-d2 <- d |>
-  dplyr::filter(!databaseSource  %in% c("GBIF")) 
+# # conflict between gbif and sienet 
+# d1 <- d |>
+#   dplyr::filter(databaseSource  %in% c("GBIF")) |>
+#   tidyr::separate(
+#       col = localityInformation,               # The column to split
+#       into = c("temp", "gbifLoc"),    # The names for the new columns
+#       sep = " -- " ,
+#       remove = FALSE # The separator to split on
+#     )
+#   
+# d2 <- d |>
+#   dplyr::filter(!databaseSource  %in% c("GBIF")) 
 
 # row by row exclusion 
-for(row in 1:nrow(d2)){
-  print(row)
-  
-  feat <- d2[row,]
-  taxon <- feat$taxon
-  lat <- feat$latitude
-  lon <- feat$longitude
-  loc <- feat$localityInformation
-  year <- feat$yearRecorded
-  
-  # test for presence in gbif 
-  test <- d1 |>
-    dplyr::filter(
-      taxon == taxon,
-      latitude == lat,
-      longitude == lon,
-      gbifLoc == loc,
-      yearRecorded == year
-    )
-  if(nrow(test) >0 ){
-    print(paste0("removed", row))
-    d1 <- d1[!d1$index == test$index, ]
-  }
-}
+# for(row in 1:nrow(d2)){
+#   print(row)
+#   
+#   feat <- d2[row,]
+#   taxon <- feat$taxon
+#   lat <- feat$latitude
+#   lon <- feat$longitude
+#   loc <- feat$localityInformation
+#   year <- feat$yearRecorded
+#   
+#   # test for presence in gbif 
+#   test <- d1 |>
+#     dplyr::filter(
+#       taxon == taxon,
+#       latitude == lat,
+#       longitude == lon,
+#       gbifLoc == loc,
+#       yearRecorded == year
+#     )
+#   if(nrow(test) >0 ){
+#     print(paste0("removed", row))
+#     d1 <- d1[!d1$index == test$index, ]
+#   }
+# }
 
 # bind the data back in 
-d7 <- bind_rows(d1,d2)
+# d7 <- bind_rows(d1,d2)
 
-# remove midwest herb 
-d8 <- d7[!d7$databaseSource == "Midwest Herbaria 2019", ]
-
-
-write_csv(x = d8, file = "data/processed_occurrence/model_data072025_edit.csv")
-
+# remove NA taxon 
+d8 <- d |>
+  dplyr::filter(!is.na(taxon))
+  
 
 
+write_csv(x = d8, file = "data/processed_occurrence/model_data122025.csv")
 
 
+t1<- read_csv("temp/allVitisData082025.csv")
+
+# get counts per taxon and compare to see what needs alterations 
+prevCounts <- t1 |>
+  dplyr::group_by(taxon)|>
+  dplyr::count( sort =TRUE) |>
+  dplyr::select(previousCount = n) |>
+  dplyr::filter(!is.na(taxon))
+
+newCounts <- d8 |>
+  dplyr::group_by(taxon)|>
+  dplyr::count( sort =TRUE)|>
+  dplyr::select(newCount = n)
 
 
+joined <- dplyr::left_join(newCounts, prevCounts, by = "taxon") |>
+  dplyr::mutate(
+    changeInNumber = newCount - previousCount
+  )
 
-
+write_csv(joined, "temp/changeInCounts.csv")

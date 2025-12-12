@@ -23,5 +23,7 @@ evaluateTable <- function(sdm_result){
     evaluationTable <- evaluationTable %>% 
       bind_cols(atrain, atest)
   }
+  
+  
   return(evaluationTable)
 }

@@ -68,7 +68,8 @@ processJun <- function(){
       iso3 = "MEX",
       country = "Mexico",
       type = "H",
-      databaseSource = "Personal Communication with Jun Wen"
+      databaseSource = "Personal Communication with Jun Wen",
+      sourceUniqueID = paste0("sourceID_",1:12),
     )
   d2 <- read_csv(files[2])  |> 
     dplyr::select(

@@ -1,5 +1,18 @@
-
+# 
 # path <- "data/source_data/bg_survey.csv"
+# t1 <- read_csv(path)
+# write_csv(t1, file = "temp/bg_surveyCounts.csv")
+# #species object is pull from run_all072025
+# summarizeCount <- t1|>
+#   dplyr::filter(`Taxon Full Name` %in% species)|>
+#   dplyr::group_by(`Ex situ Collection Name`)|>
+#   dplyr::count(sort = TRUE)
+# View(summarizeCount)
+# # read in the species list and filter then summarize 
+
+
+
+write_csv(summarizeCount, file = "temp/bg_surveyCounts.csv")
 ### something with the lat long column is preventing it from being read in? 
 processBG <- function(path){
   

@@ -15,7 +15,7 @@ generateThresholdModel <- function(evalTable, rasterResults){
   
   # generate binary raster based on threshold value 
   ## The right side value of the matrix is include. all values > threshold are 1.  
-  rast1 <- terra::classify(rast(rasterResults$median), rcl = rclmat, right = TRUE)
+  rast1 <- terra::classify(rasterResults$median, rcl = rclmat, right = TRUE)
   names(rast1) <- "Threshold"
   
   return(rast1)

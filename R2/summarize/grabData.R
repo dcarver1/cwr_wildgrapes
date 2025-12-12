@@ -45,20 +45,21 @@ grabData <- function(
     }
     if (length(projectsResults) > 1) {
       projectsResults <- projectsResults |>
-        map(raster::projectRaster, crs = "epsg:3857", method = "ngb")
+        purrr::map(terra::project, y = "epsg:3857", method = "near")
     }
     thres <- terra::project(x = thres, y = "epsg:3857", method = "near")
 
     # add variable importance data
     if (!is.na(variableImportance)) {
-      var1 <- readRDS(variableImportance)$rankPredictors
+      var1 <- read_csv(variableImportance)#$rankPredictors
       names <- read_csv(
         "data/geospatial_datasets/bioclim_layers/variableNames_072025.csv"
       )
       variableImportance <- var1 |>
         dplyr::left_join(y = names, by = c("varNames" = "vitisModelNames"))
     }
-
+    
+    
     # bind to export object
     reportData <- list(
       occuranceData = occuranceData,

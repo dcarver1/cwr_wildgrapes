@@ -9,18 +9,18 @@
 #' 
 rasterResults <- function(sdm_result){
   #Convert back to Terra objects. 
-  prj_stk <- sdm_results %>% 
+  prj_stk <- sdm_result %>% 
     dplyr::select(do.projections) %>%
-    unlist() %>% 
-    raster::stack()%>%
+    unlist()   %>% 
+    raster::stack()  %>%
     rast()
   
   # list of modeled outputs 
   rasters <- list(
-    all = raster(prj_stk),
-    mean = raster(terra::mean(prj_stk)),
-    median = raster(median(prj_stk)),
-    stdev = raster(terra::stdev(prj_stk))
+    all = prj_stk,
+    mean = terra::mean(prj_stk),
+    median = terra::median(prj_stk),
+    stdev = terra::stdev(prj_stk)
   )
   return(rasters)
 }

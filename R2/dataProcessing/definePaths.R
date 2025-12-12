@@ -47,6 +47,8 @@ definePaths <- function(dir1, j, runVersion){
   medianRun = paste0(path$results, "/prj_median.tif"),
   # standard devation run
   stdevRun = paste0(path$results, "/prj_stdev.tif"),
+  # additional AUC metrics 
+  aucMetrics = paste0(path$results, "/aucMetrics.csv"),
   # evaluation table 
   evalTablePath=paste0(path$results,"/evaluationTable.csv"),
   # threshold raster

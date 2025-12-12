@@ -106,19 +106,45 @@ fnaData <- read_csv("data/source_data/FNA_stateClassification.csv")
 # export for gap r testing
 # write.csv(speciesData, file = "temp/allVitisData082025.csv")
 ## doubled check and this data seems to have less duplication of G values
-speciesData <- read_csv("temp/allVitisData082025.csv")
-# s2 <- cPerSpec(speciesData)
+speciesData <- read_csv("data/processed_occurrence/model_data122025.csv")
+
+# read in the data for a evaluating what needs to be rerendered 
+joinedEval <- read_csv("temp/changeInCounts.csv")
+speciesRerun <- joinedEval |>
+  dplyr::arrange(changeInNumber) |> 
+  dplyr::filter(changeInNumber > 0 )|>
+  dplyr::select(taxon) |>
+  dplyr::pull()
+
+
 
 # adding back in Vitis tiliifolia records  --------------------------------
+# unsure of this step but keeping in as 
+vt2 <- speciesData[speciesData$taxon %in% c("Vitis tiliifolia", "Vitis popenoei"),]
+
 vt <- read_csv(
   "data/processed_occurrence/allEvaluated_data_removedDups_072025.csv"
 ) |>
   dplyr::filter(taxon %in% c("Vitis tiliifolia", "Vitis popenoei"))
+write_csv(vt2, "temp/vt2.csv")
 
+
+# ensure that there is no unique data in the december 25 dataset that is being dropped by this 
+vt2_unique <- vt2[!vt2$sourceUniqueID %in% vt$sourceUniqueID, ]
+
+# remove all records from the dec source 
 sd2 <- speciesData[
   !speciesData$taxon %in% c("Vitis tiliifolia", "Vitis popenoei"),
 ]
-speciesData <- bind_rows(sd2, vt)
+# combine back in corrected data and include the unique features from dec source 
+speciesData <- bind_rows(sd2, vt) |>
+  bind_rows(vt2_unique)
+
+# test <- speciesData[speciesData$sourceUniqueID %in% vt2_unique$sourceUniqueID, ]
+# dim(test) == dim(vt2_unique)
+# 
+
+
 # one off removals based on summayr map reviews
 source("temp/clearNewErrors.R")
 speciesData <- clearNewErrors(speciesData)
@@ -162,11 +188,8 @@ bioNames <- read_csv(
 #vitis run
 runVersion <- "run08282025_1k"
 # overwrite
-overwrite <- FALSE
+overwrite <- TRUE
 
-# Vitis popenoei
-
-# create folder structure
 #create folder
 dir1 <- "data/Vitis"
 if (!dir.exists(dir1)) {
@@ -190,7 +213,6 @@ erroredSpecies <- list(
 # species to test for FNA filter - maybe need to rerun if filter was not applied
 fnaSpecies <- fnaData$`Taxon Name`[fnaData$`States from FNA` != "NA,"]
 
-#
 
 # summary table of species
 s2 <- speciesData |>
@@ -204,31 +226,13 @@ s2 <- speciesData |>
 j <- "Vitis baileyana"
 j <- s2$taxon[6]
 # species to regenerate nat area and SRSex measures
-# rerun <- c(
-#   "Vitis acerifolia",
-#   "Vitis aestivalis",
-#   "Vitis berlandieri",
-#   "Vitis bloodworthiana",
-#   "Vitis riparia",
-#   "Vitis baileyana",
-#   "Vitis californica",
-#   "Vitis simpsonii",
-#   "Vitis aestivalis var. aestivalis",
-#   "Vitis aestivalis var. bicolor",
-#   "Vitis arizonica",
-#   "Vitis cinerea var. cinerea",
-#   "Vitis rotundifolia",
-#   "Vitis bourgaeana",
-#   "Vitis cinerea",
-#   "Vitis vulpina",
-#   "Vitis tiliifolia"
-# )
+rerun <- speciesRerun
 # all that were not just created 
-# r2 <- s2$taxon[!s2$taxon %in% rerun]
+r2 <- s2$taxon[!s2$taxon %in% rerun]
 
-j <-   "Vitis acerifolia"
+j <-   "Vitis rotundifolia"
 # start of for loop -------------------------------------------------------
-for (j in s2$taxon[7:nrow(s2)]) {
+for (j in r2[8:13]) {
   # species
   # create unique path for summary HTML docs
   p1 <- paste0("data/Vitis/speciesSummaryHTML/", runVersion)
@@ -341,21 +345,21 @@ for (j in s2$taxon[7:nrow(s2)]) {
       backgroudRecords = nrow(m_data[m_data$presence == 0, ]),
       totalRecords = nrow(m_data)
     )
-    # write_csv(
-    #   x = modelDataSummary,
-    #   file = paste0(allPaths$occurances, "/modelDataSummary.csv")
-    # )
+    write_csv(
+      x = modelDataSummary,
+      file = paste0(allPaths$occurances, "/modelDataSummary.csv")
+    )
 
     ## perform variable selection
     v_data <- write_RDS(
       path = allPaths$variablbeSelectPath,
-      overwrite = TRUE,
+      overwrite = overwrite,
       function1 = varaibleSelection(modelData = m_data, parallel = TRUE)
     )
-    ## had to re-export the variable selection data. I expect that I was attepting to write a list object as a csv  
-    # message(paste0("exporting data for ", j))
+    # had to re-export the variable selection data. I expect that I was attepting to write a list object as a csv
+    message(paste0("exporting model data with variables for ", j))
     # # adding in a export for the variable selection data 
-    # write_csv(x = v_data$rankPredictors, file = allPaths$variablbeSelectPath)
+    write_csv(x = v_data$rankPredictors, file = allPaths$variablbeSelectPath)
     # next()
     
     ## prepare data for maxent model
@@ -383,10 +387,18 @@ for (j in s2$taxon[7:nrow(s2)]) {
       ## raster objects
       projectsResults <- write_RDS(
         path = allPaths$modeledRasters,
-        overwrite = overwrite,
-        function1 = rasterResults(sdm_result)
+        overwrite = TRUE,
+        function1 = rasterResults(sdm_results)
       )
-
+      
+      # generate additional 
+      aucMetrics <- write_CSV(
+        path = allPaths$aucMetrics,
+        overwrite = TRUE,
+        function1 = calc_sdm_metrics(sd_raster = projectsResults$stdev, auc_scores = sdm_results$AUC)
+        )
+      
+      
       ## generate evaluationTable
       evalTable <- write_CSV(
         path = allPaths$evalTablePath,
@@ -462,7 +474,7 @@ for (j in s2$taxon[7:nrow(s2)]) {
       ##ersex
       ersex <- write_CSV(
         path = allPaths$ersexPath,
-        overwrite = TRUE,
+        overwrite = overwrite,
         function1 = ers_exsitu(
           speciesData = sp1,
           thres = thres,
@@ -484,7 +496,7 @@ for (j in s2$taxon[7:nrow(s2)]) {
       ##fcsex
       fcsex <- write_CSV(
         path = allPaths$fcsexPath,
-        overwrite = TRUE,
+        overwrite = overwrite,
         function1 = fcs_exsitu(
           srsex = srsex,
           grsex = grsex,
@@ -496,7 +508,7 @@ for (j in s2$taxon[7:nrow(s2)]) {
       #combined measure
       fcsCombined <- write_CSV(
         path = allPaths$fcsCombinedPath,
-        overwrite = TRUE,
+        overwrite = overwrite,
         function1 = fcs_combine(fcsin = fcsin, fcsex = fcsex)
       )
 
@@ -504,7 +516,7 @@ for (j in s2$taxon[7:nrow(s2)]) {
       ## just a helper function to reduce the number of input for the RMD
       reportData <- write_RDS(
         path = allPaths$summaryDataPath,
-        overwrite = TRUE,
+        overwrite = overwrite,
         function1 = grabData(
           fscCombined = fcsCombined,
           ersex = ersex,
@@ -690,7 +702,7 @@ for (j in s2$taxon[7:nrow(s2)]) {
     ##ersex
     ersex <- write_CSV(
       path = allPaths$ersexPath,
-      overwrite = TRUE,
+      overwrite = overwrite,
       function1 = ers_exsitu(
         speciesData = sd1,
         thres = buffer_rs,
@@ -702,7 +714,7 @@ for (j in s2$taxon[7:nrow(s2)]) {
     ##grsex
     grsex <- write_CSV(
       path = allPaths$grsexPath,
-      overwrite = TRUE,
+      overwrite = overwrite,
       function1 = grs_exsitu(
         speciesData = sd1,
         ga50 = g_bufferCrop,
@@ -738,6 +750,7 @@ for (j in s2$taxon[7:nrow(s2)]) {
         ersex = ersex,
         fcsex = fcsex,
         fcsin = fcsin,
+        ersin = ersin,
         evalTable = NA,
         g_bufferCrop = g_bufferCrop,
         thres = buffer_rs,
@@ -749,7 +762,8 @@ for (j in s2$taxon[7:nrow(s2)]) {
         protectedAreas = protectedAreas,
         countsData = c1,
         variableImportance = NA,
-        NoModel = FALSE
+        NoModel = FALSE,
+        modelDataCounts = NA
       )
     )
 
