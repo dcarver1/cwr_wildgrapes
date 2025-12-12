@@ -108,19 +108,20 @@ fnaData <- read_csv("data/source_data/FNA_stateClassification.csv")
 ## doubled check and this data seems to have less duplication of G values
 speciesData <- read_csv("data/processed_occurrence/model_data122025.csv")
 
-# read in the data for a evaluating what needs to be rerendered 
+# read in the data for a evaluating what needs to be rerendered
 joinedEval <- read_csv("temp/changeInCounts.csv")
 speciesRerun <- joinedEval |>
-  dplyr::arrange(changeInNumber) |> 
-  dplyr::filter(changeInNumber > 0 )|>
+  dplyr::arrange(changeInNumber) |>
+  dplyr::filter(changeInNumber > 0) |>
   dplyr::select(taxon) |>
   dplyr::pull()
 
 
-
 # adding back in Vitis tiliifolia records  --------------------------------
-# unsure of this step but keeping in as 
-vt2 <- speciesData[speciesData$taxon %in% c("Vitis tiliifolia", "Vitis popenoei"),]
+# unsure of this step but keeping in as
+vt2 <- speciesData[
+  speciesData$taxon %in% c("Vitis tiliifolia", "Vitis popenoei"),
+]
 
 vt <- read_csv(
   "data/processed_occurrence/allEvaluated_data_removedDups_072025.csv"
@@ -129,29 +130,28 @@ vt <- read_csv(
 write_csv(vt2, "temp/vt2.csv")
 
 
-# ensure that there is no unique data in the december 25 dataset that is being dropped by this 
+# ensure that there is no unique data in the december 25 dataset that is being dropped by this
 vt2_unique <- vt2[!vt2$sourceUniqueID %in% vt$sourceUniqueID, ]
 
-# remove all records from the dec source 
+# remove all records from the dec source
 sd2 <- speciesData[
   !speciesData$taxon %in% c("Vitis tiliifolia", "Vitis popenoei"),
 ]
-# combine back in corrected data and include the unique features from dec source 
+# combine back in corrected data and include the unique features from dec source
 speciesData <- bind_rows(sd2, vt) |>
   bind_rows(vt2_unique)
 
 # test <- speciesData[speciesData$sourceUniqueID %in% vt2_unique$sourceUniqueID, ]
 # dim(test) == dim(vt2_unique)
-# 
-
+#
 
 # one off removals based on summayr map reviews
 source("temp/clearNewErrors.R")
 speciesData <- clearNewErrors(speciesData)
 
-# export the 
+# export the
 allData <- "data/datasetsForPublication/allSpeciesOccurrences.csv"
-if(!file.exists(allData)){
+if (!file.exists(allData)) {
   write_csv(x = speciesData, file = allData)
 }
 
@@ -188,7 +188,7 @@ bioNames <- read_csv(
 #vitis run
 runVersion <- "run08282025_1k"
 # overwrite
-overwrite <- TRUE
+overwrite <- FALSE
 
 #create folder
 dir1 <- "data/Vitis"
@@ -227,10 +227,10 @@ j <- "Vitis baileyana"
 j <- s2$taxon[6]
 # species to regenerate nat area and SRSex measures
 rerun <- speciesRerun
-# all that were not just created 
+# all that were not just created
 r2 <- s2$taxon[!s2$taxon %in% rerun]
 
-j <-   "Vitis rotundifolia"
+j <- "Vitis acerifolia"
 # start of for loop -------------------------------------------------------
 for (j in r2[8:13]) {
   # species
@@ -358,10 +358,12 @@ for (j in r2[8:13]) {
     )
     # had to re-export the variable selection data. I expect that I was attepting to write a list object as a csv
     message(paste0("exporting model data with variables for ", j))
-    # # adding in a export for the variable selection data 
+    # # adding in a export for the variable selection data
     write_csv(x = v_data$rankPredictors, file = allPaths$variablbeSelectPath)
+    # write_csv(x = v_data$rankPredictors, file = allPaths$allDataPath)
+
     # next()
-    
+
     ## prepare data for maxent model
     rasterInputs <- write_Rast(
       path = allPaths$prepRasters,
@@ -390,15 +392,17 @@ for (j in r2[8:13]) {
         overwrite = TRUE,
         function1 = rasterResults(sdm_results)
       )
-      
-      # generate additional 
+
+      # generate additional
       aucMetrics <- write_CSV(
         path = allPaths$aucMetrics,
         overwrite = TRUE,
-        function1 = calc_sdm_metrics(sd_raster = projectsResults$stdev, auc_scores = sdm_results$AUC)
+        function1 = calc_sdm_metrics(
+          sd_raster = projectsResults$stdev,
+          auc_scores = sdm_results$AUC
         )
-      
-      
+      )
+
       ## generate evaluationTable
       evalTable <- write_CSV(
         path = allPaths$evalTablePath,
@@ -631,10 +635,10 @@ for (j in r2[8:13]) {
     rastBuff <- terra::crop(templateRast, buffer)
     buffer_rs <- terra::rasterize(buffer, rastBuff)
     names(buffer_rs) <- "Threshold"
-    
-    # export this file to use in the full genus summary maps  
+
+    # export this file to use in the full genus summary maps
     write_Rast(buffer_rs, path = allPaths$thresPath, overwrite = overwrite)
-    
+
     # try to generate g buffer
     g_buffer <- write_Rast(
       path = allPaths$ga50Path,
@@ -651,8 +655,12 @@ for (j in r2[8:13]) {
       g_bufferCrop <- g_buffer
     } else {
       g_bufferCrop <- g_buffer |> terra::mask(natAreaV)
-      # export this file to use in the full genus summary maps  
-      write_Rast(g_buffer, path = allPaths$g50_bufferPath, overwrite = overwrite)
+      # export this file to use in the full genus summary maps
+      write_Rast(
+        g_buffer,
+        path = allPaths$g50_bufferPath,
+        overwrite = overwrite
+      )
     }
     # pull n G points from
     gPoints <- c1$totalGUseful
@@ -787,18 +795,18 @@ for (j in r2[8:13]) {
 
   # rmd with Model ----------------------------------------------------------
   htmlExport <- paste0(p1, "/", j, "_Summary_fnaFilter.html")
-  if(!file.exists(htmlExport)){
-      rmarkdown::render(
-        input = "R2/summarize/singleSpeciesSummary_1k.Rmd",
-        output_format = "html_document",
-        output_dir = p1, # file.path(allPaths$result),
-        output_file = paste0(j, "_Summary_fnaFilter"),
-        params = list(
-          reportData = reportData
-        ),
-        envir = new.env(parent = globalenv())
-        # clean = F,
-        # encoding = "utf-8"
+  if (!file.exists(htmlExport)) {
+    rmarkdown::render(
+      input = "R2/summarize/singleSpeciesSummary_1k.Rmd",
+      output_format = "html_document",
+      output_dir = p1, # file.path(allPaths$result),
+      output_file = paste0(j, "_Summary_fnaFilter"),
+      params = list(
+        reportData = reportData
+      ),
+      envir = new.env(parent = globalenv())
+      # clean = F,
+      # encoding = "utf-8"
     )
   }
   # # block here for testing. I want variable in local environment and don't want them written out.
@@ -818,17 +826,17 @@ for (j in r2[8:13]) {
 # produce Run level Summaries ---------------------------------------------
 ## big processing step...
 # might need to revisit how these are being generated...
-# runSummaries <- FALSE
-# if (runSummaries == TRUE) {
-#   generateRunSummaries(
-#     dir1 = dir1,
-#     runVersion = runVersion,
-#     species = s2$taxon,
-#     genus = "Vitis",
-#     protectedAreas = protectedAreas,
-#     overwrite = FALSE
-#   )
-# }
+runSummaries <- FALSE
+if (runSummaries == TRUE) {
+  generateRunSummaries(
+    dir1 = dir1,
+    runVersion = runVersion,
+    species = s2$taxon,
+    genus = "Vitis",
+    protectedAreas = protectedAreas,
+    overwrite = FALSE
+  )
+}
 # # produce boxplot summaries -----------------------------------------------
 # renderBoxPlots <- TRUE
 # if (renderBoxPlots == TRUE) {
@@ -876,9 +884,9 @@ for (j in r2[8:13]) {
 # #
 # # #
 # # # # generate a summary CSV for vitis
-# source("R2/summarize/summaryTable.R")
-# summaryCSV <- summaryTable(species = species, runVersion = runVersion)
-# write_csv(
-#   x = summaryCSV,
-#   file = paste0("data/Vitis/summaryTable_", runVersion, ".csv")
-# )
+source("R2/summarize/summaryTable.R")
+summaryCSV <- summaryTable(species = species, runVersion = runVersion)
+write_csv(
+  x = summaryCSV,
+  file = paste0("data/Vitis/summaryTable_", runVersion, ".csv")
+)

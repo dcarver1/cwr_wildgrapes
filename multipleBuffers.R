@@ -57,8 +57,8 @@ process_species_gaps <- function(
   # --- Load large spatial objects *inside* the worker ---
   # This is the standard, robust way to handle this in parallel
   # important note and a standard to work toward going forward
-  ecoregions <- terra::vect(ecoregions_path, quiet = TRUE)
-  protectedAreas <- terra::rast(protectedAreas_path, quiet = TRUE)
+  ecoregions <- terra::vect(ecoregions_path)
+  protectedAreas <- terra::rast(protectedAreas_path)
   # ---
 
   export <- paste0("data/Vitis/varBuffer/", i, "_", bs, "includePoints.csv")
@@ -151,10 +151,10 @@ process_species_gaps <- function(
       fcsex = fcs_exsitu1
     )
 
-    write_csv(x = fcs_combine1, file = export, quiet = TRUE)
+    write_csv(x = fcs_combine1, file = export)
   } else {
     # If file exists, just read it
-    fcs_combine1 <- read_csv(export, quiet = TRUE)
+    fcs_combine1 <- read_csv(export)
   }
 
   # Return the data frame for this species

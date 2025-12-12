@@ -36,6 +36,7 @@ noting other specific functions/workflows what that is not the case
 - shee 5 :  the updated =models testing results 
 
 - sheet 6 : priority score metrics for all species 
+ - this is generated during the creation of the run summary rmd documen 
 
 - sheet 7 : summary of db source and instiution code for the G collections 
 
