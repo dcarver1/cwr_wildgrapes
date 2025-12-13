@@ -51,15 +51,14 @@ grabData <- function(
 
     # add variable importance data
     if (!is.na(variableImportance)) {
-      var1 <- read_csv(variableImportance)#$rankPredictors
+      var1 <- readRDS(variableImportance) #$rankPredictors
       names <- read_csv(
         "data/geospatial_datasets/bioclim_layers/variableNames_072025.csv"
       )
-      variableImportance <- var1 |>
+      variableImportance <- var1$rankPredictors |>
         dplyr::left_join(y = names, by = c("varNames" = "vitisModelNames"))
     }
-    
-    
+
     # bind to export object
     reportData <- list(
       occuranceData = occuranceData,

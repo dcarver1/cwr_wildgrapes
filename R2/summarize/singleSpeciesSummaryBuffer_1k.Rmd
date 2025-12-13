@@ -338,24 +338,7 @@ if (class(gBuf) != "character" & data$fcsex$GRS != 0) {
   #   terra::rast()|>
   #   terra::aggregate(fact = resampleFactor, fun = "mean")
   # meanPal <- colorNumeric(palette = distColor,
-  #                domain = values(meanDist),
-  #                na.color = "transparent")
-  # # Median distribution map
-  # medianDist <- data$projectedResults$median|>
-  #   terra::rast()|>
-  #   terra::aggregate(fact = resampleFactor, fun = "mean")
-  # medianPal <-
-  #   colorNumeric(palette = distColor,
-  #                domain = values(medianDist),
-  #                na.color = "transparent")
-  # 
-  # # standdard devation map
-  # stdevDist <- data$projectedResults$stdev|>
-  #   terra::rast()|>
-  #   terra::aggregate(fact = resampleFactor, fun = "mean")
-  # stdevPal <- colorNumeric(palette = distColor,
-  #                domain = values(stdevDist),
-  #                na.color = "transparent")
+  grsin#                na.color = "transparent")
 }
 
 
@@ -586,7 +569,7 @@ if(exTables$`Total G with coordinates` == 0){
         fill = TRUE,
         fillOpacity = 0.2,
         popup = allEcos$ECO_NAME,
-        color = "#60616050"
+        color = "#01010150"
       ) 
     }
 

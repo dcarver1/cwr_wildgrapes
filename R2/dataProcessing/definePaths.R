@@ -65,7 +65,7 @@ definePaths <- function(dir1, j, runVersion) {
     # all model data
     allDataPath = paste0(path$occurances, "/allmodelData.csv"),
     # varabile selection data
-    variablbeSelectPath = paste0(path$occurances, "/variableSelectionData.csv"),
+    variablbeSelectPath = paste0(path$occurances, "/variableSelectionData.RDS"),
     # third level -- gap_analysis --------------------------------------------
     #srsex
     srsExPath = paste0(path$gap_analysis, "/srs_ex.csv"),
