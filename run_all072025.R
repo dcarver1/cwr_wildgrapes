@@ -232,7 +232,7 @@ r2 <- s2$taxon[!s2$taxon %in% rerun]
 
 j <- "Vitis acerifolia"
 # start of for loop -------------------------------------------------------
-for (j in s2$taxon[8:13]) {
+for (j in s2$taxon[c(35, 38)]) {
   # species
   # create unique path for summary HTML docs
   p1 <- paste0("data/Vitis/speciesSummaryHTML/", runVersion)
@@ -267,6 +267,7 @@ for (j in s2$taxon[8:13]) {
   # check for no lat lon data
   if (c1$totalUseful == 0) {
     erroredSpecies$noLatLon <- c(erroredSpecies$noLatLon, j)
+    print(j)
     next
     print("next")
   }
@@ -274,7 +275,7 @@ for (j in s2$taxon[8:13]) {
   ## create the inital spatial object
   sp1 <- write_GPKG(
     path = allPaths$spatialDataPath,
-    overwrite = overwrite,
+    overwrite = TRUE,
     function1 = createSF_Objects(speciesData = sd1) %>%
       removeDuplicates()
   )
@@ -282,14 +283,31 @@ for (j in s2$taxon[8:13]) {
   # apply FNA filter if possible.
   sp1 <- write_GPKG(
     path = allPaths$spatialDataPath,
-    overwrite = overwrite, # this needs to stay true otherwise the call above will be used.
+    overwrite = TRUE, # this needs to stay true otherwise the call above will be used.
     function1 = applyFNA(
       speciesPoints = sp1,
       fnaData = fnaData,
       states = naStates
     )
   )
-
+  # moved this data out of the modeling loop to capture new features 
+  ## associate observations with bioclim data and spatial thin
+  m_data1 <- write_CSV(
+    path = allPaths$allDataPath,
+    overwrite = TRUE,
+    generateModelData(
+      speciesPoints = sp1,
+      natArea = natArea,
+      bioVars = bioVars,
+      b_Number = b_Number
+    )
+  )
+  # exporting with type column now removing for consistenty
+  m_data <- m_data1 |>
+    dplyr::select(-type)
+  next
+  
+  
   ## define natural area based on ecoregions
   natArea <- write_GPKG(
     path = allPaths$natAreaPath,
@@ -315,21 +333,6 @@ for (j in s2$taxon[8:13]) {
         templateRast = templateRast
       )
     )
-
-    ## associate observations with bioclim data and spatial thin
-    m_data1 <- write_CSV(
-      path = allPaths$allDataPath,
-      overwrite = overwrite,
-      generateModelData(
-        speciesPoints = sp1,
-        natArea = natArea,
-        bioVars = bioVars,
-        b_Number = b_Number
-      )
-    )
-    # exporting with type column now removing for consistenty
-    m_data <- m_data1 |>
-      dplyr::select(-type)
 
     # remove duplicated background data
     presence <- m_data[m_data$presence == 1, ]
@@ -851,50 +854,63 @@ for (j in s2$taxon[8:13]) {
 #     overwrite = FALSE
 #   )
 # }
-# # produce boxplot summaries -----------------------------------------------
-# renderBoxPlots <- TRUE
-# if (renderBoxPlots == TRUE) {
-#   # compile all modeling data
-#   amd <- list.files(
-#     dir1,
-#     pattern = "allmodelData.csv",
-#     full.names = TRUE,
-#     recursive = TRUE
-#   )
-#   amd2 <- amd[grepl(pattern = runVersion, x = amd)]
-#   #empty df for storing data from the loop
-#   df4 <- data.frame()
-#   # loop over species
-#   for (p in seq_along(species)) {
-#     p1 <- amd2[grepl(pattern = species[p], x = amd2)]
-#     if (length(p1) == 1) {
-#       p2 <- p1 |>
-#         read.csv() |>
-#         dplyr::filter(presence == 1) |>
-#         dplyr::mutate(taxon = species[p])
-#       df4 <- bind_rows(p2, df4)
-#     }
-#   }
-#   # generate input data set
-#   inputData <- list(
-#     data = df4,
-#     species = sort(species),
-#     names = bioNames
-#   )
-#   # produce the document
-#   rmarkdown::render(
-#     input = "R2/summarize/boxplotSummaries.Rmd",
-#     output_format = "html_document",
-#     output_dir = file.path(dir1),
-#     output_file = paste0(runVersion, "_boxPlotSummary.html"),
-#     params = list(
-#       inputData = inputData
-#     ),
-#     envir = new.env(parent = globalenv())
-#     # clean = F,
-#     # encoding = "utf-8"
-#   )
-# }
+# produce boxplot summaries -----------------------------------------------
+renderBoxPlots <- TRUE
+if (renderBoxPlots == TRUE) {
+  # compile all modeling data
+  amd <- list.files(
+    dir1,
+    pattern = "allmodelData.csv",
+    full.names = TRUE,
+    recursive = TRUE
+  )
+  amd2 <- amd[grepl(pattern = runVersion, x = amd)]
+  #empty df for storing data from the loop
+  df4 <- data.frame()
+  # loop over species
+  for (p in seq_along(species)) {
+    p1 <- amd2[grepl(pattern = paste0(species[p], "/"), x = amd2)]
+    if (length(p1) == 1) {
+      p2 <- p1 |>
+        read.csv() |>
+        dplyr::filter(presence == 1) |>
+        dplyr::mutate(taxon = species[p])
+      df4 <- bind_rows(p2, df4)
+    }
+  }
+  # generate input data set
+  inputData <- list(
+    data = df4,
+    species = sort(species),
+    names = bioNames
+  )
+  # produce the document
+  # rmarkdown::render(
+  #   input = "R2/summarize/boxplotSummaries.Rmd",
+  #   output_format = "html_document",
+  #   output_dir = file.path(dir1),
+  #   output_file = paste0(runVersion, "_boxPlotSummary.html"),
+  #   params = list(
+  #     inputData = inputData
+  #   ),
+  #   envir = new.env(parent = globalenv())
+  #   # clean = F,
+  #   # encoding = "utf-8"
+  # )
+  # produce the document
+  rmarkdown::render(
+    input = "R2/summarize/boxplotSummaries_editsSGCK.Rmd",
+    output_format = "html_document",
+    output_dir = file.path(dir1),
+    output_file = paste0(runVersion, "_boxPlotSummary.html"),
+    params = list(
+      inputData = inputData
+    ),
+    envir = new.env(parent = globalenv())
+    # clean = F,
+    # encoding = "utf-8"
+  )
+}
 # #
 # # #
 # # # # generate a summary CSV for vitis

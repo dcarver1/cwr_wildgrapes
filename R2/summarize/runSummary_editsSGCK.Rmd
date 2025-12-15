@@ -1,0 +1,462 @@
+---
+title: Genus/genepool level conservation gap analysis summary
+author: Daniel P. Carver, Colin K. Khoury, Sarah L. Gora
+output:
+  html_document:
+      css: style.css
+date: "Report generated on `r Sys.Date()`"
+params:
+  reportData: NA
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pacman::p_load("leaflet","data.table", "tidyr", "dplyr","plotly","DT")
+
+### function for control number of character after the decimal place 
+sigfig <- function(vec, n=3){ 
+### function to round values to N significant digits
+# input:   vec       vector of numeric
+#          n         integer is the required sigfig  
+# output:  outvec    vector of numeric rounded to N sigfig
+
+formatC(signif(vec,digits=n), digits=n,format="fg", flag="#") 
+
+} 
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+testing <- FALSE
+# transform data
+if(testing==TRUE){
+  data <- conservationSummary$summaryData # testing only
+  figure1 <- conservationSummary$figure1
+  figure2 <- conservationSummary$figure2
+  figure3 <- conservationSummary$figure3
+  image <- conservationSummary$map
+  p1 <- conservationSummary$proAreas
+  ga50 <- conservationSummary$ga50Map
+  protectCounts <- conservationSummary$protectAreasRichness
+  ersExGapMap <- conservationSummary$ersExRichness
+  ersInGapMap <- conservationSummary$ersInRichness
+  genus <- conservationSummary$genus
+}else{
+  inputs <- params$reportData
+  data <- inputs$summaryData
+  figure1 <- inputs$figure1
+  figure2 <- inputs$figure2
+  figure3 <- inputs$figure3  
+  image <- inputs$map
+  p1 <- inputs$proAreas
+  ga50 <- inputs$ga50Map
+  protectCounts <- inputs$protectAreasRichness
+  ersExGapMap <- inputs$ersExRichness
+  ersInGapMap <- inputs$ersInRichness
+  genus <- inputs$genus
+}
+
+# Grab the gensus name to use in plain text within the document 
+if(genus == "Daucus"){
+  printGenus <- paste0(genus, " L.") 
+}else{
+  printGenus <- genus
+  # add new records for the two missing species 
+  vr <- data.frame(
+     "ID" = "Vitis rufotomentosa",
+     "SRSex"= 100,
+     "GRSex"= NA,
+     "ERSex"= NA,
+     "SRSin"= 0,
+     "GRSin"= NA,
+     "ERSin"= NA,          
+     "FCSex"= 33.333,
+     "FCSin"= 0,
+     "FCSc_min"= 0,
+     "FCSc_max"= 33.333,
+     "FCSc_mean"= 16.6666,
+     "FCSc_min_class"= "UP",
+     "FCSc_max_class"= "UP",
+     "FCSc_mean_class"= "UP"
+  )
+  vn <- data.frame(
+     "ID" = "Vitis novogranatensis",
+     "SRSex"= 0,
+     "GRSex"= NA,
+     "ERSex"= NA,
+     "SRSin"= 0,
+     "GRSin"= NA,
+     "ERSin"= NA,          
+     "FCSex"= 0,
+     "FCSin"= 0,
+     "FCSc_min"= 0,
+     "FCSc_max"= 0,
+     "FCSc_mean"= 0,
+     "FCSc_min_class"= "UP",
+     "FCSc_max_class"= "UP",
+     "FCSc_mean_class"= "UP"
+  )
+  data <- bind_rows(data, vr)|>
+    bind_rows(vn)
+  # arrange by ID for visualization 
+  data <- dplyr::arrange(data, ID)
+}
+
+# reproject protected areas raster to threshold image
+p1 <- terra::resample(x = p1, y = image, method = 'near')
+
+```
+
+## Conservation gap analysis results for wild *Vitis* of the Americas
+
+
+The figure below displays all conservation gap analysis scores per *Vitis* taxon, with *ex situ* conservation scores shown as circles, *in situ* conservation scores shown as triangles, and the combined (FCSc-mean) score as a diamond. The scores are used to categorize taxa, with urgent priority (UP) for further conservation action assigned when score < 25, high priority (HP) where 25 ≤ score < 50, medium priority (MP) where 50 ≤ score < 75, and low priority (LP) for taxa whose score ≥75. Hover over features to see the scores. Click the objects at the bottom of the figures to turn on and off elements on the figure.
+
+
+
+:::: {style="display: flex;"}
+
+::: {}
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'right', fig.height = 8 } 
+#  fig.height= 8
+# not all species were showing up with autosize on. Have this set to capture, but need to evaluate how flexable it is. 
+heightPerRow <- 35
+height <- nrow(data) * heightPerRow
+figure1 # |>  layout(autosize = T, width = 800) # might
+```
+:::
+
+::: {}
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'right', fig.height = 8 } 
+#  fig.height= 8
+# not all species were showing up with autosize on. Have this set to capture, but need to evaluate how flexable it is. 
+heightPerRow <- 35
+height <- nrow(data) * heightPerRow
+figure2  # might
+```
+:::
+
+::::
+
+
+
+
+<br>
+<br>
+<br>
+
+### Conservation gap analysis results table
+
+The table below displays conservation gap analysis results per assessed taxon. Results of the conservation assessments within each conservation format [Sampling Representativeness Score *ex situ* (SRS ex situ), Geographic Representativeness Score *ex situ* (GRS ex situ), and Ecological Representativeness Score *ex situ* (ERS ex situ) for *ex situ*; and Sampling Representativeness Score *in situ* (SRS in situ), Geographic Representativeness Score *in situ* (GRS in situ) and Ecological Representativeness Score *in situ* (ERS in situ) for *in situ*] are displayed. The Combined Final Conservation Score (FCSc-mean) is the average of the final *ex situ* (FCS ex situ) and *in situ* (FCS in situ) scores. The scores are used to categorize taxa, with urgent priority (UP) for further conservation action assigned when score < 25, high priority (HP) where 25 ≤ score < 50, medium priority (MP) where 50 ≤ score < 75, and low priority (LP) for taxa whose score ≥75.
+
+
+
+```{r  echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
+# # alter Counts data for better visualizations
+c1 <- data |>
+  select(Taxon = ID, everything()) |>
+  dplyr::mutate(Taxon = stringr::str_replace_all(Taxon, pattern = "_", replacement = " "))
+  
+c1[,2:12] <- lapply(c1[,2:12], sigfig)
+
+# rename features for the table 
+c2 <- c1 |>
+  dplyr::select(
+    "Taxon",
+    "SRS ex situ" = "SRSex",           
+    "GRS ex situ" = "GRSex",   
+    "ERS ex situ" = "ERSex",
+    "FCS ex situ" = "FCSex",           
+    "SRS in situ" = "SRSin",           
+    "GRS in situ" = "GRSin",   
+    "ERS in situ" = "ERSin",           
+    "FCS in situ" = "FCSin",
+    "FCSc-mean" = "FCSc_mean",   
+    "FCSc class min" = "FCSc_min_class",  
+    "FCSc class max" = "FCSc_max_class" , 
+    "FCSc class mean" = "FCSc_mean_class"
+  ) |> 
+  dplyr::mutate(across(everything(), ~stringr::str_trim(., side = "left")))|>
+  dplyr::mutate(across(everything(), ~ifelse(. == "NA", 0, .)))
+
+
+DT::datatable(c2,
+              rownames = FALSE,
+              class = "compact",
+              options = list(pageLength = 10,
+                             scrollX='400px'),
+              filter = "top")
+```
+<br>
+
+
+## Map of predicted taxon richness
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
+# core species richness map
+r1 <- image
+r1[r1==0] <- NA
+#distribution palette
+distColor <- c("#ffffd4","#fed98e","#fe9929","#d95f0e","#993404")
+vals <- unique(values(r1))
+# Mean distribution map
+meanPal <- colorNumeric(palette = distColor,domain = values(r1), na.color = "transparent")
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
+# produce the first map
+richness1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3)) |>
+  addTiles() |>
+  addRasterImage(x = r1,
+                 colors = meanPal,
+                 method = "ngb",
+                 group = "Species Richness")|>
+  leaflet::addLegend(position = "bottomright",
+            colors = distColor,
+            title = "Species Richness",
+            labels = c("1","","","",max(vals,na.rm = TRUE)),
+            group = "Mean Distribution Model"
+            )|>
+    setView(lng = -95.7190, lat = 39.976, zoom = 3)
+richness1
+```
+<br>
+
+The figure above displays the predicted taxonomic richness map for the assessed taxa, combining 36 potential distribution models. Darker colors indicate greater numbers of taxa potentially overlapping in the same areas.  
+
+<br>
+<br>
+<br>
+
+## Geographic *ex situ* gap richness
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
+g50 <- classify(ga50, cbind(NaN, 0)) #|> raster()
+
+exGap <- r1 - g50
+
+#distribution palette
+valsexGap <- unique(values(exGap))
+# Mean distribution map
+exGapPal <- colorNumeric(palette = distColor,
+                        domain = values(exGap),
+                        na.color = "transparent")
+
+
+
+g1 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))|>
+  addTiles()|>
+  addRasterImage(x = exGap,
+                 colors = exGapPal,
+                 method = "ngb",
+                 group = "Species Richness")|>
+  leaflet::addLegend(position = "bottomright",
+            colors = distColor,
+            title = "Number of taxa",
+            labels = c("1","","","",max(valsexGap,na.rm = TRUE)),
+            group = "Mean Distribution Model"
+            )|>
+    setView(lng = -95.7190, lat = 39.976, zoom = 3)
+terra::writeRaster(x = exGap, filename = "~/trueNAS/work/cwr_wildgrapes/data/datasetsForPublication/grsEX_map.tif")
+g1
+```
+
+The figure above displays predicted collecting priority hotspots to resolve geographic gaps in current *ex situ* conservation. The map displays richness of geographic areas within the potential distributions of the assessed taxa that have not been previously collected for *ex situ* conservation (i.e., areas not within 50 km of an existing germplasm collection location). Darker colors indicate greater numbers of taxa potentially overlapping in the same areas.
+<br>
+<br>
+<br>
+
+
+## Ecological *ex situ* gap richness
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
+ersExMap <- classify(ersExGapMap, cbind(0, NA)) |> raster()
+
+
+#distribution palette
+valsersExGap <- unique(values(ersExMap))
+maxExsGap <- max(valsersExGap, na.rm = TRUE)
+# Mean distribution map
+ersExGapPal <- colorNumeric(palette = distColor,
+                        domain = values(ersExMap),
+                        na.color = "transparent")
+
+
+
+g2 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))|>
+  addTiles()|>
+  addRasterImage(x = ersExMap,
+                 colors = ersExGapPal,
+                 method = "ngb",
+                 group = "Species Richness")|>
+  leaflet::addLegend(position = "bottomright",
+            colors = distColor,
+            title = "Number of taxa",
+            labels = c("1","","","",max(valsersExGap,na.rm = TRUE)),
+            group = "Mean Distribution Model")|>
+    setView(lng = -95.7190, lat = 39.976, zoom = 3)
+
+g2
+```
+
+<br>
+
+The figure above displays predicted collecting priority hotspots to resolve ecological gaps in current *ex situ* conservation. The map displays richness of ecoregions within the potential distributions of the assessed taxa that have not been previously collected for *ex situ* conservation. Darker colors indicate greater numbers of taxa potentially overlapping in the same areas.
+
+<br>
+<br>
+<br>
+
+## Geographic *in situ* gap richness
+
+```{r echo=FALSE, message=FALSE, warning=FALSE ,fig.align='center', out.width='90%'}
+# reclass to make the mask of the protect areas features
+p2 <- classify(p1, cbind(1, 2))
+p2 <- classify(p2, cbind(NaN, 1))
+p2 <- classify(p2, cbind(2, NA))
+# extent to extent of species richness raster 
+p2 <- terra::crop(p2, r1)
+
+# mask the richness map to protect areas feature
+inGap <- p2 * r1
+
+#distribution palette
+distColor <- c("#ffffd4","#fed98e","#fe9929","#d95f0e","#993404")
+valsInGAP <- unique(values(inGap))
+# Mean distribution map
+inGapPal <- colorNumeric(palette = distColor,
+                        domain = values(inGap),
+                        na.color = "transparent")
+
+
+in1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3))|>
+  addTiles()|>
+  addRasterImage(x = inGap,
+                 colors = inGapPal,
+                 method = "ngb",
+                 group = "Species Richness")|>
+  leaflet::addLegend(position = "bottomright",
+            colors = distColor,
+            title = "Number of taxa",
+            labels = c("1","","","",max(valsInGAP,na.rm = TRUE)),
+            group = "Mean Distribution Model")|>
+    setView(lng = -95.7190, lat = 39.976, zoom = 3)
+terra::writeRaster(x = inGap, filename = "~/trueNAS/work/cwr_wildgrapes/data/datasetsForPublication/grsIn_map.tif")
+
+in1
+```
+<br>
+The figure above displays predicted habitat protection priorities to resolve geographic gaps in current *in situ* conservation. The map displays richness of geographic areas within the potential distributions of the assessed taxa that are outside of current protected areas. Darker colors indicate greater numbers of taxa potentially overlapping in the same areas.
+<br>
+<br>
+
+
+### Protected areas table
+
+This table below lists protected areas overlapping with the potential distributions of four or more taxa. The total number of taxa potentially present in the protected area, based on potential distributions, is shown in the Total Taxa  column. A full list of protected areas can be found at the following [link](https://drive.google.com/file/d/1zJRLjhtIK1Bl_gW6JDoQUhZO1tTCxeGt/view?usp=sharing).
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', out.width='90%'}
+# probably want to process this outside of the rendering of the document. '
+pc1 <- protectCounts |>
+  dplyr::filter(totalSpecies > 3) |>
+  dplyr::arrange(desc(totalSpecies))|>
+  dplyr::select(
+    WDPAID,
+    "Protect area name" = NAME,
+    "Designation" = DESIG_ENG,
+    "Country ISO3" = ISO3,
+    "Total Taxa" = totalSpecies
+  )
+DT::datatable(pc1,
+              rownames = FALSE,
+              class = "compact",
+              filter = c("top"))
+```
+
+<br>
+<br>
+<br>
+
+
+## Ecological *in situ* gap richness
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
+ersInMap <- classify(ersInGapMap, cbind(0, NA)) |> raster()
+
+
+#distribution palette
+valsersINGap <- unique(values(ersInMap))
+maxERSin <- max(valsersINGap, na.rm = TRUE)
+# Mean distribution map
+ersINGapPal <- colorNumeric(palette = distColor,
+                        domain = values(ersInMap),
+                        na.color = "transparent")
+
+
+
+g3 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))|>
+  addTiles()|>
+  addRasterImage(x = ersInMap,
+                 colors = ersINGapPal,
+                 method = "ngb",
+                 group = "Species Richness")|>
+  leaflet::addLegend(position = "bottomright",
+            colors = distColor,
+            title = "Number of taxa",
+            labels = c("1","","","",max(valsersINGap,na.rm = TRUE)),
+            group = "Mean Distribution Model")|>
+    setView(lng = -95.7190, lat = 39.976, zoom = 3)
+
+g3
+```
+<br>
+
+The figure above displays predicted habitat protection priorities to resolve ecological gaps in current *in situ* conservation. The map displays richness of ecoregions within the potential distributions of the assessed taxa that are not represented at all within current protected areas within those potential distributions. Darker colors indicate greater numbers of taxa potentially overlapping in the same areas.
+
+<br>
+<br> 
+
+## Definitions of conservation gap analysis scores
+
+### Sampling Representativeness Score (SRS)
+
+***Ex situ***: The Sampling Representativeness Score *ex situ* (SRS ex situ) calculates the ratio of germplasm accessions (G) available in *ex situ* repositories to reference/voucher/herbarium (H) records for each taxon, making use of all compiled records irrespective of whether they include coordinates.
+
+***In situ***: The Sampling Representativeness Score *in situ* (SRS in situ) calculates the proportion of all occurrences of a taxon within its native range that fall within a protected area.
+
+### Geographic Representativeness Score (GRS)
+
+***Ex situ***: The Geographic Representativeness Score *ex situ* (GRS ex situ) uses 50-km-radius buffers created around each G collection coordinate point to estimate geographic areas already well collected within the potential distribution models of each taxon and then calculates the proportion of the potential distribution model covered by these buffers.
+
+***In situ***: The Geographic Representativeness Score *in situ* (GRS in situ) compares the area (in km^2^) of the potential distribution model located within protected areas versus the total area of the model.
+
+### Ecological Representativeness Score (ERS)
+
+***Ex situ***: The Ecological Representativeness Score *ex situ* (ERS ex situ) calculates the proportion of terrestrial ecoregions represented within the G buffered areas out of the total number of ecoregions occupied by the potential distribution model.
+
+***In situ***: The Ecological Representativeness Score *in situ* (ERS in situ) calculates the proportion of ecoregions encompassed within the range of the taxon located inside protected areas to the ecoregions encompassed within the total area of the potential distribution model.
+
+### Final Conservation Score (FCS)
+
+***Ex situ***: The Final Conservation Score *ex situ* (FCS ex situ) was derived by calculating the average of the three *ex situ* conservation metrics.
+
+***In situ***: The Final Conservation Score *in situ* (FCS in situ) was derived by calculating the average of the three *in situ* conservation metrics.
+
+**FCSc-mean**: The Combined Final Conservation Score (FCSc-mean) was calculated for each taxon by averaging its final FCS ex situ and FCS in situ scores.
+
+Taxa were further categorized with regard to the two conservation strategies as well as in combination, with Urgent Priority (UP) for further conservation action assigned when FCS < 25, High Priority (HP) assigned when 25 ≤ FCS < 50, Medium Priority (MP) when 50 ≤ FCS < 75, and Low Priority (LP) when FCS ≥75.
+
+## Definitions of occurrence data categories
+
+**Occurrences**: The total number of observations and *ex situ* collections records for the taxon that were evaluated for use within the study.
+
+**Occurrences with lat/long**: The total number of observations that had a valid latitude and longitude pair and were used for spatial analysis. Non-valid latitude longitude pairs included but were not limited to points not on land masses, and records with only one of the two values present.
+
+**Germplasm Records (G)**: Occurrences in which a living sample (typically a live plant or seed) is present in an *ex situ* conservation system (i.e., botanical garden, seed bank, genebank, etc.).
+
+**Reference/voucher Records (H)**: Occurrences that have a supporting herbarium or other reference record.
+
+**Unique Data Sources**: The number of unique database sources from which occurrences of the taxon were gathered.

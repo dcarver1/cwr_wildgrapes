@@ -14,9 +14,6 @@ pacman::p_load(dplyr,readr)
 # vitis specific moves ----------------------------------------------------
 folder <- "~/trueNAS/work/vitis2/m"
 
-
-
-
 # vitis SDMS --------------------------------------------------------------
 genus <- "Vitis" 
 modelRun <- "run08282025_1k"

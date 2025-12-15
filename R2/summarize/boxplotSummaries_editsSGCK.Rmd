@@ -1,0 +1,442 @@
+---
+title: Genus/genepool level visualization of ecogeographic characteristics of taxa
+author: Daniel P. Carver, Colin K. Khoury, Sarah Gora
+output:
+  html_document:
+      css: style.css
+      toc: true
+      toc_float: true
+date: "Report generated on `r Sys.Date()`"
+params:
+  inputData: NA
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# compile all model data for species 
+species <- params$inputData$species
+data <- params$inputData$data
+names <- params$inputData$names
+# change to params$inputData$species
+testing <- FALSE 
+if(isTRUE(testing)){
+  species <- inputData$species
+  data <- inputData$data
+  names <- inputData$names
+}
+
+
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+# generate the plots then append them to a named list
+for(i in seq_along(names$vitisModelNames )){
+  parameter <- names$vitisModelNames[i]
+  box1 <- generateBoxPlot(data = data,
+                names = names,
+                parameter = parameter)
+  l2 <- list("temp" = box1)
+  names(l2) <- parameter
+
+  if(i == 1){
+    plots <- l2
+    
+  }else{
+    plots <- c(plots, l2)
+  }
+}
+
+```
+
+All plots shown below are generated using all available occurrences. The purple points shown on the figures represent the germplasm (G) occurrences for the given taxon. 
+
+
+## Temperature Related Variables {.tabset}
+
+### Annual mean temperature     
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_1
+```
+
+### Mean diurnal temperature range
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_2
+```
+
+### Isothermality
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_3
+```
+
+### Temperature seasonality (standard deviation)        
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_4
+```
+
+### Maximum temperature of warmest month                
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_5
+```
+
+### Minimum temperature of coldest month                
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_6
+```
+
+### Temperature annual range                            
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_7
+```
+
+### Mean temperature of wettest quarter                 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_8
+```
+
+### Mean temperature of driest quarter
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_9
+```
+
+### Mean temperature of warmest quarter                 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_10
+```
+
+### Mean temperature of coldest quarter                 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_11
+```
+
+## Precipitation related variables {.tabset}
+
+### Annual precipitation                                
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_12
+```
+
+### Precipitation of wettest month                      
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_13
+```
+
+### Precipitation of driest month                      
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_14
+```
+
+### Precipitation seasonality (coefficient of variation)
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_15
+```
+
+### Precipitation of wettest quarter                   
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_16
+```
+
+### Precipitation of driest quarter                    
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_17
+```
+
+### Precipitation of warmest quarter                   
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_18
+```
+
+### Precipitation of coldest quarter                   
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$bio_19
+```
+
+## Solar Radiation, Wind, and Topography variables {.tabset}
+
+### srad                                               
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$srad
+```
+
+### vapr                                               
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$vapr
+```
+
+### wind                                              
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$wind
+```
+
+### elevation                                          
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$elevation
+```
+
+### Aspect                             
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$aspect
+```
+
+### Slope
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+plots$slope
+```
+
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+## PCA work 
+# 
+# library("factoextra")
+# library("FactoMineR")
+# 
+# # helper function  
+# visualizeAndSave <- function(pcaplot, title, subtitle, tiltX = FALSE){
+#   # more direct visualization of the plots 
+#   p1 <- ggpubr::ggpar(pcaplot,
+#                 title = title,
+#                 subtitle = subtitle,
+#                 legend.title = "Taxon Group",
+#                 legend.position = "top",
+#                 ggtheme = theme_gray()
+#                 )
+#   p1
+#   #save result 
+#   # ggexport(plotlist = p1, 
+#   #          filename = paste0("outputs/pca/july2024exports/",subtitle,".png"))
+#            # width = 1200,
+#            # height = 800,
+#            # res = 300)
+# }
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 
+# d2 <- data[,c(30, 3:28)]
+# 
+# attData <- d2 |>
+#     dplyr::mutate(Taxon = stringr::str_replace_all(string = taxon,
+#                                                          pattern = "_",
+#                                                          replace = " ")
+#   )|>
+#   dplyr::select(
+#     Taxon,
+#     "bio_01","bio_02","bio_03","bio_04","bio_05","bio_06","bio_07","bio_08",
+#     "bio_09", "bio_10","bio_11","bio_12","bio_13","bio_14","bio_15","bio_16",
+#     "bio_17","bio_18","bio_19","bio_20", "bio_21","bio_22","bio_23","bio_24",
+#     "bio_25","bio_26" 
+#   )
+# names(attData) <- c("Taxon", names$`Current title`)
+# 
+# # generate the PCA 
+# pca <- PCA(attData[,-1],scale.unit = TRUE, graph = FALSE)
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# # eigenvalues/ariance 
+# eig <- fviz_eig(pca, addlabels = TRUE, ylim = c(0, 50))
+# visualizeAndSave(pcaplot = eig,
+#                  title = "Principal Component Analysis- Eigenvalues",
+#                  subtitle = " ") |> 
+#     ggplotly(height = 800, width = 1200) 
+# 
+
+```
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+### Correlation Circle
+
+# correlation circle 
+# var <- get_pca_var(pca)
+# corCircle <- fviz_pca_var(pca, col.var = "black")
+# visualizeAndSave(pcaplot = corCircle,
+#                  title = "Principal Component Analysis - Correlation circle",
+#                  subtitle = "") |>
+#   ggplotly(height = 800, width = 1200) 
+
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# # quality of representation 
+# fviz_cos2(pca, choice = "var", axes = 1:2)+
+#   theme(axis.text.x = element_text(angle = 75))+
+#   ggtitle("Principal Component Analysis - quality of representation")
+
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# library(gridExtra)
+# # contributino of variables 
+# # Contributions of variables to PC1
+# c1 <- fviz_contrib(pca, choice = "var", axes = 1, top = 10) + 
+#   theme(axis.text.x = element_text(angle = 75))+
+#   ggtitle("Contribution of Variables Dim-1")
+# 
+# # Contributions of variables to PC2
+# c2 <- fviz_contrib(pca, choice = "var", axes = 1, top = 10) + 
+#   theme(axis.text.x = element_text(angle = 75))+
+#   ggtitle("Contribution of Variables Dim-2")
+# 
+# 
+# grid.arrange(c1, c2, ncol=2)
+
+```
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+### Ellipse
+# # pca elispe with groups 
+# pcaEllipse <- fviz_pca_ind(pca,
+#              geom.ind = "point", # show points only (nbut not "text")
+#              col.ind = attData$Taxon, # color by groups
+#              addEllipses = TRUE, # Concentration ellipses
+#              mean.point = FALSE,
+#              legend.title = "Taxon Groups"
+# )
+# visualizeAndSave(pcaplot = pcaEllipse,
+#                  title = "Principal Component Analysis - Ellipse",
+#                  subtitle = "") |>
+#   ggplotly(height = 800, width = 1200) 
+
+```
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 
+# 
+# # Add confidence ellipses
+# pcaEllipseConfidence <-fviz_pca_ind(pca, 
+#              geom.ind = "point", 
+#              col.ind = attData$Taxon, 
+#              addEllipses = TRUE, 
+#              ellipse.type = "confidence",
+#              mean.point = FALSE,
+#              legend.title = "Groups"
+# )
+# visualizeAndSave(pcaplot = pcaEllipseConfidence,
+#                  title = "Principal Component Analysis - Confidence Ellipse",
+#                  subtitle = "Confidence Ellipse")|>
+#   ggplotly(height = 800, width = 1200) 
+```
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 
+# # Convex hull
+# convexHull <- fviz_pca_ind(pca,
+#                            geom.ind = "point",
+#              col.ind = attData$Taxon, # color by groups
+#              addEllipses = TRUE,
+#              ellipse.type = "convex",
+#              legend.title = "Groups"
+# )
+# visualizeAndSave(pcaplot = convexHull,
+#                  title = "Principal Component Analysis - Convex Hull Ellipse",
+#                  subtitle = "")|>
+#   ggplotly(height = 800, width = 1200) 
+```
+
+
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+### Biplot
+# # biplot with elipse 
+# biplot <- fviz_pca_biplot(pca, 
+#                 col.ind = attData$Taxon,
+#                 addEllipses = TRUE, 
+#                 label = "var",
+#                 col.var = "black",
+#                 repel = TRUE,
+#                 legend.title = "Species Group") 
+# 
+# visualizeAndSave(pcaplot = biplot,
+#                  title = "Principal Component Analysis - Biplot",
+#                  subtitle = "" )|>
+#   ggplotly(height = 800, width = 1200) 
+
+
+```
+
+
+
+## Definitions of conservation gap analysis scores
+
+### Sampling Representativeness Score (SRS)
+
+***Ex situ***: The Sampling Representativeness Score *ex situ* (SRS ex situ) calculates the ratio of germplasm accessions (G) available in *ex situ* repositories to reference/voucher/herbarium (H) records for each taxon, making use of all compiled records irrespective of whether they include coordinates.
+
+***In situ***: The Sampling Representativeness Score *in situ* (SRS in situ) calculates the proportion of all occurrences of a taxon within its native range that fall within a protected area.
+
+### Geographic Representativeness Score (GRS)
+
+***Ex situ***: The Geographic Representativeness Score *ex situ* (GRS ex situ) uses 50-km-radius buffers created around each G collection coordinate point to estimate geographic areas already well collected within the potential distribution models of each taxon and then calculates the proportion of the potential distribution model covered by these buffers.
+
+***In situ***: The Geographic Representativeness Score *in situ* (GRS in situ) compares the area (in km^2^) of the potential distribution model located within protected areas versus the total area of the model.
+
+### Ecological Representativeness Score (ERS)
+
+***Ex situ***: The Ecological Representativeness Score *ex situ* (ERS ex situ) calculates the proportion of terrestrial ecoregions represented within the G buffered areas out of the total number of ecoregions occupied by the potential distribution model. 
+
+***In situ***: The Ecological Representativeness Score *in situ* (ERS in situ) calculates the proportion of ecoregions encompassed within the range of the taxon located inside protected areas to the ecoregions encompassed within the total area of the potential distribution model.
+
+### Final Conservation Score (FCS)
+
+***Ex situ***: The Final Conservation Score *ex situ* (FCS ex situ) was derived by calculating the average of the three *ex situ* conservation metrics.
+
+***In situ***: The Final Conservation Score *in situ* (FCS in situ) was derived by calculating the average of the three *in situ* conservation metrics.
+
+**FCSc-mean**: The Combined Final Conservation Score (FCSc-mean) was calculated for each taxon by averaging its final FCS ex situ and FCS in situ scores. 
+
+Taxa were further categorized with regard to the two conservation strategies as well as in combination, with Urgent Priority (UP) for further conservation action assigned when FCS < 25, High Priority (HP) assigned when 25 ≤ FCS < 50, Medium Priority (MP) when 50 ≤ FCS < 75, and Low Priority (LP) when FCS ≥75.
+
+## Definitions of occurrence data categories
+
+**Occurrences**: The total number of observations and *ex situ* collections records for the taxon that were evaluated for use within the study.
+
+**Occurrences with lat/long**: The total number of observations that had a valid latitude and longitude pair and were used for spatial analysis. Non-valid latitude longitude pairs included but were not limited to points not on land masses, and records with only one of the two values present.
+
+**Germplasm Records (G)**: Occurrences in which a living sample (typically a live plant or seed) is present in an *ex situ* conservation system (i.e., botanical garden, seed bank, genebank, etc.).
+
+
+**Reference/voucher Records (H)**: Occurrences that have a supporting herbarium or other reference record.
+
+**Unique Data Sources**: The number of unique database sources from which occurrences of the taxon were gathered.
