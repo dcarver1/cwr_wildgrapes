@@ -261,7 +261,8 @@ g1 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))|>
             group = "Mean Distribution Model"
             )|>
     setView(lng = -95.7190, lat = 39.976, zoom = 3)
-terra::writeRaster(x = exGap, filename = "~/trueNAS/work/cwr_wildgrapes/data/datasetsForPublication/grsEX_map.tif")
+terra::writeRaster(x = exGap, filename = "~/trueNAS/work/cwr_wildgrapes/data/datasetsForPublication/grsEX_map.tif",
+                   overwrite = TRUE)
 g1
 ```
 
@@ -345,7 +346,8 @@ in1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3))|>
             labels = c("1","","","",max(valsInGAP,na.rm = TRUE)),
             group = "Mean Distribution Model")|>
     setView(lng = -95.7190, lat = 39.976, zoom = 3)
-terra::writeRaster(x = inGap, filename = "~/trueNAS/work/cwr_wildgrapes/data/datasetsForPublication/grsIn_map.tif")
+terra::writeRaster(x = inGap, filename = "~/trueNAS/work/cwr_wildgrapes/data/datasetsForPublication/grsIn_map.tif",
+                   overwrite = TRUE)
 
 in1
 ```

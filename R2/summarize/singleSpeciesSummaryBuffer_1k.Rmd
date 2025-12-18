@@ -39,13 +39,14 @@ if(testing == TRUE){
 printSpecies <- stringr::str_replace_all(string = species, pattern = "_", replacement = " ")
 ```
 
-# `r printSpecies`
+# `r paste0('*', printSpecies, '*')`
 
 <br>
 
 ## Occurrence records    
 
-The table below shows a summary of the occurrence records for the taxon. A record “with Lat/Long” is one that has a complete set of latitude and longitude values associated with it, which could be used for distribution modeling and the conservation gap analysis. In preparation for the conservation gap analyses, we classified each record based on whether it was an existing ex situ germplasm sample from a genebank, botanic garden, or other repository (labeled G, as most records were from genebanks), or a reference observation/voucher specimen (labeled H, as most of these records were from herbaria).
+The table below shows a summary of the occurrence records for the taxon. A record “with Lat/Long” is one that has a complete set of latitude and longitude values associated with it, which could be used for distribution modeling and the conservation gap analysis. In preparation for the conservation gap analyses, we classified each record based on whether it was an existing *ex situ* germplasm sample from a genebank, botanic garden, or other repository (labeled G, as most records were from genebanks), or a reference observation/voucher specimen (labeled H, as most of these records were from herbaria).
+
 
 ```{r  echo=FALSE, message=FALSE, warning=FALSE}
 # alter Counts data for better visualizations
@@ -121,8 +122,7 @@ webMecOccData <- vect(st_transform(occData, crs = "epsg:3857")) # need to change
 
 if(data$NoModel == FALSE){
     # predicted presence map
-  threshold <- data$binaryMap  |> 
-    resampleRast()
+  threshold <- data$binaryMap
   
   thresColor <- colorNumeric(
     palette = c("#cfcccc70", "#45B320"),
@@ -133,8 +133,7 @@ if(data$NoModel == FALSE){
   # generate a threshold mask
   mask1 <- ifel(test = threshold == 1, yes = 1, no = NA)
   # protected area
-  protectedArea <- data$protectedArea|> 
-    terra::aggregate(fact = resampleFactor, fun = "max")
+  protectedArea <- data$protectedArea
   
   protectColor <-
     colorNumeric(
@@ -278,6 +277,7 @@ if (class(gBuf) != "character" & data$fcsex$GRS != 0) {
   #ecoregions
   ## grab the missing ecoregions
   missingEcos <- data$ersex$missingEcos |> unlist()
+  
   ## filter the full set
   ecoReg <- data$naturalArea |>
     dplyr::filter(ECO_ID_U %in% missingEcos) |>
@@ -445,8 +445,7 @@ m3
 
 #  *Ex situ* conservation gap analysis 
 
-The table below shows the *ex situ* conservation gap analysis summary. The sampling representativeness score *ex situ* (SRS ex situ) calculates the ratio of germplasm accessions (G) available in *ex situ* repositories to reference/voucher (H) records for each taxon, making use of all compiled records, regardless of whether they include coordinates. The geographical representativeness score *ex situ* (GRS ex situ) uses buffers of 50 km radius created around each G collection coordinate point to estimate geographic areas already well collected within the distribution models of each taxon, and then calculates the proportion of the distribution model covered by these buffers. The ecological representativeness score *ex situ* (ERS ex situ) calculates the proportion of terrestrial ecoregions represented within the G buffered areas out of the total number of ecoregions occupied by the distribution model. A final conservation score for *ex situ* (FCS ex situ) was derived by calculating the average of the three *ex situ* conservation metrics. All of the conservation metrics are on a scale from 0-100, with 0 = poor state of conservation and 100 = comprehensive conservation. The FCS *ex situ* is used to categorize species, with urgent priority (UP) for further conservation action assigned when FCS ex situ < 25, high priority (HP) where 25 ≤ FCS ex situ < 50, medium priority (MP) where 50 ≤ FCS ex situ < 75, and low priority (LP) for taxa whose FCS ex situ ≥75
-
+The table below shows the *ex situ* conservation gap analysis summary. The Sampling Representativeness Score *ex situ* (SRS ex situ) calculates the ratio of germplasm accessions (G) available in *ex situ* repositories to reference/voucher (H) records for each taxon, making use of all compiled records, regardless of whether they include coordinates. The Geographical Representativeness Score *ex situ* (GRS ex situ) uses buffers of 50 km radius created around each G collection coordinate point to estimate geographic areas already well collected within the distribution models of each taxon, and then calculates the proportion of the distribution model covered by these buffers. The Ecological Representativeness Score *ex situ* (ERS ex situ) calculates the proportion of terrestrial ecoregions represented within the G buffered areas out of the total number of ecoregions occupied by the distribution model. A Final Conservation Score for *ex situ* (FCS ex situ) was derived by calculating the average of the three *ex situ* conservation metrics. All of the conservation metrics are on a scale from 0-100, with 0 = poor state of conservation and 100 = comprehensive conservation. The FCS ex situ is used to categorize species, with urgent priority (UP) for further conservation action assigned when FCS ex situ < 25, high priority (HP) where 25 ≤ FCS ex situ < 50, medium priority (MP) where 50 ≤ FCS ex situ < 75, and low priority (LP) for taxa whose FCS ex situ ≥75.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 exCounts <- data$countsData |> 
@@ -486,7 +485,7 @@ DT::datatable(exTables,
 
 The GRS ex situ map feature shows the potential distribution model, with previous *ex situ* germplasm collection points surrounded by a 50 km buffer overlaid. Only germplasm (G) points are displayed on the map.
 
-The ERS ex situ map feature shows ecoregions within the potential distribution model from which no ex situ germplasm collections have been made. The ecoregion extent has been clipped to be within the potential distribution model of the taxon.There are many cases where the ecoregion area within the potential distribution model extent is very small (e.g., less than 5 cells). Utilize the “All ecoregions” layer and the ERS ex situ legend to help locate these areas.
+The ERS ex situ map feature shows ecoregions within the potential distribution model from which no *ex situ* germplasm collections have been made. The ecoregion extent has been clipped to be within the potential distribution model of the taxon. There are many cases where the ecoregion area within the potential distribution model extent is very small (e.g., less than 5 cells). Utilize the “All ecoregions” layer and the ERS ex situ legend to help locate these areas.
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -559,7 +558,7 @@ if(exTables$`Total G with coordinates` == 0){
                    project = FALSE)|>
       leaflet::addLegend(colors = ecoReg$color,
                 group = "ERS ex situ",
-                labels = ecoReg$ECO_NAME) |>
+                labels = ecoReg$ECO_NAME)|>
       # Outline of all ecoregions
       addPolygons(
         data = allEcos,
@@ -599,12 +598,10 @@ ex3
 
 <br>
 
-### Ex situ conservation ecoregions table
+### *Ex situ* conservation ecoregions table
 
 
-The table below shows all the ecoregions utilized within the study.
-
-The column ERS ex situ gap ecoregion denotes (True) if an ecoregion overlaps with the potential distribution model but is farther than 50 km from any ex situ conservation occurrence, and is thus considered a gap in ex situ conservation
+The table below shows all the ecoregions overlapping with the distribution model of the taxon. The column ERS ex situ gap ecoregion denotes (true) if an ecoregion overlaps with the potential distribution model but is farther than 50 km from any *ex situ* conservation occurrence, and is thus considered a gap in *ex situ* conservation.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -663,9 +660,10 @@ DT::datatable(eco2,
 <br>
 <br>
 
+
 # *In situ* conservation gap analysis
 
-The table below shows the *in situ* conservation gap analysis summary. The sampling representativeness score *in situ* (SRS in situ) calculates the proportion of all occurrences of a taxon within its predicted distribution that fall within a protected area. The geographical representativeness score *in situ* (GRS in situ) compares the area (in km2) of the potential distribution model located within protected areas versus the total area of the model. The ecological representativeness score *in situ* (ERS in situ) calculates the proportion of ecoregions encompassed within the range of the taxon located inside protected areas to the ecoregions encompassed within the total area of the potential distribution model. A final conservation score for *in situ* (FCS in situ) was derived by calculating the average of the three *in situ* conservation metrics. All of the conservation metrics are on a scale from 0-100, with 0 = poor state of conservation and 100 = comprehensive conservation. The FCS in situ is used to categorize taxa, with urgent priority (UP) for further conservation action assigned when FCS in situ < 25, high priority (HP) where 25 ≤ FCS in situ < 50, medium priority (MP) where 50 ≤ FCS in situ < 75, and low priority (LP) for taxa whose FCS in situ ≥75.
+The table below shows the *in situ* conservation gap analysis summary. The Sampling Representativeness Score *in situ* (SRS in situ) calculates the proportion of all occurrences of a taxon within its predicted distribution that fall within a protected area. The Geographical Representativeness Score *in situ* (GRS in situ) compares the area (in km^2^) of the potential distribution model located within protected areas versus the total area of the model. The Ecological Representativeness Score *in situ* (ERS in situ) calculates the proportion of ecoregions encompassed within the range of the taxon located inside protected areas to the ecoregions encompassed within the total area of the potential distribution model. A Final Conservation Score for *in situ* (FCS in situ) was derived by calculating the average of the three *in situ* conservation metrics. All of the conservation metrics are on a scale from 0-100, with 0 = poor state of conservation and 100 = comprehensive conservation. The FCS in situ is used to categorize taxa, with urgent priority (UP) for further conservation action assigned when FCS in situ < 25, high priority (HP) where 25 ≤ FCS in situ < 50, medium priority (MP) where 50 ≤ FCS in situ < 75, and low priority (LP) for taxa whose FCS in situ ≥75.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -732,11 +730,12 @@ DT::datatable(inTables,
 <br>
 <br>
 
+
 ## Map of *in situ* conservation gap analysis measures
 
 <br>
 
-The SRS in situ map feature shows occurrences within the potential distribution that are outside of protected areas. Values are summarized by count per cell. The GRS in situ map feature shows the potential distribution, with distribution occurring within existing protected areas in purple and that outside of protected areas in green. The ERS in situ map features shows ecoregions within the potential distribution model that have no protected areas.There are many cases where the ecoregion area within the potential distribution model extent is very small (e.g., less than 5 cells). Utilize the “All ecoregions” layer and the ERS in situ legend to help locate these areas.
+The SRS in situ map feature shows occurrences within the potential distribution that are outside of protected areas. Values are summarized by count per cell. The GRS in situ map feature shows the potential distribution, with distribution occurring within existing protected areas in purple and that outside of protected areas in green. The ERS in situ map features shows ecoregions within the potential distribution model that have no protected areas. There are many cases where the ecoregion area within the potential distribution model extent is very small (e.g., less than 5 cells). Utilize the “All ecoregions” layer and the ERS in situ legend to help locate these areas.
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -836,12 +835,7 @@ in3
 
 ### *In situ* conservation ecoregions table
 
-The table below shows all the ecoregions utilized within the study.
-
-
-The column ‘ERS in situ gap ecoregion denotes (TRUE) if an ecoregion overlaps with the potential distribution model but none of that area is within a protected area.
-
-
+The table below shows all the ecoregions overlapping with the distribution model of the taxon. The column ERS in situ gap ecoregion denotes (true) if an ecoregion overlaps with the potential distribution model but none of that area is within a protected area, and is thus considered a gap in *in situ* conservation.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # All ecoregions considered
@@ -882,9 +876,10 @@ DT::datatable(eco3,
 
 <br>
 
+
 # Combined conservation gap analysis
 
-This table displays all conservation gap analysis scores, providing a comparison of the ex situ and in situ scores
+The table below displays all conservation gap analysis scores, providing a comparison of the *ex situ* and *in situ* conservation scores.
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='right',out.width="100%"}
 exTable <- data$fcsex|>
   dplyr::mutate(across(c('ID'), str_replace_all, pattern = "_", replacement = " "))
@@ -926,7 +921,7 @@ DT::datatable(finalTable,
 
 ## Conservation scores 
 
-This figure displays all conservation gap analysis scores, providing a comparison of the ex situ and in situ scores
+The figure below displays all conservation gap analysis scores, providing a comparison of the *ex situ* and *in situ* conservation scores.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='right',out.width="100%"}
 d2 <- rbind(data$fcsex, data$fcsin) |>
@@ -986,27 +981,27 @@ plot_ly(d3,
 
 ### Sampling Representativeness Score (SRS)
 
-**Ex situ**: The Sampling Representativeness Score *ex situ* (SRS ex situ) calculates the ratio of germplasm accessions (G) available in *ex situ* repositories to reference/voucher (H) records for each taxon, making use of all compiled records irrespective of whether they include coordinates.
+***Ex situ***: The Sampling Representativeness Score *ex situ* (SRS ex situ) calculates the ratio of germplasm accessions (G) available in *ex situ* repositories to reference/voucher/herbarium (H) records for each taxon, making use of all compiled records irrespective of whether they include coordinates.
 
-**In situ**: The Sampling Representativeness Score *in situ* (SRS in situ) calculates the proportion of all occurrences of a taxon within its native range that fall within a protected area.
+***In situ***: The Sampling Representativeness Score *in situ* (SRS in situ) calculates the proportion of all occurrences of a taxon within its native range that fall within a protected area.
 
 ### Geographic Representativeness Score (GRS)
 
-**Ex situ**: The Geographic Representativeness Score *ex situ* (GRS ex situ) uses 50-km-radius buffers created around each G collection coordinate point to estimate geographic areas already well collected within the potential distribution models of each taxon and then calculates the proportion of the potential distribution model covered by these buffers.
+***Ex situ***: The Geographic Representativeness Score *ex situ* (GRS ex situ) uses 50-km-radius buffers created around each G collection coordinate point to estimate geographic areas already well collected within the potential distribution models of each taxon and then calculates the proportion of the potential distribution model covered by these buffers.
 
-**In situ**: The Geographic Representativeness Score *in situ* (GRS in situ) compares the area (in km2) of the potential distribution model located within protected areas versus the total area of the model.
+***In situ***: The Geographic Representativeness Score *in situ* (GRS in situ) compares the area (in km^2^) of the potential distribution model located within protected areas versus the total area of the model.
 
 ### Ecological Representativeness Score (ERS)
 
-**Ex situ**: The Ecological Representativeness Score *ex situ* (ERS ex situ) calculates the proportion of terrestrial ecoregions represented within the G buffered areas out of the total number of ecoregions occupied by the potential distribution model. 
+***Ex situ***: The Ecological Representativeness Score *ex situ* (ERS ex situ) calculates the proportion of terrestrial ecoregions represented within the G buffered areas out of the total number of ecoregions occupied by the potential distribution model. 
 
-**In situ**: The Ecological Representativeness Score *in situ* (ERS in situ) calculates the proportion of ecoregions encompassed within the range of the taxon located inside protected areas to the ecoregions encompassed within the total area of the potential distribution model. 
+***In situ***: The Ecological Representativeness Score *in situ* (ERS in situ) calculates the proportion of ecoregions encompassed within the range of the taxon located inside protected areas to the ecoregions encompassed within the total area of the potential distribution model.
 
 ### Final Conservation Score (FCS)
 
-**Ex situ**: The Final Conservation Score *ex situ* (FCS ex situ) was derived by calculating the average of the three *ex situ* conservation metrics.
+***Ex situ***: The Final Conservation Score *ex situ* (FCS ex situ) was derived by calculating the average of the three *ex situ* conservation metrics.
 
-**In situ**: The Final Conservation Score *in situ* (FCS in situ) in was derived by calculating the average of the three *in situ* conservation metrics.
+***In situ***: The Final Conservation Score *in situ* (FCS in situ) was derived by calculating the average of the three *in situ* conservation metrics.
 
 **FCSc-mean**: The Combined Final Conservation Score (FCSc-mean) was calculated for each taxon by averaging its final FCS ex situ and FCS in situ scores. 
 
@@ -1014,9 +1009,9 @@ Taxa were further categorized with regard to the two conservation strategies as 
 
 ## Definitions of occurrence data categories
 
-**Occurrences**: The total number of observations and ex situ collections records for the taxon that were evaluated for use within the study.
+**Occurrences**: The total number of observations and *ex situ* collections records for the taxon that were evaluated for use within the study.
 
-**Occurrences with lat/long**: The total number of observations that had a valid latitude and longitude pair and were used for spatial analysis. Non valid latitude longitude pairs included but were not limited to points not on land masses, and records with only one of the two values present.
+**Occurrences with lat/long**: The total number of observations that had a valid latitude and longitude pair and were used for spatial analysis. Non-valid latitude longitude pairs included but were not limited to points not on land masses, and records with only one of the two values present.
 
 **Germplasm Records (G)**: Occurrences in which a living sample (typically a live plant or seed) is present in an *ex situ* conservation system (i.e., botanical garden, seed bank, genebank, etc.).
 
@@ -1024,5 +1019,7 @@ Taxa were further categorized with regard to the two conservation strategies as 
 **Reference/voucher Records (H)**: Occurrences that have a supporting herbarium or other reference record.
 
 **Unique Data Sources**: The number of unique database sources from which occurrences of the taxon were gathered.
+
+
 
 

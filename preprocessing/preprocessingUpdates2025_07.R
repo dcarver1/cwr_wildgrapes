@@ -34,7 +34,7 @@ source("preprocessing/functions/preprocessing07_2025Functions.R")
 # call in specific require functions that were not altered
 source("preprocessing/functions/process_gbif.R")
 source("preprocessing/functions/helperFunctions.R")
-
+source("preprocessing/functions/process_bg.R")
 
 # global variables  -------------------------------------------------------
 standardColumnNames <- c(
@@ -102,12 +102,13 @@ single$institutionCode <- "MBG"
 jun <- bind_rows(jun, single)
 # write out data
 write_csv(x = jun, file = "data/processed_occurrence/jun_072025.csv")
-
+# Vitis rubriflora - 4 
 
 # processing Mexico accessions  -------------------------------------------
 mex <- processMex()
 # write out data
 write_csv(x = mex, file = "data/processed_occurrence/mexicoRecords_082025.csv")
+
 
 
 # update the botanical garden dataset
@@ -132,6 +133,9 @@ write_csv(x = gen, file = "data/processed_occurrence/genesys_072025.csv")
 df <- readAndBind(run = TRUE) |>
   dplyr::select(-`Collecting number`)
 # martineziana present
+# Vitis rubriflora - 4 
+
+
 
 # drop specific datasets based on source  ---------------------------------
 df <- df |>
@@ -150,6 +154,8 @@ df <- df |>
 
 View(df)
 # martineziana present
+# rubriflora - 4
+
 
 # Standardize names ( genus, species)  ------------------------------------
 source("preprocessing/functions/standardizeNames.R")
@@ -157,6 +163,7 @@ source("preprocessing/functions/standardizeNames.R")
 ## preforms text check steps. Structure, capilatization, etc
 df1 <- standardizeNames(df)
 # martineziana present
+# rubriflora - 4 
 
 # species filter and synonym check  ---------------------------------------
 source("preprocessing/functions/speciesStandardization.R")
@@ -165,6 +172,7 @@ source("preprocessing/functions/speciesStandardization.R")
 datasets <- speciesCheck(data = df1, synonymList = vitis2)
 df2 <- datasets$includedData
 # martineziana present
+# rubriflora - 4 
 
 novogranatensis <- df2[df2$taxon == "Vitis novogranatensis", ]
 # export the dataset to be used in the SRSex
@@ -182,16 +190,20 @@ write_csv(
   x = df2,
   file = "data/processed_occurrence/allEvaluated_data072025.csv"
 )
+# rubriflora - 4 
 write_csv(
   x = df2_a,
   file = "data/processed_occurrence/allEvaluated_data_removedDups_072025.csv"
 )
+# rubriflora - 4 
+
 
 # Checks on the lat lon  --------------------------------------------------
 
 # Lat long based quality checks  ------------------------------------------
 source("preprocessing/functions/checksOnLatLong.R")
 d3 <- checksOnLatLong(df2)
+
 
 ## grab the G records with no lat lon values
 d3_g <- d3$countycheck |>
@@ -211,6 +223,7 @@ valLatLon <- d3$validLatLon
 
 # add the G records with no lat lon back to the modeling data---------------------------------------
 d6 <- valLatLon |> bind_rows(d3_g)
+# rubriflora -4 
 
 # pull out single and re add
 ## don't know what this is maybe the single object from above
@@ -221,62 +234,20 @@ single$longitude <- as.numeric(single$longitude)
 
 # export data 2023-10-24 --- All g points included and duplicates between sources are removed.
 
-#more duplicate checks
-d <- d6[!duplicated(d6[, c("taxon", "databaseSource", "sourceUniqueID")]), ]
-View(d)
-
-# # conflict between gbif and sienet
-# d1 <- d |>
-#   dplyr::filter(databaseSource  %in% c("GBIF")) |>
-#   tidyr::separate(
-#       col = localityInformation,               # The column to split
-#       into = c("temp", "gbifLoc"),    # The names for the new columns
-#       sep = " -- " ,
-#       remove = FALSE # The separator to split on
-#     )
-#
-# d2 <- d |>
-#   dplyr::filter(!databaseSource  %in% c("GBIF"))
-
-# row by row exclusion
-# for(row in 1:nrow(d2)){
-#   print(row)
-#
-#   feat <- d2[row,]
-#   taxon <- feat$taxon
-#   lat <- feat$latitude
-#   lon <- feat$longitude
-#   loc <- feat$localityInformation
-#   year <- feat$yearRecorded
-#
-#   # test for presence in gbif
-#   test <- d1 |>
-#     dplyr::filter(
-#       taxon == taxon,
-#       latitude == lat,
-#       longitude == lon,
-#       gbifLoc == loc,
-#       yearRecorded == year
-#     )
-#   if(nrow(test) >0 ){
-#     print(paste0("removed", row))
-#     d1 <- d1[!d1$index == test$index, ]
-#   }
-# }
-
-# bind the data back in
-# d7 <- bind_rows(d1,d2)
+#more duplicate checks - can
+## many datasets do not have the sources UniqueID 
+s2 <- d6[!is.na(d6$sourceUniqueID), ]
+s3 <- d6[is.na(d6$sourceUniqueID), ]
+d <- s2[!duplicated(s2[, c("taxon", "databaseSource", "sourceUniqueID")]), ]
+# add back in the features with no sourceUniqueID 
+d7 <- bind_rows(d, s3)
 
 # remove NA taxon
-d8 <- d |>
+d8 <- d7 |>
   dplyr::filter(!is.na(taxon))
 
 
-write_csv(x = d8, file = "data/processed_occurrence/model_data122025.csv")
-
-
-t1 <- read_csv("temp/allVitisData082025.csv")
-
+t1 <- read_csv("data/processed_occurrence/model_data122025.csv")
 # get counts per taxon and compare to see what needs alterations
 prevCounts <- t1 |>
   dplyr::group_by(taxon) |>
@@ -295,4 +266,74 @@ joined <- dplyr::left_join(newCounts, prevCounts, by = "taxon") |>
     changeInNumber = newCount - previousCount
   )
 
-write_csv(joined, "temp/changeInCounts.csv")
+write_csv(joined, "temp/changeInCounts12_16.csv")
+
+# testing 
+t1 <- d8 |>
+  dplyr::filter(taxon == "Vitis x doaniana")
+# drop some columns and test for duplicated matches 
+t2 <- d8|>
+  dplyr::select(
+    -c(index,recordID,validLat,validLon,validLatLon)
+  ) 
+all_duplicates <- duplicated(t2) | duplicated(t2, fromLast = TRUE)
+t3 <- t2[!all_duplicates, ]
+
+
+newCounts <- t3 |>
+  dplyr::group_by(taxon) |>
+  dplyr::count(sort = TRUE) |>
+  dplyr::select(newCount = n)
+
+
+joined <- dplyr::left_join(newCounts, prevCounts, by = "taxon") |>
+  dplyr::mutate(
+    changeInNumber = newCount - previousCount
+  )
+
+View(joined)
+
+# testing duplicaiton between huerto and david 
+d9 <- t3 |>
+  dplyr::filter(databaseSource %in% c("Huerta-Acosta publication", "UC Davis Grape Breeding Collection"))|>
+  dplyr::distinct(taxon, sourceUniqueID, .keep_all = TRUE)
+
+d10 <- t3 |>
+  dplyr::filter(!databaseSource %in% c("Huerta-Acosta publication", "UC Davis Grape Breeding Collection"))
+
+d11 <- bind_rows(d9, d10) |>
+  dplyr::arrange(taxon)|>
+  dplyr::mutate(
+    index = row_number()
+  )
+
+# remove a rotundifolia occurrence 
+d11a <- d11 |>
+  dplyr::filter(latitude == 82.233333) |>
+  select(index)
+
+d11 <- d11 |>
+  filter(index != d11a$index)
+write_csv(x = d11, file = "data/processed_occurrence/model_data20251216.csv")
+
+d11 |>
+  dplyr::filter(taxon == "Vitis rupestris")|>
+  dplyr::group_by(type)|>
+  count()
+
+
+newCounts <- d11 |>
+  dplyr::group_by(taxon) |>
+  dplyr::count(sort = TRUE) |>
+  dplyr::select(newCount = n)
+
+
+joined <- dplyr::left_join(newCounts, prevCounts, by = "taxon") |>
+  dplyr::mutate(
+    changeInNumber = newCount - previousCount
+  )
+
+View(joined)
+
+
+

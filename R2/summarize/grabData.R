@@ -8,6 +8,7 @@ grabData <- function(
   fcsex,
   fcsin,
   evalTable,
+  aucMetrics,
   g_bufferCrop,
   thres,
   projectsResults,
@@ -70,6 +71,7 @@ grabData <- function(
       projectedResults = projectsResults,
       binaryMap = thres,
       modelEvaluation = evalTable,
+      aucMetrics = aucMetrics,
       ersex = ersex,
       ersin = ersin,
       fcsCombined = fcsCombined,
@@ -91,6 +93,7 @@ grabData <- function(
       projectedResults = NA,
       binaryMap = NA,
       modelEvaluation = NA,
+      aucMetrics = NA,
       ersex = NA,
       ersin = NA,
       fcsCombined = fcsCombined,
@@ -102,5 +105,6 @@ grabData <- function(
       modelDataCounts = NA
     )
   }
+  
   return(reportData)
 }

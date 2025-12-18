@@ -32,7 +32,7 @@ r2 <- r1[grepl(pattern = "prj_threshold.tif", x = r1)]
 # load in data for species
 s2 <- r1[grepl(pattern = "spatialData.gpkg", x = r1)]
 
-speciesData <- read_csv("temp/allVitisData082025.csv")
+speciesData <- read_csv("data/processed_occurrence/model_data20251216.csv")
 species <- sort(unique(speciesData$taxon))
 
 # org for gap r

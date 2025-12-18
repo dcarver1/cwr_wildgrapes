@@ -139,11 +139,6 @@ figure2  # might
 
 ::::
 
-
-
-
-<br>
-<br>
 <br>
 
 ### Conservation gap analysis results table
@@ -184,7 +179,7 @@ c2 <- c1 |>
 DT::datatable(c2,
               rownames = FALSE,
               class = "compact",
-              options = list(pageLength = 10,
+              options = list(pageLength = 50,
                              scrollX='400px'),
               filter = "top")
 ```
@@ -226,10 +221,6 @@ richness1
 
 The figure above displays the predicted taxonomic richness map for the assessed taxa, combining 36 potential distribution models. Darker colors indicate greater numbers of taxa potentially overlapping in the same areas.  
 
-<br>
-<br>
-<br>
-
 ## Geographic *ex situ* gap richness
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
@@ -264,8 +255,6 @@ g1
 ```
 
 The figure above displays predicted collecting priority hotspots to resolve geographic gaps in current *ex situ* conservation. The map displays richness of geographic areas within the potential distributions of the assessed taxa that have not been previously collected for *ex situ* conservation (i.e., areas not within 50 km of an existing germplasm collection location). Darker colors indicate greater numbers of taxa potentially overlapping in the same areas.
-<br>
-<br>
 <br>
 
 
@@ -304,10 +293,6 @@ g2
 <br>
 
 The figure above displays predicted collecting priority hotspots to resolve ecological gaps in current *ex situ* conservation. The map displays richness of ecoregions within the potential distributions of the assessed taxa that have not been previously collected for *ex situ* conservation. Darker colors indicate greater numbers of taxa potentially overlapping in the same areas.
-
-<br>
-<br>
-<br>
 
 ## Geographic *in situ* gap richness
 
@@ -349,8 +334,6 @@ in1
 ```
 <br>
 The figure above displays predicted habitat protection priorities to resolve geographic gaps in current *in situ* conservation. The map displays richness of geographic areas within the potential distributions of the assessed taxa that are outside of current protected areas. Darker colors indicate greater numbers of taxa potentially overlapping in the same areas.
-<br>
-<br>
 
 
 ### Protected areas table
@@ -377,9 +360,6 @@ DT::datatable(pc1,
 ```
 
 <br>
-<br>
-<br>
-
 
 ## Ecological *in situ* gap richness
 
@@ -415,9 +395,6 @@ g3
 <br>
 
 The figure above displays predicted habitat protection priorities to resolve ecological gaps in current *in situ* conservation. The map displays richness of ecoregions within the potential distributions of the assessed taxa that are not represented at all within current protected areas within those potential distributions. Darker colors indicate greater numbers of taxa potentially overlapping in the same areas.
-
-<br>
-<br> 
 
 ## Definitions of conservation gap analysis scores
 
