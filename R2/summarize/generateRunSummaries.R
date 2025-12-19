@@ -15,9 +15,9 @@ generateRunSummaries <- function(
   # storing summaries data in run folders
   dir2 <- paste0(dir1, "/", runVersion)
   # generate summary of all the models --------------------------------------
-  path1 <- paste0(dir2, "/speciesrichness.tif")
+  path1 <- paste0(dir2, "/speciesrichness_1km.tif")
   path2 <- paste0(dir2, "/speciesUsed_speciesrichness.csv")
-  path3 <- paste0(dir2, "/ga50_speciesrichness.tif")
+  path3 <- paste0(dir2, "/ga50_speciesrichness_1km.tif")
   path4 <- paste0(dir2, "/ga50speciesUsed_speciesrichness.csv")
   path5 <- paste0(dir2, "/protectedAreaSpeciesRichness.csv")
   path6 <- paste0(dir2, "/ersexRichness.tif")
@@ -25,7 +25,7 @@ generateRunSummaries <- function(
   path8 <- paste0(dir2, "/ersinRichness.tif")
   path9 <- paste0(dir2, "/ersin_speciesUsed_Richness.tif")
   path10 <- paste0(dir2, "/protectedAreaSpeciesPointRichness.csv")
-  path11 <- paste0(dir2, "/protectedAreaSpeciesRasterRichness.csv")
+  path11 <- paste0(dir2, "/protectedAreaSpeciesRasterRichness_1km.csv")
 
   # Testing the presense of species in the summary maps
   t1 <- read_csv(path10)
@@ -51,11 +51,11 @@ generateRunSummaries <- function(
       # generate export name
       export <- sub("\\.tif$", "_5.tif", file)
       # resample if needed
-      # if(!file.exists(export)){
-      print(file)
-      r2 <- resampleRast(rast = terra::rast(file))
-      terra::writeRaster(x = r2, filename = export, overwrite = TRUE)
-      # }
+      if (!file.exists(export)) {
+        print(file)
+        r2 <- resampleRast(rast = terra::rast(file))
+        terra::writeRaster(x = r2, filename = export, overwrite = TRUE)
+      }
     }
   }
 
@@ -66,7 +66,7 @@ generateRunSummaries <- function(
     richness <- generateSpeciesRichnessMap(
       directory = dir1,
       runVersion = runVersion,
-      rasterFileName = "prj_threshold_5.tif"
+      rasterFileName = "prj_threshold.tif"
     )
     terra::writeRaster(
       x = richness$richnessTif,
@@ -84,7 +84,7 @@ generateRunSummaries <- function(
     ga50Richness <- generateSpeciesRichnessMap(
       directory = dir1,
       runVersion = runVersion,
-      rasterFileName = "ga50_masked_5.tif"
+      rasterFileName = "ga50_masked.tif"
     )
 
     # need to extend this file to matcht he extent of the richness image
@@ -103,9 +103,9 @@ generateRunSummaries <- function(
     ersExRichness <- generateERSRichnessMap(
       directory = dir1,
       runVersion = runVersion,
-      ersMap = "ers_ex_gaps_5.tif",
+      ersMap = "ers_ex_gaps.tif",
       species = species,
-      thresholdMap = "prj_threshold_5.tif"
+      thresholdMap = "prj_threshold.tif"
     )
     terra::writeRaster(
       x = ersExRichness$richnessTif,
@@ -146,11 +146,14 @@ generateRunSummaries <- function(
     ".gpkg"
   )
   if (!file.exists(wdpaVectExport)) {
-    wdpaVect <- wdpaVect(species = species, runVersion = runVersion)
+    # this function generate the gpkg of all the wdpa files
+    wdpaVect1 <- wdpaVect(species = species, runVersion = runVersion)
     terra::writeVector(wdpaVect, wdpaVectExport)
   } else {
-    wdpaVect <- terra::vect(wdpaVectExport)
+    wdpaVect1 <- terra::vect(wdpaVectExport)
   }
+  # not 100% what's going on here so going to read in the files directly
+  wdpa1 <- terra::vect("data/geospatial_datasets/protectedLands/wdpa_1.gpkg")
 
   if (overwrite == TRUE) {
     protectedAreaPoints(
@@ -192,7 +195,7 @@ generateRunSummaries <- function(
   ## richness
   speciesRichness <- terra::rast(path1)
   # crop to species richness
-  pro1 <- wdpaVect |>
+  pro1 <- wdpa1 |>
     terra::crop(speciesRichness)
 
   calculate_max_pixel_values <- function(speciesRichness, wdpaVect) {
