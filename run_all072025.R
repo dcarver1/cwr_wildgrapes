@@ -262,9 +262,9 @@ r2 <- s2$taxon[!s2$taxon %in% dontRun]
 # "Vitis riparia","Vitis rotundifolia"
 
 r3 <- c("Vitis jaegeriana", "Vitis rubriflora", "Vitis martineziana")
-j <- "Vitis martineziana"
+j <- "Vitis rotundifolia"
 # start of for loop -------------------------------------------------------
-for (j in s2$taxon[3]) {
+for (j in s2$taxon[4:40]) {
   # species
   # create unique path for summary HTML docs
   p1 <- paste0("data/Vitis/speciesSummaryHTML/", runVersion)
@@ -363,7 +363,7 @@ for (j in s2$taxon[3]) {
   ## associate observations with bioclim data and spatial thin
   m_data1 <- write_CSV(
     path = allPaths$allDataPath,
-    overwrite = overwrite,
+    overwrite = FALSE,
     generateModelData(
       speciesPoints = sp1,
       natArea = natArea,
@@ -372,13 +372,12 @@ for (j in s2$taxon[3]) {
     )
   )
   # exporting with type column now removing for consistenty
-  m_data <- m_data1 |>
-    dplyr::select(-type)
-  write_csv(
-    x = m_data,
-    file = paste0(allPaths$allDataPath)
-  )
-  next
+# 
+#   write_csv(
+#     x = m_data1,
+#     file = paste0(allPaths$allDataPath)
+#   )
+  # next
   # condition for at least 8 observations
   ## attempt to model the data
   if (nrow(sp1) >= 8) {
@@ -412,10 +411,10 @@ for (j in s2$taxon[3]) {
       backgroudRecords = nrow(m_data[m_data$presence == 0, ]),
       totalRecords = nrow(m_data)
     )
-    write_csv(
-      x = modelDataSummary,
-      file = paste0(allPaths$occurances, "/modelDataSummary.csv")
-    )
+    # write_csv(
+    #   x = modelDataSummary,
+    #   file = paste0(allPaths$occurances, "/modelDataSummary.csv")
+    # )
 
     ## perform variable selection
     ### something not working the export -- list object but not rendering with the write_RDS
@@ -427,10 +426,10 @@ for (j in s2$taxon[3]) {
     # had to re-export the variable selection data. I expect that I was attepting to write a list object as a csv
     message(paste0("exporting model data with variables for ", j))
     # # adding in a export for the variable selection data
-    # write_csv(x = v_data$rankPredictors, file = allPaths$variablbeSelectPath)
+    write_csv(x = v_data$rankPredictors, file = paste0("data/Vitis/",j,"/run08282025_1k/occurances/topVariablesData.csv"))
     # write_csv(x = v_data$rankPredictors, file = allPaths$allDataPath)
 
-    # next()
+    next
 
     ## prepare data for maxent model
     rasterInputs <- write_Rast(
