@@ -192,7 +192,7 @@ compileConservationData <- function(directory, runVersion, genus) {
           x0 = 0,
           x1 = 25,
           y0 = -2,
-          y1 = size1,
+          y1 = size,
           # yref = "paper",
           fillcolor = '#ffb4b3',
           layer = 'below'
@@ -202,7 +202,7 @@ compileConservationData <- function(directory, runVersion, genus) {
           x0 = 25,
           x1 = 50,
           y0 = -2,
-          y1 = size1,
+          y1 = size,
           fillcolor = '#ffd380',
           layer = 'below'
         ),
@@ -211,7 +211,7 @@ compileConservationData <- function(directory, runVersion, genus) {
           x0 = 50,
           x1 = 75,
           y0 = -2,
-          y1 = size1,
+          y1 = size,
           fillcolor = '#ffff80',
           layer = 'below'
         ),
@@ -220,7 +220,7 @@ compileConservationData <- function(directory, runVersion, genus) {
           x0 = 75,
           x1 = 100,
           y0 = -2,
-          y1 = size1,
+          y1 = size,
           fillcolor = '#a8d2a8',
           layer = 'below'
         )

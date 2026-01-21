@@ -262,9 +262,9 @@ r2 <- s2$taxon[!s2$taxon %in% dontRun]
 # "Vitis riparia","Vitis rotundifolia"
 
 r3 <- c("Vitis jaegeriana", "Vitis rubriflora", "Vitis martineziana")
-j <- "Vitis rotundifolia"
+j <- "Vitis bloodworthiana"
 # start of for loop -------------------------------------------------------
-for (j in s2$taxon[4:40]) {
+for (j in s2$taxon[c(3,7,30)]) {
   # species
   # create unique path for summary HTML docs
   p1 <- paste0("data/Vitis/speciesSummaryHTML/", runVersion)
@@ -398,6 +398,7 @@ for (j in s2$taxon[4:40]) {
     )
 
     # remove duplicated background data
+    m_data <- m_data1
     presence <- m_data[m_data$presence == 1, ]
     absence <- m_data[m_data$presence != 1, ]
     dubs <- duplicated(absence[, 2:27])
@@ -429,7 +430,7 @@ for (j in s2$taxon[4:40]) {
     write_csv(x = v_data$rankPredictors, file = paste0("data/Vitis/",j,"/run08282025_1k/occurances/topVariablesData.csv"))
     # write_csv(x = v_data$rankPredictors, file = allPaths$allDataPath)
 
-    next
+    # next
 
     ## prepare data for maxent model
     rasterInputs <- write_Rast(
@@ -444,7 +445,7 @@ for (j in s2$taxon[4:40]) {
 
     ## perform maxent model
     ### tabular data
-    sdm_results <- write_RDS(
+    sdm_result <- write_RDS(
       path = allPaths$sdmResults,
       overwrite = overwrite,
       function1 = runMaxnet(selectVars = v_data, rasterData = rasterInputs)
@@ -458,7 +459,8 @@ for (j in s2$taxon[4:40]) {
         path = allPaths$modeledRasters,
         overwrite = TRUE,
         function1 = rasterResults(sdm_results)
-      )
+      ) |>  # unwrap the list of wrapped rasters
+        lapply( terra::unwrap)
 
       # generate additional
       aucMetrics <- write_CSV(

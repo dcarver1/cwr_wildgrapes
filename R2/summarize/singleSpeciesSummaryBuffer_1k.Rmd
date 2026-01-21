@@ -338,7 +338,7 @@ if (class(gBuf) != "character" & data$fcsex$GRS != 0) {
   #   terra::rast()|>
   #   terra::aggregate(fact = resampleFactor, fun = "mean")
   # meanPal <- colorNumeric(palette = distColor,
-  grsin#                na.color = "transparent")
+  # grsin#                na.color = "transparent")
 }
 
 
@@ -899,10 +899,11 @@ finalTable <- bind_cols(exTable, inTable)|>
 
 
 # generate the combine conservation score 
-meanVal <- mean(finalTable$`Ex situ Final Conservation Score`, finalTable$`In situ Final Conservation Score`)
+meanVal <- mean(c(finalTable$`Ex situ Final Conservation Score`, finalTable$`In situ Final Conservation Score`))
 
 finalTable <- finalTable |>
   dplyr::mutate(
+    `Final Conservation Score mean` = meanVal,
     `Combined Conservation Priority` = case_when(
       meanVal <= 25 ~ "UP",
       meanVal > 25 & meanVal <= 50 ~ "HP",

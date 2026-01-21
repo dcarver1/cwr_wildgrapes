@@ -235,12 +235,18 @@ generateRunSummaries <- function(
 
     return(output)
   }
-  projectProCounts <- calculate_max_pixel_values(
-    speciesRichness = speciesRichness,
-    wdpaVect = pro1
-  )
-  # export
-  write_csv(projectProCounts, path11)
+  
+  if(!file.exists(path11) | isTRUE(overwrite)){
+    projectProCounts <- calculate_max_pixel_values(
+      speciesRichness = speciesRichness,
+      wdpaVect = pro1
+    )
+    # export
+    write_csv(projectProCounts, path11)
+  }else{
+    projectProCounts <- read_csv(path11)
+  }
+
 
   # generate conservation summary figures
   conservationSummary <- compileConservationData(
@@ -256,13 +262,11 @@ generateRunSummaries <- function(
   conservationSummary$ersExRichness <- terra::rast(path6)
   conservationSummary$ersInRichness <- terra::rast(path8)
   conservationSummary$genus <- genus
-
-  #
-
+  
   # run summary html
   try(
     rmarkdown::render(
-      input = "R2/summarize/runSummary.Rmd",
+      input = "R2/summarize/runSummary_editsSGCK.Rmd",
       output_format = "html_document",
       output_dir = paste0(dir1, "/"),
       output_file = paste0(runVersion, "_Summary.html"),

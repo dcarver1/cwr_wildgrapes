@@ -1,5 +1,5 @@
 ---
-title: Genus/genepool level visualization of ecogeographic characteristics of taxa
+title: Ecogeographic characterization summary
 author: Daniel P. Carver, Colin K. Khoury, Sarah Gora
 output:
   html_document:
@@ -24,7 +24,20 @@ if(isTRUE(testing)){
   names <- inputData$names
 }
 
+# need to include the intraspecific data as part of the aestivalis and cinerea, going to just duplicated these records and rename the taxa... 
+aestivalis <- c("Vitis aestivalis var. aestivalis", "Vitis aestivalis var. bicolor")
+cinerea <- c("Vitis cinerea var. cinerea","Vitis cinerea var. tomentosa")
 
+# pull records 
+a1 <- data |> 
+  dplyr::filter(taxon %in% aestivalis) |>
+  dplyr::mutate(taxon = "Vitis aestivalis")
+c1 <- data |> 
+  dplyr::filter(taxon %in% cinerea) |>
+  dplyr::mutate(taxon = "Vitis cinerea")
+# bind back to data 
+data <- data |>
+  bind_rows(a1, c1)
 
 ```
 

@@ -70,34 +70,38 @@ This table displays all conservation gap analysis scores, providing a comparison
 if(species == "Vitis novogranatensis"){
   conservation_data <- data.frame(
   Taxon = species,
-  Ex_situ_Sampling_Representativeness_Score = 0,
-  Ex_situ_Geographic_Representativeness_Score = NA,
-  Ex_situ_Ecological_Representativeness_Score = NA,
-  Ex_situ_Final_Conservation_Score = 0,
-  Ex_situ_Conservation_Priority = "UP",
-  In_situ_Sampling_Representativeness_Score = 0,
-  In_situ_Geographic_Representativeness_Score = NA,
-  In_situ_Ecological_Representativeness_Score = NA,
-  In_situ_Final_Conservation_Score = 0,
-  In_situ_Conservation_Priority = "UP",
-  Combined_Conservation_Priority = "UP"
+  `Ex situ Sampling Representativeness Score` = 0,
+  `Ex situ Geographic Representativeness Score` = NA,
+  `Ex situ Ecological Representativeness Score` = NA,
+  `Ex situ Final Conservation Score` = 0,
+  `Ex situ Conservation Priority` = "UP",
+  `In situ Sampling Representativeness Score` = 0,
+  `In situ Geographic Representativeness Score` = NA,
+  `In situ Ecological Representativeness Score` = NA,
+  `In situ Final Conservation Score` = 0,
+  `In situ Conservation Priority` = "UP",
+  `Final Convervation Score Mean` = 0, 
+  `Combined Conservation Priority` = "UP",
+  check.names = FALSE
 )}
 
 
 if(species == "Vitis rufotomentosa"){
   conservation_data <- data.frame(
   Taxon = species,
-  Ex_situ_Sampling_Representativeness_Score = 100,
-  Ex_situ_Geographic_Representativeness_Score = NA,
-  Ex_situ_Ecological_Representativeness_Score = NA,
-  Ex_situ_Final_Conservation_Score = 100,
-  Ex_situ_Conservation_Priority = "LP",
-  In_situ_Sampling_Representativeness_Score = 0,
-  In_situ_Geographic_Representativeness_Score = NA,
-  In_situ_Ecological_Representativeness_Score = NA,
-  In_situ_Final_Conservation_Score = 0,
-  In_situ_Conservation_Priority = "UP",
-  Combined_Conservation_Priority = "MP"
+   `Ex situ Sampling Representativeness Score` = 100,
+   `Ex situ Geographic Representativeness Score` = NA,
+   `Ex situ Ecological Representativeness Score` = NA,
+   `Ex situ Final Conservation Score` = 100,
+   `Ex situ Conservation Priority` =  "LP",
+   `In situ Sampling Representativeness Score` = 0,
+  `In situ Geographic Representativeness Score` = NA,
+  `In situ Ecological Representativeness Score` = NA,
+  `In situ Final Conservation Score` = 0,
+  `In situ Conservation Priority` = "UP",
+  `Final Convervation Score Mean` = 50,
+  `Combined Conservation Priority` = "MP",
+  check.names = FALSE
 )}
 
 #visualize

@@ -312,8 +312,20 @@ d11a <- d11 |>
   dplyr::filter(latitude == 82.233333) |>
   select(index)
 
+# remove a Girdiana point 
+d11b <- d11 |>
+  dplyr::filter(longitude == -177.2805)|>
+  select(index)
+
+
 d11 <- d11 |>
-  filter(index != d11a$index)
+  filter(index != d11a$index)|>
+  filter(index != d11b$index)
+
+# alter novogranatensis  database source 
+d11[d11$taxon == "Vitis novogranatensis", "databaseSource"] <- "Personal Communication with Jun Wen"
+
+
 write_csv(x = d11, file = "data/processed_occurrence/model_data20251216.csv")
 
 d11 |>

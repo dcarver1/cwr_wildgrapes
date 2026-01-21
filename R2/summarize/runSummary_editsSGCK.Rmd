@@ -1,5 +1,5 @@
 ---
-title: Genus/genepool level conservation gap analysis summary
+title: Distributions and conservation gap analysis summary
 author: Daniel P. Carver, Colin K. Khoury, Sarah L. Gora
 output:
   html_document:
@@ -145,6 +145,7 @@ figure2  # might
 
 The table below displays conservation gap analysis results per assessed taxon. Results of the conservation assessments within each conservation format [Sampling Representativeness Score *ex situ* (SRS ex situ), Geographic Representativeness Score *ex situ* (GRS ex situ), and Ecological Representativeness Score *ex situ* (ERS ex situ) for *ex situ*; and Sampling Representativeness Score *in situ* (SRS in situ), Geographic Representativeness Score *in situ* (GRS in situ) and Ecological Representativeness Score *in situ* (ERS in situ) for *in situ*] are displayed. The Combined Final Conservation Score (FCSc-mean) is the average of the final *ex situ* (FCS ex situ) and *in situ* (FCS in situ) scores. The scores are used to categorize taxa, with urgent priority (UP) for further conservation action assigned when score < 25, high priority (HP) where 25 ≤ score < 50, medium priority (MP) where 50 ≤ score < 75, and low priority (LP) for taxa whose score ≥75.
 
+All germplasm records utilized in the *ex situ* conservation assessments can be found within the Supplementary Material associated with the publication or through this  [link](https://docs.google.com/spreadsheets/d/1a0GRbN4O4UCVcOV-OXECcWiiQtmkfPOU/edit?gid=2052151280#gid=2052151280)
 
 
 ```{r  echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
@@ -188,6 +189,8 @@ DT::datatable(c2,
 
 ## Map of predicted taxon richness
 
+Displayed maps, projected at 2.5 arc minutes resolution here, may not precisely reflect conservation gap analysis scores, which were based on maps at 30 arc seconds resolution.
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
 # core species richness map
 r1 <- image
@@ -212,9 +215,13 @@ richness1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3)) |>
             colors = distColor,
             title = "Species Richness",
             labels = c("1","","","",max(vals,na.rm = TRUE)),
-            group = "Mean Distribution Model"
+            group = "Species Richness" # Updated to match raster group
             )|>
-    setView(lng = -95.7190, lat = 39.976, zoom = 3)
+  addLayersControl(
+    overlayGroups = c("Species Richness"),
+    options = layersControlOptions(collapsed = FALSE)
+  ) |>
+  setView(lng = -95.7190, lat = 39.976, zoom = 3)
 richness1
 ```
 <br>
@@ -235,8 +242,6 @@ exGapPal <- colorNumeric(palette = distColor,
                         domain = values(exGap),
                         na.color = "transparent")
 
-
-
 g1 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))|>
   addTiles()|>
   addRasterImage(x = exGap,
@@ -247,10 +252,15 @@ g1 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))|>
             colors = distColor,
             title = "Number of taxa",
             labels = c("1","","","",max(valsexGap,na.rm = TRUE)),
-            group = "Mean Distribution Model"
+            group = "Species Richness" # Updated to match raster group
             )|>
-    setView(lng = -95.7190, lat = 39.976, zoom = 3)
-terra::writeRaster(x = exGap, filename = "~/trueNAS/work/cwr_wildgrapes/data/datasetsForPublication/grsEX_map.tif")
+  addLayersControl(
+    overlayGroups = c("Species Richness"),
+    options = layersControlOptions(collapsed = FALSE)
+  ) |>
+  setView(lng = -95.7190, lat = 39.976, zoom = 3)
+terra::writeRaster(x = exGap, filename = "~/trueNAS/work/cwr_wildgrapes/data/datasetsForPublication/grsEX_map.tif", 
+                   overwrite = TRUE)
 g1
 ```
 
@@ -263,7 +273,6 @@ The figure above displays predicted collecting priority hotspots to resolve geog
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='center', out.width='90%'}
 ersExMap <- classify(ersExGapMap, cbind(0, NA)) |> raster()
 
-
 #distribution palette
 valsersExGap <- unique(values(ersExMap))
 maxExsGap <- max(valsersExGap, na.rm = TRUE)
@@ -271,8 +280,6 @@ maxExsGap <- max(valsersExGap, na.rm = TRUE)
 ersExGapPal <- colorNumeric(palette = distColor,
                         domain = values(ersExMap),
                         na.color = "transparent")
-
-
 
 g2 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))|>
   addTiles()|>
@@ -284,8 +291,12 @@ g2 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))|>
             colors = distColor,
             title = "Number of taxa",
             labels = c("1","","","",max(valsersExGap,na.rm = TRUE)),
-            group = "Mean Distribution Model")|>
-    setView(lng = -95.7190, lat = 39.976, zoom = 3)
+            group = "Species Richness")|> # Updated to match raster group
+  addLayersControl(
+    overlayGroups = c("Species Richness"),
+    options = layersControlOptions(collapsed = FALSE)
+  ) |>
+  setView(lng = -95.7190, lat = 39.976, zoom = 3)
 
 g2
 ```
@@ -326,9 +337,14 @@ in1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3))|>
             colors = distColor,
             title = "Number of taxa",
             labels = c("1","","","",max(valsInGAP,na.rm = TRUE)),
-            group = "Mean Distribution Model")|>
-    setView(lng = -95.7190, lat = 39.976, zoom = 3)
-terra::writeRaster(x = inGap, filename = "~/trueNAS/work/cwr_wildgrapes/data/datasetsForPublication/grsIn_map.tif")
+            group = "Species Richness")|> # Updated to match raster group
+  addLayersControl(
+    overlayGroups = c("Species Richness"),
+    options = layersControlOptions(collapsed = FALSE)
+  ) |>
+  setView(lng = -95.7190, lat = 39.976, zoom = 3)
+terra::writeRaster(x = inGap, filename = "~/trueNAS/work/cwr_wildgrapes/data/datasetsForPublication/grsIn_map.tif",
+                   overwrite = TRUE)
 
 in1
 ```
@@ -338,7 +354,7 @@ The figure above displays predicted habitat protection priorities to resolve geo
 
 ### Protected areas table
 
-This table below lists protected areas overlapping with the potential distributions of four or more taxa. The total number of taxa potentially present in the protected area, based on potential distributions, is shown in the Total Taxa  column. A full list of protected areas can be found at the following [link](https://drive.google.com/file/d/1zJRLjhtIK1Bl_gW6JDoQUhZO1tTCxeGt/view?usp=sharing).
+This table below lists protected areas overlapping with the potential distributions of four or more taxa. The total number of taxa potentially present in the protected area, based on potential distributions, is shown in the Total Taxa  column. A full list of protected areas can be found at the following [link](https://docs.google.com/spreadsheets/d/1FAa3Rb5PCsxgir56J7lk7JCACADOWcCI/edit?gid=841430323#gid=841430323&range=A1).
 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', out.width='90%'}
@@ -375,8 +391,6 @@ ersINGapPal <- colorNumeric(palette = distColor,
                         domain = values(ersInMap),
                         na.color = "transparent")
 
-
-
 g3 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))|>
   addTiles()|>
   addRasterImage(x = ersInMap,
@@ -387,8 +401,12 @@ g3 <- leaflet(width = "100%",options = leafletOptions(minZoom = 3))|>
             colors = distColor,
             title = "Number of taxa",
             labels = c("1","","","",max(valsersINGap,na.rm = TRUE)),
-            group = "Mean Distribution Model")|>
-    setView(lng = -95.7190, lat = 39.976, zoom = 3)
+            group = "Species Richness")|> # Updated to match raster group
+  addLayersControl(
+    overlayGroups = c("Species Richness"),
+    options = layersControlOptions(collapsed = FALSE)
+  ) |>
+  setView(lng = -95.7190, lat = 39.976, zoom = 3)
 
 g3
 ```
