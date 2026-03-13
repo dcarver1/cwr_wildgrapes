@@ -620,7 +620,7 @@ for (j in s2$taxon[c(3,7,30)]) {
       # rmd with Model ----------------------------------------------------------
       export1 <- paste0(j, "_Summary_fnaFilter")
       if (!file.exists(export1)) {
-        try(
+        render_result <- try(
           rmarkdown::render(
             input = "R2/summarize/singleSpeciesSummary_1k_editsSGCK.Rmd",
             output_format = "html_document",
@@ -634,6 +634,10 @@ for (j in s2$taxon[c(3,7,30)]) {
             # encoding = "utf-8"
           )
         )
+        if (inherits(render_result, "try-error")) {
+          erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
+          message("Failed to render 1km summary for ", j)
+        }
       }
     }
   } else {
@@ -827,18 +831,27 @@ for (j in s2$taxon[c(3,7,30)]) {
     )
 
     # # # generate the report with
-    rmarkdown::render(
-      input = "R2/summarize/singleSpeciesSummaryBuffer_1k.Rmd",
-      output_format = "html_document",
-      output_dir = p1, # file.path(allPaths$result),
-      output_file = paste0(j, "_Summary_fnaFilter"),
-      params = list(
-        reportData = reportData
-      ),
-      envir = new.env(parent = globalenv())
-      # clean = F,
-      # encoding = "utf-8"
-    )
+    export_buf <- paste0(j, "_Summary_fnaFilter")
+    if (!file.exists(paste0(p1, "/", export_buf, ".html"))) {
+      render_result_buf <- try(
+        rmarkdown::render(
+          input = "R2/summarize/singleSpeciesSummaryBuffer_1k.Rmd",
+          output_format = "html_document",
+          output_dir = p1, # file.path(allPaths$result),
+          output_file = export_buf,
+          params = list(
+            reportData = reportData
+          ),
+          envir = new.env(parent = globalenv())
+          # clean = F,
+          # encoding = "utf-8"
+        )
+      )
+      if (inherits(render_result_buf, "try-error")) {
+        erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
+        message("Failed to render 1km summary (buffer version) for ", j)
+      }
+    }
   }
 
   # generate summary html
