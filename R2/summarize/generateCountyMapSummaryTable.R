@@ -266,8 +266,6 @@ fips <- tigris::fips_codes |>
     county = gsub(" County", x = county, replacement = ""),
     countyFIPS = paste0(state_code, county_code)
   )
-
-
 # read in eddMAPS data  ---------------------------------------------------
 
 s1 <- read_csv("data/countyMaps/mappings.csv")|>

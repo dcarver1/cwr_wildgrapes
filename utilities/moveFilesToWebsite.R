@@ -13,6 +13,7 @@ pacman::p_load(dplyr,readr)
 ##################
 # vitis specific moves ----------------------------------------------------
 folder <- "~/trueNAS/work/vitis2/m"
+folderCounty <- "~/trueNAS/work/vitis2/c"
 
 # vitis SDMS --------------------------------------------------------------
 genus <- "Vitis" 
@@ -53,15 +54,15 @@ print("box plot summary doc copied")
 
 
 
-# files <- list.files("data/countyMaps",pattern = "Evaluation2.html",full.names = TRUE)
-# print(files)
-# # Find the files 
-# for(i in seq_along(files)){
-#   if(length(files)>0){
-#     file.copy(files[i], folder,overwrite = TRUE)
-#     print(paste0(i, " moved"))
-#   }
-# }
+files <- list.files("data/countyMaps",pattern = "Evaluation2.html",full.names = TRUE)
+print(files)
+# Find the files 
+for(i in seq_along(files)){
+  if(length(files)>0){
+    file.copy(files[i], folderCounty,overwrite = TRUE)
+    print(paste0(i, " moved"))
+  }
+}
 
 
 
