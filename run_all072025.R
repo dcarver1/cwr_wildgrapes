@@ -941,3 +941,44 @@ write_csv(
   x = summaryCSV,
   file = paste0("data/Vitis/summaryTable_", runVersion, ".csv")
 )
+
+# Variable Buffer Gap Analysis for all species ----------------------------
+source("R2/variableBufferAnalysis.R")
+
+# You can adjust the buffer_sizes_km vector as needed 
+# Currently defaulting to the standard 1, 5, 20, 50, 100km requested
+message("Starting variable buffer gap analysis for all modeled species...")
+
+all_raw_results <- list()
+all_stats <- list()
+
+for (spp in species) {
+  # Run the variable buffer analysis function
+  out <- run_variable_buffer_analysis(
+    species = spp, 
+    runVersion = runVersion, 
+    buffer_sizes_km = c(1, 5, 20, 50, 100)
+  )
+  
+  if (!is.null(out)) {
+    all_raw_results[[spp]] <- out$results
+    all_stats[[spp]] <- out$statistics
+  }
+}
+
+# Combine all species results into single dataframes
+final_raw_results_df <- dplyr::bind_rows(all_raw_results)
+final_stats_df <- dplyr::bind_rows(all_stats)
+
+# Write to CSV in the main run folder
+write_csv(
+  final_raw_results_df, 
+  paste0("data/Vitis/variable_buffer_raw_results_", runVersion, ".csv")
+)
+write_csv(
+  final_stats_df, 
+  paste0("data/Vitis/variable_buffer_statistics_", runVersion, ".csv")
+)
+
+message("Variable buffer analysis complete. Results saved to data/Vitis/")
+
