@@ -22,8 +22,9 @@ species_list <- read_csv("data/processed_occurrence/model_data20251216.csv") |>
   dplyr::pull() |>
   unique()
 # removing novo
-species_list <- species_list[!species_list %in% c("Vitis novogranatensis",
-"Vitis rufotomentosa")]
+species_list <- species_list[
+  !species_list %in% c("Vitis novogranatensis", "Vitis rufotomentosa")
+]
 
 # Global storage for post-loop summaries
 all_raw_results <- list()
