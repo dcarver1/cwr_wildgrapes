@@ -19,13 +19,13 @@ df <- data.frame()
 for (i in spList) {
   # construct path to data
   files <- list.files(
-    "data/Vitis/Vitis acerifolia/run08282025_1k/",
+    paste0("data/Vitis/", i, "/run08282025_1k/"),
     recursive = TRUE,
     full.names = TRUE
   )
   #
   path <- files[grepl("occurances/allmodelData.csv", x = files)]
-  if (file.exists(path)) {
+  if (length(path) > 0) {
     # read in data
     t1 <- read_csv(path) |>
       dplyr::filter(presence == 1) |>
@@ -48,7 +48,24 @@ vars <- df |>
   )
 # add this back into the previous data
 df2 <- dplyr::bind_rows(df, vars)
-
+df2 |> dplyr::group_by(taxon) |> count()
 write_csv(df2, "work2026/data/var_collapse_modelData.csv")
 
-# with this
+# regenerate the material for species with variatals
+species <- c("Vitis cinerea", "Vitis aestivalis")
+for (i in species) {
+  # read in the specific file
+  files <- list.files(
+    paste0("data/Vitis/", i, "/run08282025_1k/"),
+    recursive = TRUE,
+    full.names = TRUE
+  )
+  path <- files[grepl("occurances/allmodelData.csv", x = files)]
+  if (length(path) > 0) {
+    # read in data - for all background records
+    t1 <- read_csv(path) |>
+      dplyr::filter(presence == 0)
+    # bind to previous data
+    df <- dplyr::bind_rows(df, t1)
+  }
+}
