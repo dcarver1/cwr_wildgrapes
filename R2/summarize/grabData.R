@@ -22,87 +22,298 @@ grabData <- function(
   NoModel,
   modelDataCounts
 ) {
-  # crop protected areas
-  # mask protected areas layer
-  if (class(thres) == "SpatRaster") {
-    p2 <- thres
-    p2[p2 == 0] <- NA
-    # crop protected areas raster
-    p1 <- terra::crop(x = protectedAreas, y = p2)
-    # multiple to create mask
-    p1 <- p1 * p2
+  # Load required libraries
+  suppressPackageStartupMessages({
+    library(dplyr)
+    library(terra)
+    library(sf)
+    library(stringr)
+    library(readr)
+    library(purrr)
+    library(RColorBrewer)
+  })
 
-    # some reprjecting issues are causing some visualization problems in the htmls
-    # project all the raster objects to EPSG:3857
-    # do not project the vector objects.
-    p1 <- terra::project(x = p1, y = "epsg:3857", method = "max")
-    if (class(g_buffer) != "character") {
-      g_buffer <- terra::project(x = g_buffer, y = "epsg:3857", method = "near")
-      g_bufferCrop <- terra::project(
-        x = g_bufferCrop,
-        y = "epsg:3857",
-        method = "near"
+  # Helper for sigfig rounding
+  sigfig <- function(vec, n=3){ 
+    formatC(signif(vec,digits=n), digits=n,format="fg", flag="#") 
+  }
+
+  # 1. Data QA/QC & Cleaning
+  species <- countsData$species[1]
+  # Handle hardcoded Vitis bloodworthiana longitude filter
+  if (!is.null(species) && species == "Vitis bloodworthiana") {
+    occuranceData <- occuranceData[occuranceData$longitude != -100.00000, ]
+  }
+
+  # Prep Occurence Data for Leaflet (add popups and styling)
+  occData <- occuranceData |>
+    dplyr::mutate(
+      popup = paste0(
+        "<br/><b>Taxon:</b> ", taxon,
+        "<br/><b>Source:</b> ", databaseSource,
+        "<br/><b>Collector Code:</b> ", institutionCode,
+        "<br/><b>Collection Type:</b> ", type
+      ),
+      color = dplyr::case_when(type == "H" ~ "#1184D4",
+                               type == "G" ~ "#6300F0",
+                               TRUE ~ "#CCCCCC")
+    )
+
+  # 2. Table Joins and Categorical Logic
+  
+  # Unified Counts Data for Table 1
+  c1_a <- countsData |>
+    dplyr::select(
+      Taxon = species,
+      'Occurrences' = totalRecords,
+      'Occurrences with Lat/Long' = totalUseful,
+      'Germplasm Records(G)' = totalGRecords,
+      'Germplasm Records(G) with Lat/Long' = totalGUseful,
+      'Reference Records(H)' = totalHRecords,
+      'Reference Records(H) with Lat/Long' = totalHUseful,
+      'Unique Data Sources' = numberOfUniqueSources
+    )
+  
+  if (!is.null(modelDataCounts) && !all(is.na(modelDataCounts))) {
+    c2 <- modelDataCounts |>
+      dplyr::select(
+        Taxon = species,
+        'Presence Occurrences' = presenceRecords,
+        'Background Occurrences' = backgroudRecords,
+        'Total Occurrences Used in Model' = totalRecords
       )
+    unifiedCounts <- dplyr::left_join(c1_a, c2, by = "Taxon") |>
+      dplyr::mutate(Taxon = stringr::str_replace_all(Taxon, pattern = "_", replacement = " "))
+  } else {
+    unifiedCounts <- c1_a |>
+      dplyr::mutate(Taxon = stringr::str_replace_all(Taxon, pattern = "_", replacement = " "))
+  }
+
+  # Ex situ Scores and Categories
+  exScores <- fcsex |> 
+    dplyr::mutate("SRS ex situ" = as.numeric(sigfig(SRS)),
+                  "GRS ex situ" = as.numeric(sigfig(GRS)),
+                  "ERS ex situ" = as.numeric(sigfig(ERS)),
+                  "FCS ex situ" = as.numeric(sigfig(FCS))) |>
+    dplyr::mutate(
+      "FCS ex situ priority category" = dplyr::case_when(
+        `FCS ex situ` >= 75 ~ "LP",
+        `FCS ex situ` >= 50 ~ "MP",
+        `FCS ex situ` >= 25 ~ "HP",
+        TRUE ~ "UP"
+      )
+    )
+  
+  # In situ Scores and Categories
+  inScores <- fcsin |> 
+    dplyr::mutate("SRS in situ" = as.numeric(sigfig(SRS)),
+                  "GRS in situ" = as.numeric(sigfig(GRS)),
+                  "ERS in situ" = as.numeric(sigfig(ERS)),
+                  "FCS in situ" = as.numeric(sigfig(FCS))) |>
+    dplyr::mutate(
+      "FCS in situ priority category" = dplyr::case_when(
+        `FCS in situ` >= 75 ~ "LP",
+        `FCS in situ` >= 50 ~ "MP",
+        `FCS in situ` >= 25 ~ "HP",
+        TRUE ~ "UP"
+      )
+    )
+
+  # Combined Conservation Score Calculation
+  meanVal <- mean(c(exScores$`FCS ex situ`, inScores$`FCS in situ`), na.rm = TRUE)
+  finalConservationTable <- fscCombined |>
+    dplyr::mutate(Taxon = stringr::str_replace_all(ID, pattern = "_", replacement = " ")) |>
+    dplyr::mutate(across(where(is.numeric), \(x) round(x, 2))) |>
+    dplyr::mutate(
+      `Final Conservation Score Mean` = round(meanVal, 2),
+      `Combined Conservation Priority` = dplyr::case_when(
+        meanVal >= 75 ~ "LP",
+        meanVal >= 50 ~ "MP",
+        meanVal >= 25 ~ "HP",
+        TRUE ~ "UP"
+      )
+    )
+
+  # 3. Dynamic Resolution & Master Masking (The 5km Fix)
+  resampleFactor <- 1
+  if (inherits(thres, "SpatRaster") && NoModel == FALSE) {
+    # Evaluate number of active cells in the 1km thres raster
+    total_active_cells <- as.numeric(terra::global(thres, "sum", na.rm = TRUE))
+    
+    if (total_active_cells > 500000) {
+      resampleFactor <- 5
+      # Aggregate threshold to 5km using fun = "max" to act as Master Mask
+      thres <- terra::aggregate(thres, fact = resampleFactor, fun = "max")
     }
+    
+    # Define Masks
+    habitatMask <- terra::ifel(thres == 1, 1, NA)
+    masterMask <- terra::ifel(thres >= 0, 1, NA) # Native area + habitat
+    
+    # Project to EPSG:3857 for Leaflet
+    thres <- terra::project(thres, "epsg:3857", method = "near")
+    masterMask <- terra::project(masterMask, "epsg:3857", method = "near")
+    habitatMask <- terra::project(habitatMask, "epsg:3857", method = "near")
+
+    # Resample and Mask all other necessary rasters to prevent bleeding
+    p1 <- terra::project(protectedAreas, "epsg:3857", method = "max")
+    p1 <- terra::resample(p1, thres, method = "max") |> terra::mask(masterMask)
+    
+    if (inherits(g_buffer, "SpatRaster")) {
+      g_buffer <- terra::project(g_buffer, "epsg:3857", method = "near")
+      g_buffer <- terra::resample(g_buffer, thres, method = "near") |> terra::mask(masterMask)
+    }
+    if (inherits(g_bufferCrop, "SpatRaster")) {
+      g_bufferCrop <- terra::project(g_bufferCrop, "epsg:3857", method = "near")
+      g_bufferCrop <- terra::resample(g_bufferCrop, thres, method = "near") |> terra::mask(habitatMask)
+    }
+    
     if (length(projectsResults) > 1) {
-      projectsResults <- projectsResults |>
-        purrr::map(terra::project, y = "epsg:3857", method = "near")
-    }
-    thres <- terra::project(x = thres, y = "epsg:3857", method = "near")
-
-    # add variable importance data
-    if (!is.na(variableImportance)) {
-      var1 <- readRDS(variableImportance) #$rankPredictors
-      names <- read_csv(
-        "data/geospatial_datasets/bioclim_layers/variableNames_072025.csv"
-      )
-      variableImportance <- var1$rankPredictors |>
-        dplyr::left_join(y = names, by = c("varNames" = "vitisModelNames"))
+      projectsResults <- purrr::map(projectsResults, function(r) {
+        rp <- terra::project(r, "epsg:3857", method = "near")
+        terra::resample(rp, thres, method = "near") |> terra::mask(masterMask)
+      })
     }
 
-    # bind to export object
+    # 4. Heavy Spatial Operations
+    webMecOccData <- sf::st_as_sf(occuranceData, coords = c("longitude", "latitude"), crs = 4326) |>
+      sf::st_transform(3857) |>
+      terra::vect()
+    
+    # Pre-calculate counts in habitat and protected areas
+    inThres <- terra::extract(habitatMask, webMecOccData)
+    totalObsinThres <- sum(inThres[,2] == 1, na.rm = TRUE)
+    inPro <- terra::extract(p1, webMecOccData)
+    totalObsinPro <- totalObsinThres - sum(inThres[,2] == 1 & (is.na(inPro[,2]) | inPro[,2] == 0), na.rm = TRUE)
+
+    # SRS in situ raster (rasterized observations)
+    srs1 <- terra::rasterize(webMecOccData, thres, fun = "sum", background = 0) |>
+      terra::mask(habitatMask)
+
+    # GRS in situ raster math
+    proReclass <- terra::ifel(is.na(p1), 0, 1)
+    grs1 <- thres + proReclass
+
+    # ERS in situ zonal stats and ecoregion gaps
+    allEcos <- natArea |> dplyr::select("ECO_ID_U", "ECO_NAME")
+    webMecAllEcos <- sf::st_transform(allEcos, 3857)
+    
+    v1 <- terra::zonal(habitatMask, terra::vect(webMecAllEcos), fun = "sum", na.rm = TRUE)
+    v1$ECO_ID_U <- webMecAllEcos$ECO_ID_U
+    ecosInThres <- v1 |> dplyr::filter(layer > 0) |> dplyr::pull(ECO_ID_U)
+    
+    ers1 <- terra::zonal(proReclass, terra::vect(webMecAllEcos), fun = "sum", na.rm = TRUE)
+    ers1$ECO_ID_U <- webMecAllEcos$ECO_ID_U
+    ers1$ECO_NAME <- webMecAllEcos$ECO_NAME
+    
+    ers2 <- ers1 |>
+      dplyr::filter(ECO_ID_U %in% ecosInThres) |>
+      dplyr::filter(layer == 0)
+
+    if (nrow(ers2) > 0) {
+      ers2 <- ers2 |> arrange(desc(ECO_NAME))
+      ecoPal2 <- rep(RColorBrewer::brewer.pal(n = 12, name = "Spectral"), ceiling(nrow(ers2)/12))
+      ers2$color <- ecoPal2[1:nrow(ers2)]
+      ers2$ECO_ID_U <- factor(ers2$ECO_ID_U, ordered = TRUE, levels = ers2$ECO_ID_U)
+      
+      ersinMap <- webMecAllEcos |>
+        dplyr::filter(ECO_ID_U %in% ers2$ECO_ID_U) |>
+        terra::rasterize(y = thres, field = "ECO_ID_U") |>
+        terra::mask(habitatMask)
+    } else {
+      ersinMap <- NULL
+    }
+
+    # GRS ex situ raster math
+    if (inherits(g_bufferCrop, "SpatRaster")) {
+      m_grs <- matrix(c(NA, 0), ncol = 2)
+      gbuf2 <- terra::classify(g_bufferCrop, m_grs)
+      grsexMap <- thres + gbuf2
+    } else {
+      grsexMap <- NULL
+    }
+
+    # ERS ex situ ecoregion gaps
+    missingEcos <- ersex$missingEcos |> unlist()
+    ecoReg <- natArea |> dplyr::filter(ECO_ID_U %in% missingEcos)
+    if (nrow(ecoReg) > 0) {
+      ecoReg <- ecoReg |> arrange(desc(ECO_NAME))
+      ecoPal <- rep(RColorBrewer::brewer.pal(n = 12, name = "Spectral"), ceiling(nrow(ecoReg)/12))
+      ecoReg$color <- ecoPal[1:nrow(ecoReg)]
+      ecoReg$ECO_ID_U <- factor(ecoReg$ECO_ID_U, ordered = TRUE, levels = ecoReg$ECO_ID_U)
+      
+      webMecEcoReg <- sf::st_transform(ecoReg, 3857)
+      ecoRast <- terra::rasterize(webMecEcoReg, thres, field = "ECO_ID_U") |>
+        terra::mask(habitatMask)
+    } else {
+      ecoRast <- NULL
+    }
+
+    # Pre-format Evaluation Metrics for DT
+    evalData <- if (!is.null(evalTable) && !all(is.na(evalTable))) {
+      evalTable |>
+        dplyr::select("AUC"="AUCtest", "Normalized AUC"="nAUC", "Calibrated AUC"="cAUC", 
+                      "Threshold Value"="threshold_test", "Sensitivity"="sensi_test", 
+                      "Specificity"="speci_test", "Mathews Correlation"="matthews.cor_test", 
+                      "Cohen's kappa"="kappa_index_test") |>
+        dplyr::mutate(across(everything(), sigfig))
+    } else { NA }
+
+    aucData <- if (!is.null(aucMetrics) && !all(is.na(aucMetrics))) {
+      aucMetrics |> dplyr::mutate(across(where(is.numeric), sigfig)) |>
+        dplyr::select("Mean AUC"="AUCmean", "SDAUC", "AUC15", "Passed Validity Tests"="validity")
+    } else { NA }
+
+    # Variable Importance Formatting
+    variableImportanceData <- if (!is.na(variableImportance)) {
+      var1 <- readRDS(variableImportance)$rankPredictors
+      vn <- readr::read_csv("data/geospatial_datasets/bioclim_layers/variableNames_072025.csv")
+      var1 |> dplyr::left_join(y = vn, by = c("varNames" = "vitisModelNames")) |>
+        dplyr::mutate(across(c('importance'), \(x) round(x, 3))) |>
+        dplyr::select("Predictor variable name" = `Current title`, "Relative importance to model" = importance,
+                      "Included in the modeling process" = includeInFinal, "Abbrevaition" = varNames) |>
+        dplyr::arrange(desc(`Relative importance to model`))
+    } else { NA }
+
+    # Final report data structure
     reportData <- list(
-      occuranceData = occuranceData,
-      naturalArea = natArea,
-      model_Occurances = v_data,
+      occData = occData,
+      allEcos = webMecAllEcos,
       protectedArea = p1,
       g_buffer = g_buffer,
       g_bufferCrop = g_bufferCrop,
       projectedResults = projectsResults,
       binaryMap = thres,
-      modelEvaluation = evalTable,
-      aucMetrics = aucMetrics,
-      ersex = ersex,
-      ersin = ersin,
-      fcsCombined = fcsCombined,
-      fcsex = fcsex,
-      fcsin = fcsin,
-      countsData = countsData,
-      variableImportance = variableImportance,
-      NoModel = NoModel,
-      modelDataCounts = modelDataCounts
+      habitatMask = habitatMask,
+      masterMask = masterMask,
+      resampleFactor = resampleFactor,
+      unifiedCounts = unifiedCounts,
+      exScores = exScores,
+      inScores = inScores,
+      finalConservationTable = finalConservationTable,
+      totalObsinThres = totalObsinThres,
+      totalObsinPro = totalObsinPro,
+      srs1 = srs1,
+      grs1 = grs1,
+      ersinMap = ersinMap,
+      ers2 = ers2,
+      ecoRast = ecoRast,
+      ecoReg = ecoReg,
+      missingEcos = missingEcos,
+      grsexMap = grsexMap,
+      modelEvaluation = evalData,
+      aucMetrics = aucData,
+      variableImportance = variableImportanceData,
+      NoModel = NoModel
     )
   } else {
     reportData <- list(
-      occuranceData = occuranceData,
-      naturalArea = natArea,
-      model_Occurances = NA,
-      protectedArea = NA,
-      g_buffer = NA,
-      g_bufferCrop = NA,
-      projectedResults = NA,
-      binaryMap = NA,
-      modelEvaluation = NA,
-      aucMetrics = NA,
-      ersex = NA,
-      ersin = NA,
-      fcsCombined = fcsCombined,
-      fcsex = fcsex,
-      fcsin = fcsin,
-      countsData = countsData,
-      variableImportance = NA,
-      NoModel = NoModel,
-      modelDataCounts = NA
+      occData = occData,
+      unifiedCounts = unifiedCounts,
+      exScores = exScores,
+      inScores = inScores,
+      finalConservationTable = finalConservationTable,
+      NoModel = TRUE
     )
   }
   
