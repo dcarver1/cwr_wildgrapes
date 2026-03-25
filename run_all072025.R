@@ -43,12 +43,11 @@ tmap::tmap_mode("view")
 
 
 # Download the states and provinces for North America
-naStates <- rnaturalearth::ne_states(
-  country = c("mexico", "canada", "united states of america"),
-  returnclass = "sf"
-) |>
-  dplyr::select(name, adm0_a3)
-
+# naStates <- rnaturalearth::ne_states(
+#   country = c("mexico", "canada", "united states of america"),
+#   returnclass = "sf"
+# ) |>
+#   dplyr::select(name, adm0_a3)
 
 #source functions
 source("R2/helperFunctions.R")
@@ -264,7 +263,7 @@ r2 <- s2$taxon[!s2$taxon %in% dontRun]
 r3 <- c("Vitis jaegeriana", "Vitis rubriflora", "Vitis martineziana")
 j <- "Vitis bloodworthiana"
 # start of for loop -------------------------------------------------------
-for (j in s2$taxon[c(3,7,30)]) {
+for (j in s2$taxon[c(3, 7, 30)]) {
   # species
   # create unique path for summary HTML docs
   p1 <- paste0("data/Vitis/speciesSummaryHTML/", runVersion)
@@ -372,11 +371,11 @@ for (j in s2$taxon[c(3,7,30)]) {
     )
   )
   # exporting with type column now removing for consistenty
-# 
-#   write_csv(
-#     x = m_data1,
-#     file = paste0(allPaths$allDataPath)
-#   )
+  #
+  #   write_csv(
+  #     x = m_data1,
+  #     file = paste0(allPaths$allDataPath)
+  #   )
   # next
   # condition for at least 8 observations
   ## attempt to model the data
@@ -427,7 +426,14 @@ for (j in s2$taxon[c(3,7,30)]) {
     # had to re-export the variable selection data. I expect that I was attepting to write a list object as a csv
     message(paste0("exporting model data with variables for ", j))
     # # adding in a export for the variable selection data
-    write_csv(x = v_data$rankPredictors, file = paste0("data/Vitis/",j,"/run08282025_1k/occurances/topVariablesData.csv"))
+    write_csv(
+      x = v_data$rankPredictors,
+      file = paste0(
+        "data/Vitis/",
+        j,
+        "/run08282025_1k/occurances/topVariablesData.csv"
+      )
+    )
     # write_csv(x = v_data$rankPredictors, file = allPaths$allDataPath)
 
     # next
@@ -459,8 +465,8 @@ for (j in s2$taxon[c(3,7,30)]) {
         path = allPaths$modeledRasters,
         overwrite = TRUE,
         function1 = rasterResults(sdm_results)
-      ) |>  # unwrap the list of wrapped rasters
-        lapply( terra::unwrap)
+      ) |> # unwrap the list of wrapped rasters
+        lapply(terra::unwrap)
 
       # generate additional
       aucMetrics <- write_CSV(

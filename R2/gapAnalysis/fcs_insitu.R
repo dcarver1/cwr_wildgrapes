@@ -12,7 +12,7 @@ fcs_insitu <- function(srsin, grsin, ersin, noModel){
                          SRS=srsin$SRS, 
                          GRS=NA,
                          ERS=NA, 
-                         FCS=srsin$SRS,
+                         FCS=srsin$SRS/3,
                          FCS_Score = NA)
   }else{
     # calculate the mean across the three measures 
@@ -27,7 +27,7 @@ fcs_insitu <- function(srsin, grsin, ersin, noModel){
     
   }
   sp_fcs <- out_df$FCS
-  #assign classes (min)
+  #assign classes
   if (sp_fcs < 25) {
     score <- "UP"
   } else if (sp_fcs >= 25 & sp_fcs < 50) {

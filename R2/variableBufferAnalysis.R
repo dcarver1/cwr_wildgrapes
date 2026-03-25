@@ -15,7 +15,7 @@ ea_proj <- "+proj=cea +lon_0=0 +lat_ts=30 +datum=WGS84 +units=m +no_defs"
 runVersion <- "run08282025_1k"
 buffer_sizes_km <- c(1, 5, 20, 50, 100)
 projections <- c("WGS84", "EqualArea")
-overwrite <- FALSE
+overwrite <- TRUE
 
 species_list <- read_csv("data/processed_occurrence/model_data20251216.csv") |>
   dplyr::select("taxon") |>

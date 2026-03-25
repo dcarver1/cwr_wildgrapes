@@ -15,7 +15,7 @@ fcs_exsitu <- function(srsex, grsex, ersex, noModel, gPoints) {
                              SRS=srsex$SRS,
                              GRS= NA,
                              ERS= NA,
-                             FCS= srsex$SRS,
+                             FCS= srsex$SRS / 3,
                              FCS_Score = NA)
       }else{
         # no go points so values are assigned as zero 
@@ -40,7 +40,7 @@ fcs_exsitu <- function(srsex, grsex, ersex, noModel, gPoints) {
     } 
   sp_fcs <- out_df$FCS
   
-  #assign classes (min)
+  #assign classes
   if (sp_fcs < 25) {
     score <- "UP"
   } else if (sp_fcs >= 25 & sp_fcs < 50) {
