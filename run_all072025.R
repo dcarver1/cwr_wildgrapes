@@ -626,7 +626,7 @@ for (j in s2$taxon[c(3, 7, 30)]) {
       # rmd with Model ----------------------------------------------------------
       export1 <- paste0(j, "_Summary_fnaFilter")
       if (!file.exists(export1)) {
-        try(
+        render_result <- try(
           rmarkdown::render(
             input = "R2/summarize/singleSpeciesSummary_1k_editsSGCK.Rmd",
             output_format = "html_document",
@@ -640,6 +640,10 @@ for (j in s2$taxon[c(3, 7, 30)]) {
             # encoding = "utf-8"
           )
         )
+        if (inherits(render_result, "try-error")) {
+          erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
+          message("Failed to render 1km summary for ", j)
+        }
       }
     }
   } else {
@@ -833,18 +837,27 @@ for (j in s2$taxon[c(3, 7, 30)]) {
     )
 
     # # # generate the report with
-    rmarkdown::render(
-      input = "R2/summarize/singleSpeciesSummaryBuffer_1k.Rmd",
-      output_format = "html_document",
-      output_dir = p1, # file.path(allPaths$result),
-      output_file = paste0(j, "_Summary_fnaFilter"),
-      params = list(
-        reportData = reportData
-      ),
-      envir = new.env(parent = globalenv())
-      # clean = F,
-      # encoding = "utf-8"
-    )
+    export_buf <- paste0(j, "_Summary_fnaFilter")
+    if (!file.exists(paste0(p1, "/", export_buf, ".html"))) {
+      render_result_buf <- try(
+        rmarkdown::render(
+          input = "R2/summarize/singleSpeciesSummaryBuffer_1k.Rmd",
+          output_format = "html_document",
+          output_dir = p1, # file.path(allPaths$result),
+          output_file = export_buf,
+          params = list(
+            reportData = reportData
+          ),
+          envir = new.env(parent = globalenv())
+          # clean = F,
+          # encoding = "utf-8"
+        )
+      )
+      if (inherits(render_result_buf, "try-error")) {
+        erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
+        message("Failed to render 1km summary (buffer version) for ", j)
+      }
+    }
   }
 
   # generate summary html
@@ -934,3 +947,44 @@ write_csv(
   x = summaryCSV,
   file = paste0("data/Vitis/summaryTable_", runVersion, ".csv")
 )
+
+# Variable Buffer Gap Analysis for all species ----------------------------
+source("R2/variableBufferAnalysis.R")
+
+# You can adjust the buffer_sizes_km vector as needed 
+# Currently defaulting to the standard 1, 5, 20, 50, 100km requested
+message("Starting variable buffer gap analysis for all modeled species...")
+
+all_raw_results <- list()
+all_stats <- list()
+
+for (spp in species) {
+  # Run the variable buffer analysis function
+  out <- run_variable_buffer_analysis(
+    species = spp, 
+    runVersion = runVersion, 
+    buffer_sizes_km = c(1, 5, 20, 50, 100)
+  )
+  
+  if (!is.null(out)) {
+    all_raw_results[[spp]] <- out$results
+    all_stats[[spp]] <- out$statistics
+  }
+}
+
+# Combine all species results into single dataframes
+final_raw_results_df <- dplyr::bind_rows(all_raw_results)
+final_stats_df <- dplyr::bind_rows(all_stats)
+
+# Write to CSV in the main run folder
+write_csv(
+  final_raw_results_df, 
+  paste0("data/Vitis/variable_buffer_raw_results_", runVersion, ".csv")
+)
+write_csv(
+  final_stats_df, 
+  paste0("data/Vitis/variable_buffer_statistics_", runVersion, ".csv")
+)
+
+message("Variable buffer analysis complete. Results saved to data/Vitis/")
+

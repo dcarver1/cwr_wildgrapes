@@ -388,14 +388,16 @@ m1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3)) |>
              radius = 1,
              group = "Occurrences",
              stroke = 1,
-             popup = ~popup) |> 
+             popup = ~popup,
+             clusterOptions = markerClusterOptions()) |> 
   addCircleMarkers(data = occData[occData$type=="G",],
              color = ~color,
              opacity = 1,
              radius = 1,
              group = "Occurrences",
              stroke = 1,
-             popup = ~popup)|>
+             popup = ~popup,
+             clusterOptions = markerClusterOptions())|>
     leaflet::addLegend(
       position = "bottomright",
       color = c("#1184D4","#6300F0"),
@@ -664,7 +666,8 @@ if(data$NoModel == FALSE){
         radius = 1,
         group = "GRS ex situ",
         stroke = 1,
-        popup = ~ popup
+        popup = ~ popup,
+        clusterOptions = markerClusterOptions()
       ) |>
       #add legend
       leaflet::addLegend(
