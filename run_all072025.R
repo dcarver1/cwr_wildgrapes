@@ -43,11 +43,11 @@ tmap::tmap_mode("view")
 
 
 # Download the states and provinces for North America
-# naStates <- rnaturalearth::ne_states(
-#   country = c("mexico", "canada", "united states of america"),
-#   returnclass = "sf"
-# ) |>
-#   dplyr::select(name, adm0_a3)
+naStates <- rnaturalearth::ne_states(
+  country = c("mexico", "canada", "united states of america"),
+  returnclass = "sf"
+) |>
+  dplyr::select(name, adm0_a3)
 
 #source functions
 source("R2/helperFunctions.R")
@@ -260,10 +260,10 @@ r2 <- s2$taxon[!s2$taxon %in% dontRun]
 # avoiding remodel
 # "Vitis riparia","Vitis rotundifolia"
 
-r3 <- c("Vitis jaegeriana", "Vitis rubriflora", "Vitis martineziana")
-j <- "Vitis bloodworthiana"
+r3 <- c("Vitis cinerea", "Vitis aestivalis")
+j <- "Vitis aestivalis"
 # start of for loop -------------------------------------------------------
-for (j in s2$taxon[c(3, 7, 30)]) {
+for (j in r3) {
   # species
   # create unique path for summary HTML docs
   p1 <- paste0("data/Vitis/speciesSummaryHTML/", runVersion)
@@ -280,6 +280,36 @@ for (j in s2$taxon[c(3, 7, 30)]) {
   ## species specific data
   sd1 <- speciesData |>
     dplyr::filter(taxon == j)
+  # recombine for a
+  if (j == "Vitis cinerea") {
+    sd1 <- speciesData |>
+      dplyr::filter(
+        taxon %in%
+          c(
+            "Vitis cinerea",
+            "Vitis cinerea var. cinerea",
+            "Vitis cinerea var. tomentosa"
+          )
+      ) |>
+      dplyr::mutate(
+        taxon = "Vitis cinerea"
+      )
+  }
+  if (j == "Vitis aestivalis") {
+    sd1 <- speciesData |>
+      dplyr::filter(
+        taxon %in%
+          c(
+            "Vitis aestivalis",
+            "Vitis aestivalis var. aestivalis",
+            "Vitis aestivalis var. bicolor"
+          )
+      ) |>
+      dplyr::mutate(
+        taxon = "Vitis cinerea"
+      )
+  }
+
   # write_csv(sd1, "temp/doania.csv" )
   ## counts data
   c1 <- write_CSV(
@@ -362,7 +392,7 @@ for (j in s2$taxon[c(3, 7, 30)]) {
   ## associate observations with bioclim data and spatial thin
   m_data1 <- write_CSV(
     path = allPaths$allDataPath,
-    overwrite = FALSE,
+    overwrite = TRUE,
     generateModelData(
       speciesPoints = sp1,
       natArea = natArea,
@@ -382,12 +412,12 @@ for (j in s2$taxon[c(3, 7, 30)]) {
   if (nrow(sp1) >= 8) {
     print("Modeling")
     ## define number of background points
-    b_Number <- numberBackground(natArea = natArea)
+    # b_Number <- numberBackground(natArea = natArea)
 
     ## generate GA50 objects
     g_buffer <- write_Rast(
       path = allPaths$ga50Path,
-      overwrite = FALSE,
+      overwrite = overwrite,
       function1 = create_buffers(
         speciesPoints = sp1,
         natArea = natArea,
@@ -417,6 +447,7 @@ for (j in s2$taxon[c(3, 7, 30)]) {
     # )
 
     ## perform variable selection
+
     ### something not working the export -- list object but not rendering with the write_RDS
     v_data <- write_RDS(
       path = allPaths$variablbeSelectPath,
@@ -441,7 +472,7 @@ for (j in s2$taxon[c(3, 7, 30)]) {
     ## prepare data for maxent model
     rasterInputs <- write_Rast(
       path = allPaths$prepRasters,
-      overwrite = FALSE,
+      overwrite = TRUE,
       function1 = cropRasters(
         natArea = natArea,
         bioVars = bioVars,
@@ -458,13 +489,13 @@ for (j in s2$taxon[c(3, 7, 30)]) {
     )
 
     ## condition to test if model was suscessfull produced.
-    if (!is.null(sdm_results)) {
+    if (!is.null(sdm_result)) {
       print("conservation metrics")
       ## raster objects
       projectsResults <- write_RDS(
         path = allPaths$modeledRasters,
         overwrite = TRUE,
-        function1 = rasterResults(sdm_results)
+        function1 = rasterResults(sdm_result)
       ) |> # unwrap the list of wrapped rasters
         lapply(terra::unwrap)
 
@@ -474,7 +505,7 @@ for (j in s2$taxon[c(3, 7, 30)]) {
         overwrite = overwrite,
         function1 = calc_sdm_metrics(
           sd_raster = projectsResults$stdev,
-          auc_scores = sdm_results$AUC
+          auc_scores = sdm_result$AUC
         )
       )
 
@@ -482,7 +513,7 @@ for (j in s2$taxon[c(3, 7, 30)]) {
       evalTable <- write_CSV(
         path = allPaths$evalTablePath,
         overwrite = overwrite,
-        function1 = evaluateTable(sdm_result = sdm_results)
+        function1 = evaluateTable(sdm_result = sdm_result)
       )
 
       ## generate threshold rasters
@@ -951,7 +982,7 @@ write_csv(
 # Variable Buffer Gap Analysis for all species ----------------------------
 source("R2/variableBufferAnalysis.R")
 
-# You can adjust the buffer_sizes_km vector as needed 
+# You can adjust the buffer_sizes_km vector as needed
 # Currently defaulting to the standard 1, 5, 20, 50, 100km requested
 message("Starting variable buffer gap analysis for all modeled species...")
 
@@ -961,11 +992,11 @@ all_stats <- list()
 for (spp in species) {
   # Run the variable buffer analysis function
   out <- run_variable_buffer_analysis(
-    species = spp, 
-    runVersion = runVersion, 
+    species = spp,
+    runVersion = runVersion,
     buffer_sizes_km = c(1, 5, 20, 50, 100)
   )
-  
+
   if (!is.null(out)) {
     all_raw_results[[spp]] <- out$results
     all_stats[[spp]] <- out$statistics
@@ -978,13 +1009,12 @@ final_stats_df <- dplyr::bind_rows(all_stats)
 
 # Write to CSV in the main run folder
 write_csv(
-  final_raw_results_df, 
+  final_raw_results_df,
   paste0("data/Vitis/variable_buffer_raw_results_", runVersion, ".csv")
 )
 write_csv(
-  final_stats_df, 
+  final_stats_df,
   paste0("data/Vitis/variable_buffer_statistics_", runVersion, ".csv")
 )
 
 message("Variable buffer analysis complete. Results saved to data/Vitis/")
-
