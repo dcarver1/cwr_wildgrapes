@@ -96,6 +96,7 @@ species <- c("Vitis cinerea", "Vitis aestivalis")
 for (i in species) {
   spList2 <- spList[grepl(i, x = spList)]
   varSp <- spList2[grepl("var.", x = spList2)]
+  print(varSp)
   # read in file for the primary species
   primary <- st_read(paste0(
     "data/Vitis/",

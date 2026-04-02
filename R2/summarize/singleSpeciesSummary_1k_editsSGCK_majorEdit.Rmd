@@ -1,0 +1,355 @@
+---
+title: Taxon level predicted distribution modeling and conservation gap analysis summary
+author: Daniel P. Carver, Colin K. Khoury, Sarah L. Gora
+output:
+  html_document:
+      css: style.css
+date: "Report generated on `r Sys.Date()`"
+params:
+  reportData: NA
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+pacman::p_load("leaflet","data.table", "tidyr", "dplyr","plotly","DT","RColorBrewer","htmltools", "terra")
+
+# Assign data from params
+data <- params$reportData
+species <- data$unifiedCounts$Taxon[1]
+resampleFactor <- data$resampleFactor
+printSpecies <- species # Already formatted in grabData.R
+
+# Round all numeric values in tables to 2 digits for display
+data$unifiedCounts <- data$unifiedCounts |> dplyr::mutate(across(where(is.numeric), \(x) round(x, 2)))
+data$exScores <- data$exScores |> dplyr::mutate(across(where(is.numeric), \(x) round(x, 2)))
+data$inScores <- data$inScores |> dplyr::mutate(across(where(is.numeric), \(x) round(x, 2)))
+data$finalConservationTable <- data$finalConservationTable |> dplyr::mutate(across(where(is.numeric), \(x) round(x, 2)))
+if(!is.null(data$modelEvaluation) && !all(is.na(data$modelEvaluation))) {
+  data$modelEvaluation <- data$modelEvaluation |> dplyr::mutate(across(where(is.numeric), \(x) round(x, 2)))
+}
+if(!is.null(data$aucMetrics) && !all(is.na(data$aucMetrics))) {
+  data$aucMetrics <- data$aucMetrics |> dplyr::mutate(across(where(is.numeric), \(x) round(x, 2)))
+}
+if(!is.null(data$variableImportance) && !all(is.na(data$variableImportance))) {
+  data$variableImportance <- data$variableImportance |> dplyr::mutate(across(where(is.numeric), \(x) round(x, 2)))
+}
+
+# Bounds for map initialization
+if (!is.null(data$occData) && nrow(data$occData) > 0) {
+  # Convert to sf if it's just a data frame
+  if (!inherits(data$occData, "sf")) {
+    temp_sf <- data$occData |> 
+      dplyr::filter(!is.na(longitude), !is.na(latitude)) |>
+      sf::st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+    mapBounds <- if(nrow(temp_sf) > 0) sf::st_bbox(temp_sf) else NULL
+  } else {
+    mapBounds <- sf::st_bbox(data$occData)
+  }
+} else {
+  mapBounds <- NULL
+}
+```
+
+# `r paste0('*', printSpecies, '*')`
+
+<br>
+
+## Occurrence records    
+
+The table below shows a summary of the occurrence records for the taxon. A record “with Lat/Long” is one that has a complete set of latitude and longitude values associated with it, which could be used for distribution modeling and the conservation gap analysis. In preparation for the conservation gap analyses, we classified each record based on whether it was an existing *ex situ* germplasm sample from a genebank, botanic garden, or other repository (labeled G, as most records were from genebanks), or a reference observation/voucher specimen (labeled H, as most of these records were from herbaria).
+
+```{r  echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(data$unifiedCounts,
+              rownames = FALSE,
+              class = "compact",
+              options = list(dom = 't'))
+```
+
+<br>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, include = FALSE}
+# Palettes and visual setup
+thresColor <- colorNumeric(
+  palette = c("#cfcccc70", "#45B320"),
+  domain = c(0, 1),
+  alpha = TRUE,
+  na.color = "transparent"
+)
+
+distColor <- c("#ffffd4", "#fed98e", "#fe9929", "#d95f0e", "#993404")
+exPal <- c("#cfcccc80", "#45b320", "#7570b3")
+
+if(data$NoModel == FALSE){
+  # Use pre-calculated Leaflet-ready rasters
+  threshold <- data$binaryMap
+  protectedArea <- data$protectedArea
+  srs1 <- data$srs1
+  grs1 <- data$grs1
+  grsexMap <- data$grsexMap
+  ersinMap <- data$ersinMap
+  ecoRast <- data$ecoRast
+  
+  # Predictor results
+  meanDist <- data$projectedResults$mean
+  medianDist <- data$projectedResults$median
+  stdevDist <- data$projectedResults$stdev
+  
+  # Value-based palettes
+  srsPal <- colorNumeric(palette = c("#cfcccc95","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#0c2c84"), 
+                         domain = values(srs1), alpha = TRUE, na.color = "transparent")
+  meanPal <- colorNumeric(palette = distColor, domain = values(meanDist), na.color = "transparent")
+  medianPal <- colorNumeric(palette = distColor, domain = values(medianDist), na.color = "transparent")
+  stdevPal <- colorNumeric(palette = distColor, domain = values(stdevDist), na.color = "transparent")
+  
+  grsinColor <- colorNumeric(palette = exPal, domain = values(grs1), alpha = TRUE, na.color = "transparent")
+  
+  if(!is.null(grsexMap)){
+    grsexColor <- colorNumeric(palette = exPal, domain = values(grsexMap), alpha = TRUE, na.color = "transparent")
+  }
+  
+  if(!is.null(data$ers2)){
+    ecoInColor <- colorFactor(palette = data$ers2$color, domain = data$ers2$ECO_ID_U, na.color = "#FF000000")
+  }
+  
+  if(!is.null(data$ecoReg)){
+    ecoColor <- colorFactor(palette = data$ecoReg$color, domain = data$ecoReg$ECO_ID_U, na.color = "#FF000000")
+  }
+}
+```
+
+<br>
+
+## Map of predicted distribution
+
+The map below shows the median, mean, and standard deviation (SD) of potential distribution model runs, as well as the predicted presence threshold distribution. The predicted presence threshold distribution was generated by applying a statistically determined threshold value to the median model distribution, and is used in the conservation gap analysis as the potential distribution model. The occurrences used in the modeling process are represented by dots, distinguishing between *ex situ* germplasm collections (G) and reference sightings/voucher specimens (H) records (as available), and the attribute data associated with the points can be viewed by clicking on the dots. The semi-transparent gray background reflects the native country-ecoregion area. Layers can be added to the map using the toggle buttons on the left side. The first layer turned on will be in the bottom position on the map.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# modeled distribution Map
+m1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 2)) |>
+  addTiles()
+
+if (!is.null(mapBounds)) {
+  m1 <- m1 |> fitBounds(mapBounds[[1]], mapBounds[[2]], mapBounds[[3]], mapBounds[[4]])
+}
+
+m1 <- m1 |>
+  addCircleMarkers(data = data$occData[data$occData$type=="H",],
+             color = ~color, opacity = 1, radius = 2, group = "Occurrences", stroke = 1,
+             popup = ~popup) |> 
+  addCircleMarkers(data = data$occData[data$occData$type=="G",],
+             color = ~color, opacity = 1, radius = 2, group = "Occurrences", stroke = 1,
+             popup = ~popup)|>
+    leaflet::addLegend(position = "bottomright", color = c("#1184D4","#6300F0"),
+      labels = c("H (for herbaria) observations", "G (for genebank) samples"),
+      title = "Observation Type", group = "Occurrences")
+
+if(data$NoModel == FALSE){
+m2 <- m1 |> 
+  addRasterImage(x = threshold, colors = thresColor, group = "Potential distribution model", project = FALSE)|>
+    leaflet::addLegend(position = "bottomright", color = c( "#cfcccc","#45B320"),
+            labels = c("Native Area", "Potential distribution model"), title = "Modeled Habitat", group = "Potential distribution model")|>
+  addRasterImage(x = meanDist, colors = meanPal, group = "Mean Distribution Model", project = FALSE)|>
+    leaflet::addLegend(position = "bottomright", color = distColor, title = "Mean Distribution Model",
+            labels = c("low","","","","high"), group = "Mean Distribution Model")|>
+  addRasterImage(x = medianDist, colors = medianPal, group = "Median Distribution Model", project = FALSE) |>
+    leaflet::addLegend(position = "bottomright", color = distColor, title = "Median Distribution Model",
+            labels = c("low","","","","high"), group = "Median Distribution Model")|>
+  addRasterImage(x = stdevDist, colors = stdevPal, group = "SD of Distribution Model", project = FALSE)|>
+    leaflet::addLegend(position = "bottomright", color = distColor, title = "SD of Distribution Model",
+            labels = c("low","","","","high"), group = "SD of Distribution Model")
+
+m3 <- m2 |>
+  addLayersControl(position = "topleft", options = list(collapsed = FALSE, autoZIndex = FALSE),
+    overlayGroups = c("Potential distribution model","Occurrences", "Mean Distribution Model", "Median Distribution Model", "SD of Distribution Model"))|> 
+  hideGroup(c("Mean Distribution Model", "Median Distribution Model", "SD of Distribution Model"))
+m3 
+}else{ m1 }
+```
+
+<br>
+
+### Evaluation metrics 
+
+```{r, echo=FALSE, eval=TRUE}
+if(data$NoModel == FALSE){
+  DT::datatable(data$modelEvaluation, class = "hover", options = list(dom = 't'))
+}else{
+  "No model was generated for this species"
+}
+```
+
+<br>
+```{r, echo=FALSE, eval=TRUE}
+if(!is.null(data$aucMetrics)) DT::datatable(data$aucMetrics, class = "hover", options = list(dom = 't'))
+```
+
+### Predictors used in modeling process 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+if(data$NoModel == FALSE){
+  DT::datatable(data$variableImportance, rownames = FALSE, class = "compact")
+} else {
+  "No model was generated for this species"
+}
+```
+
+<br>
+<br>
+
+#  *Ex situ* conservation gap analysis 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(data$exScores, rownames = FALSE, class = "compact", options = list(dom = 't'))
+```
+
+<br>
+
+## Map of *ex situ* conservation gap analysis measures
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ex1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 2))|>
+      addProviderTiles(providers$Esri.WorldGrayCanvas)
+
+if (!is.null(mapBounds)) {
+  ex1 <- ex1 |> fitBounds(mapBounds[[1]], mapBounds[[2]], mapBounds[[3]], mapBounds[[4]])
+}
+
+if (!is.null(data$allEcos)) {
+  ex1 <- ex1 |>
+      addPolygons(data = data$allEcos, group = "All ecoregions", weight = 2, stroke = TRUE, fill = TRUE, fillOpacity = 0.2, popup = ~ECO_NAME, color = "#60616050")
+}
+
+if(data$NoModel == FALSE){
+  ex1 <- ex1 |>
+    leaflet::addRasterImage(x = threshold, colors = thresColor, group = "Potential distribution model", project = FALSE)
+
+  if(!is.null(grsexMap)){
+    exG <- ex1 |>
+      addRasterImage(x = grsexMap, colors = grsexColor, group = "GRS ex situ", project = FALSE) |>
+      addCircleMarkers(data = data$occData[data$occData$type == "G",], color = ~ color, opacity = 1, radius = 2, group = "GRS ex situ", stroke = 1, popup = ~ popup) |>
+      leaflet::addLegend(position = "bottomright", color = exPal, title = "Ex Situ GRS",
+        labels = c("Native area", "Potential distribution model", "Areas < 50 km from collection"), group = "GRS ex situ")
+  } else { exG <- ex1 }
+
+  if(!is.null(data$ecoRast) && !is.null(data$ecoReg)){
+      exE <- exG |>
+      addRasterImage(data$ecoRast, group = "ERS ex situ", colors = ecoColor, project = FALSE) |>
+      leaflet::addLegend(colors = data$ecoReg$color, group = "ERS ex situ", labels = data$ecoReg$ECO_NAME)|>
+      addPolygons(data = data$ecoReg, group = "Missing ecoregions", color = "#f0a01f", weight = 2, opacity = 0.8, fillOpacity = 0.3, popup = ~ECO_NAME)
+  } else { exE <- exG }
+  
+  ex3 <- exE |>
+    addLayersControl(position = "topleft", options = list(collapsed = FALSE, autoZIndex = FALSE),
+      overlayGroups = c("Potential distribution model", "GRS ex situ", "ERS ex situ", "Missing ecoregions", "All ecoregions")) |>
+    hideGroup(c("ERS ex situ"))
+  ex3
+} else {
+  ex1
+}
+```
+
+<br>
+
+# *In situ* conservation gap analysis
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(data$inScores, rownames = FALSE, class = "compact", options = list(dom = 't'))
+```
+
+<br>
+
+## Map of *in situ* conservation gap analysis measures
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+in1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 2))|>
+      addProviderTiles(providers$Esri.WorldGrayCanvas)
+
+if (!is.null(mapBounds)) {
+  in1 <- in1 |> fitBounds(mapBounds[[1]], mapBounds[[2]], mapBounds[[3]], mapBounds[[4]])
+}
+
+if (!is.null(data$allEcos)) {
+  in1 <- in1 |>
+      addPolygons(data = data$allEcos, group = "All ecoregions", weight = 2, stroke = TRUE, fill = TRUE, fillOpacity = 0.2, popup = ~ECO_NAME, color = "#60616050")
+}
+
+if(data$NoModel == FALSE){
+  in1 <- in1 |>
+    leaflet::addRasterImage(x = threshold, colors = thresColor, group = "Potential distribution model", project = FALSE)
+
+  inS <- in1 |> 
+    addRasterImage(x = srs1, colors = srsPal, group = "SRS in situ", project = FALSE)|>
+    addRasterImage(x = protectedArea, colors = "#7570b3", group = "SRS in situ", project = FALSE )|>
+    leaflet::addLegend(colors = "#7570b3", group = "SRS in situ", labels = c("Protected Areas"))
+
+  inG <- inS |>
+    addRasterImage(x = grs1, colors = grsinColor, group = "GRS in situ", project = FALSE)|>
+    leaflet::addLegend(colors = exPal, group = "GRS in situ", labels = c("Background area", "Potential distribution", "Distribution in PA"))
+
+  if(!is.null(ersinMap)){
+    inE <- inG |>
+    addRasterImage(x = ersinMap, colors = ecoInColor, group = "ERS in situ", project = FALSE)|>
+      leaflet::addLegend(colors = data$ers2$color, group = "ERS in situ", labels = data$ers2$ECO_NAME)
+    
+    # Add polygons for better visibility of the gap areas
+    if (!is.null(data$ers2)) {
+      gapEcos_in <- data$allEcos |> dplyr::filter(ECO_ID_U %in% data$ers2$ECO_ID_U)
+      inE <- inE |> addPolygons(data = gapEcos_in, group = "ERS in situ", color = "#f0a01f", weight = 2, opacity = 0.8, fillOpacity = 0.3, popup = ~ECO_NAME)
+    }
+  } else { inE <- inG }
+
+  inMap <- inE |> 
+    addLayersControl(position = "topleft", options = list(collapsed = FALSE, autoZIndex = FALSE),
+      overlayGroups = c("Potential distribution model", "SRS in situ", "GRS in situ", "ERS in situ", "All ecoregions"))|>
+    hideGroup(group = c( "SRS in situ", "ERS in situ","All ecoregions"))
+  inMap
+} else {
+  in1
+}
+```
+```
+
+<br>
+
+# Combined conservation gap analysis
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+DT::datatable(data$finalConservationTable, rownames = FALSE, class = "compact", options = list(dom = 't'))
+```
+
+<br>
+
+## Conservation scores 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='right',out.width="100%"}
+# Plotly logic: ID, Category, Metric, value
+if (!is.null(data$exScores) && !is.null(data$inScores)) {
+  d2 <- dplyr::bind_rows(
+    data$exScores |> 
+      dplyr::mutate(Category = "ex situ", ID = species) |>
+      dplyr::select(ID, Category, SRS = `SRS ex situ`, GRS = `GRS ex situ`, ERS = `ERS ex situ`, FCS = `FCS ex situ`),
+    data$inScores |> 
+      dplyr::mutate(Category = "in situ", ID = species) |>
+      dplyr::select(ID, Category, SRS = `SRS in situ`, GRS = `GRS in situ`, ERS = `ERS in situ`, FCS = `FCS in situ`)
+  )
+
+  d3 <- d2 |> pivot_longer(cols = c("SRS", "GRS","ERS", "FCS"), names_to = "Metric")
+
+  # Add combined mean row correctly
+  d3 <- d3 |> bind_rows(
+    data.frame(
+      ID = species,
+      Category = "combined",
+      Metric = "Combined Final Conservation Score",
+      value = data$finalConservationTable$`Final Conservation Score Mean`
+    )
+  )
+
+  d3$Metric <- factor(d3$Metric, levels = c("SRS", "GRS", "ERS", "FCS", "Combined Final Conservation Score"))
+
+  plot_ly(d3, x = ~Metric, y = ~value, color = ~Category, type = 'bar')|>
+    layout(xaxis = list(title = ""), yaxis = list(title = "Score"), barmode = 'group')
+} else {
+  "Insufficient data for conservation score chart."
+}
+```
+```

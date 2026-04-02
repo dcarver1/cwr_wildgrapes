@@ -260,8 +260,8 @@ r2 <- s2$taxon[!s2$taxon %in% dontRun]
 # avoiding remodel
 # "Vitis riparia","Vitis rotundifolia"
 
-r3 <- c("Vitis cinerea", "Vitis aestivalis")
-j <- "Vitis aestivalis"
+r3 <- c("Vitis girdiana", "Vitis arizonica")
+j <- "Vitis girdiana"
 # start of for loop -------------------------------------------------------
 for (j in r3) {
   # species
@@ -392,7 +392,7 @@ for (j in r3) {
   ## associate observations with bioclim data and spatial thin
   m_data1 <- write_CSV(
     path = allPaths$allDataPath,
-    overwrite = TRUE,
+    overwrite = overwrite,
     generateModelData(
       speciesPoints = sp1,
       natArea = natArea,
@@ -472,7 +472,7 @@ for (j in r3) {
     ## prepare data for maxent model
     rasterInputs <- write_Rast(
       path = allPaths$prepRasters,
-      overwrite = TRUE,
+      overwrite = overwrite,
       function1 = cropRasters(
         natArea = natArea,
         bioVars = bioVars,
@@ -494,7 +494,7 @@ for (j in r3) {
       ## raster objects
       projectsResults <- write_RDS(
         path = allPaths$modeledRasters,
-        overwrite = TRUE,
+        overwrite = overwrite,
         function1 = rasterResults(sdm_result)
       ) |> # unwrap the list of wrapped rasters
         lapply(terra::unwrap)
@@ -550,7 +550,7 @@ for (j in r3) {
       ## ersin
       ersin <- write_CSV(
         path = allPaths$ersinPath,
-        overwrite = overwrite,
+        overwrite = TRUE,
         function1 = ers_insitu(
           occuranceData = sp1,
           nativeArea = natArea,
@@ -837,7 +837,7 @@ for (j in r3) {
     #combined measure
     fcsCombined <- write_CSV(
       path = allPaths$fcsCombinedPath,
-      overwrite = TRUE,
+      overwrite = overwrite,
       function1 = fcs_combine(fcsin = fcsin, fcsex = fcsex)
     )
 
@@ -927,7 +927,7 @@ if (runSummaries == TRUE) {
   )
 }
 # produce boxplot summaries -----------------------------------------------
-renderBoxPlots <- TRUE
+renderBoxPlots <- FALSE
 if (renderBoxPlots == TRUE) {
   # compile all modeling data
   amd <- list.files(
