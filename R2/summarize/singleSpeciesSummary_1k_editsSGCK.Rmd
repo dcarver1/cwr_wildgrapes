@@ -39,6 +39,55 @@ if(testing == TRUE){
 
 printSpecies <- stringr::str_replace_all(string = species, pattern = "_", replacement = " ")
 
+# --- Reduce polygon complexity and coordinate precision to reduce HTML size ---
+round_sf_coords <- function(sf_obj, digits = 3) {
+  if (is.null(sf_obj) || nrow(sf_obj) == 0) return(sf_obj)
+  geom <- sf::st_geometry(sf_obj)
+  geom <- sf::st_sfc(lapply(geom, function(x) {
+    if (inherits(x, "POLYGON")) {
+      sf::st_polygon(lapply(x, function(y) round(y, digits)))
+    } else if (inherits(x, "MULTIPOLYGON")) {
+      sf::st_multipolygon(lapply(x, function(y) lapply(y, function(z) round(z, digits))))
+    } else if (inherits(x, "POINT")) {
+      sf::st_point(round(as.numeric(x), digits))
+    } else {
+      x
+    }
+  }), crs = sf::st_crs(sf_obj))
+  sf::st_geometry(sf_obj) <- geom
+  return(sf_obj)
+}
+
+if (!is.null(data$naturalArea)) {
+  # Simplify polygons predictably by turning off S2 temporarily 
+  # (so dTolerance is in degrees: 0.05 deg is ~5.5km)
+  s2_state <- sf::sf_use_s2()
+  sf::sf_use_s2(FALSE)
+  
+  is_longlat <- sf::st_is_longlat(data$naturalArea)
+  tol <- if (!is.na(is_longlat) && is_longlat) 0.05 else 5000
+  data$naturalArea <- sf::st_simplify(data$naturalArea, preserveTopology = FALSE, dTolerance = tol)
+  
+  sf::sf_use_s2(s2_state)
+  
+  # Round coordinates (2 digits is ~1.1km precision)
+  digits_to_keep <- if (!is.na(is_longlat) && is_longlat) 2 else 0
+  data$naturalArea <- round_sf_coords(data$naturalArea, digits = digits_to_keep)
+}
+
+if (!is.null(data$occuranceData)) {
+  if (inherits(data$occuranceData, "sf")) {
+    is_longlat <- sf::st_is_longlat(data$occuranceData)
+    digits_to_keep <- if (!is.na(is_longlat) && is_longlat) 3 else 0
+    data$occuranceData <- round_sf_coords(data$occuranceData, digits = digits_to_keep)
+  }
+  if ("longitude" %in% names(data$occuranceData)) {
+    data$occuranceData$longitude <- round(data$occuranceData$longitude, 3)
+    data$occuranceData$latitude <- round(data$occuranceData$latitude, 3)
+  }
+}
+# ----------------------------------------------------------------------------
+
 
 # remove the g point from MBG for bloodworthiana 
 if(species == "Vitis bloodworthiana"){
@@ -342,22 +391,19 @@ if (class(gBuf) != "character" & data$fcsex$GRS != 0) {
                  na.color = "transparent")
   
   # Mean distribution map
-  meanDist <- data$projectedResults$mean |>
-    terra::aggregate(fact = resampleFactor, fun = "mean")
+  meanDist <- data$projectedResults$mean 
   meanPal <- colorNumeric(palette = distColor,
                  domain = values(meanDist),
                  na.color = "transparent")
   # Median distribution map
-  medianDist <- data$projectedResults$median|>
-    terra::aggregate(fact = resampleFactor, fun = "mean")
+  medianDist <- data$projectedResults$median
   medianPal <-
     colorNumeric(palette = distColor,
                  domain = values(medianDist),
                  na.color = "transparent")
   
   # standdard devation map
-  stdevDist <- data$projectedResults$stdev|>
-    terra::aggregate(fact = resampleFactor, fun = "mean")
+  stdevDist <- data$projectedResults$stdev
   stdevPal <- colorNumeric(palette = distColor,
                  domain = values(stdevDist),
                  na.color = "transparent")
@@ -406,6 +452,7 @@ if(data$NoModel == FALSE){
 m2 <- m1 |> 
   # threshold 
   addRasterImage(x = raster(threshold),
+                  
                  colors = thresColor, 
                  group = "Potential distribution model",
                  project = FALSE)|>
@@ -417,6 +464,7 @@ m2 <- m1 |>
   #mean 
   addRasterImage(x = meanDist, 
                  colors = meanPal,
+                 
                  group = "Mean Distribution Model",
                  project = FALSE)|>
     leaflet::addLegend(position = "bottomright",
@@ -427,6 +475,7 @@ m2 <- m1 |>
   #median 
   addRasterImage(x = medianDist, 
                  colors = medianPal,
+                 
                  group = "Median Distribution Model",
                  project = FALSE) |>
     leaflet::addLegend(position = "bottomright",

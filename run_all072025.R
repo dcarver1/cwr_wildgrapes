@@ -263,7 +263,7 @@ r2 <- s2$taxon[!s2$taxon %in% dontRun]
 r3 <- c("Vitis girdiana", "Vitis arizonica")
 j <- "Vitis girdiana"
 # start of for loop -------------------------------------------------------
-for (j in r3) {
+for (j in s2$taxon) {
   # species
   # create unique path for summary HTML docs
   p1 <- paste0("data/Vitis/speciesSummaryHTML/", runVersion)
