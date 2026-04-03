@@ -165,14 +165,8 @@ DT::datatable(cj,
 occData <- data$occuranceData |>
   dplyr::mutate(
     popup = paste0(
-      "<br/><b>Taxon:</b> ",
-      taxon,
-      "<br/><b>Source:</b> ",
-      databaseSource,
-      "<br/><b>Collector Code:</b> ",
-      institutionCode,
-      "<br/><b>Collection Type:</b> ",
-      type
+      "<b>", taxon, "</b><br/>",
+      type, " (", databaseSource, ")"
     )
   ) |>
   mutate(color = case_when(type == "H" ~ "#1184D4",
@@ -183,6 +177,33 @@ webMecOccData <- vect(st_transform(occData, crs = "epsg:3857")) # need to change
 if(data$NoModel == FALSE){
     # predicted presence map
   threshold <- data$binaryMap  
+  
+  # --- Reduce raster resolution for widespread species ---
+  if (species %in% c("Vitis riparia", "Vitis rotundifolia", "Vitis tiliifolia",
+                     "Vitis_riparia", "Vitis_rotundifolia", "Vitis_tiliifolia")) {
+    resampleFactor <- 5
+    
+    threshold <- terra::aggregate(threshold, fact = resampleFactor, fun = "max", na.rm = TRUE)
+      
+    if (!is.null(data$protectedArea)) {
+      data$protectedArea <- terra::aggregate(data$protectedArea, fact = resampleFactor, fun = "max", na.rm = TRUE)
+    }
+    
+    if (!is.null(data$projectedResults$mean)) {
+      data$projectedResults$mean <- terra::aggregate(data$projectedResults$mean, fact = resampleFactor, fun = "mean", na.rm = TRUE)
+    }
+    if (!is.null(data$projectedResults$median)) {
+      data$projectedResults$median <- terra::aggregate(data$projectedResults$median, fact = resampleFactor, fun = "mean", na.rm = TRUE)
+    }
+    if (!is.null(data$projectedResults$stdev)) {
+      data$projectedResults$stdev <- terra::aggregate(data$projectedResults$stdev, fact = resampleFactor, fun = "mean", na.rm = TRUE)
+    }
+    
+    if (!is.null(data$g_bufferCrop) && inherits(data$g_bufferCrop, "SpatRaster")) {
+      data$g_bufferCrop <- terra::aggregate(data$g_bufferCrop, fact = resampleFactor, fun = "max", na.rm = TRUE)
+    }
+  }
+  # -------------------------------------------------------
   
   thresColor <- colorNumeric(
     palette = c("#cfcccc70", "#45B320"),
@@ -421,9 +442,16 @@ The map below shows the median, mean, and standard deviation (SD) of potential d
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # modeled distribution Map
+
+# Define a much shorter popup text to prevent Base64/HTML string bloat
+occData$popup <- paste0(
+  "<b>", occData$taxon, "</b><br/>",
+  occData$type, " (", occData$databaseSource, ")"
+)
+
 ## Add occurrances 
 m1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3)) |>
-  addTiles()|>
+      addProviderTiles(providers$Esri.WorldGrayCanvas)|>
   addCircleMarkers(data = occData[occData$type=="H",],
              color = ~color,
              opacity = 1,
@@ -448,11 +476,16 @@ m1 <- leaflet(width = "100%", options = leafletOptions(minZoom = 3)) |>
 
 
 if(data$NoModel == FALSE){
+  # Trim rasters to remove empty edge space and reduce HTML payload size
+  threshold_trim <- raster::trim(raster(threshold))
+  meanDist_trim <- raster::trim(meanDist)
+  medianDist_trim <- raster::trim(medianDist)
+  stdevDist_trim <- raster::trim(stdevDist)
+
   ## add rasters 
 m2 <- m1 |> 
   # threshold 
-  addRasterImage(x = raster(threshold),
-                  
+  addRasterImage(x = threshold_trim,
                  colors = thresColor, 
                  group = "Potential distribution model",
                  project = FALSE)|>
@@ -462,9 +495,8 @@ m2 <- m1 |>
             title = "Modeled Habitat",
             group = "Potential distribution model")|>
   #mean 
-  addRasterImage(x = meanDist, 
+  addRasterImage(x = meanDist_trim, 
                  colors = meanPal,
-                 
                  group = "Mean Distribution Model",
                  project = FALSE)|>
     leaflet::addLegend(position = "bottomright",
@@ -473,9 +505,8 @@ m2 <- m1 |>
             labels = c("low","","","","high"),
             group = "Mean Distribution Model")|>
   #median 
-  addRasterImage(x = medianDist, 
+  addRasterImage(x = medianDist_trim, 
                  colors = medianPal,
-                 
                  group = "Median Distribution Model",
                  project = FALSE) |>
     leaflet::addLegend(position = "bottomright",
@@ -484,7 +515,7 @@ m2 <- m1 |>
             labels = c("low","","","","high"),
             group = "Median Distribution Model")|>
     #stdev 
-  addRasterImage(x = stdevDist, 
+  addRasterImage(x = stdevDist_trim, 
                  colors = stdevPal,
                  group = "SD of Distribution Model",
                  project = FALSE)|>
@@ -647,23 +678,28 @@ Displayed maps, projected at 2.5 arc minutes resolution here, may not precisely 
 
 # start with a map of the distribution and ecoregions 
 
-ex1 <- leaflet(width = "100%")|>
-      addProviderTiles(providers$Esri.WorldGrayCanvas)|>
-      # Outline of all ecoregions
-      addPolygons(
-        data = allEcos,
-        group = "All ecoregions",
-        weight = 2,
-        stroke = TRUE,
-        fill = TRUE,
-        fillOpacity = 0.2,
-        popup = allEcos$ECO_NAME,
-        color = "#60616050"
-      ) |>
-    leaflet::addRasterImage(x = raster(threshold),
-                 colors = thresColor, 
-                 group = "Potential distribution model",
-                 project = FALSE)
+if(data$NoModel == FALSE){
+  ex1 <- leaflet(width = "100%")|>
+        addProviderTiles(providers$Esri.WorldGrayCanvas)|>
+        # Outline of all ecoregions
+        addPolygons(
+          data = allEcos,
+          group = "All ecoregions",
+          weight = 2,
+          stroke = TRUE,
+          fill = TRUE,
+          fillOpacity = 0.2,
+          popup = allEcos$ECO_NAME,
+          color = "#60616050"
+        ) |>
+      leaflet::addRasterImage(x = threshold_trim,
+                   colors = thresColor, 
+                   group = "Potential distribution model",
+                   project = FALSE)
+} else {
+  ex1 <- leaflet(width = "100%") |>
+      addProviderTiles(providers$Esri.WorldGrayCanvas)
+}
 
 
 # Add the GRSex maps 
@@ -694,10 +730,11 @@ if(data$NoModel == FALSE){
   )     
   }else{ # G points with valid lat lon are present
     # generate the GRSex map
+    grsexMap_trim <- raster::trim(raster(grsexMap))
     exG <- ex1 |>
       #GRSex raster
       addRasterImage(
-        x = raster(grsexMap),
+        x = grsexMap_trim,
         colors = grsexColor,
         group = "GRS ex situ",
         project = FALSE)   |>
@@ -745,9 +782,10 @@ if(data$NoModel == FALSE){
     html = ers_html,
     position = "bottomleft")
     } else {
+      ecoRast_trim <- raster::trim(raster(ecoRast))
       exE <- exG |>
       # Ecoregion Raster Layers
-      addRasterImage(raster(ecoRast),
+      addRasterImage(ecoRast_trim,
                    group = "ERS ex situ",
                    colors = ecoColor,
                    project = FALSE) |>
@@ -927,23 +965,28 @@ Displayed maps, projected at 2.5 arc minutes resolution here, may not precisely 
 
 
 # generate the base map 
-in1 <- leaflet(width = "100%")|>
-      addProviderTiles(providers$Esri.WorldGrayCanvas)|>
-      # Outline of all ecoregions
-      addPolygons(
-        data = allEcos,
-        group = "All ecoregions",
-        weight = 2,
-        stroke = TRUE,
-        fill = TRUE,
-        fillOpacity = 0.2,
-        popup = allEcos$ECO_NAME,
-        color = "#60616050"
-      ) |>
-    leaflet::addRasterImage(x = raster(threshold),
-                 colors = thresColor, 
-                 group = "Potential distribution model",
-                 project = FALSE)
+if(data$NoModel == FALSE){
+  in1 <- leaflet(width = "100%")|>
+        addProviderTiles(providers$Esri.WorldGrayCanvas)|>
+        # Outline of all ecoregions
+        addPolygons(
+          data = allEcos,
+          group = "All ecoregions",
+          weight = 2,
+          stroke = TRUE,
+          fill = TRUE,
+          fillOpacity = 0.2,
+          popup = allEcos$ECO_NAME,
+          color = "#60616050"
+        ) |>
+      leaflet::addRasterImage(x = threshold_trim,
+                   colors = thresColor, 
+                   group = "Potential distribution model",
+                   project = FALSE)
+} else {
+  in1 <- leaflet(width = "100%") |>
+      addProviderTiles(providers$Esri.WorldGrayCanvas)
+}
 
 # srsin map 
 if(data$NoModel == FALSE){
@@ -968,16 +1011,19 @@ if(data$NoModel == FALSE){
     position = "bottomleft")
   }else{
 
+srs1_trim <- raster::trim(raster(srs1))
+protectedArea_trim <- raster::trim(raster(protectedArea))
+
 inS <- in1 |> 
   # SRSin 
   addRasterImage(
-    x = raster(srs1),
+    x = srs1_trim,
     colors = srsPal,
     group = "SRS in situ",
     project = FALSE)|>
   # protected Areas 
   addRasterImage(
-    x = raster(protectedArea),
+    x = protectedArea_trim,
     colors = "#7570b3",
     group = "SRS in situ",
     project = FALSE )|>
@@ -1016,9 +1062,10 @@ uniqueSRSVals <- sort(unique(values(srs1)))
   }else{
 
   ##GRSin map 
+  grs1_trim <- raster::trim(raster(grs1))
   inG <- inS |>
     addRasterImage(
-      x = raster(grs1),
+      x = grs1_trim,
       colors = grsinColor,
       group = "GRS in situ",
       project = FALSE
@@ -1052,8 +1099,9 @@ if(data$NoModel == FALSE){
   }else{
   missEcoIn <- allEcos[allEcos$ECO_ID_U %in% ersin$missingEcos, ]
   ##ERSin map 
+  ersinMap_trim <- raster::trim(raster(ersinMap))
   inE <- inG |>
-  addRasterImage(x = raster(ersinMap),
+  addRasterImage(x = ersinMap_trim,
     colors = ecoInColor,
     group = "ERS in situ",
     project = FALSE

@@ -260,10 +260,16 @@ r2 <- s2$taxon[!s2$taxon %in% dontRun]
 # avoiding remodel
 # "Vitis riparia","Vitis rotundifolia"
 
+# errors 20260403
+# "Vitis cinerea var. tomentosa" "Vitis novogranatensis"            "Vitis rufotomentosa"  "Vitis martineziana"
+# [1] "Vitis novogranatensis"            "Vitis rufotomentosa"              "Vitis rubriflora"                 "Vitis cinerea var. tomentosa"     "Vitis martineziana"
+#  [6] "Vitis munsoniana"                 "Vitis jaegerian
+## anything that doesn't have a model is failing due to the changes in the grab data functions.,
+
 r3 <- c("Vitis girdiana", "Vitis arizonica")
-j <- "Vitis girdiana"
+j <- "Vitis blancoi"
 # start of for loop -------------------------------------------------------
-for (j in s2$taxon) {
+for (j in s2$taxon[10:40]) {
   # species
   # create unique path for summary HTML docs
   p1 <- paste0("data/Vitis/speciesSummaryHTML/", runVersion)
@@ -494,7 +500,7 @@ for (j in s2$taxon) {
       ## raster objects
       projectsResults <- write_RDS(
         path = allPaths$modeledRasters,
-        overwrite = overwrite,
+        overwrite = TRUE,
         function1 = rasterResults(sdm_result)
       ) |> # unwrap the list of wrapped rasters
         lapply(terra::unwrap)
@@ -813,7 +819,7 @@ for (j in s2$taxon) {
     ##grsex
     grsex <- write_CSV(
       path = allPaths$grsexPath,
-      overwrite = overwrite,
+      overwrite = TRUE,
       function1 = grs_exsitu(
         speciesData = sd1,
         ga50 = g_bufferCrop,
