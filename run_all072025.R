@@ -223,7 +223,7 @@ s2 <- speciesData |>
 
 
 #testing
-j <- "Vitis baileyana"
+j <- "Vitis riparia"
 j <- s2$taxon[6]
 # species to regenerate nat area and SRSex measures
 dontRun <- c(
@@ -266,10 +266,10 @@ r2 <- s2$taxon[!s2$taxon %in% dontRun]
 #  [6] "Vitis munsoniana"                 "Vitis jaegerian
 ## anything that doesn't have a model is failing due to the changes in the grab data functions.,
 
-r3 <- c("Vitis girdiana", "Vitis arizonica")
+r3 <- c("Vitis rotundifolia", "Vitis tiliifolia")
 j <- "Vitis blancoi"
 # start of for loop -------------------------------------------------------
-for (j in s2$taxon[10:40]) {
+for (j in r3) {
   # species
   # create unique path for summary HTML docs
   p1 <- paste0("data/Vitis/speciesSummaryHTML/", runVersion)
