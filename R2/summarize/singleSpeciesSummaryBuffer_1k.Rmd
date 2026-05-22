@@ -116,17 +116,28 @@ c1_a <- data$countsData |>
     'Reference Records(H) with Lat/Long' = totalHUseful,
     'Unique Data Sources' = numberOfUniqueSources
   ) 
-# add in the model data counts 
-c2 <- data$modelDataCounts|>
-  dplyr::select(
-    Taxon = species,
-    'Presence Occurrences' = presenceRecords,
-    'Background Occurrences' = backgroudRecords,
-    'Total Occurrences Used for Buffer' = totalRecords
-  ) 
-# join 
-cj <- dplyr::left_join(c1_a,c2,by = "Taxon")|>
-  dplyr::mutate(Taxon = stringr::str_replace_all(Taxon, pattern = "_", replacement = " "))  
+# add in the model data counts if they exist (they may be NA for buffer models)
+if(is.data.frame(data$modelDataCounts) || is.list(data$modelDataCounts)){
+  c2 <- data$modelDataCounts |>
+    dplyr::select(
+      Taxon = species,
+      'Presence Occurrences' = presenceRecords,
+      'Background Occurrences' = backgroudRecords,
+      'Total Occurrences Used for Buffer' = totalRecords
+    ) 
+  # join 
+  cj <- dplyr::left_join(c1_a, c2, by = "Taxon") |>
+    dplyr::mutate(Taxon = stringr::str_replace_all(Taxon, pattern = "_", replacement = " "))  
+} else {
+  # if no model counts, just use the main counts data and maybe add NA columns so the table structure remains consistent
+  cj <- c1_a |>
+    dplyr::mutate(
+      Taxon = stringr::str_replace_all(Taxon, pattern = "_", replacement = " "),
+      'Presence Occurrences' = NA,
+      'Background Occurrences' = NA,
+      'Total Occurrences Used for Buffer' = NA
+    )
+}
 
 DT::datatable(cj,
               rownames = FALSE,
