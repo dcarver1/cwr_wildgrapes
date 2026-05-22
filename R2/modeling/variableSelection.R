@@ -16,7 +16,7 @@ varaibleSelection <- function(modelData, parallel) {
   # dplyr::select(-geometry)# [test2,] |> st_drop_geometry()
   # redefine var select to in
   varSelect <- bioValues |>
-    dplyr::select(-presence)
+    dplyr::select(-presence, -type)
   # Maximum modelled data
   #write.csv(x = bioValues, file = paste0(sp_dir, "/modeling/maxent/bioValuesForPresencePoints.csv"))
 
@@ -26,9 +26,13 @@ varaibleSelection <- function(modelData, parallel) {
   # vsurfThres <- VSURF_thres(x=bioValues[,1:26] , y=as.factor(bioValues$presence) ,
   #                           ntree = 100 )
   ### change for 30 arc second run
+  bio_no_na <- bioValues |>
+    dplyr::select(-type) |>
+    tidyr::drop_na()
+
   vsurfThres <- VSURF_thres(
-    x = bioValues[, 2:26],
-    y = as.factor(bioValues$presence),
+    x = bio_no_na[, c(2:26)],
+    y = as.factor(bio_no_na$presence),
     parallel = parallel
   )
   ###
@@ -41,7 +45,9 @@ varaibleSelection <- function(modelData, parallel) {
   # ordered predictors from our variable selection
   predictors <- varSelect[, c(inputPredictors)]
   # Calculate correlation coefficient matrix
-  correlation <- cor(predictors, method = "pearson")
+  correlation <- predictors |>
+    dplyr::select(where(is.numeric)) |>
+    cor(method = "pearson")
   #change self correlation value
 
   # #define the list of top 15 predictors

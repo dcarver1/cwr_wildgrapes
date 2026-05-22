@@ -25,9 +25,11 @@ ers_insitu <- function(
     z = nativeArea,
     fun = "sum",
     na.rm = TRUE
-  ) |>
+  ) 
+  names(totEco)[1] <- "value"
+  totEco <- totEco |>
     dplyr::mutate(ECO_ID_U = nativeArea$ECO_ID_U) |>
-    dplyr::filter(Threshold > 0)
+    dplyr::filter(value > 0)
 
   # reduce to number of rows for simple math
   totalEcoregions <- nrow(totEco)
@@ -38,9 +40,11 @@ ers_insitu <- function(
     z = nativeArea,
     fun = "sum",
     na.rm = TRUE
-  ) |>
+  )
+  names(totProEco)[1] <- "value"
+  totProEco <- totProEco |>
     dplyr::mutate(ECO_ID_U = nativeArea$ECO_ID_U) |>
-    dplyr::filter(layer > 0)
+    dplyr::filter(value > 0)
 
   totalProtectedEcoregions <- nrow(totProEco)
   # calculate the ERS function
@@ -59,14 +63,14 @@ ers_insitu <- function(
   } else {
     missEcoIDs <- mEcos$ECO_ID_U
   }
-  
+
   # mask the thres features
   thres[thres!=1, ] <- NA
-  
+
   missingEcos <- nativeArea[nativeArea$ECO_ID_U %in% mEcos$ECO_ID_U, ]
-  
+
   maskThres <- terra::mask(thres, missingEcos)
-  # export 
+  # export
   if (!is.null(rasterPath)) {
     print("writing ")
     terra::writeRaster(x = maskThres, filename = rasterPath, overwrite = TRUE)
@@ -78,6 +82,6 @@ ers_insitu <- function(
     SPP_WITHIN_PA_N_ECO = totalProtectedEcoregions,
     ERS = ers
   )
-  df$missingEcos <- list(missEcoIDs)
+  df$missingEcos <- paste(missEcoIDs, collapse = ";")
   return(df)
 }
