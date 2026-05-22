@@ -266,8 +266,11 @@ r2 <- s2$taxon[!s2$taxon %in% dontRun]
 #  [6] "Vitis munsoniana"                 "Vitis jaegerian
 ## anything that doesn't have a model is failing due to the changes in the grab data functions.,
 
-r3 <- c("Vitis rotundifolia", "Vitis tiliifolia")
-j <- "Vitis blancoi"
+r3 <- c( "Vitis jaegeriana")
+       #   ,"Vitis rufotomentosa",
+       # "Vitis novogranatensis","Vitis rubriflora")
+
+j <- "Vitis californica"
 # start of for loop -------------------------------------------------------
 for (j in r3) {
   # species
