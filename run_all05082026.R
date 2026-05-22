@@ -73,7 +73,8 @@ dontRun <- c(
 
 r2 <- s2$taxon[!s2$taxon %in% dontRun]
 r3 <- c("Vitis novogranatensis") # specific target for this run
-
+# adding some text for git 
+#
 # 6. Main Modeling Loop
 for (j in r3) {
   print(paste("Processing:", j))
