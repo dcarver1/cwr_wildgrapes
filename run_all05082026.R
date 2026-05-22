@@ -44,43 +44,15 @@ s2 <- speciesData |>
   dplyr::arrange(count) |>
   dplyr::filter(taxon != "NA")
 
-dontRun <- c(
-  "Vitis bourgaeana",
-  "Vitis cinerea var. cinerea",
-  "Vitis baileyana",
-  "Vitis blancoi",
-  "Vitis peninsularis",
-  "Vitis biformis",
-  "Vitis jaegeriana",
-  "Vitis munsoniana",
-  "Vitis martineziana",
-  "Vitis cinerea var. tomentosa",
-  "Vitis rufotomentosa",
-  "Vitis novogranatensis",
-  "Vitis rubriflora",
-  "Vitis bloodworthiana",
-  "Vitis lincecumii",
-  "Vitis popenoei",
-  "Vitis berlandieri",
-  "Vitis rupestris",
-  "Vitis girdiana",
-  "Vitis californica",
-  "Vitis vulpina",
-  "Vitis arizonica",
-  "Vitis nesbittiana",
-  "Vitis x doaniana"
-)
-
 
 updateSpecies <- c(
   "Vitis riparia", # memmory error on vm 
-  "Vitis labrusca",
 )
 
 
 
 r2 <- s2$taxon[!s2$taxon %in% dontRun]
-r3 <- c("Vitis labrusca") # specific target for this run
+r3 <- c("Vitis riparia") # specific target for this run
 # adding some text for git 
 #
 # 6. Main Modeling Loop
