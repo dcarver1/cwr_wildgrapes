@@ -266,7 +266,7 @@ for (j in r3) {
 
       projectsResults <- write_RDS(
         path = allPaths$modeledRasters,
-        overwrite = TRUE,
+        overwrite = overwrite,
         function1 = rasterResults(sdm_result)
       ) |>
         lapply(terra::unwrap)
@@ -313,7 +313,7 @@ for (j in r3) {
 
       ersin <- write_CSV(
         path = allPaths$ersinPath,
-        overwrite = TRUE,
+        overwrite = overwrite,
         function1 = ers_insitu(
           occuranceData = sp1,
           nativeArea = natArea,
@@ -346,7 +346,7 @@ for (j in r3) {
 
       ersex <- write_CSV(
         path = allPaths$ersexPath,
-        overwrite = TRUE,
+        overwrite = overwrite,
         function1 = ers_exsitu(
           speciesData = sp1,
           thres = thres,
@@ -379,7 +379,7 @@ for (j in r3) {
 
       fcsCombined <- write_CSV(
         path = allPaths$fcsCombinedPath,
-        overwrite = TRUE,
+        overwrite = overwrite,
         function1 = fcs_combine(fcsin = fcsin, fcsex = fcsex)
       )
 
