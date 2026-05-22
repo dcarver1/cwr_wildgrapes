@@ -508,7 +508,7 @@ if (data$NoModel == FALSE) {
       x = threshold_trim,
       colors = thresColor,
       group = "Buffered Area",
-      project = FALSE
+      project = FALSE, maxBytes = 10 * 1024 * 1024
     ) |>
     leaflet::addLegend(
       position = "bottomright",
@@ -613,7 +613,7 @@ if(data$NoModel == FALSE){
       leaflet::addRasterImage(x = threshold_trim,
                    colors = thresColor, 
                    group = "Buffered Area",
-                   project = FALSE)
+                   project = FALSE, maxBytes = 10 * 1024 * 1024)
 } else {
   ex1 <- leaflet(width = "100%") |>
       addProviderTiles(providers$Esri.WorldGrayCanvas)
@@ -655,7 +655,7 @@ if(data$NoModel == FALSE){
         x = grsexMap_trim,
         colors = grsexColor,
         group = "GRS ex situ",
-        project = FALSE)   |>
+        project = FALSE, maxBytes = 10 * 1024 * 1024)   |>
       #G points
       addCircleMarkers(
         data = occData[occData$type == "G",],
@@ -706,7 +706,7 @@ if(data$NoModel == FALSE){
       addRasterImage(ecoRast_trim,
                    group = "ERS ex situ",
                    colors = ecoColor,
-                   project = FALSE) |>
+                   project = FALSE, maxBytes = 10 * 1024 * 1024) |>
       leaflet::addLegend(colors = ecoReg$color,
                 group = "ERS ex situ",
                 labels = ecoReg$ECO_NAME) |>
@@ -900,7 +900,7 @@ if(data$NoModel == FALSE){
       leaflet::addRasterImage(x = threshold_trim,
                    colors = thresColor, 
                    group = "Buffered Area",
-                   project = FALSE)
+                   project = FALSE, maxBytes = 10 * 1024 * 1024)
 } else {
   in1 <- leaflet(width = "100%") |>
       addProviderTiles(providers$Esri.WorldGrayCanvas)
@@ -938,13 +938,13 @@ inS <- in1 |>
     x = srs1_trim,
     colors = srsPal,
     group = "SRS in situ",
-    project = FALSE)|>
+    project = FALSE, maxBytes = 10 * 1024 * 1024)|>
   # protected Areas 
   addRasterImage(
     x = protectedArea_trim,
     colors = "#7570b3",
     group = "SRS in situ",
-    project = FALSE )|>
+    project = FALSE, maxBytes = 10 * 1024 * 1024 )|>
   leaflet::addLegend(colors = srsPal1,
             group = "SRS in situ",
             title = "SRS in situ",
@@ -986,7 +986,7 @@ uniqueSRSVals <- sort(unique(values(srs1)))
       x = grs1_trim,
       colors = grsinColor,
       group = "GRS in situ",
-      project = FALSE
+      project = FALSE, maxBytes = 10 * 1024 * 1024
     )|>
     leaflet::addLegend(colors = exPal,
               group = "GRS in situ",
@@ -1022,7 +1022,7 @@ if(data$NoModel == FALSE){
   addRasterImage(x = ersinMap_trim,
     colors = ecoInColor,
     group = "ERS in situ",
-    project = FALSE
+    project = FALSE, maxBytes = 10 * 1024 * 1024
   )|>
     leaflet::addLegend(colors = ers2$color,
               group = "ERS in situ",
