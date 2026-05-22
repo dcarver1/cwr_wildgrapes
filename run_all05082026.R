@@ -131,12 +131,13 @@ for (j in r3) {
   sp1 <- write_GPKG(
     path = allPaths$spatialDataPath,
     overwrite = overwrite,
-    function1 = createSF_Objects(speciesData = sd1) %>% removeDuplicates()
+    function1 = createSF_Objects(speciesData = sd1)
   )
 
   # Only apply FNA if sp1 is actually a spatial object (not the character error string)
   if (!inherits(sp1, "character")) {
-    sp1 <- write_GPKG(
+    sp1 <- removeDuplicates(sp1)
+    sp1 <-  write_GPKG(
       path = allPaths$spatialDataPath,
       overwrite = overwrite,
       function1 = applyFNA(
