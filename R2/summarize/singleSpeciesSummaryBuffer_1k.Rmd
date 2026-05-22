@@ -207,31 +207,6 @@ if (data$NoModel == FALSE) {
       )
     }
     
-    if (!is.null(data$projectedResults$mean)) {
-      data$projectedResults$mean <- terra::aggregate(
-        data$projectedResults$mean,
-        fact = resampleFactor,
-        fun = "mean",
-        na.rm = TRUE
-      )
-    }
-    if (!is.null(data$projectedResults$median)) {
-      data$projectedResults$median <- terra::aggregate(
-        data$projectedResults$median,
-        fact = resampleFactor,
-        fun = "mean",
-        na.rm = TRUE
-      )
-    }
-    if (!is.null(data$projectedResults$stdev)) {
-      data$projectedResults$stdev <- terra::aggregate(
-        data$projectedResults$stdev,
-        fact = resampleFactor,
-        fun = "mean",
-        na.rm = TRUE
-      )
-    }
-    
     if (!is.null(data$g_bufferCrop) &&
         inherits(data$g_bufferCrop, "SpatRaster")) {
       data$g_bufferCrop <- terra::aggregate(
@@ -472,28 +447,6 @@ if (data$NoModel == FALSE) {
     ),
     domain = values(srs1),
     alpha = TRUE,
-    na.color = "transparent"
-  )
-  
-  # Mean distribution map
-  meanDist <- data$projectedResults$mean
-  meanPal <- colorNumeric(palette = distColor,
-                          domain = values(meanDist),
-                          na.color = "transparent")
-  # Median distribution map
-  medianDist <- data$projectedResults$median
-  medianPal <-
-    colorNumeric(
-      palette = distColor,
-      domain = values(medianDist),
-      na.color = "transparent"
-    )
-  
-  # standdard devation map
-  stdevDist <- data$projectedResults$stdev
-  stdevPal <- colorNumeric(
-    palette = distColor,
-    domain = values(stdevDist),
     na.color = "transparent"
   )
 }
