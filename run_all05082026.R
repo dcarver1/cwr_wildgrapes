@@ -71,8 +71,25 @@ dontRun <- c(
   "Vitis x doaniana"
 )
 
+
+updateSpecies <- c(
+  "Vitis rotundifolia",
+  "Vitis riparia",
+  "Vitis arizonica",
+  "Vitis girdiana",
+  "Vitis berlandieri",
+  "Vitis bourgaeana",
+  "Vitis cinerea var. cinerea",
+  "Vitis bloodworthiana",
+  "Vitis rubriflora",
+  "Vitis labrusca",
+  "Vitis nesbittiana"
+)
+
+
+
 r2 <- s2$taxon[!s2$taxon %in% dontRun]
-r3 <- c("Vitis novogranatensis") # specific target for this run
+r3 <- c("Vitis rubriflora", "Vitis bourgaeana","Vitis bloodworthiana") # specific target for this run
 # adding some text for git 
 #
 # 6. Main Modeling Loop
@@ -126,17 +143,24 @@ for (j in r3) {
     overwrite = overwrite,
     function1 = srs_exsitu(sp_counts = c1)
   )
+  
+  if(c1$totalUseful > 0 ){
+    # --- 1. Generate the spatial object FIRST ---
+    sp1 <- write_GPKG(
+      path = allPaths$spatialDataPath,
+      overwrite = overwrite,
+      function1 = createSF_Objects(speciesData = sd1) |> removeDuplicates()
+    )
+  }else{
+    sp1 <- write_GPKG(
+      path = allPaths$spatialDataPath,
+      overwrite = overwrite,
+      function1 = createSF_Objects(speciesData = sd1) )
+  }
 
-  # --- 1. Generate the spatial object FIRST ---
-  sp1 <- write_GPKG(
-    path = allPaths$spatialDataPath,
-    overwrite = overwrite,
-    function1 = createSF_Objects(speciesData = sd1)
-  )
 
   # Only apply FNA if sp1 is actually a spatial object (not the character error string)
   if (!inherits(sp1, "character")) {
-    sp1 <- removeDuplicates(sp1)
     sp1 <-  write_GPKG(
       path = allPaths$spatialDataPath,
       overwrite = overwrite,
@@ -180,7 +204,7 @@ for (j in r3) {
       "_Summary_fnaFilter.html"
     )
 
-    if (!file.exists(htmlExport)) {
+    # if (!file.exists(htmlExport)) {
       rmarkdown::render(
         input = "R2/summarize/summaryDocForNoRecords.Rmd",
         output_format = "html_document",
@@ -189,7 +213,7 @@ for (j in r3) {
         params = list(counts = counts),
         envir = new.env(parent = globalenv())
       )
-    }
+    # }
     next # SKIP TO THE NEXT SPECIES
   }
 
@@ -426,7 +450,7 @@ for (j in r3) {
       )
 
       export1 <- paste0(j, "_Summary_fnaFilter")
-      if (!file.exists(export1)) {
+      # if (!file.exists(export1)) {
         render_result <- try(
           rmarkdown::render(
             input = "R2/summarize/singleSpeciesSummary_1k_editsSGCK.Rmd",
@@ -441,7 +465,7 @@ for (j in r3) {
           erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
           message("Failed to render 1km summary for ", j)
         }
-      }
+      # }
     }
   } else {
     erroredSpecies$lessThenEight <- c(erroredSpecies$lessThenEight, j)
@@ -591,7 +615,7 @@ for (j in r3) {
     )
 
     export_buf <- paste0(j, "_Summary_fnaFilter")
-    if (!file.exists(paste0(p1, "/", export_buf, ".html"))) {
+    # if (!file.exists(paste0(p1, "/", export_buf, ".html"))) {
       render_result_buf <- try(
         rmarkdown::render(
           input = "R2/summarize/singleSpeciesSummaryBuffer_1k.Rmd",
@@ -606,7 +630,7 @@ for (j in r3) {
         erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
         message("Failed to render 1km summary (buffer version) for ", j)
       }
-    }
+    # }
   }
 }
 

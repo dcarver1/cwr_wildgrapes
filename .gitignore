@@ -11,3 +11,6 @@ githubKey.pub
 /countyMapReporting/data
 /archive/data_backupds
 archive/
+output_rasters/mean.tif
+output_rasters/median.tif
+output_rasters/stdev.tif
