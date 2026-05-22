@@ -45,14 +45,12 @@ s2 <- speciesData |>
   dplyr::filter(taxon != "NA")
 
 
-updateSpecies <- c(
-  "Vitis riparia", # memmory error on vm 
-)
+updateSpecies <- c()
 
 
 
 r2 <- s2$taxon[!s2$taxon %in% dontRun]
-r3 <- c("Vitis riparia") # specific target for this run
+r3 <- c("Vitis shuttleworthii") # specific target for this run
 # adding some text for git 
 #
 # 6. Main Modeling Loop
@@ -94,7 +92,15 @@ for (j in r3) {
       ) |>
       dplyr::mutate(taxon = "Vitis aestivalis")
   }
-
+  
+  if (j == "Vitis shuttleworthii"){
+    sd1 <- sd1 |> 
+      dplyr::filter(
+        longitude != -80.001483
+      )
+  }
+  
+  
   c1 <- write_CSV(
     path = allPaths$countsPaths,
     overwrite = overwrite,
@@ -111,13 +117,13 @@ for (j in r3) {
     # --- 1. Generate the spatial object FIRST ---
     sp1 <- write_GPKG(
       path = allPaths$spatialDataPath,
-      overwrite = overwrite,
+      overwrite = TRUE,
       function1 = createSF_Objects(speciesData = sd1) |> removeDuplicates()
     )
   }else{
     sp1 <- write_GPKG(
       path = allPaths$spatialDataPath,
-      overwrite = overwrite,
+      overwrite = TRUE,
       function1 = createSF_Objects(speciesData = sd1) )
   }
 
@@ -266,7 +272,7 @@ for (j in r3) {
 
       projectsResults <- write_RDS(
         path = allPaths$modeledRasters,
-        overwrite = overwrite,
+        overwrite = TRUE,
         function1 = rasterResults(sdm_result)
       ) |>
         lapply(terra::unwrap)
@@ -598,7 +604,7 @@ for (j in r3) {
 }
 
 # 7. Post-Run Summaries
-runSummaries <- FALSE
+runSummaries <- TRUE
 if (runSummaries == TRUE) {
   generateRunSummaries(
     dir1 = dir1,
@@ -610,7 +616,7 @@ if (runSummaries == TRUE) {
   )
 }
 
-renderBoxPlots <- FALSE
+renderBoxPlots <- TRUE
 if (renderBoxPlots == TRUE) {
   amd <- list.files(
     dir1,
