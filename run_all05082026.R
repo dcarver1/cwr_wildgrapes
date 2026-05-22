@@ -73,23 +73,14 @@ dontRun <- c(
 
 
 updateSpecies <- c(
-  "Vitis rotundifolia",
-  "Vitis riparia",
-  "Vitis arizonica",
-  "Vitis girdiana",
-  "Vitis berlandieri",
-  "Vitis bourgaeana",
-  "Vitis cinerea var. cinerea",
-  "Vitis bloodworthiana",
-  "Vitis rubriflora",
+  "Vitis riparia", # memmory error on vm 
   "Vitis labrusca",
-  "Vitis nesbittiana"
 )
 
 
 
 r2 <- s2$taxon[!s2$taxon %in% dontRun]
-r3 <- c("Vitis rubriflora", "Vitis bourgaeana","Vitis bloodworthiana") # specific target for this run
+r3 <- c("Vitis labrusca") # specific target for this run
 # adding some text for git 
 #
 # 6. Main Modeling Loop
