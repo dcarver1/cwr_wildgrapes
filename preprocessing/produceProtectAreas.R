@@ -10,12 +10,12 @@
 
 pacman::p_load("terra", "tmap", "dplyr", "tictoc", "tidyterra","rmapshaper")
 
-# bioVars <- readRDS("data/geospatial_datasets/bioclim_layers/bioclim_2.5arcsec_terra.RDS")%>%
-#   unwrap()
+bioVars <- readRDS("data/geospatial_datasets/bioclim_layers/bioclim_2.5arcsec_terra.RDS")%>%
+  unwrap()
 
-# temp1 <- bioVars[[1]]
+temp1 <- bioVars[[1]]
 # 
-# rm(bioVars)
+rm(bioVars)
 
 
 f1 <- list.files(path = "data/geospatial_datasets/protectedLands/WDPA_Mar2023_Public_shp", pattern = ".gpkg",
