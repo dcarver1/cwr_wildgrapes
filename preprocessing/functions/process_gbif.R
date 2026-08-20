@@ -1,4 +1,9 @@
- # path <- "data/source_data/gbif.csv"
+## potential change 
+
+
+
+### this was the version used in the publication 
+# path <- "data/source_data/gbif.csv"
 
 processGBIF <- function(path){
   

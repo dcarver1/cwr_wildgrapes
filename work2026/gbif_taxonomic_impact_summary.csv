@@ -1,0 +1,41 @@
+accepted_name,synonyms_raw,original_raw_count,preserved_count,lumped_lost_count,gained_absorbed_count,dropped_entirely_count,final_pipeline_count,net_change
+Vitis acerifolia,Vitis longii,0,0,0,1020,0,1020,1020
+Vitis aestivalis,"Vitis aestivalis var. aestivalis, Vitis aestivalis var. bicolor, Vitis aestivalis var. argentifolia, Vitis argentifolia",11482,9871,1611,417,0,10288,-1194
+Vitis aestivalis var. aestivalis,NA,1620,1620,0,1,0,1621,1
+Vitis aestivalis var. bicolor,"Vitis aestivalis var. argentifolia, Vitis argentifolia",0,0,0,1404,0,1404,1404
+Vitis arizonica,Vitis treleasei,29,29,0,3991,0,4020,3991
+Vitis baileyana,Vitis cinerea var. baileyana,133,0,133,530,0,530,397
+Vitis berlandieri,Vitis cinerea var. helleri,751,0,751,693,0,693,-58
+Vitis biformis,NA,0,0,0,67,0,67,67
+Vitis blancoi,NA,187,187,0,0,0,187,0
+Vitis bloodworthiana,NA,0,0,0,91,0,91,91
+Vitis bourgaeana,NA,685,685,0,1,0,686,1
+Vitis californica,NA,0,0,0,3173,0,3173,3173
+Vitis cinerea,"Vitis cinerea var. cinerea, Vitis cinerea var. tomentosa",1237,20,1217,4936,0,4956,3719
+Vitis cinerea var. cinerea,NA,628,628,0,8,0,636,8
+Vitis cinerea var. tomentosa,NA,0,0,0,11,0,11,11
+Vitis girdiana,NA,2385,2385,0,0,0,2385,0
+Vitis jaegeriana,NA,0,0,0,38,0,38,38
+Vitis labrusca,NA,5820,5819,1,157,0,5976,156
+Vitis lincecumii,"Vitis aestivalis var. lincecumii, Vitis linsecomii",230,0,230,188,0,188,-42
+Vitis martineziana,NA,0,0,0,0,0,0,0
+Vitis monticola,Vitis aestivalis var. monticola,1085,1085,0,0,0,1085,0
+Vitis munsoniana,"Vitis munsoniana, Muscadinia munsoniana, Vitis rotundifolia var. pygmaea",131,0,131,22,0,22,-109
+Vitis mustangensis,"Vitis candicans var. diversa, Vitis candicans",9172,9172,0,161,0,9333,161
+Vitis nesbittiana,NA,0,0,0,98,0,98,98
+Vitis novogranatensis,NA,0,0,0,0,0,0,0
+Vitis palmata,Vitis rubra,13,13,0,1113,0,1126,1113
+Vitis peninsularis,NA,0,0,0,131,0,131,131
+Vitis popenoei,NA,0,0,0,220,0,220,220
+Vitis riparia,"Vitis riparia var. syrticola, Vitis riparia var. praecox, Vitis cordifolia var. riparia, Vitis vulpina subsp. riparia, Vitis vulpina var. syrticola",20043,20012,31,41,0,20053,10
+Vitis rotundifolia,"Muscadinia rotundifolia, Vitis rotundifolia var. rotundifolia",27564,27542,22,700,0,28242,678
+Vitis rubriflora,NA,0,0,0,0,0,0,0
+Vitis rufotomentosa,NA,26,0,26,0,0,0,-26
+Vitis rupestris,NA,6,6,0,2254,0,2260,2254
+Vitis shuttleworthii,Vitis candicans var. coriacea,944,944,0,36,0,980,36
+Vitis simpsonii,Vitis cinerea var. floridana,1007,912,95,0,0,912,-95
+Vitis tiliifolia,NA,0,0,0,4127,0,4127,4127
+Vitis vulpina,Vitis cordifolia; V. cordifolia var. sempervirens,7840,7821,18,452,1,8273,433
+Vitis x champinii,"Vitis champinii, Vitis xchampinii",0,0,0,92,0,92,92
+Vitis x doaniana,"Vitis doaniana, Vitis xdoaniana",0,0,0,62,0,62,62
+Vitis x novae-angliae,"Vitis novae-angliae, Vitis xnovae-angliae",0,0,0,280,0,280,280
