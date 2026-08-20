@@ -223,7 +223,7 @@ s2 <- speciesData |>
 
 
 #testing
-j <- "Vitis riparia"
+j <- "Vitis rufotomentosa"
 j <- s2$taxon[6]
 # species to regenerate nat area and SRSex measures
 dontRun <- c(
@@ -266,7 +266,7 @@ r2 <- s2$taxon[!s2$taxon %in% dontRun]
 #  [6] "Vitis munsoniana"                 "Vitis jaegerian
 ## anything that doesn't have a model is failing due to the changes in the grab data functions.,
 
-r3 <- c( "Vitis jaegeriana")
+r3 <- c( "Vitis rufotomentosa","Vitis novogranatensis")
        #   ,"Vitis rufotomentosa",
        # "Vitis novogranatensis","Vitis rubriflora")
 
@@ -345,7 +345,7 @@ for (j in r3) {
     ))
     htmlExport <- paste0(
       "data/Vitis/speciesSummaryHTML/run08282025_1k/",
-      i,
+      j,
       "_Summary_fnaFilter.html"
     )
     #render rmd
