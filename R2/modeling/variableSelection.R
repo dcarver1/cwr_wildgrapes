@@ -13,13 +13,11 @@ varaibleSelection <- function(modelData, parallel) {
   # drop all column from bioValues set as well so the same data is used for maxnet modeling.
   bioValues <- modelData |>
     st_drop_geometry()
-  # dplyr::select(-geometry)# [test2,] |> st_drop_geometry()
+  
   # redefine var select to in
   varSelect <- bioValues |>
     dplyr::select(-presence, -type)
-  # Maximum modelled data
-  #write.csv(x = bioValues, file = paste0(sp_dir, "/modeling/maxent/bioValuesForPresencePoints.csv"))
-
+  
   # # #vsurf
   ### Considered altering the number of trees, 100 is somewhat low for the
   # number of predictors used. It was a time concern more then anything.
@@ -29,61 +27,64 @@ varaibleSelection <- function(modelData, parallel) {
   bio_no_na <- bioValues |>
     dplyr::select(-type) |>
     tidyr::drop_na()
-
+  
   vsurfThres <- VSURF_thres(
     x = bio_no_na[, c(2:26)],
     y = as.factor(bio_no_na$presence),
     parallel = parallel
   )
+  
   ###
   #correlation matrix
   ###
-
+  
   # define predictor list based on Run
   inputPredictors <- vsurfThres$varselect.thres
-
+  
   # ordered predictors from our variable selection
   predictors <- varSelect[, c(inputPredictors)]
+  
   # Calculate correlation coefficient matrix
   correlation <- predictors |>
     dplyr::select(where(is.numeric)) |>
     cor(method = "pearson")
-  #change self correlation value
-
-  # #define the list of top 15 predictors
+  
+  # define the list of predictors in order of importance
   varNames <- colnames(correlation)
-  # empty list containing the variables tested
-  varsTested <- c()
-  #loop through the top 5 predictors to remove correlated varables.
-  for (i in 1:5) {
-    print(varNames[i])
-    if (varNames[i] %in% varNames) {
-      # add variable to the test list
-      varsTested <- c(varsTested, varNames[i])
-      # Test for correlations with predictors
-      vars <- correlation[(i + 1):nrow(correlation), i] > 0.7 |
-        correlation[(i + 1):nrow(correlation), i] < -0.7
-      # Select correlated values names
-      corVar <- names(which(vars == TRUE))
-      #test is any correlated variables exist
-      if (length(corVar) > 0) {
-        # loop through the list of correlated variables
-        varNames <- varNames[!varNames %in% corVar]
-        print(paste0("the variable ", corVar, " was removed"))
+  
+  # Initialize an empty vector to store correlated variables flagged for removal
+  varsToRemove <- c()
+  
+  # loop through the top 5 predictors to identify correlated variables
+  for (i in 1:min(5, length(varNames))) {
+    currentVar <- varNames[i]
+    
+    # Only test correlations if the current variable hasn't already been flagged for removal
+    if (!(currentVar %in% varsToRemove)) {
+      
+      # Ensure we do not index out of bounds if i equals the number of rows
+      if (i < nrow(correlation)) {
+        # Test for correlations greater than 0.7 or less than -0.7
+        vars <- correlation[(i + 1):nrow(correlation), i] > 0.7 |
+          correlation[(i + 1):nrow(correlation), i] < -0.7
+        
+        # Select names of highly correlated variables
+        corVar <- names(which(vars == TRUE))
+        
+        if (length(corVar) > 0) {
+          # Add to the removal list, ensuring no duplicates
+          varsToRemove <- unique(c(varsToRemove, corVar))
+          print(paste0("Variables flagged for removal due to correlation with ", currentVar, ": ", paste(corVar, collapse = ", ")))
+        }
       }
     } else {
-      print("this variable has been removed already")
+      print(paste0("Variable ", currentVar, " was previously flagged for removal. Skipping correlation test."))
     }
   }
-
-  # include all variables that were tested.
-  for (p in varsTested) {
-    if (p %in% varNames) {} else {
-      varNames <- c(varNames, p)
-    }
-  } # It's a little bit confusing why variable are being dropped after they area tested. Correlation
-  # should be the same in both directs. This is just a test to make sure it works.
-
+  
+  # Filter the main variable list to exclude the highly correlated variables
+  varNames <- varNames[!varNames %in% varsToRemove]
+  
   #create a dataframe of the top predictors and
   rankPredictors <- data.frame(matrix(
     nrow = length(colnames(correlation)),
@@ -93,11 +94,10 @@ varaibleSelection <- function(modelData, parallel) {
   rankPredictors$importance <- vsurfThres$imp.varselect.thres
   rankPredictors$includeInFinal <- colnames(correlation) %in% varNames
   rankPredictors <- rankPredictors[, 4:6]
-  # write.csv(x = rankPredictors, file = paste0(sp_dir, "/modeling/maxent/predictorImportance.csv"))
-
+  
   # filter the input sf object based on rank order of selected variables.
   variblesToModel <- modelData[, c("presence", varNames, "geometry")]
-
+  
   return(list(
     rankPredictors = rankPredictors,
     variblesToModel = variblesToModel
