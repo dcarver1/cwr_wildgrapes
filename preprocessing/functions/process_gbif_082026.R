@@ -1,7 +1,54 @@
 # preprocessing/functions/process_gbif_082026.R
-# Custom GBIF processor to preserve original/recorded taxonomy and prevent taxonomic lumping
+# Custom GBIF processor to preserve the recorded taxonomy and prevent lumping by
+# the GBIF taxonomic backbone.
+#
+# Background (see work2026/GBIF_taxonomy_notes.md):
+#   The original processGBIF() built `taxon` from the GBIF backbone columns
+#   (`species`, `infraspecificEpithet`, `taxonRank`). `species` is the backbone's
+#   ACCEPTED species, so any name GBIF treats as a synonym is silently moved to a
+#   different species before our own synonym list is ever applied. Example:
+#   "Vitis rufotomentosa Small" is a synonym of V. aestivalis in the backbone, so
+#   every record was assigned to V. aestivalis and V. rufotomentosa received none.
+#
+# This version parses the name string instead and only falls back to the backbone
+# when the string cannot be parsed (e.g. "Vitis L.").
+#
+# nameSource controls which string is parsed:
+#   "scientificName"          GBIF's interpreted name usage (backbone-matched name,
+#                             with authorship). This can differ from what the
+#                             publisher wrote (e.g. rank changes, spelling fixes).
+#   "verbatimScientificName"  the name exactly as supplied by the publisher.
+#   "combined"                parse scientificName; if that fails (GBIF could not
+#                             match the name and fell back to "Vitis L."), parse
+#                             verbatimScientificName; only then use the backbone.
 
-processGBIF <- function(path){
+# Parse "Genus [x] epithet [var.|subsp.|f. epithet]" from a name string.
+# Hyphenated epithets (novae-angliae, izu-insularis) are supported.
+# Returns NA when the string does not start with a Vitis/Muscadinia binomial, or
+# when it is a hybrid formula ("Vitis riparia x Vitis rupestris",
+# "Vitis labrusca x vinifera"): such records belong to neither parent.
+# Named hybrids ("Vitis x doaniana") are kept.
+# Known limitation: homonyms are not distinguished ("Vitis labrusca Thunb." is
+# V. coignetiae, "Vitis cordifolia Roth ex Roem. & Schult." is V. heyneana);
+# list the full name with authorship in the concept's "Names to exclude" cell
+# to drop them.
+parseVitisName <- function(x) {
+  clean <- stringr::str_replace_all(x, "×\\s*|\\s+[xX]\\s+", " x ")
+  clean <- stringr::str_replace_all(clean, "\\s+", " ")
+  clean <- stringr::str_trim(clean)
+  m <- stringr::str_match(
+    clean,
+    "^((?:Vitis|Muscadinia)\\s+(?:x\\s+)?[a-z]+(?:-[a-z]+)?(?:\\s+(?:var\\.|subsp\\.|f\\.)\\s+[a-z]+(?:-[a-z]+)?)?)(.*)$"
+  )
+  parsed <- m[, 2]
+  remainder <- m[, 3]
+  hybridFormula <- !is.na(remainder) & stringr::str_detect(remainder, "^\\s+x\\s+")
+  parsed[hybridFormula] <- NA_character_
+  parsed
+}
+
+processGBIF <- function(path, nameSource = c("scientificName", "verbatimScientificName", "combined")) {
+  nameSource <- match.arg(nameSource)
   
   d1a <- read_tsv(file = path)
   
@@ -9,6 +56,7 @@ processGBIF <- function(path){
   d1 <- d1a |> 
     dplyr::select(
       originalTaxon = "scientificName",
+      verbatimScientificName,
       sourceUniqueID = "occurrenceID",
       genus = "genus",
       species,
@@ -36,19 +84,15 @@ processGBIF <- function(path){
     # Standardize locality information
     dplyr::mutate(localityInformation = paste0(state, " -- ", locality ))
   
-  # 2. Extract unlumped, clean botanical taxonomy from raw scientificName
-  # Standardize hybrid symbols (×) and normalize multiple spaces
-  clean_raw <- stringr::str_replace_all(d1$originalTaxon, "×\\s*|\\s+[xX]\\s+", " x ")
-  clean_raw <- stringr::str_replace_all(clean_raw, "\\s+", " ")
+  # 2. Extract the unlumped taxon from the chosen name string
+  extracted_taxon <- switch(nameSource,
+    scientificName = parseVitisName(d1$originalTaxon),
+    verbatimScientificName = parseVitisName(d1$verbatimScientificName),
+    combined = dplyr::coalesce(parseVitisName(d1$originalTaxon), parseVitisName(d1$verbatimScientificName))
+  )
   
-  # Extract clean Genus + optional hybrid marker (x) + specificEpithet + optional variety/subspecies
-  extracted_taxon <- stringr::str_match(
-    clean_raw, 
-    "^((?:Vitis|Muscadinia)\\s+(?:x\\s+)?[a-z]+(?:\\s+(?:var\\.|subsp\\.|f\\.)\\s+[a-z]+)?)"
-  )[, 2]
-  
-  # 3. Assign the custom parsed taxon to bypass the GBIF backbone lumping
-  # Fall back to standard GBIF backbone assignment ONLY if the raw name can't be parsed (e.g. "Vitis L.")
+  # 3. Assign the parsed taxon; fall back to the GBIF backbone ONLY when the
+  #    string cannot be parsed (e.g. "Vitis L.", non-Vitis verbatim names)
   d2 <- d1 |> 
     dplyr::mutate(
       taxon = dplyr::case_when(
@@ -60,7 +104,7 @@ processGBIF <- function(path){
         TRUE ~ d1$species
       )
     ) |>
-    # 4. Re-calculate clean genus and species epithets to match our unlumped taxonomy
+    # 4. Re-calculate genus and species epithets to match the parsed taxon
     dplyr::mutate(
       genus = stringr::str_split_fixed(taxon, " ", 2)[, 1],
       species_temp = stringr::str_split_fixed(taxon, " ", 2)[, 2]
@@ -69,7 +113,7 @@ processGBIF <- function(path){
       species = stringr::str_remove(species_temp, "^[xX]\\s+") |>
         stringr::str_remove("\\s+(var\\.|subsp\\.|f\\.).*")
     ) |>
-    dplyr::select(-species_temp)
+    dplyr::select(-species_temp, -verbatimScientificName)
   
   # 5. Define the specimen type (H = Herbarium, G = Germplasm/Living)
   d3 <- d2 |>

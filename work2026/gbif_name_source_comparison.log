@@ -1,0 +1,272 @@
+GBIF records (non-fossil): 331939 
+parse failures -> backbone fallback: scientificName 22742  verbatim 16306 
+== records per concept (after synonym + exclude step; before dedup / coordinate checks) ==
+# A tibble: 40 × 10
+   taxon                            modelSpecies backbone sciName verbatim combined sciName_minus_backbone verbatim_minus_backbone combined_minus_backbone combined_minus_sciName
+   <chr>                            <chr>           <int>   <int>    <int>    <int>                  <int>                   <int>                   <int>                  <int>
+ 1 Vitis cinerea                    Y                5568    4564     4561     4564                  -1004                   -1007                   -1004                      0
+ 2 Vitis berlandieri                Y                 693    1427     1413     1427                    734                     720                     734                      0
+ 3 Vitis aestivalis                 Y               13078   12722    12536    12728                   -356                    -542                    -350                      6
+ 4 Vitis rotundifolia               Y               27820   27539    27623    27540                   -281                    -197                    -280                      1
+ 5 Vitis munsoniana                 Y                  22     302      278      302                    280                     256                     280                      0
+ 6 Vitis lincecumii                 Y                 188     361      325      361                    173                     137                     173                      0
+ 7 Vitis tiliifolia                 Y                4124    3968     3836     3968                   -156                    -288                    -156                      0
+ 8 Vitis labrusca                   Y                6021    5886     5894     5888                   -135                    -127                    -133                      2
+ 9 Vitis baileyana                  Y                 530     662      641      662                    132                     111                     132                      0
+10 Vitis simpsonii                  Y                 912    1007      820     1007                     95                     -92                      95                      0
+11 Vitis shuttleworthii             Y                 980     944      944      944                    -36                     -36                     -36                      0
+12 Vitis rufotomentosa              Y                   0      32       46       46                     32                      46                      46                     14
+13 Vitis rupestris                  Y                2252    2227     2252     2227                    -25                       0                     -25                      0
+14 Vitis riparia                    Y               19632   19609    19839    19609                    -23                     207                     -23                      0
+15 Vitis popenoei                   Y                 220     198      198      198                    -22                     -22                     -22                      0
+16 Vitis vulpina                    Y                8446    8434     8434     8434                    -12                     -12                     -12                      0
+17 Vitis cinerea var. tomentosa     Y                  11       0        0        0                    -11                     -11                     -11                      0
+18 Vitis palmata                    Y                1123    1134     1131     1134                     11                       8                      11                      0
+19 Vitis aestivalis var. bicolor    Y                1404    1414     1372     1414                     10                     -32                      10                      0
+20 Vitis cinerea var. cinerea       Y                 636     628      571      628                     -8                     -65                      -8                      0
+21 Vitis arizonica                  Y                3991    3987     3976     3987                     -4                     -15                      -4                      0
+22 Vitis californica                Y                3166    3170     3168     3170                      4                       2                       4                      0
+23 Vitis acerifolia                 Y                 991     988      988      988                     -3                      -3                      -3                      0
+24 Vitis aestivalis var. aestivalis Y                1621    1620     1382     1620                     -1                    -239                      -1                      0
+25 Vitis mustangensis               Y                9332    9333     9332     9333                      1                       0                       1                      0
+26 Vitis biformis                   Y                  67      67       67       67                      0                       0                       0                      0
+27 Vitis blancoi                    Y                 187     187      171      187                      0                     -16                       0                      0
+28 Vitis bloodworthiana             Y                  91      91       91       91                      0                       0                       0                      0
+29 Vitis bourgaeana                 Y                 684     684      684      684                      0                       0                       0                      0
+30 Vitis girdiana                   Y                2384    2384     2384     2384                      0                       0                       0                      0
+31 Vitis jaegeriana                 Y                  38      38       38       38                      0                       0                       0                      0
+32 Vitis martineziana               Y                   0       0        2        2                      0                       2                       2                      2
+33 Vitis monticola                  Y                1085    1085     1032     1085                      0                     -53                       0                      0
+34 Vitis nesbittiana                Y                  98      98       98       98                      0                       0                       0                      0
+35 Vitis novogranatensis            Y                   0       0        0        0                      0                       0                       0                      0
+36 Vitis peninsularis               Y                 131     131      131      131                      0                       0                       0                      0
+37 Vitis rubriflora                 Y                   0       0        0        0                      0                       0                       0                      0
+38 Vitis x champinii                Y                  92      92      161      166                      0                      69                      74                     74
+39 Vitis x doaniana                 Y                  62      62       78       78                      0                      16                      16                     16
+40 Vitis x novae-angliae            Y                 280     280      303      303                      0                      23                      23                     23
+excluded (no concept match):  backbone=217651  sciName=218246  verbatim=218198  combined=218108 
+removed by exclude lists   :  backbone=0  sciName=0  verbatim=266  combined=0 
+== exclude-list removals by concept and source name (scientificName shown), per method ==
+# A tibble: 8 × 4
+  method   excludedFromConcept originalTaxon                                         n
+  <chr>    <chr>               <chr>                                             <int>
+1 verbatim Vitis cinerea       Vitis cinerea var. floridana Munson                 184
+2 verbatim Vitis aestivalis    Vitis aestivalis var. lincecumii (Buckley) Munson    45
+3 verbatim Vitis cinerea       Vitis cinerea var. baileyana (Munson) Comeaux        21
+4 verbatim Vitis cinerea       Vitis cinerea var. helleri (L.H.Bailey) M.O.Moore     8
+5 verbatim Vitis cinerea       Vitis berlandieri Planch.                             3
+6 verbatim Vitis aestivalis    Vitis linsecomii Buckley                              2
+7 verbatim Vitis cinerea       Vitis simpsonii Munson                                2
+8 verbatim Vitis vulpina       Vitis vulpina subsp. riparia (Michx.) R.T.Clausen     1
+== records GBIF could not match (scientificName is genus-only) but verbatim name parses ==
+# A tibble: 15 × 3
+   sciName  p_ver                     n
+   <chr>    <chr>                 <int>
+ 1 Vitis L. Vitis i                2507
+ 2 Vitis L. Vitis x interspecific  1662
+ 3 Vitis L. Vitis sp               1653
+ 4 Vitis L. Vitis sativa            500
+ 5 Vitis L. Vitis x vinicarpa       221
+ 6 Vitis L. Vitis compound          120
+ 7 Vitis L. Vitis interspecific      80
+ 8 Vitis L. Vitis xchampinii         74
+ 9 Vitis L. Vitis spec               69
+10 Vitis L. Vitis vinifera           33
+11 Vitis L. Vitis mesoamericana      25
+12 Vitis L. Vitis xnovae-angliae     23
+13 Vitis L. Vitis xdoaniana          16
+14 Vitis L. Vitis yeshanensis        16
+15 Vitis L. Vitis cignetiae          15
+# A tibble: 8 × 2
+  taxon                 records_recovered_via_verbatim
+  <chr>                                          <int>
+1 Vitis x champinii                                 74
+2 Vitis x novae-angliae                             23
+3 Vitis x doaniana                                  16
+4 Vitis rufotomentosa                               14
+5 Vitis aestivalis                                   6
+6 Vitis labrusca                                     2
+7 Vitis martineziana                                 2
+8 Vitis rotundifolia                                 1
+== backbone reassignments: concept by recorded name vs concept by GBIF backbone (top 40) ==
+# A tibble: 30 × 3
+   name_concept                                     backbone_concept                                        n
+   <chr>                                            <chr>                                               <int>
+ 1 Vitis berlandieri                                Vitis cinerea                                         740
+ 2 Vitis munsoniana                                 Vitis rotundifolia                                    280
+ 3 Vitis lincecumii                                 Vitis aestivalis                                      173
+ 4 <no concept>                                     Vitis tiliifolia                                      156
+ 5 <no concept>                                     Vitis aestivalis                                      150
+ 6 <no concept>                                     Vitis labrusca                                        144
+ 7 Vitis baileyana                                  Vitis cinerea                                         132
+ 8 Vitis simpsonii                                  Vitis cinerea                                          95
+ 9 <no concept>                                     Vitis shuttleworthii                                   36
+10 <no concept>                                     Vitis vulpina                                          33
+11 Vitis rufotomentosa                              Vitis aestivalis                                       32
+12 <no concept>                                     Vitis rupestris                                        25
+13 <no concept>                                     Vitis popenoei                                         22
+14 Vitis labrusca                                   <no concept>                                           22
+15 <no concept>                                     Vitis riparia                                          21
+16 <no concept>                                     Vitis cinerea                                          18
+17 Vitis vulpina                                    <no concept>                                           14
+18 <no concept>                                     Vitis cinerea | Vitis cinerea var. tomentosa           11
+19 Vitis aestivalis | Vitis aestivalis var. bicolor Vitis aestivalis                                       10
+20 <no concept>                                     Vitis cinerea | Vitis cinerea var. cinerea              8
+21 Vitis vulpina                                    Vitis labrusca                                          7
+22 <no concept>                                     Vitis berlandieri                                       6
+23 Vitis palmata                                    Vitis labrusca                                          6
+24 Vitis palmata                                    Vitis riparia                                           5
+25 Vitis californica                                Vitis arizonica                                         4
+26 <no concept>                                     Vitis acerifolia                                        3
+27 Vitis riparia                                    <no concept>                                            3
+28 <no concept>                                     Vitis aestivalis | Vitis aestivalis var. aestivalis     1
+29 <no concept>                                     Vitis rotundifolia                                      1
+30 Vitis mustangensis                               <no concept>                                            1
+-- why does the backbone drop records whose scientificName is a project taxon? --
+# A tibble: 6 × 5
+  sciName            scientificName                                    taxonRank  backbone_species       n
+  <chr>              <chr>                                             <chr>      <chr>              <int>
+1 Vitis labrusca     Vitis labrusca Thunb.                             SPECIES    Vitis coignetiae      21
+2 Vitis vulpina      Vitis cordifolia Roth ex Roem. & Schult.          SPECIES    Vitis heyneana        13
+3 Vitis riparia      Vitis vulpina subsp. riparia (Michx.) R.T.Clausen SUBSPECIES Vitis riparia          3
+4 Vitis labrusca     Vitis labrusca Scop.                              SPECIES    Vitis vinifera         1
+5 Vitis mustangensis Vitis candicans var. diversa L.H.Bailey           VARIETY    Vitis mustangensis     1
+6 Vitis vulpina      Vitis cordifolia var. sempervirens Munson         VARIETY    Vitis vulpina          1
+== per taxon: records the backbone took away / added (scientificName parse as reference) ==
+# A tibble: 25 × 3
+   taxon                            recorded_as_taxon_but_backbone_moved_elsewhere backbone_added_from_other_names
+   <chr>                                                                     <int>                           <int>
+ 1 Vitis berlandieri                                                           740                               6
+ 2 Vitis munsoniana                                                            280                               0
+ 3 Vitis lincecumii                                                            173                               0
+ 4 Vitis baileyana                                                             132                               0
+ 5 Vitis simpsonii                                                              95                               0
+ 6 Vitis rufotomentosa                                                          32                               0
+ 7 Vitis labrusca                                                               22                             157
+ 8 Vitis vulpina                                                                21                              33
+ 9 Vitis palmata                                                                11                               0
+10 Vitis aestivalis                                                             10                             366
+11 Vitis aestivalis var. bicolor                                                10                               0
+12 Vitis californica                                                             4                               0
+13 Vitis riparia                                                                 3                              26
+14 Vitis mustangensis                                                            1                               0
+15 Vitis acerifolia                                                              0                               3
+16 Vitis aestivalis var. aestivalis                                              0                               1
+17 Vitis arizonica                                                               0                               4
+18 Vitis cinerea                                                                 0                            1004
+19 Vitis cinerea var. cinerea                                                    0                               8
+20 Vitis cinerea var. tomentosa                                                  0                              11
+21 Vitis popenoei                                                                0                              22
+22 Vitis rotundifolia                                                            0                             281
+23 Vitis rupestris                                                               0                              25
+24 Vitis shuttleworthii                                                          0                              36
+25 Vitis tiliifolia                                                              0                             156
+== names with no concept match (scientificName parse), with old backbone destination (top 30) ==
+# A tibble: 30 × 5
+   taxon                                   n backbone_concept in_any_include_list in_exclude_list_of
+   <chr>                               <int> <chr>            <lgl>               <chr>             
+ 1 Vitis vinifera                     148976 <NA>             FALSE               ""                
+ 2 Vitis vinifera var. vinifera         8758 <NA>             FALSE               ""                
+ 3 Vitis vinifera subsp. sylvestris     6493 <NA>             FALSE               ""                
+ 4 Vitis flexuosa                       5273 <NA>             FALSE               ""                
+ 5 Vitis amurensis                      3548 <NA>             FALSE               ""                
+ 6 Vitis coignetiae                     2308 <NA>             FALSE               ""                
+ 7 Vitis vinifera var. orientalis       1347 <NA>             FALSE               ""                
+ 8 Vitis heyneana                       1262 <NA>             FALSE               ""                
+ 9 Vitis betulifolia                    1211 <NA>             FALSE               ""                
+10 Vitis ficifolia var. sinuata         1186 <NA>             FALSE               ""                
+11 Vitis davidi                          806 <NA>             FALSE               ""                
+12 Vitis ficifolia                       771 <NA>             FALSE               ""                
+13 Vitis sylvestris                      698 Vitis labrusca   FALSE               ""                
+14 Vitis thunbergii                      655 <NA>             FALSE               ""                
+15 Vitis wilsoniae                       562 <NA>             FALSE               ""                
+16 Vitis piasezkii                       544 <NA>             FALSE               ""                
+17 Vitis flexuosa var. flexuosa          531 <NA>             FALSE               ""                
+18 Vitis ficifolia var. lobata           493 <NA>             FALSE               ""                
+19 Vitis quinquangularis                 492 <NA>             FALSE               ""                
+20 Vitis bryoniifolia                    442 <NA>             FALSE               ""                
+21 Vitis riparia subsp. riparia          417 <NA>             FALSE               ""                
+22 Vitis rotundifolia var. munsoniana    412 <NA>             FALSE               ""                
+23 Vitis piasezkii var. pagnucii         381 <NA>             FALSE               ""                
+24 Vitis ficifolia var. ficifolia        344 <NA>             FALSE               ""                
+25 Vitis pseudoreticulata                336 <NA>             FALSE               ""                
+26 Vitis romanetii                       293 <NA>             FALSE               ""                
+27 Vitis saccharifera                    284 <NA>             FALSE               ""                
+28 Vitis vinifera subsp. sativa          279 <NA>             FALSE               ""                
+29 Vitis chunganensis                    264 <NA>             FALSE               ""                
+30 Vitis heyneana subsp. ficifolia       264 <NA>             FALSE               ""                
+== verbatimScientificName vs scientificName ==
+# A tibble: 7 × 2
+  kind                                          n
+  <chr>                                     <int>
+1 same                                     291226
+2 same species, rank/infraspecific differs  15566
+3 neither parses                            15468
+4 scientificName not parseable               7274
+5 spelling normalised                        1538
+6 verbatim not parseable                      838
+7 different name                               29
+-- 'different name' cases (GBIF matched the verbatim string to a different name), top 25 --
+# A tibble: 13 × 4
+   kind           p_ver                               p_sci                                 n
+   <chr>          <chr>                               <chr>                             <int>
+ 1 different name Vitis davidii                       Vitis davidi var. cyanocarpa          6
+ 2 different name Vitis davidii                       Vitis davidi var. davidi              6
+ 3 different name Vitis sinensis                      Vitis sinuosa                         3
+ 4 different name Vitis davidii var. shennongjiaensis Vitis davidi                          2
+ 5 different name Vitis monticolia subsp. arizonica   Vitis monticola                       2
+ 6 different name Vitis piazeckii var. pagnucci       Vitis piasezkii var. pagnucii         2
+ 7 different name Vitis roman                         Vitis romanetii                       2
+ 8 different name Vitis aff                           Vitis californica                     1
+ 9 different name Vitis australis                     Vitis austrina                        1
+10 different name Vitis cf                            Vitis heyneana subsp. heyneana        1
+11 different name Vitis flexnosa                      Vitis flexuosa var. rufotomentosa     1
+12 different name Vitis piaseckii                     Vitis piasezkii var. pagnucii         1
+13 different name Vitis x hybrida                     Vitis hybr                            1
+-- concept-level disagreements verbatim vs sciName --
+# A tibble: 20 × 3
+   verbatim_concept   sciName_concept                                         n
+   <chr>              <chr>                                               <int>
+ 1 <no concept>       Vitis simpsonii                                       187
+ 2 <no concept>       Vitis aestivalis | Vitis aestivalis var. aestivalis   168
+ 3 <no concept>       Vitis tiliifolia                                      132
+ 4 Vitis aestivalis   Vitis aestivalis | Vitis aestivalis var. aestivalis    70
+ 5 Vitis cinerea      Vitis cinerea | Vitis cinerea var. cinerea             57
+ 6 <no concept>       Vitis monticola                                        53
+ 7 <no concept>       Vitis lincecumii                                       47
+ 8 <no concept>       Vitis rotundifolia                                     44
+ 9 Vitis aestivalis   Vitis aestivalis | Vitis aestivalis var. bicolor       42
+10 <no concept>       Vitis aestivalis                                       27
+11 Vitis rupestris    <no concept>                                           25
+12 <no concept>       Vitis baileyana                                        21
+13 Vitis labrusca     <no concept>                                           21
+14 <no concept>       Vitis blancoi                                          16
+15 Vitis rotundifolia Vitis munsoniana                                       16
+16 <no concept>       Vitis labrusca                                         15
+17 <no concept>       Vitis berlandieri                                      14
+18 <no concept>       Vitis arizonica                                        11
+19 <no concept>       Vitis munsoniana                                        8
+20 <no concept>       Vitis riparia                                           7
+== V. vulpina synonym cell (semicolon) ==
+# A tibble: 3 × 3
+  p                                  b                 n
+  <chr>                              <chr>         <int>
+1 Vitis cordifolia                   <no concept>     13
+2 Vitis cordifolia                   Vitis vulpina   593
+3 Vitis cordifolia var. sempervirens <no concept>      1
+== V. munsoniana self-synonym double count ==
+records named Vitis munsoniana: 231  -> old speciesCheck produced 462 rows
+publication file munsoniana GBIF rows: 22  distinct sourceUniqueID: 22  duplicated rows: 0 
+== exclude-list step on the compiled dataset (fresh GBIF + 072025 files for other sources) ==
+ 
+ 
+compiled data, backbone assignment: removed by exclude lists = 1105 
+# A tibble: 2 × 3
+  excludedFromConcept databaseSource     n
+  <chr>               <chr>          <int>
+1 Vitis cinerea       GBIF             910
+2 Vitis aestivalis    GBIF             195
+records removed by exclude lists: 0  of  122190 
+# A tibble: 0 × 4
+# ℹ 4 variables: excludedFromConcept <chr>, databaseSource <chr>, originalTaxon <chr>, n <int>
+done

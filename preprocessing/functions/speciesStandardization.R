@@ -1,50 +1,107 @@
+# preprocessing/functions/speciesStandardization.R
+# Assign records to the project taxon concepts defined in data/New World Vitis.csv
+#
+# Changes 2026-09 (see work2026/GBIF_taxonomy_notes.md):
+#   * synonym cells are split on commas OR semicolons and "V. " is expanded to
+#     "Vitis " (the V. vulpina cell is "Vitis cordifolia; V. cordifolia var.
+#     sempervirens", which the old ", " split never matched)
+#   * a taxon listed as its own synonym (V. munsoniana) no longer duplicates
+#     every record; a record can enter a given concept only once
+#   * the "Names to exclude from this concept" column is now applied: a record
+#     whose original (source) name is on the concept's exclude list is removed
+#     from that concept and returned in `excludedByConcept`
 
+# split a synonym / exclusion cell into clean names
+splitNames <- function(x) {
+  if (is.null(x) || is.na(x)) return(character(0))
+  x <- stringr::str_trim(x)
+  if (x %in% c("", "NA", "n/a", "N/A")) return(character(0))
+  out <- x |>
+    stringr::str_split(pattern = "\\s*[,;]\\s*") |>
+    unlist() |>
+    stringr::str_trim() |>
+    stringr::str_replace("^V\\.\\s*", "Vitis ") |>
+    stringr::str_squish()
+  out[out != ""]
+}
+
+# reduce a name to a comparable form: "Genus [x] epithet [rank epithet]", lower case,
+# authorship removed. Falls back to the squished lower-case string when the
+# name does not parse (e.g. "V. arizonica/cinerea").
+normalizeName <- function(x) {
+  x <- stringr::str_replace(stringr::str_trim(x), "^V\\.\\s*", "Vitis ")
+  # lower-case everything first: str_to_sentence() would keep a capital after
+  # "subsp. " (e.g. "subsp. Arizonica") and the epithet would then be dropped
+  x <- tolower(x)
+  parsed <- stringr::str_match(
+    stringr::str_replace_all(x, "×\\s*|\\s+x\\s+", " x ") |> stringr::str_squish(),
+    "^((?:vitis|muscadinia)\\s+(?:x\\s+)?[a-z]+(?:-[a-z]+)?(?:\\s+(?:var\\.|subsp\\.|f\\.)\\s+[a-z]+(?:-[a-z]+)?)?)"
+  )[, 2]
+  ifelse(is.na(parsed), stringr::str_squish(x), parsed)
+}
 
 #' speciesCheck
 #'
-#' @param data : dataframe of unfilter occurance data
-#' @param synonymList : reference data from for define what synonyms are expected 
+#' @param data : dataframe of unfiltered occurrence data (needs `index`, `taxon`, `originalTaxon`)
+#' @param synonymList : reference data frame with columns `taxon`, `acceptedSynonym`
+#'   and optionally `excludeNames` (or "Names to exclude from this concept")
+#' @param applyExclusions : set FALSE to reproduce the pre-2026 behaviour (exclude lists ignored)
 #'
-#' @return data for reassigned species names based on accepted synonyms 
-#' 
-speciesCheck <- function(data, synonymList){
-  # check for each species on Taxon  
+#' @return list(includedData, excludedData, excludedByConcept)
+#'   includedData      : records reassigned to the project concept name
+#'   excludedData      : records whose name matched no concept or synonym
+#'   excludedByConcept : records dropped from a concept because their original
+#'                       name is on that concept's exclude list
+speciesCheck <- function(data, synonymList, applyExclusions = TRUE){
+  exclCol <- intersect(c("excludeNames", "Names to exclude from this concept"), names(synonymList))[1]
+  if (!applyExclusions) exclCol <- NA
   nSpecies <- 1:length(synonymList$taxon)
-  # map over nSpecies... 
-  mapSynonyms <- function(nSpecies, synonymList, data){
-    i <- nSpecies
+  
+  mapSynonyms <- function(i, synonymList, data){
     taxon <- synonymList$taxon[i]
-    synonyms <- synonymList$acceptedSynonym[i]
-    # grab all original taxon name 
-    df2 <- data[data$taxon == taxon, ]
+    # synonyms, dropping a self reference (the concept name is matched already)
+    syn1 <- setdiff(splitNames(synonymList$acceptedSynonym[i]), taxon)
     
-    # grab all species with species name 
-    if(!is.na(synonyms)){
-      syn1 <- synonyms |>
-        stringr::str_split(pattern = ", ")|>
-        unlist()
-      for(j in syn1){
-        print(j)
-        df3 <- data[data$taxon == j, ]
-        df3$taxon <- taxon
-        df2 <- bind_rows(df2, df3)
+    df2 <- data[data$taxon == taxon, ]
+    for(j in syn1){
+      df3 <- data[data$taxon == j, ]
+      df2 <- bind_rows(df2, df3)
+    }
+    # a record may enter this concept only once
+    df2 <- df2[!duplicated(df2$index), ]
+    df2$taxon <- taxon
+    
+    # apply the concept's exclude list against the original (source) name
+    removed <- df2[0, ]
+    if (!is.na(exclCol)) {
+      exclRaw <- splitNames(synonymList[[exclCol]][i])
+      excl <- normalizeName(exclRaw)
+      if (length(excl) > 0 && nrow(df2) > 0) {
+        # match on the normalised name (authorship stripped) OR on the full
+        # string with authorship, so homonyms such as "Vitis labrusca Thunb."
+        # can be listed explicitly
+        hit <- normalizeName(df2$originalTaxon) %in% excl |
+          tolower(stringr::str_squish(df2$originalTaxon)) %in% tolower(stringr::str_squish(exclRaw))
+        removed <- df2[hit, ]
+        df2 <- df2[!hit, ]
       }
     }
-    return(df2)
+    removed$excludedFromConcept <- rep(taxon, nrow(removed))
+    return(list(kept = df2, removed = removed))
   }
   
-  # gather data included
-  ## there can be repeated records for taxon that are being modeled directly and also included as a synonym "Vitis aestivalis var. aestivalis"
-  includedData <- nSpecies |>
-    purrr::map(mapSynonyms, synonymList =synonymList, data = data)|>
-    bind_rows()
+  ## a record can legitimately feed two concepts when a taxon is modeled directly
+  ## and is also a synonym of a broader concept (e.g. "Vitis aestivalis var. aestivalis")
+  results <- purrr::map(nSpecies, mapSynonyms, synonymList = synonymList, data = data)
+  includedData <- purrr::map(results, "kept") |> bind_rows()
+  excludedByConcept <- purrr::map(results, "removed") |> bind_rows()
   
-  
-  # define excluded data 
-  excludedData <- data[!data$index %in% includedData$index, ]
+  # records that matched no concept at all
+  excludedData <- data[!data$index %in% c(includedData$index, excludedByConcept$index), ]
   
   return(list(
     excludedData = excludedData,
-    includedData = includedData
+    includedData = includedData,
+    excludedByConcept = excludedByConcept
   ))
 }
