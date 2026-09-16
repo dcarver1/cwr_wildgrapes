@@ -13,4 +13,3 @@ githubKey.pub
 archive/
 output_rasters/*
 !.gitkeep
-/review
