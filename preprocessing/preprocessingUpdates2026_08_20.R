@@ -175,6 +175,21 @@ df2_a <- uniqueTaxon |>
 # Re-inject the novogranatensis records back in
 df2_a <- bind_rows(df2_a, novogranatensis)
 
+# Recover WIEWS records whose longitude was supplied without the minus sign
+# (decision 2026-09-16: nine V. riparia accessions at 46 N / +106.7 E, i.e.
+# Montana). The sign is flipped only when the negated value falls inside the
+# US longitude range (66 W to 180 W), so an implausible pair such as
+# 42.8 N / +46 E stays excluded by the bounding box below. Flipped records are
+# written to coordinateSignFlipped_<date>.csv. Other sources are not touched;
+# extending the rule to GBIF is a phase-2 decision (review/GBIF_fix_plan_2026-09-16.md).
+lonNum <- suppressWarnings(as.numeric(df2$longitude))
+flipIdx <- which(df2$databaseSource == "wiews" &
+                   df2$country %in% c("United States of America", "United States") &
+                   !is.na(lonNum) & lonNum >= 66 & lonNum <= 180)
+write_csv(df2[flipIdx, ], paste0("data/processed_occurrence/coordinateSignFlipped_", date_suffix, ".csv"))
+df2$longitude[flipIdx] <- as.character(-lonNum[flipIdx])
+message(length(flipIdx), " WIEWS longitude values sign-flipped")
+
 # Quality Checks on Spatial Coordinates (Lat/Long Bounding Box)
 source("preprocessing/functions/checksOnLatLong.R")
 d3 <- checksOnLatLong(df2)

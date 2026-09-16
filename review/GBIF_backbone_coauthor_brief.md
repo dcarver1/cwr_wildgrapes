@@ -275,13 +275,21 @@ Full table for all 40 taxa: `work2026/changeInCounts_20260916.csv`; by source:
 `work2026/GBIF_taxonomy_notes.md` section 10.
 
 Two changes in the same run are **not** the taxonomy fix and should be
-reported separately: (a) 215 records with eastern-hemisphere longitudes that
+reported separately: (a) 206 records with eastern-hemisphere longitudes that
 the old driver re-added after flagging them are now removed (mostly *vulpina*
-88, *aestivalis* 60); (b) *V. cinerea* var. *tomentosa* drops to 0 records
+88, *aestivalis* 60); nine WIEWS *V. riparia* accessions whose Montana
+longitude lacked the minus sign are kept via a documented sign flip; (b) *V. cinerea* var. *tomentosa* drops to 0 records
 because its 11 records were all named "Vitis berlandieri var. tomentosa",
 which is on no include list. Item (b) needs a sheet decision (section 6, point
 4). Decision 3 on the six Japanese records is moot for the model data: they are
 removed by the country filter either way.
+
+SRSex re-computed on both files (`work2026/srsEx_comparison_20260916.csv`):
+24 of 40 taxa change score, four change priority class. *V. rufotomentosa*
+100 -> 5.0 (LP -> UP; the published 100 was the no-herbarium-records default),
+*V.* x *champinii* 80.0 -> 41.2 (LP -> HP), *V. berlandieri* 28.5 -> 18.0
+(HP -> UP), *V. cinerea* var. *tomentosa* has no score. All other scores move
+by under 13 points and stay in class.
 
 ## 9. What changed from the earlier brief, and why
 

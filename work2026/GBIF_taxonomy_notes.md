@@ -250,7 +250,7 @@ Comparison against `model_data20251216.csv` by
 `work2026/changeInCounts_20260916.csv` (per taxon) and
 `work2026/changeInCounts_bySource_20260916.csv` (per taxon x source).
 
-Totals: 111,458 -> 111,083 rows (-375); with coordinates 70,695 -> 70,364;
+Totals: 111,458 -> 111,092 rows (-366); with coordinates 70,695 -> 70,373;
 40 -> 39 taxa (*V. cinerea* var. *tomentosa* now has 0 records, see below).
 
 ### Final counts, taxa that changed (model-data rows, after all filters)
@@ -269,7 +269,7 @@ Totals: 111,458 -> 111,083 rows (-375); with coordinates 70,695 -> 70,364;
 | Vitis simpsonii | 913 | 1008 | +95 | 392 | 448 | +56 |
 | Vitis tiliifolia | 2294 | 2207 | -87 | 1375 | 1352 | -23 |
 | Vitis x champinii | 126 | 192 | +66 | 33 | 38 | +5 |
-| Vitis riparia | 17551 | 17510 | -41 | 13200 | 13179 | -21 |
+| Vitis riparia | 17551 | 17519 | -32 | 13200 | 13188 | -12 |
 | Vitis shuttleworthii | 978 | 937 | -41 | 666 | 661 | -5 |
 | Vitis rufotomentosa | 2 | 42 | +40 | 0 | 20 | +20 |
 | Vitis x novae-angliae | 277 | 300 | +23 | 81 | 86 | +5 |
@@ -291,13 +291,18 @@ items below.
 
 ### Changes not caused by the parser (separate them in the co-author note)
 
-1. **Bounding box now enforced: -215 records.** The December file held 215
+1. **Bounding box now enforced: -206 records.** The December file held 215
    records with longitude > -30 (eastern hemisphere) under a USA/CAN/MEX or
    blank country; the old driver re-bound them after the check flagged them.
-   They are GBIF (198), WIEWS (10, all *V. riparia*), Genesys (1), GRIN (1),
-   Huerta-Acosta (1). Largest: *vulpina* 88, *aestivalis* 60, *cinerea* 13,
-   *rotundifolia* 12. This is why *vulpina* gains 103 rows overall but loses 70
-   with coordinates.
+   Nine of them (WIEWS *V. riparia* accessions at 46 N / +106.7 E, Montana
+   with the minus sign dropped) are now recovered by a documented sign flip in
+   the driver (decision 2026-09-16; written to
+   `coordinateSignFlipped_<date>.csv`). The remaining 206 are GBIF (198),
+   Genesys (1, corrupt values), GRIN (1) and WIEWS (1) at 42.8 N / +46 E which
+   no sign flip makes plausible, and Huerta-Acosta (1, Mexico with the sign
+   dropped, not flipped because the rule is WIEWS-only for now). Largest:
+   *vulpina* 88, *aestivalis* 60, *cinerea* 13, *rotundifolia* 12. This is why
+   *vulpina* gains 103 rows overall but loses 70 with coordinates.
 2. **Synonym-cell split fix: +19 non-GBIF records.** "V. cordifolia" now
    matches, so Genesys (+17) and WIEWS (+2) accessions enter *V. vulpina*.
 3. ***V. cinerea* var. *tomentosa* has 0 records.** All 11 of its December rows
@@ -319,7 +324,8 @@ threshold.
 
 ## Files
 
-* `work2026/compareCounts_20260916.R`: section 10 tables
+* `work2026/compareCounts_20260916.R`: section 10 tables; also writes the share copy `temp/speciesCounts_dec2025_vs_sep2026.csv`
+* `work2026/compareSRSex_20260916.R`, `srsEx_comparison_20260916.csv`: SRSex and priority class, Dec 2025 vs Sep 2026 (share copy `temp/srsEx_dec2025_vs_sep2026.csv`)
 * `work2026/changeInCounts_20260916.csv`, `changeInCounts_bySource_20260916.csv`: section 10 outputs
 * `work2026/gbif_name_source_comparison.R`: sections 2 to 6
 * `work2026/gbif_name_source_comparison_by_taxon.csv`: counts per taxon, four methods

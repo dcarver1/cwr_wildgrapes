@@ -37,6 +37,21 @@ per_taxon <- both |>
   arrange(desc(abs(total_change)))
 write_csv(per_taxon, "work2026/changeInCounts_20260916.csv")
 
+# share copy for the co-author (temp/ is gitignored): totals, GBIF-only,
+# other-source and coordinate columns; gbifWithCoords dropped on request
+share <- per_taxon |> transmute(
+  taxon,
+  total_dec2025, total_sep2026, total_change,
+  gbif_dec2025, gbif_sep2026, gbif_change,
+  otherSources_dec2025 = total_dec2025 - gbif_dec2025,
+  otherSources_sep2026 = total_sep2026 - gbif_sep2026,
+  otherSources_change = otherSources_sep2026 - otherSources_dec2025,
+  withCoords_dec2025, withCoords_sep2026, withCoords_change,
+  germplasm_dec2025 = G_dec2025, germplasm_sep2026 = G_sep2026,
+  herbarium_dec2025 = H_dec2025, herbarium_sep2026 = H_sep2026
+) |> arrange(desc(abs(total_change)), taxon)
+write_csv(share, "temp/speciesCounts_dec2025_vs_sep2026.csv")
+
 # per taxon x source
 by_source <- both |>
   count(taxon, databaseSource, run) |>
