@@ -6,7 +6,13 @@
 # summary documents (UP < 25, HP < 50, MP < 75, LP >= 75).
 # Also pulls the SRSex stored by the last model run (run08282025_1k, or the
 # newest run folder present) to confirm the December reproduction.
-# Output: temp/srsEx_dec2025_vs_sep2026.csv and work2026/srsEx_comparison_20260916.csv
+# taxonomyOnly <- TRUE compares against model_data20260820_taxonomyOnly.csv
+# (driver run with enforceBoundingBox = FALSE) and writes the share copies
+# temp/srsEx_dec2025_vs_sep2026.csv and temp/rerunCandidates_dec2025_vs_sep2026.csv;
+# the default (full pipeline) writes the same names with "_allChanges".
+# The rerun-candidate table flags a taxon when SRSex changed or the number of
+# georeferenced germplasm (G) records changed; total coordinate pairs are shown
+# alongside because the SDM uses all of them.
 suppressPackageStartupMessages({library(dplyr); library(readr); library(purrr); library(tidyr)})
 source("R2/dataProcessing/generateCounts.R")
 source("R2/gapAnalysis/srs_exsitu.R")
@@ -26,14 +32,18 @@ runSRS <- function(path, label) {
   taxa <- sort(unique(d$taxon))
   map_dfr(taxa, function(j) {
     sd1 <- speciesSubset(d, j)
-    if (nrow(sd1) == 0) return(tibble(ID = j, NTOTAL = 0, NG = 0, NH = 0, SRS = NA_real_))
+    if (nrow(sd1) == 0) return(tibble(ID = j, NTOTAL = 0, NTOTAL_COORDS = 0, NG = 0, NG_COORDS = 0, NH = 0, NH_COORDS = 0, SRS = NA_real_))
     c1 <- suppressMessages(generateCounts(sd1))
-    srs_exsitu(c1) |> select(ID, NTOTAL, NG, NH, SRS)
+    srs_exsitu(c1) |> select(ID, NTOTAL, NTOTAL_COORDS, NG, NG_COORDS, NH, NH_COORDS, SRS)
   }) |> mutate(run = label)
 }
 
+taxonomyOnly <- exists("taxonomyOnly") && taxonomyOnly
+newFile <- if (taxonomyOnly) "data/processed_occurrence/model_data20260820_taxonomyOnly.csv" else "data/processed_occurrence/model_data20260820.csv"
+tag <- if (taxonomyOnly) "" else "_allChanges"
+cat("comparing against:", newFile, "\n")
 old <- runSRS("data/processed_occurrence/model_data20251216.csv", "dec2025")
-new <- runSRS("data/processed_occurrence/model_data20260820.csv", "sep2026")
+new <- runSRS(newFile, "sep2026")
 
 # stored values from the last model run, for validation of the December reproduction
 stored <- map_dfr(list.dirs("data/Vitis", recursive = FALSE), function(sp) {
@@ -50,8 +60,8 @@ stored <- map_dfr(list.dirs("data/Vitis", recursive = FALSE), function(sp) {
 })
 
 cmp <- full_join(
-  old |> select(ID, NTOTAL_dec2025 = NTOTAL, NG_dec2025 = NG, NH_dec2025 = NH, SRSex_dec2025 = SRS),
-  new |> select(ID, NTOTAL_sep2026 = NTOTAL, NG_sep2026 = NG, NH_sep2026 = NH, SRSex_sep2026 = SRS),
+  old |> select(ID, NTOTAL_dec2025 = NTOTAL, coords_dec2025 = NTOTAL_COORDS, NG_dec2025 = NG, NGcoords_dec2025 = NG_COORDS, NH_dec2025 = NH, NHcoords_dec2025 = NH_COORDS, SRSex_dec2025 = SRS),
+  new |> select(ID, NTOTAL_sep2026 = NTOTAL, coords_sep2026 = NTOTAL_COORDS, NG_sep2026 = NG, NGcoords_sep2026 = NG_COORDS, NH_sep2026 = NH, NHcoords_sep2026 = NH_COORDS, SRSex_sep2026 = SRS),
   by = "ID") |>
   left_join(stored, by = "ID") |>
   mutate(across(c(SRSex_dec2025, SRSex_sep2026, SRS_stored), ~ round(.x, 2)),
@@ -62,14 +72,45 @@ cmp <- full_join(
          classChanged = coalesce(class_dec2025 != class_sep2026, TRUE),
          dec2025_matches_storedRun = coalesce(abs(SRSex_dec2025 - SRS_stored) < 0.01, FALSE)) |>
   rename(taxon = ID) |>
+  mutate(NG_change = NG_sep2026 - NG_dec2025,
+         NGcoords_change = NGcoords_sep2026 - NGcoords_dec2025,
+         NHcoords_change = NHcoords_sep2026 - NHcoords_dec2025,
+         coords_change = coords_sep2026 - coords_dec2025) |>
   select(taxon, NG_dec2025, NH_dec2025, SRSex_dec2025, class_dec2025,
          NG_sep2026, NH_sep2026, SRSex_sep2026, class_sep2026,
          SRSex_change, scoreChanged, classChanged,
+         NG_change, NGcoords_dec2025, NGcoords_sep2026, NGcoords_change,
+         NHcoords_dec2025, NHcoords_sep2026, NHcoords_change,
+         coords_dec2025, coords_sep2026, coords_change,
          storedRun, SRS_stored, dec2025_matches_storedRun, NTOTAL_dec2025, NTOTAL_sep2026) |>
   arrange(desc(classChanged), desc(abs(SRSex_change)), taxon)
 
-write_csv(cmp, "temp/srsEx_dec2025_vs_sep2026.csv")
-write_csv(cmp, "work2026/srsEx_comparison_20260916.csv")
+write_csv(cmp, paste0("temp/srsEx_dec2025_vs_sep2026", tag, ".csv"))
+write_csv(cmp, paste0("work2026/srsEx_comparison_20260916", if (taxonomyOnly) "_taxonomyOnly" else "", ".csv"))
+
+# rerun candidates: SRSex changed, or georeferenced G records changed
+rerun <- cmp |>
+  mutate(SRSexChanged = scoreChanged,
+         gCoordsChanged = coalesce(NGcoords_change != 0, TRUE),
+         rerunCandidate = SRSexChanged | gCoordsChanged,
+         reason = case_when(
+           is.na(SRSex_sep2026) ~ "no records in Sep 2026",
+           SRSexChanged & gCoordsChanged ~ "SRSex and G coordinate pairs",
+           SRSexChanged ~ "SRSex only",
+           gCoordsChanged ~ "G coordinate pairs only",
+           TRUE ~ "no change")) |>
+  select(taxon, rerunCandidate, reason,
+         SRSex_dec2025, SRSex_sep2026, SRSex_change, class_dec2025, class_sep2026, classChanged,
+         NG_dec2025, NG_sep2026, NG_change,
+         NGcoords_dec2025, NGcoords_sep2026, NGcoords_change,
+         NHcoords_dec2025, NHcoords_sep2026, NHcoords_change,
+         coords_dec2025, coords_sep2026, coords_change) |>
+  arrange(desc(rerunCandidate), desc(classChanged), desc(abs(NGcoords_change)), desc(abs(SRSex_change)), taxon)
+write_csv(rerun, paste0("temp/rerunCandidates_dec2025_vs_sep2026", tag, ".csv"))
+write_csv(rerun, paste0("work2026/rerunCandidates_20260916", if (taxonomyOnly) "_taxonomyOnly" else "", ".csv"))
+cat("\n=== rerun candidates ===\n")
+print(as.data.frame(rerun |> filter(rerunCandidate) |> select(taxon, reason, SRSex_dec2025, SRSex_sep2026, class_dec2025, class_sep2026, NG_change, NGcoords_dec2025, NGcoords_sep2026, NGcoords_change, coords_change)))
+cat("\nrerun candidates:", sum(rerun$rerunCandidate), " of", nrow(rerun), "\n")
 options(width = 220)
 cat("=== SRSex comparison (scores that changed) ===\n")
 print(as.data.frame(cmp |> filter(scoreChanged) |> select(taxon, NG_dec2025, NH_dec2025, SRSex_dec2025, class_dec2025, NG_sep2026, NH_sep2026, SRSex_sep2026, class_sep2026, SRSex_change, classChanged)))
