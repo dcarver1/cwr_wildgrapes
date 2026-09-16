@@ -10,6 +10,8 @@
 #   * the "Names to exclude from this concept" column is now applied: a record
 #     whose original (source) name is on the concept's exclude list is removed
 #     from that concept and returned in `excludedByConcept`
+#   * subsetting uses which(): a record with an NA taxon no longer injects an
+#     all-NA row into every concept (review/WORKFLOW_EVALUATION.md section 2.3)
 
 # split a synonym / exclusion cell into clean names
 splitNames <- function(x) {
@@ -62,9 +64,11 @@ speciesCheck <- function(data, synonymList, applyExclusions = TRUE){
     # synonyms, dropping a self reference (the concept name is matched already)
     syn1 <- setdiff(splitNames(synonymList$acceptedSynonym[i]), taxon)
     
-    df2 <- data[data$taxon == taxon, ]
+    # which() drops NA comparisons: `data[data$taxon == taxon, ]` returns one
+    # all-NA row for every record whose taxon is NA (genus-only GBIF records)
+    df2 <- data[which(data$taxon == taxon), ]
     for(j in syn1){
-      df3 <- data[data$taxon == j, ]
+      df3 <- data[which(data$taxon == j), ]
       df2 <- bind_rows(df2, df3)
     }
     # a record may enter this concept only once

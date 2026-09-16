@@ -219,6 +219,27 @@ Suggested additions to make it do real work:
 4. `run_all05082026.R` reads `data/datasetsForPublication/allSpeciesOccurrences.csv` and refers to a `prep_species_data.R` that does not exist. That file has 1,525 more rows than `model_data20251216.csv` and an extra `recordID` column; the step producing it needs to be scripted before the next run is reproducible.
 5. Re-run the models under a new `runVersion`.
 
+## 9. Changes made 2026-09-16 on `workflow-evaluation`
+
+Main was frozen at tag `main-frozen-2026-09-16` and merged into this branch.
+Then, from `review/WORKFLOW_EVALUATION.md`:
+
+* driver switched to `nameSource = "combined"` (section 4 above)
+* driver no longer re-binds records that failed the Americas bounding box; only
+  records with no coordinates are added back (evaluation section 2.2)
+* hard-coded outlier removals use `!index %in%` so a zero match cannot error
+* `speciesCheck()` subsets with `which()`; NA-taxon records no longer inject an
+  all-NA row into every concept (evaluation section 2.3)
+* fossil filter is `!(sampleCategory %in% "FOSSIL_SPECIMEN")` so a blank
+  basisOfRecord is kept (evaluation section 2.5)
+* GBIF `LIVING_SPECIMEN` -> type "G" is unchanged and marked as a decision point
+  in `process_gbif_082026.R` (evaluation section 2.5)
+
+Still open and deliberately untouched so the co-author diff isolates the
+taxonomy fix: `df2_a` (cross-source de-duplication) is still not fed downstream;
+the duplicate `speciesCheck()` in `preprocessing07_2025Functions.R`; the
+`novogranatensis` re-injection.
+
 ## Files
 
 * `work2026/gbif_name_source_comparison.R`: produces everything above

@@ -79,8 +79,9 @@ processGBIF <- function(path, nameSource = c("scientificName", "verbatimScientif
       collectionSource = NA,
       biologicalStatus = NA
     )|>
-    # Remove fossil records 
-    dplyr::filter(sampleCategory != "FOSSIL_SPECIMEN")|>
+    # Remove fossil records. `%in%` keeps rows whose basisOfRecord is NA;
+    # `!= "FOSSIL_SPECIMEN"` silently dropped them.
+    dplyr::filter(!(sampleCategory %in% "FOSSIL_SPECIMEN"))|>
     # Standardize locality information
     dplyr::mutate(localityInformation = paste0(state, " -- ", locality ))
   
@@ -116,6 +117,12 @@ processGBIF <- function(path, nameSource = c("scientificName", "verbatimScientif
     dplyr::select(-species_temp, -verbatimScientificName)
   
   # 5. Define the specimen type (H = Herbarium, G = Germplasm/Living)
+  # DECISION POINT (unchanged from the published run): every GBIF
+  # LIVING_SPECIMEN is typed "G" and counts as a germplasm accession in SRSex.
+  # Most GBIF living specimens are botanic-garden collections, not genebank
+  # accessions, so this inflates ex-situ scores for garden-popular taxa
+  # (review/WORKFLOW_EVALUATION.md section 2.5). Kept as-is so the co-author
+  # diff isolates the taxonomy fix; revisit with the co-author.
   d3 <- d2 |>
     dplyr::mutate(type = case_when(
       sampleCategory != "LIVING_SPECIMEN" ~ "H",

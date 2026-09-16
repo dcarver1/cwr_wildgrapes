@@ -53,10 +53,12 @@ standardColumnNames <- c(
 # -------------------------------------------------------------------------
 
 # 1. Process GBIF (Using the new unlumped processGBIF from process_gbif_082026.R)
-# nameSource: "scientificName" (GBIF interpreted name) or "verbatimScientificName"
-# (publisher's name). See work2026/GBIF_taxonomy_notes.md for the comparison.
+# nameSource = "combined": parse GBIF's interpreted scientificName first; if that
+# cannot be parsed (GBIF fell back to "Vitis L."), parse the publisher's
+# verbatimScientificName; only then use the backbone columns. Recommended in
+# work2026/GBIF_taxonomy_notes.md section 4 (+138 records over "scientificName").
 gbif <- processGBIF(path = "data/source_data/vitisGBIFDownload_20250721.csv",
-                    nameSource = "scientificName") |>
+                    nameSource = "combined") |>
   orderNames(names = standardColumnNames) |>
   removeDuplicatesID()
 write_csv(x = gbif, file = paste0("data/processed_occurrence/gbif_", date_suffix, ".csv"))
@@ -178,8 +180,14 @@ source("preprocessing/functions/checksOnLatLong.R")
 d3 <- checksOnLatLong(df2)
 valLatLon <- d3$validLatLon
 
-# Process countycheck entries (living specimen / G germplasm records with no lat lon)
+# Records with no coordinates are kept (they count toward totals and feed the
+# county-level products). Records that HAVE coordinates but failed the
+# Americas bounding box (validLatLon == FALSE, written to
+# excludedOnLatLonBoundingBox.csv) must NOT come back in: checksOnLatLong()
+# returns both groups together in `countycheck`, and the previous drivers
+# re-bound both. See review/WORKFLOW_EVALUATION.md section 2.2.
 d3_g <- d3$countycheck |>
+  dplyr::filter(is.na(validLatLon)) |>
   dplyr::mutate(
     county = stringr::str_remove_all(string = county, pattern = " .Co"),
     county = stringr::str_remove_all(string = county, pattern = " Co."),
@@ -224,9 +232,11 @@ d11 <- bind_rows(d9, d10) |>
 d11a <- d11 |> dplyr::filter(latitude == 82.233333) |> select(index)
 d11b <- d11 |> dplyr::filter(longitude == -177.2805) |> select(index)
 
+# `!index %in%` is safe when a filter matches zero or several rows
+# (`index != d11a$index` errors on zero matches and recycles on several)
 d11 <- d11 |>
-  dplyr::filter(index != d11a$index) |>
-  dplyr::filter(index != d11b$index)
+  dplyr::filter(!index %in% d11a$index) |>
+  dplyr::filter(!index %in% d11b$index)
 
 # Update database source tag for Vitis novogranatensis
 d11[d11$taxon == "Vitis novogranatensis", "databaseSource"] <- "Personal Communication with Jun Wen"

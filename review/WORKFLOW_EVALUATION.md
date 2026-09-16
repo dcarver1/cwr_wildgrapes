@@ -13,6 +13,16 @@ Findings are ordered by how much they can move a published number.
 
 ## 1. GBIF taxonomy — the confirmed functional error
 
+> **Superseded 2026-09-14.** This section was written from live backbone lookups
+> (`review/verify_gbif_backbone.R`), not from the occurrence download. Several
+> claims are wrong or out of date: the file has no `taxonomicStatus` /
+> `acceptedScientificName` columns; the "12 of 40" figure is not what happened to
+> records in the file; *novogranatensis* and *rubriflora* have no GBIF records at
+> all; the corrected parser in commit `15e72a1` does recover *lincecumii* and the
+> hyphenated hybrids. The corrected, download-based account with per-taxon counts
+> is `review/GBIF_backbone_coauthor_brief.md` (section 8 there lists each change).
+> Sections 2 to 6 of this document stand.
+
 ### 1.1 What GBIF actually returns
 
 In a GBIF interpreted occurrence download the taxonomy columns describe **two different
