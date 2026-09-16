@@ -240,9 +240,88 @@ taxonomy fix: `df2_a` (cross-source de-duplication) is still not fed downstream;
 the duplicate `speciesCheck()` in `preprocessing07_2025Functions.R`; the
 `novogranatensis` re-injection.
 
+## 10. First run of the 2026-08-20 pipeline (2026-09-16)
+
+`preprocessing/preprocessingUpdates2026_08_20.R` ran end to end on the first
+attempt (`nameSource = "combined"`, exclusions applied, bounding-box failures no
+longer re-bound). Output: `data/processed_occurrence/model_data20260820.csv`.
+Comparison against `model_data20251216.csv` by
+`work2026/compareCounts_20260916.R` ->
+`work2026/changeInCounts_20260916.csv` (per taxon) and
+`work2026/changeInCounts_bySource_20260916.csv` (per taxon x source).
+
+Totals: 111,458 -> 111,083 rows (-375); with coordinates 70,695 -> 70,364;
+40 -> 39 taxa (*V. cinerea* var. *tomentosa* now has 0 records, see below).
+
+### Final counts, taxa that changed (model-data rows, after all filters)
+
+| Taxon | Dec 2025 | Sep 2026 | change | with coords Dec | Sep | change |
+|---|---:|---:|---:|---:|---:|---:|
+| Vitis cinerea | 5341 | 4445 | -896 | 2172 | 1772 | -400 |
+| Vitis berlandieri | 736 | 1357 | +621 | 359 | 626 | +267 |
+| Vitis aestivalis | 12877 | 12494 | -383 | 5618 | 5496 | -122 |
+| Vitis rotundifolia | 27551 | 27297 | -254 | 23084 | 22980 | -104 |
+| Vitis munsoniana | 22 | 265 | +243 | 18 | 110 | +92 |
+| Vitis lincecumii | 168 | 332 | +164 | 71 | 88 | +17 |
+| Vitis baileyana | 531 | 653 | +122 | 105 | 152 | +47 |
+| Vitis labrusca | 5346 | 5236 | -110 | 2223 | 2147 | -76 |
+| Vitis vulpina | 7674 | 7777 | +103 | 2546 | 2476 | -70 |
+| Vitis simpsonii | 913 | 1008 | +95 | 392 | 448 | +56 |
+| Vitis tiliifolia | 2294 | 2207 | -87 | 1375 | 1352 | -23 |
+| Vitis x champinii | 126 | 192 | +66 | 33 | 38 | +5 |
+| Vitis riparia | 17551 | 17510 | -41 | 13200 | 13179 | -21 |
+| Vitis shuttleworthii | 978 | 937 | -41 | 666 | 661 | -5 |
+| Vitis rufotomentosa | 2 | 42 | +40 | 0 | 20 | +20 |
+| Vitis x novae-angliae | 277 | 300 | +23 | 81 | 86 | +5 |
+| Vitis popenoei | 216 | 194 | -22 | 115 | 112 | -3 |
+| Vitis rupestris | 1254 | 1233 | -21 | 260 | 259 | -1 |
+| Vitis x doaniana | 106 | 118 | +12 | 50 | 53 | +3 |
+| Vitis cinerea var. tomentosa | 11 | 0 | -11 | 11 | 0 | -11 |
+| Vitis aestivalis var. bicolor | 1412 | 1421 | +9 | 555 | 557 | +2 |
+| Vitis cinerea var. cinerea | 619 | 611 | -8 | 181 | 181 | 0 |
+| Vitis arizonica | 4307 | 4303 | -4 | 2762 | 2761 | -1 |
+| Vitis palmata | 1097 | 1101 | +4 | 245 | 238 | -7 |
+| Vitis acerifolia | 855 | 852 | -3 | 391 | 389 | -2 |
+| Vitis californica | 3220 | 3223 | +3 | 2154 | 2154 | 0 |
+| Vitis martineziana | 12 | 14 | +2 | 12 | 14 | +2 |
+| Vitis aestivalis var. aestivalis | 1569 | 1568 | -1 | 392 | 392 | 0 |
+
+Eleven taxa are unchanged. Every change is in GBIF rows except the three
+items below.
+
+### Changes not caused by the parser (separate them in the co-author note)
+
+1. **Bounding box now enforced: -215 records.** The December file held 215
+   records with longitude > -30 (eastern hemisphere) under a USA/CAN/MEX or
+   blank country; the old driver re-bound them after the check flagged them.
+   They are GBIF (198), WIEWS (10, all *V. riparia*), Genesys (1), GRIN (1),
+   Huerta-Acosta (1). Largest: *vulpina* 88, *aestivalis* 60, *cinerea* 13,
+   *rotundifolia* 12. This is why *vulpina* gains 103 rows overall but loses 70
+   with coordinates.
+2. **Synonym-cell split fix: +19 non-GBIF records.** "V. cordifolia" now
+   matches, so Genesys (+17) and WIEWS (+2) accessions enter *V. vulpina*.
+3. ***V. cinerea* var. *tomentosa* has 0 records.** All 11 of its December rows
+   were recorded as "Vitis berlandieri var. tomentosa Planch." and reached the
+   concept only through the backbone. That name is on no include list, so the
+   records now sit in `excludedOnTaxonomy_08202026.csv`. Adding the name to the
+   concept's include cell (section 5) restores them. Until the sheet decides,
+   the taxon cannot be modelled.
+
+### *V. rufotomentosa* in the model data
+
+42 rows: 37 GBIF US (20 with coordinates), 3 GBIF with blank country, 1
+Genesys, 1 WIEWS. The 6 Japanese records never reach the model data because
+`checksOnLatLong()` keeps only USA/CAN/MEX/blank ISO3, so that curator question
+affects the raw counts only. 20 georeferenced records clears the 8-record SDM
+threshold.
+
+`excludedByConcept_08202026.csv` is empty, as predicted in section 6.
+
 ## Files
 
-* `work2026/gbif_name_source_comparison.R`: produces everything above
+* `work2026/compareCounts_20260916.R`: section 10 tables
+* `work2026/changeInCounts_20260916.csv`, `changeInCounts_bySource_20260916.csv`: section 10 outputs
+* `work2026/gbif_name_source_comparison.R`: sections 2 to 6
 * `work2026/gbif_name_source_comparison_by_taxon.csv`: counts per taxon, four methods
 * `work2026/gbif_backbone_reassignments.csv`: every (recorded name concept, backbone concept, scientificName) flow
 * `work2026/gbif_unmatched_names.csv`: parsed names matching no concept, with backbone destination and list membership

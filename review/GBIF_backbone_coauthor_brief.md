@@ -10,7 +10,7 @@ and coordinate checks, so they are comparable to each other but are not final
 model counts.
 
 This replaces the earlier brief drafted from the `workflow-evaluation` branch.
-Section 8 lists what changed and why.
+Section 9 lists what changed and why; section 8 has the results of the first run.
 
 ## 1. One-sentence version
 
@@ -251,7 +251,39 @@ No new GBIF download is needed for any of this.
 6. Decide together which published tables and figures change and how to
    communicate it.
 
-## 8. What changed from the earlier brief, and why
+## 8. Update 2026-09-16: the pipeline has now been run
+
+The 2026-08-20 preprocessing was executed for the first time with the
+recommended parser setting. Final model-data counts (after de-duplication,
+country and coordinate checks) for the taxa in section 4:
+
+| Taxon | Dec 2025 rows | Sep 2026 rows | with coordinates Dec -> Sep |
+|---|---:|---:|---|
+| Vitis berlandieri | 736 | 1357 | 359 -> 626 |
+| Vitis munsoniana | 22 | 265 | 18 -> 110 |
+| Vitis lincecumii | 168 | 332 | 71 -> 88 |
+| Vitis baileyana | 531 | 653 | 105 -> 152 |
+| Vitis simpsonii | 913 | 1008 | 392 -> 448 |
+| Vitis rufotomentosa | 2 | 42 | 0 -> 20 |
+| Vitis x champinii | 126 | 192 | 33 -> 38 |
+| Vitis cinerea | 5341 | 4445 | 2172 -> 1772 |
+| Vitis aestivalis | 12877 | 12494 | 5618 -> 5496 |
+| Vitis rotundifolia | 27551 | 27297 | 23084 -> 22980 |
+
+Full table for all 40 taxa: `work2026/changeInCounts_20260916.csv`; by source:
+`work2026/changeInCounts_bySource_20260916.csv`; discussion in
+`work2026/GBIF_taxonomy_notes.md` section 10.
+
+Two changes in the same run are **not** the taxonomy fix and should be
+reported separately: (a) 215 records with eastern-hemisphere longitudes that
+the old driver re-added after flagging them are now removed (mostly *vulpina*
+88, *aestivalis* 60); (b) *V. cinerea* var. *tomentosa* drops to 0 records
+because its 11 records were all named "Vitis berlandieri var. tomentosa",
+which is on no include list. Item (b) needs a sheet decision (section 6, point
+4). Decision 3 on the six Japanese records is moot for the model data: they are
+removed by the country filter either way.
+
+## 9. What changed from the earlier brief, and why
 
 | Earlier claim | Status | Evidence |
 |---|---|---|
