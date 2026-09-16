@@ -5,11 +5,11 @@ Vitis berlandieri,TRUE,SRSex only,28.45,18,-10.45,HP,UP,TRUE,163,207,44,70,70,0,
 Vitis cinerea var. tomentosa,TRUE,no records in Sep 2026,0,NA,NA,UP,NA,TRUE,0,NA,NA,0,NA,NA,11,NA,NA,11,NA,NA
 Vitis vulpina,TRUE,SRSex and G coordinate pairs,1.17,1.47,0.3,UP,UP,FALSE,89,114,25,6,7,1,2540,2557,17,2546,2564,18
 Vitis x doaniana,TRUE,SRSex only,100,87.3,-12.7,LP,LP,FALSE,55,55,0,29,29,0,21,24,3,50,53,3
-Vitis rupestris,TRUE,SRSex only,17.97,16.09,-1.88,UP,UP,FALSE,191,171,-20,50,50,0,210,210,0,260,260,0
 Vitis lincecumii,TRUE,SRSex only,1.82,3.11,1.29,UP,UP,FALSE,3,10,7,0,0,0,71,88,17,71,88,17
+Vitis labrusca,TRUE,SRSex only,9.5,9.72,0.22,UP,UP,FALSE,464,464,0,31,31,0,2192,2120,-72,2223,2151,-72
 Vitis baileyana,TRUE,SRSex only,0.57,0.77,0.2,UP,UP,FALSE,3,5,2,0,0,0,105,153,48,105,153,48
-Vitis labrusca,TRUE,SRSex only,9.5,9.66,0.16,UP,UP,FALSE,464,461,-3,31,31,0,2192,2120,-72,2223,2151,-72
 Vitis popenoei,TRUE,SRSex only,1.41,1.57,0.16,UP,UP,FALSE,3,3,0,1,1,0,114,111,-3,115,112,-3
+Vitis riparia,TRUE,SRSex only,2.5,2.64,0.14,UP,UP,FALSE,428,460,32,72,72,0,13128,13289,161,13200,13361,161
 Vitis acerifolia,TRUE,SRSex only,25.92,26.04,0.12,HP,HP,FALSE,176,176,0,63,63,0,328,326,-2,391,389,-2
 Vitis simpsonii,TRUE,SRSex only,1,0.9,-0.1,UP,UP,FALSE,9,9,0,0,0,0,392,448,56,392,448,56
 Vitis cinerea,TRUE,SRSex only,5.91,6,0.09,UP,UP,FALSE,333,287,-46,131,131,0,2233,1836,-397,2364,1967,-397
@@ -36,6 +36,6 @@ Vitis nesbittiana,FALSE,no change,10.42,10.42,0,UP,UP,FALSE,10,10,0,1,1,0,58,58,
 Vitis novogranatensis,FALSE,no change,0,0,0,UP,UP,FALSE,0,0,0,0,0,0,0,0,0,0,0,0
 Vitis palmata,FALSE,no change,4.18,4.18,0,UP,UP,FALSE,44,44,0,0,0,0,245,245,0,245,245,0
 Vitis peninsularis,FALSE,no change,0,0,0,UP,UP,FALSE,0,0,0,0,0,0,113,113,0,113,113,0
-Vitis riparia,FALSE,no change,2.5,2.5,0,UP,UP,FALSE,428,428,0,72,72,0,13128,13127,-1,13200,13199,-1
 Vitis rotundifolia,FALSE,no change,0.3,0.3,0,UP,UP,FALSE,82,83,1,9,9,0,23075,22983,-92,23084,22992,-92
 Vitis rubriflora,FALSE,no change,0,0,0,UP,UP,FALSE,0,0,0,0,0,0,4,4,0,4,4,0
+Vitis rupestris,FALSE,no change,17.97,17.97,0,UP,UP,FALSE,191,191,0,50,50,0,210,210,0,260,260,0

@@ -3,14 +3,13 @@ Vitis rufotomentosa,TRUE,SRSex only,100,5,-95,LP,UP,TRUE,2,2,0,0,0,0,0,20,20,0,2
 Vitis x champinii,TRUE,SRSex only,80,41.18,-38.82,LP,HP,TRUE,56,56,0,23,23,0,10,15,5,33,38,5
 Vitis berlandieri,TRUE,SRSex only,28.45,18,-10.45,HP,UP,TRUE,163,207,44,70,70,0,289,556,267,359,626,267
 Vitis cinerea var. tomentosa,TRUE,no records in Sep 2026,0,NA,NA,UP,NA,TRUE,0,NA,NA,0,NA,NA,11,NA,NA,11,NA,NA
-Vitis riparia,TRUE,SRSex and G coordinate pairs,2.5,2.49,-0.01,UP,UP,FALSE,428,426,-2,72,70,-2,13128,13118,-10,13200,13188,-12
+Vitis riparia,TRUE,SRSex and G coordinate pairs,2.5,2.63,0.13,UP,UP,FALSE,428,458,30,72,70,-2,13128,13280,152,13200,13350,150
 Vitis vulpina,TRUE,SRSex and G coordinate pairs,1.17,1.49,0.32,UP,UP,FALSE,89,114,25,6,7,1,2540,2469,-71,2546,2476,-70
 Vitis cinerea,TRUE,SRSex and G coordinate pairs,5.91,6,0.09,UP,UP,FALSE,333,286,-47,131,130,-1,2233,1823,-410,2364,1953,-411
 Vitis x doaniana,TRUE,SRSex only,100,87.3,-12.7,LP,LP,FALSE,55,55,0,29,29,0,21,24,3,50,53,3
-Vitis rupestris,TRUE,SRSex only,17.97,16.1,-1.87,UP,UP,FALSE,191,171,-20,50,50,0,210,209,-1,260,259,-1
 Vitis lincecumii,TRUE,SRSex only,1.82,3.11,1.29,UP,UP,FALSE,3,10,7,0,0,0,71,88,17,71,88,17
+Vitis labrusca,TRUE,SRSex only,9.5,9.73,0.23,UP,UP,FALSE,464,464,0,31,31,0,2192,2115,-77,2223,2146,-77
 Vitis baileyana,TRUE,SRSex only,0.57,0.77,0.2,UP,UP,FALSE,3,5,2,0,0,0,105,152,47,105,152,47
-Vitis labrusca,TRUE,SRSex only,9.5,9.67,0.17,UP,UP,FALSE,464,461,-3,31,31,0,2192,2115,-77,2223,2146,-77
 Vitis popenoei,TRUE,SRSex only,1.41,1.57,0.16,UP,UP,FALSE,3,3,0,1,1,0,114,111,-3,115,112,-3
 Vitis acerifolia,TRUE,SRSex only,25.92,26.04,0.12,HP,HP,FALSE,176,176,0,63,63,0,328,326,-2,391,389,-2
 Vitis simpsonii,TRUE,SRSex only,1,0.9,-0.1,UP,UP,FALSE,9,9,0,0,0,0,392,448,56,392,448,56
@@ -21,6 +20,7 @@ Vitis palmata,TRUE,SRSex only,4.18,4.21,0.03,UP,UP,FALSE,44,44,0,0,0,0,245,238,-
 Vitis shuttleworthii,TRUE,SRSex only,0.83,0.86,0.03,UP,UP,FALSE,8,8,0,0,0,0,665,660,-5,665,660,-5
 Vitis cinerea var. cinerea,TRUE,SRSex only,2.15,2.17,0.02,UP,UP,FALSE,13,13,0,0,0,0,181,181,0,181,181,0
 Vitis aestivalis var. bicolor,TRUE,SRSex only,0.43,0.42,-0.01,UP,UP,FALSE,6,6,0,0,0,0,555,557,2,555,557,2
+Vitis rupestris,TRUE,SRSex only,17.97,17.98,0.01,UP,UP,FALSE,191,191,0,50,50,0,210,209,-1,260,259,-1
 Vitis aestivalis var. aestivalis,FALSE,no change,1.16,1.16,0,UP,UP,FALSE,18,18,0,0,0,0,392,392,0,392,392,0
 Vitis arizonica,FALSE,no change,8.6,8.6,0,UP,UP,FALSE,341,341,0,294,294,0,2468,2468,0,2762,2762,0
 Vitis biformis,FALSE,no change,20.9,20.9,0,UP,UP,FALSE,14,14,0,2,2,0,32,32,0,34,34,0

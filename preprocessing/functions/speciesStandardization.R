@@ -12,6 +12,12 @@
 #     from that concept and returned in `excludedByConcept`
 #   * subsetting uses which(): a record with an NA taxon no longer injects an
 #     all-NA row into every concept (review/WORKFLOW_EVALUATION.md section 2.3)
+#   * autonyms match their species (decision 2026-09-16): a record named
+#     "Vitis rupestris f. rupestris" or "Vitis riparia subsp. riparia" is the
+#     typical form of the species and enters the species concept without a
+#     sheet entry. Autonyms that are project taxa themselves (V. aestivalis
+#     var. aestivalis, V. cinerea var. cinerea) still match their own concept
+#     directly; a record may feed both, as before.
 
 # split a synonym / exclusion cell into clean names
 splitNames <- function(x) {
@@ -25,6 +31,14 @@ splitNames <- function(x) {
     stringr::str_replace("^V\\.\\s*", "Vitis ") |>
     stringr::str_squish()
   out[out != ""]
+}
+
+# the autonym forms of a species-level concept name ("Vitis riparia" ->
+# "Vitis riparia var. riparia", "... subsp. riparia", "... f. riparia")
+autonymsOf <- function(taxon) {
+  m <- stringr::str_match(taxon, "^((?:Vitis|Muscadinia)\\s+(?:x\\s+)?([a-z]+(?:-[a-z]+)?))$")
+  if (is.na(m[1, 1])) return(character(0))
+  paste0(m[1, 2], c(" var. ", " subsp. ", " f. "), m[1, 3])
 }
 
 # reduce a name to a comparable form: "Genus [x] epithet [rank epithet]", lower case,
@@ -61,8 +75,9 @@ speciesCheck <- function(data, synonymList, applyExclusions = TRUE){
   
   mapSynonyms <- function(i, synonymList, data){
     taxon <- synonymList$taxon[i]
-    # synonyms, dropping a self reference (the concept name is matched already)
-    syn1 <- setdiff(splitNames(synonymList$acceptedSynonym[i]), taxon)
+    # synonyms, dropping a self reference (the concept name is matched already),
+    # plus the concept's autonym forms
+    syn1 <- union(setdiff(splitNames(synonymList$acceptedSynonym[i]), taxon), autonymsOf(taxon))
     
     # which() drops NA comparisons: `data[data$taxon == taxon, ]` returns one
     # all-NA row for every record whose taxon is NA (genus-only GBIF records)

@@ -29,7 +29,7 @@ Five mechanisms account for everything:
 
 ## Taxa that gained records
 
-(26 taxa change in total after the homonym rule; 14 unchanged.)
+(25 taxa change in total after the homonym and autonym rules; 15 unchanged.)
 
 **Vitis berlandieri** +621 (coords +267, G +44). A: 627 records recorded as
 "Vitis berlandieri Planch." return from *V. cinerea* (backbone: synonym of
@@ -79,6 +79,13 @@ Mexico, GBIF filed as "Vitis L.".
 
 **Vitis mustangensis** +1. "Vitis candicans var. diversa" now matched.
 
+**Vitis riparia** +349 (coords +161, G +32). Autonym rule: 364 records named
+"Vitis riparia subsp. riparia" enter; they were lost under both the old parser
+(which built the string from backbone fields and matched nothing) and the new
+one until autonyms were mapped to their species. +3 "Vitis vulpina subsp.
+riparia" (on the include list). D: 18 to no list: incisa 10, odoratissima 6,
+vulpina var. praecox 2. E: 5 "Vitis rubra Desf." stay in riparia.
+
 ## Taxa that lost records
 
 **Vitis cinerea** -882 (coords -386, G -46). A: 627 to *berlandieri*, 123 to
@@ -112,13 +119,6 @@ No coordinates lost.
 **Vitis popenoei** -22 (coords -3). D: 22 "Muscadinia popenoei". Add to
 include cell.
 
-**Vitis rupestris** -20 (G -20). D: 20 "Vitis rupestris f. rupestris", all
-germplasm, no coordinates. Add to include cell (autonym).
-
-**Vitis riparia** -15 (coords -1). D: 18 to no list: incisa 10, odoratissima
-6, vulpina var. praecox 2. E: 5 "Vitis rubra Desf." stay in riparia by the
-homonym rule. +3 "Vitis vulpina subsp. riparia" now matched.
-
 **Vitis cinerea var. tomentosa** -11 (coords -11), now 0 records. D: all 11
 were "Vitis berlandieri var. tomentosa Planch.", reached the concept only via
 the backbone. Add the name to the include cell to restore the taxon.
@@ -135,7 +135,9 @@ Engelm." Add to include cell.
 
 Mechanisms A and B are the fix working as intended and need no sheet change.
 Mechanism C is a data-entry fix already tolerated by the code. Mechanism E is
-handled in code. Mechanism D is the residue: 15 or so names to add to include
-cells (largest: bicolor 87, caribaea 84, coriacea 36, popenoei 22, rupestris
-f. rupestris 20, and the 412 rotundifolia var. munsoniana still sitting in
-rotundifolia). *palmata*, *californica* and *arizonica* no longer change.
+handled in code. Autonyms are handled in code
+(*rupestris* is now unchanged; *riparia* gains 364). Mechanism D is the
+residue: about a dozen names to add to include cells (largest: bicolor 87,
+caribaea 84, coriacea 36, popenoei 22, and the 412 rotundifolia var.
+munsoniana still sitting in rotundifolia, which is not an autonym).
+*palmata*, *californica*, *arizonica* and *rupestris* no longer change.

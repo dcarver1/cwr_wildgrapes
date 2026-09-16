@@ -33,13 +33,12 @@ Vitis cinerea,lost,Vitis cinerea,not in file,Vitis canescens G.Nicholson,GBIF,2,
 Vitis cinerea var. cinerea,lost,Vitis cinerea var. cinerea,not in file,Vitis aestivalis var. cinerea Engelm.,GBIF,8,0,0
 Vitis cinerea var. tomentosa,lost,Vitis cinerea var. tomentosa,not in file,Vitis berlandieri var. tomentosa Planch.,GBIF,11,11,0
 Vitis labrusca,gained,not in file,Vitis labrusca,Vitis L.,GBIF,1,0,0
-Vitis labrusca,lost,Vitis labrusca,not in file,Vitis × labruscana,GBIF,98,72,3
-Vitis labrusca,lost,Vitis labrusca,not in file,Vitis latifolia Raf.,GBIF,8,72,3
-Vitis labrusca,lost,Vitis labrusca,not in file,Vitis labrusca f. labrusca,GBIF,3,72,3
-Vitis labrusca,lost,Vitis labrusca,not in file,Vitis catawba K.Koch,GBIF,2,72,3
-Vitis labrusca,lost,Vitis labrusca,not in file,Vitis blanda Raf.,GBIF,1,72,3
-Vitis labrusca,lost,Vitis labrusca,not in file,Vitis labrusca f. alba (Prince),GBIF,1,72,3
-Vitis labrusca,lost,Vitis labrusca,not in file,Vitis obovata Raf.,GBIF,1,72,3
+Vitis labrusca,lost,Vitis labrusca,not in file,Vitis × labruscana,GBIF,98,72,0
+Vitis labrusca,lost,Vitis labrusca,not in file,Vitis latifolia Raf.,GBIF,8,72,0
+Vitis labrusca,lost,Vitis labrusca,not in file,Vitis catawba K.Koch,GBIF,2,72,0
+Vitis labrusca,lost,Vitis labrusca,not in file,Vitis blanda Raf.,GBIF,1,72,0
+Vitis labrusca,lost,Vitis labrusca,not in file,Vitis labrusca f. alba (Prince),GBIF,1,72,0
+Vitis labrusca,lost,Vitis labrusca,not in file,Vitis obovata Raf.,GBIF,1,72,0
 Vitis lincecumii,gained,Vitis aestivalis,Vitis lincecumii,Vitis lincecumii,GBIF,93,17,7
 Vitis lincecumii,gained,Vitis aestivalis,Vitis lincecumii,Vitis linsecomii,GBIF,71,17,7
 Vitis martineziana,gained,not in file,Vitis martineziana,Vitis L.,GBIF,2,2,0
@@ -49,7 +48,8 @@ Vitis munsoniana,gained,Vitis rotundifolia,Vitis munsoniana,Vitis munsoniana J.H
 Vitis munsoniana,gained,Vitis rotundifolia,Vitis munsoniana,Vitis munsoniana J.H.Simpson ex Planch.,GBIF,43,92,0
 Vitis mustangensis,gained,not in file,Vitis mustangensis,Vitis candicans var. diversa,GBIF,1,0,0
 Vitis popenoei,lost,Vitis popenoei,not in file,Muscadinia popenoei (J.L.Fennell) Weakley & Gandhi,GBIF,22,3,0
-Vitis riparia,gained,not in file,Vitis riparia,Vitis vulpina subsp. riparia (Michx.) R.T.Clausen,GBIF,3,1,0
+Vitis riparia,gained,not in file,Vitis riparia,Vitis riparia subsp. riparia,GBIF,364,163,32
+Vitis riparia,gained,not in file,Vitis riparia,Vitis vulpina subsp. riparia (Michx.) R.T.Clausen,GBIF,3,163,32
 Vitis riparia,lost,Vitis riparia,not in file,Vitis incisa Jacq.,GBIF,10,2,0
 Vitis riparia,lost,Vitis riparia,not in file,Vitis odoratissima Donn,GBIF,6,2,0
 Vitis riparia,lost,Vitis riparia,not in file,Vitis vulpina var. praecox (Engelm. ex,GBIF,2,2,0
@@ -60,7 +60,6 @@ Vitis rotundifolia,lost,Vitis rotundifolia,Vitis munsoniana,Vitis munsoniana J.H
 Vitis rotundifolia,lost,Vitis rotundifolia,Vitis munsoniana,Vitis munsoniana J.H.Simpson ex Planch.,GBIF,43,92,0
 Vitis rufotomentosa,gained,Vitis aestivalis,Vitis rufotomentosa,Vitis rufotomentosa,GBIF,26,11,0
 Vitis rufotomentosa,gained,not in file,Vitis rufotomentosa,Vitis L.,GBIF,14,9,0
-Vitis rupestris,lost,Vitis rupestris,not in file,Vitis rupestris f. rupestris,GBIF,20,0,20
 Vitis shuttleworthii,lost,Vitis shuttleworthii,not in file,Vitis coriacea Shuttlew. ex Planch.,GBIF,36,0,0
 Vitis simpsonii,gained,Vitis cinerea,Vitis simpsonii,Vitis simpsonii,GBIF,95,56,0
 Vitis tiliifolia,lost,Vitis tiliifolia,not in file,Vitis caribaea DC.,GBIF,84,23,0
