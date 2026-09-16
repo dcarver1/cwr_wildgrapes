@@ -1,0 +1,47 @@
+taxon,direction,from,to,records,names
+Vitis acerifolia,lost,Vitis acerifolia,not in file,3,Vitis novomexicana Lemmon ex
+Vitis aestivalis,gained,not in file,Vitis aestivalis,6,Vitis L.
+Vitis aestivalis,lost,Vitis aestivalis,Vitis lincecumii,164,Vitis lincecumii; Vitis linsecomii
+Vitis aestivalis,lost,Vitis aestivalis,not in file,139,Vitis bicolor Raf.; Vitis bicolor Leconte; Vitis bicolor J.Le Conte; Vitis smalliana
+Vitis aestivalis,lost,Vitis aestivalis,Vitis rufotomentosa,26,Vitis rufotomentosa
+Vitis aestivalis var. aestivalis,lost,Vitis aestivalis var. aestivalis,not in file,1,Vitis labrusca var. aestivalis (Michx.)
+Vitis aestivalis var. bicolor,gained,Vitis aestivalis,Vitis aestivalis var. bicolor,9,Vitis argentifolia
+Vitis arizonica,lost,Vitis arizonica,Vitis californica,4,Vitis californica Parry
+Vitis baileyana,gained,Vitis cinerea,Vitis baileyana,123,Vitis baileyana
+Vitis berlandieri,gained,Vitis cinerea,Vitis berlandieri,627,Vitis berlandieri Planch.
+Vitis berlandieri,lost,Vitis berlandieri,not in file,6,Vitis cordifolia var. helleri
+Vitis californica,gained,Vitis arizonica,Vitis californica,4,Vitis californica Parry
+Vitis cinerea,lost,Vitis cinerea,Vitis berlandieri,627,Vitis berlandieri Planch.
+Vitis cinerea,lost,Vitis cinerea,Vitis baileyana,123,Vitis baileyana
+Vitis cinerea,lost,Vitis cinerea,Vitis simpsonii,95,Vitis simpsonii
+Vitis cinerea,lost,Vitis cinerea,not in file,37,Vitis berlandieri var. tomentosa Planch.; Vitis aestivalis var. cinerea Engelm.; Vitis helleri (L.H.Bailey); Vitis sola
+Vitis cinerea var. cinerea,lost,Vitis cinerea var. cinerea,not in file,8,Vitis aestivalis var. cinerea Engelm.
+Vitis cinerea var. tomentosa,lost,Vitis cinerea var. tomentosa,not in file,11,Vitis berlandieri var. tomentosa Planch.
+Vitis labrusca,gained,not in file,Vitis labrusca,22,Vitis labrusca Thunb.; Vitis L.; Vitis labrusca Scop.
+Vitis labrusca,lost,Vitis labrusca,not in file,114,Vitis × labruscana; Vitis latifolia Raf.; Vitis labrusca f. labrusca; Vitis catawba K.Koch
+Vitis labrusca,lost,Vitis labrusca,Vitis vulpina,7,Vitis vulpina Bartram
+Vitis labrusca,lost,Vitis labrusca,Vitis palmata,6,Vitis palmata Leconte
+Vitis lincecumii,gained,Vitis aestivalis,Vitis lincecumii,164,Vitis lincecumii; Vitis linsecomii
+Vitis martineziana,gained,not in file,Vitis martineziana,2,Vitis L.
+Vitis munsoniana,gained,Vitis rotundifolia,Vitis munsoniana,243,Vitis munsoniana; Muscadinia munsoniana (J.H.Simpson ex; Vitis munsoniana J.H.Simpson; Vitis munsoniana J.H.Simpson ex Planch.
+Vitis mustangensis,gained,not in file,Vitis mustangensis,1,Vitis candicans var. diversa
+Vitis palmata,gained,Vitis labrusca,Vitis palmata,6,Vitis palmata Leconte
+Vitis palmata,gained,Vitis riparia,Vitis palmata,5,Vitis rubra Desf.
+Vitis popenoei,lost,Vitis popenoei,not in file,22,Muscadinia popenoei (J.L.Fennell) Weakley & Gandhi
+Vitis riparia,gained,not in file,Vitis riparia,3,Vitis vulpina subsp. riparia (Michx.) R.T.Clausen
+Vitis riparia,lost,Vitis riparia,not in file,19,Vitis incisa Jacq.; Vitis odoratissima Donn; Vitis vulpina var. praecox (Engelm. ex; Vitis virginiensis Juss. ex DC.
+Vitis riparia,lost,Vitis riparia,Vitis palmata,5,Vitis rubra Desf.
+Vitis rotundifolia,gained,not in file,Vitis rotundifolia,1,Vitis L.
+Vitis rotundifolia,lost,Vitis rotundifolia,Vitis munsoniana,243,Vitis munsoniana; Muscadinia munsoniana (J.H.Simpson ex; Vitis munsoniana J.H.Simpson; Vitis munsoniana J.H.Simpson ex Planch.
+Vitis rufotomentosa,gained,Vitis aestivalis,Vitis rufotomentosa,26,Vitis rufotomentosa
+Vitis rufotomentosa,gained,not in file,Vitis rufotomentosa,14,Vitis L.
+Vitis rupestris,lost,Vitis rupestris,not in file,20,Vitis rupestris f. rupestris
+Vitis shuttleworthii,lost,Vitis shuttleworthii,not in file,36,Vitis coriacea Shuttlew. ex Planch.
+Vitis simpsonii,gained,Vitis cinerea,Vitis simpsonii,95,Vitis simpsonii
+Vitis tiliifolia,lost,Vitis tiliifolia,not in file,87,Vitis caribaea DC.; Vitis arachnoidea Oerst.; Vitis acuminata Oerst.
+Vitis vulpina,gained,not in file,Vitis vulpina,193,Vitis cordifolia Lam.; Vitis cordifolia; Vitis cordifolia var. sempervirens
+Vitis vulpina,gained,Vitis labrusca,Vitis vulpina,7,Vitis vulpina Bartram
+Vitis vulpina,lost,Vitis vulpina,not in file,9,Vitis pullaria J.Le Conte; Vitis sylvestris W.Bartram
+Vitis x champinii,gained,not in file,Vitis x champinii,66,Vitis L.
+Vitis x doaniana,gained,not in file,Vitis x doaniana,12,Vitis L.
+Vitis x novae-angliae,gained,not in file,Vitis x novae-angliae,23,Vitis L.
