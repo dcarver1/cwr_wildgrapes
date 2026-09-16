@@ -66,8 +66,11 @@ standardColumnNames <- c(
 # cannot be parsed (GBIF fell back to "Vitis L."), parse the publisher's
 # verbatimScientificName; only then use the backbone columns. Recommended in
 # work2026/GBIF_taxonomy_notes.md section 4 (+138 records over "scientificName").
+# homonymLog: authored name strings that keep the backbone assignment (see
+# process_gbif_082026.R step 2b)
 gbif <- processGBIF(path = "data/source_data/vitisGBIFDownload_20250721.csv",
-                    nameSource = "combined") |>
+                    nameSource = "combined",
+                    homonymLog = paste0("data/processed_occurrence/gbifHomonymNames_", date_suffix, ".csv")) |>
   orderNames(names = standardColumnNames) |>
   removeDuplicatesID()
 write_csv(x = gbif, file = paste0("data/processed_occurrence/gbif_", date_suffix, ".csv"))

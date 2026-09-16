@@ -267,7 +267,7 @@ country and coordinate checks) for the taxa in section 4:
 | Vitis rufotomentosa | 2 | 42 | 0 -> 20 |
 | Vitis x champinii | 126 | 192 | 33 -> 38 |
 | Vitis cinerea | 5341 | 4445 | 2172 -> 1772 |
-| Vitis aestivalis | 12877 | 12494 | 5618 -> 5496 |
+| Vitis aestivalis | 12877 | 12496 | 5618 -> 5497 |
 | Vitis rotundifolia | 27551 | 27297 | 23084 -> 22980 |
 
 Full table for all 40 taxa: `work2026/changeInCounts_20260916.csv`; by source:
@@ -290,6 +290,11 @@ SRSex re-computed on both files (`work2026/srsEx_comparison_20260916.csv`):
 *V.* x *champinii* 80.0 -> 41.2 (LP -> HP), *V. berlandieri* 28.5 -> 18.0
 (HP -> UP), *V. cinerea* var. *tomentosa* has no score. All other scores move
 by under 13 points and stay in class.
+
+Homonyms (section 4.3): decision 2026-09-16 is to keep the backbone
+assignment for authored homonyms in code rather than maintain exclude-cell
+entries. The sheet edits for *labrusca* and *vulpina* exclusions in section 6
+are therefore withdrawn.
 
 ## 9. What changed from the earlier brief, and why
 

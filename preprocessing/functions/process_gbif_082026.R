@@ -28,10 +28,11 @@
 # when it is a hybrid formula ("Vitis riparia x Vitis rupestris",
 # "Vitis labrusca x vinifera"): such records belong to neither parent.
 # Named hybrids ("Vitis x doaniana") are kept.
-# Known limitation: homonyms are not distinguished ("Vitis labrusca Thunb." is
-# V. coignetiae, "Vitis cordifolia Roth ex Roem. & Schult." is V. heyneana);
-# list the full name with authorship in the concept's "Names to exclude" cell
-# to drop them.
+# Homonyms (same binomial, different author, different plant: "Vitis labrusca
+# Thunb." is V. coignetiae, "Vitis vulpina Bartram" is V. labrusca) are handled
+# inside processGBIF(): see the homonym block there. Decision 2026-09-16: keep
+# the original (backbone) assignment for those records rather than maintain
+# exclude-cell entries on the sheet.
 parseVitisName <- function(x) {
   clean <- stringr::str_replace_all(x, "×\\s*|\\s+[xX]\\s+", " x ")
   clean <- stringr::str_replace_all(clean, "\\s+", " ")
@@ -47,7 +48,8 @@ parseVitisName <- function(x) {
   parsed
 }
 
-processGBIF <- function(path, nameSource = c("scientificName", "verbatimScientificName", "combined")) {
+processGBIF <- function(path, nameSource = c("scientificName", "verbatimScientificName", "combined"),
+                        homonymLog = NULL) {
   nameSource <- match.arg(nameSource)
   
   d1a <- read_tsv(file = path)
@@ -92,8 +94,32 @@ processGBIF <- function(path, nameSource = c("scientificName", "verbatimScientif
     combined = dplyr::coalesce(parseVitisName(d1$originalTaxon), parseVitisName(d1$verbatimScientificName))
   )
   
+  # 2b. Homonyms: the parser strips authorship, so "Vitis vulpina Bartram"
+  #     (a V. labrusca synonym) would land in V. vulpina next to "Vitis vulpina
+  #     L.". Rule: within one parsed binomial, if the authored name strings map
+  #     to more than one backbone accepted species, the records whose authored
+  #     name maps to a species OTHER than the majority one keep the backbone
+  #     assignment (as in the published workflow). A binomial whose every
+  #     authored form maps to the same accepted species (e.g. all
+  #     "Vitis berlandieri Planch." -> V. cinerea) is NOT a homonym and is
+  #     still recovered. Names treated this way are written to `homonymLog`.
+  canon <- parseVitisName(d1$originalTaxon)
+  homonyms <- dplyr::tibble(canon = canon, sci = d1$originalTaxon, acc = d1$species) |>
+    dplyr::filter(!is.na(canon), !is.na(acc)) |>
+    dplyr::count(canon, sci, acc, name = "records") |>
+    dplyr::group_by(canon) |>
+    dplyr::mutate(majorityAccepted = acc[which.max(records)]) |>
+    dplyr::ungroup() |>
+    dplyr::filter(acc != majorityAccepted) |>
+    dplyr::rename(scientificName = sci, backboneAccepted = acc)
+  isHomonym <- d1$originalTaxon %in% homonyms$scientificName
+  extracted_taxon[isHomonym] <- NA_character_
+  message(sum(isHomonym), " records with ", nrow(homonyms), " homonym name strings keep the backbone assignment")
+  if (!is.null(homonymLog)) readr::write_csv(homonyms, homonymLog)
+  
   # 3. Assign the parsed taxon; fall back to the GBIF backbone ONLY when the
   #    string cannot be parsed (e.g. "Vitis L.", non-Vitis verbatim names)
+  #    or the name is a homonym (2b)
   d2 <- d1 |> 
     dplyr::mutate(
       taxon = dplyr::case_when(

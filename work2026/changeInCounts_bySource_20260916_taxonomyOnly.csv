@@ -1,30 +1,27 @@
 taxon,databaseSource,dec2025,sep2026,change
 Vitis acerifolia,GBIF,678,675,-3
-Vitis aestivalis,GBIF,12746,12423,-323
+Vitis aestivalis,GBIF,12746,12425,-321
 Vitis aestivalis var. aestivalis,GBIF,1560,1559,-1
 Vitis aestivalis var. bicolor,GBIF,1392,1401,9
-Vitis arizonica,GBIF,3969,3965,-4
 Vitis baileyana,GBIF,528,651,123
 Vitis berlandieri,GBIF,564,1185,621
-Vitis californica,GBIF,3139,3143,4
 Vitis cinerea,GBIF,5060,4178,-882
 Vitis cinerea var. cinerea,GBIF,616,608,-8
 Vitis cinerea var. tomentosa,GBIF,11,0,-11
-Vitis labrusca,GBIF,4891,4786,-105
+Vitis labrusca,GBIF,4891,4778,-113
 Vitis lincecumii,GBIF,165,329,164
 Vitis martineziana,GBIF,0,2,2
 Vitis munsoniana,GBIF,22,265,243
 Vitis mustangensis,GBIF,9253,9254,1
-Vitis palmata,GBIF,1060,1071,11
 Vitis popenoei,GBIF,211,189,-22
-Vitis riparia,GBIF,17128,17107,-21
+Vitis riparia,GBIF,17128,17113,-15
 Vitis rotundifolia,GBIF,27472,27230,-242
 Vitis rufotomentosa,GBIF,0,40,40
 Vitis rupestris,GBIF,1086,1066,-20
 Vitis shuttleworthii,GBIF,970,934,-36
 Vitis simpsonii,GBIF,904,999,95
 Vitis tiliifolia,GBIF,2261,2174,-87
-Vitis vulpina,GBIF,7579,7751,172
+Vitis vulpina,GBIF,7579,7737,158
 Vitis vulpina,genesys,6,23,17
 Vitis vulpina,wiews,9,11,2
 Vitis x champinii,GBIF,73,139,66

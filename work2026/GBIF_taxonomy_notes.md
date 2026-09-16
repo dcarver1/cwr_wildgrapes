@@ -250,7 +250,7 @@ Comparison against `model_data20251216.csv` by
 `work2026/changeInCounts_20260916.csv` (per taxon) and
 `work2026/changeInCounts_bySource_20260916.csv` (per taxon x source).
 
-Totals: 111,458 -> 111,092 rows (-366); with coordinates 70,695 -> 70,373;
+Totals: 111,458 -> 111,067 rows (-391); with coordinates 70,695 -> 70,373;
 40 -> 39 taxa (*V. cinerea* var. *tomentosa* now has 0 records, see below).
 
 ### Final counts, taxa that changed (model-data rows, after all filters)
@@ -259,34 +259,33 @@ Totals: 111,458 -> 111,092 rows (-366); with coordinates 70,695 -> 70,373;
 |---|---:|---:|---:|---:|---:|---:|
 | Vitis cinerea | 5341 | 4445 | -896 | 2172 | 1772 | -400 |
 | Vitis berlandieri | 736 | 1357 | +621 | 359 | 626 | +267 |
-| Vitis aestivalis | 12877 | 12494 | -383 | 5618 | 5496 | -122 |
+| Vitis aestivalis | 12877 | 12496 | -381 | 5618 | 5497 | -121 |
 | Vitis rotundifolia | 27551 | 27297 | -254 | 23084 | 22980 | -104 |
 | Vitis munsoniana | 22 | 265 | +243 | 18 | 110 | +92 |
 | Vitis lincecumii | 168 | 332 | +164 | 71 | 88 | +17 |
 | Vitis baileyana | 531 | 653 | +122 | 105 | 152 | +47 |
-| Vitis labrusca | 5346 | 5236 | -110 | 2223 | 2147 | -76 |
-| Vitis vulpina | 7674 | 7777 | +103 | 2546 | 2476 | -70 |
+| Vitis labrusca | 5346 | 5228 | -118 | 2223 | 2146 | -77 |
 | Vitis simpsonii | 913 | 1008 | +95 | 392 | 448 | +56 |
+| Vitis vulpina | 7674 | 7763 | +89 | 2546 | 2476 | -70 |
 | Vitis tiliifolia | 2294 | 2207 | -87 | 1375 | 1352 | -23 |
 | Vitis x champinii | 126 | 192 | +66 | 33 | 38 | +5 |
-| Vitis riparia | 17551 | 17519 | -32 | 13200 | 13188 | -12 |
 | Vitis shuttleworthii | 978 | 937 | -41 | 666 | 661 | -5 |
 | Vitis rufotomentosa | 2 | 42 | +40 | 0 | 20 | +20 |
+| Vitis riparia | 17551 | 17525 | -26 | 13200 | 13188 | -12 |
 | Vitis x novae-angliae | 277 | 300 | +23 | 81 | 86 | +5 |
 | Vitis popenoei | 216 | 194 | -22 | 115 | 112 | -3 |
 | Vitis rupestris | 1254 | 1233 | -21 | 260 | 259 | -1 |
 | Vitis x doaniana | 106 | 118 | +12 | 50 | 53 | +3 |
 | Vitis cinerea var. tomentosa | 11 | 0 | -11 | 11 | 0 | -11 |
 | Vitis aestivalis var. bicolor | 1412 | 1421 | +9 | 555 | 557 | +2 |
-| Vitis cinerea var. cinerea | 619 | 611 | -8 | 181 | 181 | 0 |
-| Vitis arizonica | 4307 | 4303 | -4 | 2762 | 2761 | -1 |
-| Vitis palmata | 1097 | 1101 | +4 | 245 | 238 | -7 |
+| Vitis cinerea var. cinerea | 619 | 611 | -8 | 181 | 181 | +0 |
+| Vitis palmata | 1097 | 1090 | -7 | 245 | 238 | -7 |
 | Vitis acerifolia | 855 | 852 | -3 | 391 | 389 | -2 |
-| Vitis californica | 3220 | 3223 | +3 | 2154 | 2154 | 0 |
 | Vitis martineziana | 12 | 14 | +2 | 12 | 14 | +2 |
-| Vitis aestivalis var. aestivalis | 1569 | 1568 | -1 | 392 | 392 | 0 |
+| Vitis aestivalis var. aestivalis | 1569 | 1568 | -1 | 392 | 392 | +0 |
+| Vitis californica | 3220 | 3219 | -1 | 2154 | 2153 | -1 |
 
-Eleven taxa are unchanged. Every change is in GBIF rows except the three
+13 taxa are unchanged. Every change is in GBIF rows except the three
 items below.
 
 ### Taxonomy-only run for the co-author table
@@ -296,12 +295,26 @@ switch `enforceBoundingBox` (default TRUE). Run with it FALSE
 (`Rscript -e 'enforceBoundingBox <- FALSE; source("preprocessing/preprocessingUpdates2026_08_20.R")'`)
 it reproduces the December handling of coordinate failures and skips the WIEWS
 sign flip, writing `model_data20260820_taxonomyOnly.csv`. That file differs from
-December by the taxonomy changes alone: 111,458 -> 111,298 rows, and the only
+December by the taxonomy changes alone: 111,458 -> 111,273 rows, and the only
 non-GBIF movement is the 19 *V. cordifolia* accessions entering *V. vulpina*.
 `work2026/compareCounts_20260916.R` run with `taxonomyOnly <- TRUE` writes
 `changeInCounts_20260916_taxonomyOnly.csv` and the share copy
 `temp/speciesCounts_dec2025_vs_sep2026.csv`; the full-pipeline comparison is
 kept as `temp/speciesCounts_dec2025_vs_sep2026_allChanges.csv`.
+
+### Homonyms follow the backbone (decision 2026-09-16)
+
+Rather than list authored homonyms in exclude cells, `processGBIF()` now keeps
+the backbone assignment for a record when its authored name string maps to a
+different accepted species than the majority authored form of the same
+binomial (step 2b in `process_gbif_082026.R`). 465 records, 23 name strings,
+logged to `gbifHomonymNames_<date>.csv`. Effect on project taxa: "Vitis
+vulpina Bartram" (7) and "Vitis palmata Leconte" (6) stay in *labrusca*,
+"Vitis rubra Desf." (5) stays in *riparia*, "Vitis californica Parry" (4) stays
+in *arizonica*, "Vitis labrusca Thunb." (21) and "Scop." (1) stay out, "Vitis
+cordifolia Roth ex Roem. & Schult." (13) stays out. *palmata*, *californica*
+and *arizonica* are now unchanged from December. Section 4.3 of the brief and
+the exclude-cell suggestions in sections 6 and 7 above are superseded.
 
 ### Changes not caused by the parser (separate them in the co-author note)
 

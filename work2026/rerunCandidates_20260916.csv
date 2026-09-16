@@ -10,24 +10,24 @@ Vitis x doaniana,TRUE,SRSex only,100,87.3,-12.7,LP,LP,FALSE,55,55,0,29,29,0,21,2
 Vitis rupestris,TRUE,SRSex only,17.97,16.1,-1.87,UP,UP,FALSE,191,171,-20,50,50,0,210,209,-1,260,259,-1
 Vitis lincecumii,TRUE,SRSex only,1.82,3.11,1.29,UP,UP,FALSE,3,10,7,0,0,0,71,88,17,71,88,17
 Vitis baileyana,TRUE,SRSex only,0.57,0.77,0.2,UP,UP,FALSE,3,5,2,0,0,0,105,152,47,105,152,47
+Vitis labrusca,TRUE,SRSex only,9.5,9.67,0.17,UP,UP,FALSE,464,461,-3,31,31,0,2192,2115,-77,2223,2146,-77
 Vitis popenoei,TRUE,SRSex only,1.41,1.57,0.16,UP,UP,FALSE,3,3,0,1,1,0,114,111,-3,115,112,-3
-Vitis labrusca,TRUE,SRSex only,9.5,9.65,0.15,UP,UP,FALSE,464,461,-3,31,31,0,2192,2116,-76,2223,2147,-76
 Vitis acerifolia,TRUE,SRSex only,25.92,26.04,0.12,HP,HP,FALSE,176,176,0,63,63,0,328,326,-2,391,389,-2
 Vitis simpsonii,TRUE,SRSex only,1,0.9,-0.1,UP,UP,FALSE,9,9,0,0,0,0,392,448,56,392,448,56
 Vitis x novae-angliae,TRUE,SRSex only,0.73,0.67,-0.06,UP,UP,FALSE,2,2,0,0,0,0,81,86,5,81,86,5
 Vitis tiliifolia,TRUE,SRSex only,1.33,1.38,0.05,UP,UP,FALSE,30,30,0,10,10,0,1365,1342,-23,1375,1352,-23
-Vitis aestivalis,TRUE,SRSex only,1.02,0.98,-0.04,UP,UP,FALSE,160,151,-9,6,6,0,6559,6439,-120,6565,6445,-120
+Vitis aestivalis,TRUE,SRSex only,1.02,0.98,-0.04,UP,UP,FALSE,160,151,-9,6,6,0,6559,6440,-119,6565,6446,-119
+Vitis palmata,TRUE,SRSex only,4.18,4.21,0.03,UP,UP,FALSE,44,44,0,0,0,0,245,238,-7,245,238,-7
 Vitis shuttleworthii,TRUE,SRSex only,0.83,0.86,0.03,UP,UP,FALSE,8,8,0,0,0,0,665,660,-5,665,660,-5
 Vitis cinerea var. cinerea,TRUE,SRSex only,2.15,2.17,0.02,UP,UP,FALSE,13,13,0,0,0,0,181,181,0,181,181,0
-Vitis palmata,TRUE,SRSex only,4.18,4.16,-0.02,UP,UP,FALSE,44,44,0,0,0,0,245,238,-7,245,238,-7
 Vitis aestivalis var. bicolor,TRUE,SRSex only,0.43,0.42,-0.01,UP,UP,FALSE,6,6,0,0,0,0,555,557,2,555,557,2
-Vitis arizonica,TRUE,SRSex only,8.6,8.61,0.01,UP,UP,FALSE,341,341,0,294,294,0,2468,2467,-1,2762,2761,-1
-Vitis californica,TRUE,SRSex only,2.78,2.77,-0.01,UP,UP,FALSE,87,87,0,54,54,0,2100,2100,0,2154,2154,0
 Vitis aestivalis var. aestivalis,FALSE,no change,1.16,1.16,0,UP,UP,FALSE,18,18,0,0,0,0,392,392,0,392,392,0
+Vitis arizonica,FALSE,no change,8.6,8.6,0,UP,UP,FALSE,341,341,0,294,294,0,2468,2468,0,2762,2762,0
 Vitis biformis,FALSE,no change,20.9,20.9,0,UP,UP,FALSE,14,14,0,2,2,0,32,32,0,34,34,0
 Vitis blancoi,FALSE,no change,2.15,2.15,0,UP,UP,FALSE,4,4,0,2,2,0,57,57,0,59,59,0
 Vitis bloodworthiana,FALSE,no change,54.95,54.95,0,MP,MP,FALSE,50,50,0,32,32,0,54,54,0,86,86,0
 Vitis bourgaeana,FALSE,no change,0,0,0,UP,UP,FALSE,0,0,0,0,0,0,380,380,0,380,380,0
+Vitis californica,FALSE,no change,2.78,2.78,0,UP,UP,FALSE,87,87,0,54,54,0,2100,2099,-1,2154,2153,-1
 Vitis girdiana,FALSE,no change,5.93,5.93,0,UP,UP,FALSE,141,141,0,128,128,0,1864,1864,0,1992,1992,0
 Vitis jaegeriana,FALSE,no change,0,0,0,UP,UP,FALSE,0,0,0,0,0,0,16,16,0,16,16,0
 Vitis martineziana,FALSE,no change,0,0,0,UP,UP,FALSE,0,0,0,0,0,0,12,14,2,12,14,2
