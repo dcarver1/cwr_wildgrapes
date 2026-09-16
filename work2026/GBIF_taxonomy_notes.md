@@ -289,6 +289,20 @@ Totals: 111,458 -> 111,092 rows (-366); with coordinates 70,695 -> 70,373;
 Eleven taxa are unchanged. Every change is in GBIF rows except the three
 items below.
 
+### Taxonomy-only run for the co-author table
+
+Because the bounding-box enforcement is a separate correction, the driver has a
+switch `enforceBoundingBox` (default TRUE). Run with it FALSE
+(`Rscript -e 'enforceBoundingBox <- FALSE; source("preprocessing/preprocessingUpdates2026_08_20.R")'`)
+it reproduces the December handling of coordinate failures and skips the WIEWS
+sign flip, writing `model_data20260820_taxonomyOnly.csv`. That file differs from
+December by the taxonomy changes alone: 111,458 -> 111,298 rows, and the only
+non-GBIF movement is the 19 *V. cordifolia* accessions entering *V. vulpina*.
+`work2026/compareCounts_20260916.R` run with `taxonomyOnly <- TRUE` writes
+`changeInCounts_20260916_taxonomyOnly.csv` and the share copy
+`temp/speciesCounts_dec2025_vs_sep2026.csv`; the full-pipeline comparison is
+kept as `temp/speciesCounts_dec2025_vs_sep2026_allChanges.csv`.
+
 ### Changes not caused by the parser (separate them in the co-author note)
 
 1. **Bounding box now enforced: -206 records.** The December file held 215

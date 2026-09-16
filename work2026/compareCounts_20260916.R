@@ -6,7 +6,14 @@
 suppressPackageStartupMessages({library(dplyr); library(readr); library(tidyr)})
 old <- read_csv("data/processed_occurrence/model_data20251216.csv", col_types = cols(.default = "c"), progress = FALSE) |>
   mutate(run = "dec2025")
-new <- read_csv("data/processed_occurrence/model_data20260820.csv", col_types = cols(.default = "c"), progress = FALSE) |>
+# Two September files: the full pipeline output, and the "_taxonomyOnly" run
+# (enforceBoundingBox = FALSE in the driver) whose only differences from
+# December are the taxonomy changes. The share copy in temp/ is built from the
+# taxonomy-only file (decision 2026-09-16); work2026/ keeps both.
+newFile <- if (exists("taxonomyOnly") && taxonomyOnly) "data/processed_occurrence/model_data20260820_taxonomyOnly.csv" else "data/processed_occurrence/model_data20260820.csv"
+tag <- if (exists("taxonomyOnly") && taxonomyOnly) "_taxonomyOnly" else ""
+cat("comparing against:", newFile, "\n")
+new <- read_csv(newFile, col_types = cols(.default = "c"), progress = FALSE) |>
   mutate(run = "sep2026")
 cat("rows old:", nrow(old), " new:", nrow(new), "\n")
 cat("columns only in old:", setdiff(names(old), names(new)), "\n")
@@ -35,10 +42,12 @@ per_taxon <- both |>
   select(taxon, starts_with("total"), starts_with("withCoords"), starts_with("gbif_"), starts_with("gbifCoords"),
          G_dec2025, G_sep2026, H_dec2025, H_sep2026) |>
   arrange(desc(abs(total_change)))
-write_csv(per_taxon, "work2026/changeInCounts_20260916.csv")
+write_csv(per_taxon, paste0("work2026/changeInCounts_20260916", tag, ".csv"))
 
 # share copy for the co-author (temp/ is gitignored): totals, GBIF-only,
-# other-source and coordinate columns; gbifWithCoords dropped on request
+# other-source and coordinate columns; gbifWithCoords dropped on request.
+# Taxonomy-only run -> speciesCounts_dec2025_vs_sep2026.csv (the file to share);
+# full run -> speciesCounts_dec2025_vs_sep2026_allChanges.csv
 share <- per_taxon |> transmute(
   taxon,
   total_dec2025, total_sep2026, total_change,
@@ -50,7 +59,7 @@ share <- per_taxon |> transmute(
   germplasm_dec2025 = G_dec2025, germplasm_sep2026 = G_sep2026,
   herbarium_dec2025 = H_dec2025, herbarium_sep2026 = H_sep2026
 ) |> arrange(desc(abs(total_change)), taxon)
-write_csv(share, "temp/speciesCounts_dec2025_vs_sep2026.csv")
+write_csv(share, if (tag == "") "temp/speciesCounts_dec2025_vs_sep2026_allChanges.csv" else "temp/speciesCounts_dec2025_vs_sep2026.csv")
 
 # per taxon x source
 by_source <- both |>
@@ -59,7 +68,7 @@ by_source <- both |>
   mutate(change = sep2026 - dec2025) |>
   filter(change != 0) |>
   arrange(taxon, desc(abs(change)))
-write_csv(by_source, "work2026/changeInCounts_bySource_20260916.csv")
+write_csv(by_source, paste0("work2026/changeInCounts_bySource_20260916", tag, ".csv"))
 
 options(width = 200)
 cat("\n=== taxa with any change (total / with coords / GBIF) ===\n")
