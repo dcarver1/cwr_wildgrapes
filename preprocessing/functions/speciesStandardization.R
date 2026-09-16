@@ -12,12 +12,11 @@
 #     from that concept and returned in `excludedByConcept`
 #   * subsetting uses which(): a record with an NA taxon no longer injects an
 #     all-NA row into every concept (review/WORKFLOW_EVALUATION.md section 2.3)
-#   * autonyms match their species (decision 2026-09-16): a record named
-#     "Vitis rupestris f. rupestris" or "Vitis riparia subsp. riparia" is the
-#     typical form of the species and enters the species concept without a
-#     sheet entry. Autonyms that are project taxa themselves (V. aestivalis
-#     var. aestivalis, V. cinerea var. cinerea) still match their own concept
-#     directly; a record may feed both, as before.
+#   * forma-rank autonyms match their species (decision 2026-09-16): a record
+#     named "Vitis rupestris f. rupestris" enters V. rupestris without a sheet
+#     entry. Only the "f." form is mapped; "var." and "subsp." autonyms
+#     ("Vitis riparia subsp. riparia") are deliberately NOT mapped and stay on
+#     the sheet's decision list.
 
 # split a synonym / exclusion cell into clean names
 splitNames <- function(x) {
@@ -33,12 +32,12 @@ splitNames <- function(x) {
   out[out != ""]
 }
 
-# the autonym forms of a species-level concept name ("Vitis riparia" ->
-# "Vitis riparia var. riparia", "... subsp. riparia", "... f. riparia")
+# the forma-rank autonym of a species-level concept name
+# ("Vitis rupestris" -> "Vitis rupestris f. rupestris")
 autonymsOf <- function(taxon) {
   m <- stringr::str_match(taxon, "^((?:Vitis|Muscadinia)\\s+(?:x\\s+)?([a-z]+(?:-[a-z]+)?))$")
   if (is.na(m[1, 1])) return(character(0))
-  paste0(m[1, 2], c(" var. ", " subsp. ", " f. "), m[1, 3])
+  paste0(m[1, 2], " f. ", m[1, 3])
 }
 
 # reduce a name to a comparable form: "Genus [x] epithet [rank epithet]", lower case,
@@ -76,7 +75,7 @@ speciesCheck <- function(data, synonymList, applyExclusions = TRUE){
   mapSynonyms <- function(i, synonymList, data){
     taxon <- synonymList$taxon[i]
     # synonyms, dropping a self reference (the concept name is matched already),
-    # plus the concept's autonym forms
+    # plus the concept's forma-rank autonym
     syn1 <- union(setdiff(splitNames(synonymList$acceptedSynonym[i]), taxon), autonymsOf(taxon))
     
     # which() drops NA comparisons: `data[data$taxon == taxon, ]` returns one

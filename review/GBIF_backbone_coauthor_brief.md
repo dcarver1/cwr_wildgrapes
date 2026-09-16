@@ -269,7 +269,6 @@ country and coordinate checks) for the taxa in section 4:
 | Vitis cinerea | 5341 | 4445 | 2172 -> 1772 |
 | Vitis aestivalis | 12877 | 12496 | 5618 -> 5497 |
 | Vitis rotundifolia | 27551 | 27297 | 23084 -> 22980 |
-| Vitis riparia | 17551 | 17889 | 13200 -> 13350 |
 
 Full table for all 40 taxa: `work2026/changeInCounts_20260916.csv`; by source:
 `work2026/changeInCounts_bySource_20260916.csv`; discussion in
@@ -297,11 +296,10 @@ assignment for authored homonyms in code rather than maintain exclude-cell
 entries. The sheet edits for *labrusca* and *vulpina* exclusions in section 6
 are therefore withdrawn.
 
-Autonyms: decision 2026-09-16 is to match "Vitis riparia subsp. riparia",
-"Vitis rupestris f. rupestris" and similar to their species in code. *V.
-riparia* gains 364 records that neither parser had recovered; the
-*rotundifolia* var. *munsoniana* question in section 4.5 is unaffected (that is
-not an autonym).
+Autonyms: decision 2026-09-16 is to match the forma autonym ("Vitis
+rupestris f. rupestris") to its species in code, so *rupestris* keeps its 20
+accessions. Variety and subspecies autonyms ("Vitis riparia subsp. riparia",
+417 records) stay on the decision list in section 4.5.
 
 ## 9. What changed from the earlier brief, and why
 

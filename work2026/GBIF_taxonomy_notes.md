@@ -250,7 +250,7 @@ Comparison against `model_data20251216.csv` by
 `work2026/changeInCounts_20260916.csv` (per taxon) and
 `work2026/changeInCounts_bySource_20260916.csv` (per taxon x source).
 
-Totals: 111,458 -> 111,454 rows (-4); with coordinates 70,695 -> 70,535;
+Totals: 111,458 -> 111,090 rows (-368); with coordinates 70,695 -> 70,373;
 40 -> 39 taxa (*V. cinerea* var. *tomentosa* now has 0 records, see below).
 
 ### Final counts, taxa that changed (model-data rows, after all filters)
@@ -260,7 +260,6 @@ Totals: 111,458 -> 111,454 rows (-4); with coordinates 70,695 -> 70,535;
 | Vitis cinerea | 5341 | 4445 | -896 | 2172 | 1772 | -400 |
 | Vitis berlandieri | 736 | 1357 | +621 | 359 | 626 | +267 |
 | Vitis aestivalis | 12877 | 12496 | -381 | 5618 | 5497 | -121 |
-| Vitis riparia | 17551 | 17889 | +338 | 13200 | 13350 | +150 |
 | Vitis rotundifolia | 27551 | 27297 | -254 | 23084 | 22980 | -104 |
 | Vitis munsoniana | 22 | 265 | +243 | 18 | 110 | +92 |
 | Vitis lincecumii | 168 | 332 | +164 | 71 | 88 | +17 |
@@ -272,6 +271,7 @@ Totals: 111,458 -> 111,454 rows (-4); with coordinates 70,695 -> 70,535;
 | Vitis x champinii | 126 | 192 | +66 | 33 | 38 | +5 |
 | Vitis shuttleworthii | 978 | 937 | -41 | 666 | 661 | -5 |
 | Vitis rufotomentosa | 2 | 42 | +40 | 0 | 20 | +20 |
+| Vitis riparia | 17551 | 17525 | -26 | 13200 | 13188 | -12 |
 | Vitis x novae-angliae | 277 | 300 | +23 | 81 | 86 | +5 |
 | Vitis popenoei | 216 | 194 | -22 | 115 | 112 | -3 |
 | Vitis x doaniana | 106 | 118 | +12 | 50 | 53 | +3 |
@@ -295,7 +295,7 @@ switch `enforceBoundingBox` (default TRUE). Run with it FALSE
 (`Rscript -e 'enforceBoundingBox <- FALSE; source("preprocessing/preprocessingUpdates2026_08_20.R")'`)
 it reproduces the December handling of coordinate failures and skips the WIEWS
 sign flip, writing `model_data20260820_taxonomyOnly.csv`. That file differs from
-December by the taxonomy changes alone: 111,458 -> 111,660 rows, and the only
+December by the taxonomy changes alone: 111,458 -> 111,296 rows, and the only
 non-GBIF movement is the 19 *V. cordifolia* accessions entering *V. vulpina*.
 `work2026/compareCounts_20260916.R` run with `taxonomyOnly <- TRUE` writes
 `changeInCounts_20260916_taxonomyOnly.csv` and the share copy
@@ -316,18 +316,15 @@ cordifolia Roth ex Roem. & Schult." (13) stays out. *palmata*, *californica*
 and *arizonica* are now unchanged from December. Section 4.3 of the brief and
 the exclude-cell suggestions in sections 6 and 7 above are superseded.
 
-### Autonyms match their species (decision 2026-09-16)
+### Forma-rank autonyms match their species (decision 2026-09-16)
 
-`speciesCheck()` now treats the autonym forms of a species-level concept
-("Vitis riparia subsp. riparia", "Vitis rupestris f. rupestris") as that
-species, without a sheet entry (`autonymsOf()` in
-`speciesStandardization.R`). Autonyms that are project taxa themselves
-(*V. aestivalis* var. *aestivalis*, *V. cinerea* var. *cinerea*) still match
-their own concept directly and may also feed the species, as before. Effect:
-*V. riparia* +364 records (161 with coordinates) that were lost under both the
-old and new parsers, and *V. rupestris* recovers its 20 germplasm accessions
-and is now unchanged from December. Sections 5 and 10 entries for these two
-names are superseded.
+`speciesCheck()` treats the forma autonym of a species-level concept ("Vitis
+rupestris f. rupestris") as that species, without a sheet entry
+(`autonymsOf()` in `speciesStandardization.R`). Only the "f." form is
+mapped: "var." and "subsp." autonyms ("Vitis riparia subsp. riparia", 417
+raw records) are deliberately left on the sheet's decision list (section 5).
+Effect: *V. rupestris* recovers its 20 germplasm accessions and is unchanged
+from December.
 
 ### Changes not caused by the parser (separate them in the co-author note)
 

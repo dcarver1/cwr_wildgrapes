@@ -57,6 +57,7 @@ share <- per_taxon |> transmute(
   otherSources_change = otherSources_sep2026 - otherSources_dec2025,
   withCoords_dec2025, withCoords_sep2026, withCoords_change,
   germplasm_dec2025 = G_dec2025, germplasm_sep2026 = G_sep2026,
+  germplasm_change = G_sep2026 - G_dec2025,
   herbarium_dec2025 = H_dec2025, herbarium_sep2026 = H_sep2026
 ) |> arrange(desc(abs(total_change)), taxon)
 write_csv(share, if (tag == "") "temp/speciesCounts_dec2025_vs_sep2026_allChanges.csv" else "temp/speciesCounts_dec2025_vs_sep2026.csv")

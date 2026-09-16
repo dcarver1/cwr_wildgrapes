@@ -79,12 +79,12 @@ Mexico, GBIF filed as "Vitis L.".
 
 **Vitis mustangensis** +1. "Vitis candicans var. diversa" now matched.
 
-**Vitis riparia** +349 (coords +161, G +32). Autonym rule: 364 records named
-"Vitis riparia subsp. riparia" enter; they were lost under both the old parser
-(which built the string from backbone fields and matched nothing) and the new
-one until autonyms were mapped to their species. +3 "Vitis vulpina subsp.
-riparia" (on the include list). D: 18 to no list: incisa 10, odoratissima 6,
-vulpina var. praecox 2. E: 5 "Vitis rubra Desf." stay in riparia.
+**Vitis riparia** -15 (coords -1). D: 18 to no list: incisa 10, odoratissima
+6, vulpina var. praecox 2. E: 5 "Vitis rubra Desf." stay in riparia by the
+homonym rule. +3 "Vitis vulpina subsp. riparia" (on the include list). Not
+in this file under either parser: 417 raw records named "Vitis riparia subsp.
+riparia", a subspecies autonym left for the sheet decision (only the forma
+autonym is mapped in code).
 
 ## Taxa that lost records
 
@@ -135,9 +135,9 @@ Engelm." Add to include cell.
 
 Mechanisms A and B are the fix working as intended and need no sheet change.
 Mechanism C is a data-entry fix already tolerated by the code. Mechanism E is
-handled in code. Autonyms are handled in code
-(*rupestris* is now unchanged; *riparia* gains 364). Mechanism D is the
-residue: about a dozen names to add to include cells (largest: bicolor 87,
-caribaea 84, coriacea 36, popenoei 22, and the 412 rotundifolia var.
-munsoniana still sitting in rotundifolia, which is not an autonym).
+handled in code. Forma autonyms are handled in
+code (*rupestris* is now unchanged); variety and subspecies autonyms are not. Mechanism D is the
+residue: about a dozen names to add to include cells (largest: riparia subsp. riparia 417 (dropped under
+both parsers), bicolor 87, caribaea 84, coriacea 36, popenoei 22, and the
+412 rotundifolia var. munsoniana still sitting in rotundifolia).
 *palmata*, *californica*, *arizonica* and *rupestris* no longer change.
