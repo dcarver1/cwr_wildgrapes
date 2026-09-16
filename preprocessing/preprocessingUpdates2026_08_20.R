@@ -21,7 +21,7 @@ vitis2 <- read_csv("data/New World Vitis.csv") |>
   dplyr::select(
     "taxon" = "Scientific Name",
     "acceptedSynonym" = "Names to include in this concept (Homotypic synonyms)",
-    "Names to exclude from this concept" = "Names to exclude from this concept",
+    "excludeNames" = "Names to exclude from this concept",
     "modelSpecies" = "Include in gap analysis?"
   )
 
@@ -53,7 +53,10 @@ standardColumnNames <- c(
 # -------------------------------------------------------------------------
 
 # 1. Process GBIF (Using the new unlumped processGBIF from process_gbif_082026.R)
-gbif <- processGBIF(path = "data/source_data/vitisGBIFDownload_20250721.csv") |>
+# nameSource: "scientificName" (GBIF interpreted name) or "verbatimScientificName"
+# (publisher's name). See work2026/GBIF_taxonomy_notes.md for the comparison.
+gbif <- processGBIF(path = "data/source_data/vitisGBIFDownload_20250721.csv",
+                    nameSource = "scientificName") |>
   orderNames(names = standardColumnNames) |>
   removeDuplicatesID()
 write_csv(x = gbif, file = paste0("data/processed_occurrence/gbif_", date_suffix, ".csv"))
@@ -150,6 +153,12 @@ df1 <- standardizeNames(df)
 source("preprocessing/functions/speciesStandardization.R")
 datasets <- speciesCheck(data = df1, synonymList = vitis2)
 df2 <- datasets$includedData
+# records dropped because their source name is on a concept's "Names to exclude" list
+write_csv(datasets$excludedByConcept,
+          paste0("data/processed_occurrence/excludedByConcept_", date_suffix, ".csv"))
+# records whose name matched no concept or synonym
+write_csv(datasets$excludedData,
+          paste0("data/processed_occurrence/excludedOnTaxonomy_", date_suffix, ".csv"))
 
 # Keep Vitis novogranatensis as a special-case manually added/passed taxon
 novogranatensis <- df2[df2$taxon == "Vitis novogranatensis", ]

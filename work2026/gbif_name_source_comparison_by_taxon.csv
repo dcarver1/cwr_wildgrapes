@@ -1,0 +1,41 @@
+taxon,modelSpecies,backbone,sciName,verbatim,combined,sciName_minus_backbone,verbatim_minus_backbone,combined_minus_backbone,combined_minus_sciName
+Vitis acerifolia,Y,991,988,988,988,-3,-3,-3,0
+Vitis aestivalis,Y,13078,12722,12536,12728,-356,-542,-350,6
+Vitis aestivalis var. aestivalis,Y,1621,1620,1382,1620,-1,-239,-1,0
+Vitis aestivalis var. bicolor,Y,1404,1414,1372,1414,10,-32,10,0
+Vitis arizonica,Y,3991,3987,3976,3987,-4,-15,-4,0
+Vitis baileyana,Y,530,662,641,662,132,111,132,0
+Vitis berlandieri,Y,693,1427,1413,1427,734,720,734,0
+Vitis biformis,Y,67,67,67,67,0,0,0,0
+Vitis blancoi,Y,187,187,171,187,0,-16,0,0
+Vitis bloodworthiana,Y,91,91,91,91,0,0,0,0
+Vitis bourgaeana,Y,684,684,684,684,0,0,0,0
+Vitis californica,Y,3166,3170,3168,3170,4,2,4,0
+Vitis cinerea,Y,5568,4564,4561,4564,-1004,-1007,-1004,0
+Vitis cinerea var. cinerea,Y,636,628,571,628,-8,-65,-8,0
+Vitis cinerea var. tomentosa,Y,11,0,0,0,-11,-11,-11,0
+Vitis girdiana,Y,2384,2384,2384,2384,0,0,0,0
+Vitis jaegeriana,Y,38,38,38,38,0,0,0,0
+Vitis labrusca,Y,6021,5886,5894,5888,-135,-127,-133,2
+Vitis lincecumii,Y,188,361,325,361,173,137,173,0
+Vitis martineziana,Y,0,0,2,2,0,2,2,2
+Vitis monticola,Y,1085,1085,1032,1085,0,-53,0,0
+Vitis munsoniana,Y,22,302,278,302,280,256,280,0
+Vitis mustangensis,Y,9332,9333,9332,9333,1,0,1,0
+Vitis nesbittiana,Y,98,98,98,98,0,0,0,0
+Vitis novogranatensis,Y,0,0,0,0,0,0,0,0
+Vitis palmata,Y,1123,1134,1131,1134,11,8,11,0
+Vitis peninsularis,Y,131,131,131,131,0,0,0,0
+Vitis popenoei,Y,220,198,198,198,-22,-22,-22,0
+Vitis riparia,Y,19632,19609,19839,19609,-23,207,-23,0
+Vitis rotundifolia,Y,27820,27539,27623,27540,-281,-197,-280,1
+Vitis rubriflora,Y,0,0,0,0,0,0,0,0
+Vitis rufotomentosa,Y,0,32,46,46,32,46,46,14
+Vitis rupestris,Y,2252,2227,2252,2227,-25,0,-25,0
+Vitis shuttleworthii,Y,980,944,944,944,-36,-36,-36,0
+Vitis simpsonii,Y,912,1007,820,1007,95,-92,95,0
+Vitis tiliifolia,Y,4124,3968,3836,3968,-156,-288,-156,0
+Vitis vulpina,Y,8446,8434,8434,8434,-12,-12,-12,0
+Vitis x champinii,Y,92,92,161,166,0,69,74,74
+Vitis x doaniana,Y,62,62,78,78,0,16,16,16
+Vitis x novae-angliae,Y,280,280,303,303,0,23,23,23
