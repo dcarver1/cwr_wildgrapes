@@ -34,3 +34,66 @@ independent, so run them as separate run versions on the four reference
 species plus riparia, rotundifolia and biformis; then 2 (behind a switch);
 then 4 and 6 after the partner decisions; 7 and 8 as input-file experiments
 through the preprocessing driver.
+
+
+## Status after the 2026-09-17 review with the lead author
+
+Classification: **M** = modelling method (changes the SDM or which model is
+accepted); **G** = gap-analysis score computation; **P** = preprocessing /
+input records (affects counts and points before either).
+
+| Rank | Class | Decision |
+|---|---|---|
+| 1 thinning | M | Running as `run09172026_exp_thin` in the experiments worktree (rufotomentosa, x doaniana, x champinii, popenoei, monticola) |
+| 2 validity -> buffer | M | Built into the driver behind `bufferOnInvalidModel` (default FALSE); not enabled |
+| 3 ERS distinct ecoregions | G | Confirmed as a defect: both functions count zonal-table rows = polygon parts; to be fixed and tested (see "How ERS counts" below) |
+| 4 FNA Mexico | P/M | Future enhancement, not for the paper edits |
+| 5 background points | M | Kept: the rule is min(natural-area km2, 10,000); every published species has a natural area above 9,400 km2, so all get 9,400-10,000 points and the rule is effectively constant. The lead author's intent (do not over-sample small ranges) stands; nothing to change |
+| 6 WDPA STATUS | G | Moot for the study area: the raster in use (`wdpa_1.gpkg` -> `wdpa_1km_all_.tif`, 89,259 polygons after the marine filter) has 611 Proposed / 8 Adopted / 3 Not Reported polygons worldwide and **none in USA, CAN or MEX**. North America holds only Designated (6,177), Inscribed (20) and Established (1). The only status-type question left is the 50 Biosphere Reserves in North America (MAB), which some CWR studies exclude |
+| 7 cross-source dedup | P | To test through the preprocessing driver |
+| 8 bounding box | P | Preprocessing stage (record filtering before any modelling). Off for the paper edits; candidate for future preprocessing |
+| 9 buffer distances | G | Not regenerated |
+| 10 spatial-block CV | M | New method; not for the paper edits |
+| 11 correlation pruning | M | To test |
+| 12 threshold edge case | M | On the methods-testing list (see "Threshold edge case" below) |
+| 13 record sets ex vs in situ | G | Explanation below; definition decision |
+| 14 living specimens = G | G | Existing behaviour; no change |
+
+### How ERS counts ecoregions (item 3)
+
+`nat_area_shp()` selects, from the TNC ecoregion layer, every polygon whose
+`ECO_ID_U` is intersected by a species point, **without dissolving**; the TNC
+layer stores several polygons per ecoregion ID (islands, disjunct parts).
+`ers_insitu()` and `ers_exsitu()` then run `terra::zonal(thres, natArea,
+"sum")`, which returns **one row per polygon**, attach `ECO_ID_U` to each row,
+filter `value > 0`, and take `nrow()`. So an ecoregion split into n parts that
+all intersect the model counts n times in the denominator, and n times in the
+numerator only if every part also holds a protected cell (in situ) or a G
+buffer cell (ex situ). Fix: `dplyr::distinct(ECO_ID_U)` before `nrow()` in
+both functions (or dissolve in `nat_area_shp()`); `compare_ers_run_all.R`
+already carries the fixed in situ version and its numbers. `nat_area_shp()`
+itself is not wrong for the natural area (the union of parts is the same); the
+error is only in the counting.
+
+### Threshold edge case (item 12)
+
+`generateThresholdModel()` classifies the median prediction with
+`classify(rcl = matrix(c(0, thr, 0, thr, 1, 1)), right = TRUE)`, i.e. the
+intervals (0, thr] -> 0 and (thr, 1] -> 1. A cell whose median is exactly 0
+falls in neither interval and becomes NA instead of 0. Such cells are rare
+(all folds must predict exactly zero) and NA is treated like "outside the
+model" almost everywhere, so the effect is at the margin of the natural area.
+Fix: `ifel(median > thr, 1, 0)`.
+
+### Record sets for the ex situ and in situ halves (item 13)
+
+SRSex is computed from `generateCounts(sd1)`: every record of the taxon in
+the model data, with or without coordinates, before the FNA filter and before
+duplicate-location removal. Every in situ metric (and GRS/ERS ex situ) is
+computed from `sp1`: georeferenced, FNA-filtered, one point per location.
+Example: monticola's 17 Mexican records count in NH for SRSex but are removed
+from the in situ set; x champinii's 136 herbarium records include 98 without
+coordinates that only SRSex sees. This is consistent with the published
+definition ("SRSex uses all compiled records irrespective of coordinates"),
+so it is a definition to state, not a defect, unless the partners want the
+same filtered set used throughout.
