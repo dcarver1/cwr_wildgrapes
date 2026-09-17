@@ -35,6 +35,13 @@ runVersion <- "run09162026_1k"
 # overwrite / speciesToRun can be preset before source()-ing this file, e.g.
 #   Rscript -e 'speciesToRun <- "Vitis monticola"; overwrite <- TRUE; source("run_round2_20260916.R")'
 if (!exists("overwrite")) overwrite <- FALSE
+# bufferOnInvalidModel = TRUE sends a species whose SDM fails the published
+# robustness rule (ATAUC > 0.7, STAUC < 0.15, ASD15 < 10, from
+# calc_sdm_metrics()) to the 50 km buffer method, as the methods text
+# describes. Built 2026-09-17, NOT enabled: partner decision pending
+# (review/modeling_future_improvements.md item 1b). Default FALSE reproduces
+# the published behaviour (the model is used regardless of the flag).
+if (!exists("bufferOnInvalidModel")) bufferOnInvalidModel <- FALSE
 dontRun <- c()
 # (default speciesToRun = gapSpecies, set after the sheet is read below)
 
@@ -93,6 +100,7 @@ r3 <- speciesToRun
 # 6. Main Modeling Loop
 for (j in r3) {
   set.seed(1234)
+  modelInvalid <- FALSE # set TRUE only by the validity gate when bufferOnInvalidModel is on
   print(paste("Processing:", j))
 
   p1 <- paste0("data/Vitis/speciesSummaryHTML/", runVersion)
@@ -375,6 +383,17 @@ for (j in r3) {
         function1 = evaluateTable(sdm_result = sdm_result)
       )
 
+      # validity gate (see bufferOnInvalidModel above)
+      modelInvalid <- isTRUE(bufferOnInvalidModel) && isFALSE(aucMetrics$Valid[1])
+      if (modelInvalid) {
+        message(j, ": SDM fails the robustness rule (", aucMetrics$Reason[1],
+                "); bufferOnInvalidModel = TRUE, using the 50 km buffer method")
+        erroredSpecies$noSDM <- c(erroredSpecies$noSDM, j)
+      }
+    }
+
+    if (!is.null(sdm_result) && !modelInvalid) {
+
       thres <- write_Rast(
         path = allPaths$thresPath,
         overwrite = overwrite,
@@ -520,8 +539,15 @@ for (j in r3) {
         }
       # }
     }
-  } else {
-    erroredSpecies$lessThenEight <- c(erroredSpecies$lessThenEight, j)
+  }
+
+  # Buffer method: fewer than eight points (published rule) OR, when the
+  # switch is on, a model that failed the robustness rule.
+  if (nrow(sp1) < 8 || modelInvalid) {
+    if (nrow(sp1) < 8) erroredSpecies$lessThenEight <- c(erroredSpecies$lessThenEight, j)
+    # gPoints was never defined in the published scripts (fcs_exsitu() needs it
+    # in this branch): number of georeferenced G records
+    gPoints <- c1$totalGUseful
 
     natAreaV <- terra::vect(natArea)
     buffer <- sp1 |>
@@ -534,7 +560,9 @@ for (j in r3) {
     buffer_rs <- terra::rasterize(buffer, rastBuff)
     names(buffer_rs) <- "Threshold"
 
-    write_Rast(buffer_rs, path = allPaths$thresPath, overwrite = overwrite)
+    # overwrite when the buffer replaces a failed model, so the saved threshold
+    # raster is the buffer and not the SDM's
+    write_Rast(buffer_rs, path = allPaths$thresPath, overwrite = overwrite || modelInvalid)
 
     g_buffer <- write_Rast(
       path = allPaths$ga50Path,
