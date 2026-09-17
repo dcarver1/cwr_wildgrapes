@@ -12,6 +12,8 @@
 #   * post-run summaries (all-species) switched off for the test
 #   * modelDataSummary.csv is written (the copy built it but never saved it,
 #     and grabData() reads it from disk)
+#   * projection rasters written to the species results folder, not the shared
+#     output_rasters/ (allows concurrent runs; 2026-09-17)
 #   * species universe = sheet concepts flagged "Y" for the gap analysis, so a
 #     concept with zero records is still processed: zero counts row, gap files
 #     from the noModel conventions, no-records summary document (2026-09-17)
@@ -351,7 +353,10 @@ for (j in r3) {
       projectsResults <- write_RDS(
         path = allPaths$modeledRasters,
         overwrite = TRUE,
-        function1 = rasterResults(sdm_result)
+        # write the mean/median/stdev rasters into this species' results folder
+        # instead of the shared output_rasters/ (which two concurrent runs would
+        # overwrite for each other). Path change only; values are unchanged.
+        function1 = rasterResults(sdm_result, out_dir = allPaths$results)
       ) |>
         lapply(terra::unwrap)
 
