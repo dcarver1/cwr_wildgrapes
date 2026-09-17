@@ -32,6 +32,9 @@ starting a new repo.
    LIVING_SPECIMEN counts as germplasm for SRSex.
 6. Manuscript stage: pre-submission fix or erratum; what is re-run and
    re-reported.
+6b. Models that run but fail the stated robustness rule (rufotomentosa, STAUC
+   0.158): keep, buffer-method fallback in code, or hand decision. See
+   `review/modeling_future_improvements.md` item 1b.
 
 ## Phase 3: re-run
 

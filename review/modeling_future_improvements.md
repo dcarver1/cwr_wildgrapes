@@ -38,6 +38,21 @@ Considerations before changing it:
 * Thirteen species have no list and are unfiltered; the Mexican endemics
   are among them, so they are unaffected either way.
 
+## 1b. Models that fail the paper's robustness rule are still used (partner decision)
+
+The methods text says a robust model needs mean test AUC >= 0.7, SD of AUC
+across folds < 0.15 and ASD15 <= 10%, and that otherwise the 50 km buffer
+method is used. `calc_sdm_metrics()` computes the flag, but no driver acts on
+it: the buffer branch is entered only for fewer than eight points. All 36
+published models passed, so the gap never showed. *V. rufotomentosa* (round
+2, 18 unique points) is the first case: ATAUC 0.72, STAUC 0.158, ASD15 3% ->
+"High STAUC", and its in situ scores (SRSin 30.8, GRSin 6.2, ERSin 100, FCSin
+45.7 HP) are computed from that failing model. Options: keep and report as
+failing; add a `Valid == FALSE -> buffer branch` step (matches the methods
+text, cannot change any published species); treat rufotomentosa as a buffer
+species by hand. To be discussed with the project partners before the round-2
+candidate runs are finalised.
+
 ## 2. Bounding-box enforcement and longitude sign errors
 
 `checksOnLatLong()` flags eastern-hemisphere records under USA/CAN/MEX or
