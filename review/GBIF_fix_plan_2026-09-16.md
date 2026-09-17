@@ -50,6 +50,8 @@ starting a new repo.
 
 ## Deliberately left open until phase 3 or 4
 
+Full list with considerations: `review/modeling_future_improvements.md`.
+
 * `df2_a` (cross-source de-duplication) is computed and never fed downstream.
 * Duplicate `speciesCheck()` in `preprocessing07_2025Functions.R`.
 * The `novogranatensis` re-injection.
