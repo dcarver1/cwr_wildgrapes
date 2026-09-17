@@ -7,19 +7,23 @@
 #   * `dontRun` defined (it was undefined and errored before the loop)
 #   * hard-coded "run08282025_1k" path for topVariablesData.csv -> runVersion
 #   * set.seed(1234) at the top of every species iteration so a species'
-#     result does not depend on which species ran before it. NOTE: VSURF is
-#     called with parallel = TRUE on a PSOCK cluster whose workers are not
-#     seeded, so variable selection (and everything downstream of the SDM)
-#     is still not bit-reproducible; counts, SRSex, natural area and buffers are.
+#     result does not depend on which species ran before it.
 #   * species vector `speciesToRun` set explicitly (test: 3 unchanged species)
 #   * post-run summaries (all-species) switched off for the test
 #   * modelDataSummary.csv is written (the copy built it but never saved it,
 #     and grabData() reads it from disk)
 #   * FNA step forced (overwrite = TRUE): the copy skipped it; see note at the call
+#   * RNGkind("L'Ecuyer-CMRG") + varaibleSelection() on a FORK cluster with 8
+#     cores (R2/modeling/variableSelection.R defaults, 2026-09-17): variable
+#     selection, and so everything downstream, now repeats exactly for a given
+#     seed and core count
 ###
 
 # 1. Load global environment and assets
 source("global.R")
+# Reproducible random streams for forked workers (varaibleSelection() runs
+# VSURF on a FORK cluster with 8 cores). Must be set before any set.seed().
+RNGkind("L'Ecuyer-CMRG")
 
 # 2. Run Parameters
 runVersion <- "run09162026_1k"

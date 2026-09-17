@@ -1,9 +1,18 @@
 #' Run Variable Selection
 #'
 #' @param modelData
+#' @param parallel : run VSURF_thres on a cluster (TRUE, as published)
+#' @param clusterType : "FORK" (default since 2026-09-17) or "PSOCK" (the
+#'   published setting). Forked workers inherit a reproducible random stream
+#'   from the parent when the session uses RNGkind("L'Ecuyer-CMRG") and
+#'   set.seed(); socket workers are never seeded, so the published variable
+#'   selection was not reproducible. Same algorithm, same forests, same
+#'   threshold; only the worker start-up differs.
+#' @param ncores : fixed worker count (default 8). The result depends on it,
+#'   so it is pinned rather than taken from the machine.
 #'
 #' @return A csv of occurance data that has been thinned to include on primary variables.
-varaibleSelection <- function(modelData, parallel) {
+varaibleSelection <- function(modelData, parallel, clusterType = "FORK", ncores = 8) {
   # subset predictor data and presence column
   varOnly <- modelData |>
     st_drop_geometry() |>
@@ -31,7 +40,9 @@ varaibleSelection <- function(modelData, parallel) {
   vsurfThres <- VSURF_thres(
     x = bio_no_na[, c(2:26)],
     y = as.factor(bio_no_na$presence),
-    parallel = parallel
+    parallel = parallel,
+    clusterType = clusterType,
+    ncores = ncores
   )
   
   ###
