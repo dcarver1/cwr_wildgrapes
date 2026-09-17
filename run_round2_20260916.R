@@ -13,8 +13,9 @@
 #     is still not bit-reproducible; counts, SRSex, natural area and buffers are.
 #   * species vector `speciesToRun` set explicitly (test: 3 unchanged species)
 #   * post-run summaries (all-species) switched off for the test
-# The FNA overwrite flag is deliberately left as in the original so the test
-# shows whether that step runs.
+#   * modelDataSummary.csv is written (the copy built it but never saved it,
+#     and grabData() reads it from disk)
+#   * FNA step forced (overwrite = TRUE): the copy skipped it; see note at the call
 ###
 
 # 1. Load global environment and assets
@@ -22,9 +23,11 @@ source("global.R")
 
 # 2. Run Parameters
 runVersion <- "run09162026_1k"
-overwrite <- FALSE
+# overwrite / speciesToRun can be preset before source()-ing this file, e.g.
+#   Rscript -e 'speciesToRun <- "Vitis monticola"; overwrite <- TRUE; source("run_round2_20260916.R")'
+if (!exists("overwrite")) overwrite <- FALSE
 dontRun <- c()
-speciesToRun <- c("Vitis nesbittiana", "Vitis biformis", "Vitis monticola")
+if (!exists("speciesToRun")) speciesToRun <- c("Vitis nesbittiana", "Vitis biformis", "Vitis monticola")
 
 # 3. Load Clean Data
 allDataPath <- "data/processed_occurrence/model_data20260820_taxonomyOnly.csv"
@@ -146,10 +149,14 @@ for (j in r3) {
 
 
   # Only apply FNA if sp1 is actually a spatial object (not the character error string)
+  # overwrite must be TRUE here: the file was just written above, so with FALSE
+  # write_GPKG() returns it unchanged and applyFNA() never runs (run_all072025.R
+  # carries the same note). Confirmed on the 2026-09-16 test: monticola kept 22
+  # out-of-state points and ERSex halved. Published run applied the filter.
   if (!inherits(sp1, "character")) {
     sp1 <-  write_GPKG(
       path = allPaths$spatialDataPath,
-      overwrite = overwrite,
+      overwrite = TRUE,
       function1 = applyFNA(
         speciesPoints = sp1,
         fnaData = fnaData,
@@ -250,6 +257,9 @@ for (j in r3) {
       backgroudRecords = nrow(m_data[m_data$presence == 0, ]),
       totalRecords = nrow(m_data)
     )
+    # run_all05082026.R built this table but never wrote it; grabData() reads it
+    # from disk (the 0828 run has the file). Blocking fix, no method change.
+    write_csv(modelDataSummary, file = paste0(allPaths$occurances, "/modelDataSummary.csv"))
 
     v_data <- write_RDS(
       path = allPaths$variablbeSelectPath,

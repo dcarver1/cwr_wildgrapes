@@ -1,0 +1,97 @@
+taxon,metric,run08282025_1k,run09162026_1k,match,kind
+speciesSummaryHTML,spatialPts,NA,NA,TRUE,deterministic
+speciesSummaryHTML,spatialG,NA,NA,TRUE,deterministic
+speciesSummaryHTML,statesInPts,NA,NA,TRUE,deterministic
+speciesSummaryHTML,natAreaFeatures,NA,NA,TRUE,deterministic
+speciesSummaryHTML,natAreaEco,NA,NA,TRUE,deterministic
+speciesSummaryHTML,nVarsSelected,NA,NA,TRUE,sdm-dependent
+speciesSummaryHTML,varsSelected,NA,NA,TRUE,sdm-dependent
+speciesSummaryHTML,thresholdCells,NA,NA,TRUE,sdm-dependent
+speciesSummaryHTML,AUCtest,NA,NA,TRUE,sdm-dependent
+speciesSummaryHTML,threshold,NA,NA,TRUE,sdm-dependent
+speciesSummaryHTML,NTOTAL,NA,NA,TRUE,deterministic
+speciesSummaryHTML,NCOORDS,NA,NA,TRUE,deterministic
+speciesSummaryHTML,NG,NA,NA,TRUE,deterministic
+speciesSummaryHTML,NH,NA,NA,TRUE,deterministic
+speciesSummaryHTML,presenceRows,NA,NA,TRUE,deterministic
+speciesSummaryHTML,backgroundRows,NA,NA,TRUE,sdm-dependent
+speciesSummaryHTML,SRSex,NA,NA,TRUE,deterministic
+speciesSummaryHTML,GRSex,NA,NA,TRUE,sdm-dependent
+speciesSummaryHTML,ERSex,NA,NA,TRUE,sdm-dependent
+speciesSummaryHTML,SRSin,NA,NA,TRUE,sdm-dependent
+speciesSummaryHTML,GRSin,NA,NA,TRUE,sdm-dependent
+speciesSummaryHTML,ERSin,NA,NA,TRUE,sdm-dependent
+speciesSummaryHTML,FCSc_mean,NA,NA,TRUE,sdm-dependent
+speciesSummaryHTML,FCSc_mean_class,NA,NA,TRUE,sdm-dependent
+Vitis biformis,spatialPts,24,24,TRUE,deterministic
+Vitis biformis,spatialG,2,2,TRUE,deterministic
+Vitis biformis,statesInPts,6,8,FALSE,deterministic
+Vitis biformis,natAreaFeatures,5,5,TRUE,deterministic
+Vitis biformis,natAreaEco,5,5,TRUE,deterministic
+Vitis biformis,nVarsSelected,24,24,TRUE,sdm-dependent
+Vitis biformis,varsSelected,bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,TRUE,sdm-dependent
+Vitis biformis,thresholdCells,77107,83042,FALSE,sdm-dependent
+Vitis biformis,AUCtest,0.941644633611509,0.924929671851128,FALSE,sdm-dependent
+Vitis biformis,threshold,0.297833333333333,0.283166666666667,FALSE,sdm-dependent
+Vitis biformis,NTOTAL,81,81,TRUE,deterministic
+Vitis biformis,NCOORDS,34,34,TRUE,deterministic
+Vitis biformis,NG,14,14,TRUE,deterministic
+Vitis biformis,NH,67,67,TRUE,deterministic
+Vitis biformis,presenceRows,24,24,TRUE,deterministic
+Vitis biformis,backgroundRows,9989,9991,FALSE,sdm-dependent
+Vitis biformis,SRSex,20.8955223880597,20.8955223880597,TRUE,deterministic
+Vitis biformis,GRSex,2.44707539404875,3.55359860930667,FALSE,sdm-dependent
+Vitis biformis,ERSex,20,20,TRUE,sdm-dependent
+Vitis biformis,SRSin,9.09090909090909,10,FALSE,sdm-dependent
+Vitis biformis,GRSin,11.1839741205927,11.6845764637437,FALSE,sdm-dependent
+Vitis biformis,ERSin,100,100,TRUE,sdm-dependent
+Vitis biformis,FCSc_mean,27.2695801656017,27.6889495768517,FALSE,sdm-dependent
+Vitis biformis,FCSc_mean_class,HP,HP,TRUE,sdm-dependent
+Vitis monticola,spatialPts,405,427,FALSE,deterministic
+Vitis monticola,spatialG,10,10,TRUE,deterministic
+Vitis monticola,statesInPts,1,11,FALSE,deterministic
+Vitis monticola,natAreaFeatures,5,11,FALSE,deterministic
+Vitis monticola,natAreaEco,5,11,FALSE,deterministic
+Vitis monticola,nVarsSelected,24,25,FALSE,sdm-dependent
+Vitis monticola,varsSelected,bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,aspect|bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,FALSE,sdm-dependent
+Vitis monticola,thresholdCells,95639,153328,FALSE,sdm-dependent
+Vitis monticola,AUCtest,0.981117316976429,0.981130500550847,FALSE,sdm-dependent
+Vitis monticola,threshold,0.1513,0.1079,FALSE,sdm-dependent
+Vitis monticola,NTOTAL,1107,1107,TRUE,deterministic
+Vitis monticola,NCOORDS,469,469,TRUE,deterministic
+Vitis monticola,NG,60,60,TRUE,deterministic
+Vitis monticola,NH,1047,1047,TRUE,deterministic
+Vitis monticola,presenceRows,421,427,FALSE,deterministic
+Vitis monticola,backgroundRows,9992,9992,TRUE,sdm-dependent
+Vitis monticola,SRSex,5.73065902578797,5.73065902578797,TRUE,deterministic
+Vitis monticola,GRSex,47.8646392831349,34.9962024267144,FALSE,sdm-dependent
+Vitis monticola,ERSex,75,37.5,FALSE,sdm-dependent
+Vitis monticola,SRSin,23.8578680203046,23.7037037037037,FALSE,sdm-dependent
+Vitis monticola,GRSin,2.07300618382973,4.32453245581268,FALSE,sdm-dependent
+Vitis monticola,ERSin,100,87.5,FALSE,sdm-dependent
+Vitis monticola,FCSc_mean,42.4210287521762,32.2925162686698,FALSE,sdm-dependent
+Vitis monticola,FCSc_mean_class,HP,HP,TRUE,sdm-dependent
+Vitis nesbittiana,spatialPts,29,29,TRUE,deterministic
+Vitis nesbittiana,spatialG,1,1,TRUE,deterministic
+Vitis nesbittiana,statesInPts,6,7,FALSE,deterministic
+Vitis nesbittiana,natAreaFeatures,4,4,TRUE,deterministic
+Vitis nesbittiana,natAreaEco,4,4,TRUE,deterministic
+Vitis nesbittiana,nVarsSelected,24,25,FALSE,sdm-dependent
+Vitis nesbittiana,varsSelected,bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,aspect|bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,FALSE,sdm-dependent
+Vitis nesbittiana,thresholdCells,13604,13008,FALSE,sdm-dependent
+Vitis nesbittiana,AUCtest,0.944474894094269,0.878746074948352,FALSE,sdm-dependent
+Vitis nesbittiana,threshold,0.1578,0.1798,FALSE,sdm-dependent
+Vitis nesbittiana,NTOTAL,106,106,TRUE,deterministic
+Vitis nesbittiana,NCOORDS,59,59,TRUE,deterministic
+Vitis nesbittiana,NG,10,10,TRUE,deterministic
+Vitis nesbittiana,NH,96,96,TRUE,deterministic
+Vitis nesbittiana,presenceRows,29,29,TRUE,deterministic
+Vitis nesbittiana,backgroundRows,9947,9694,FALSE,sdm-dependent
+Vitis nesbittiana,SRSex,10.4166666666667,10.4166666666667,TRUE,deterministic
+Vitis nesbittiana,GRSex,26.1973817879549,28.6240446273725,FALSE,sdm-dependent
+Vitis nesbittiana,ERSex,75,75,TRUE,sdm-dependent
+Vitis nesbittiana,SRSin,7.69230769230769,11.1111111111111,FALSE,sdm-dependent
+Vitis nesbittiana,GRSin,9.87188290678994,10.0718164816737,FALSE,sdm-dependent
+Vitis nesbittiana,ERSin,100,100,TRUE,sdm-dependent
+Vitis nesbittiana,FCSc_mean,38.1963731756199,39.2039398144707,FALSE,sdm-dependent
+Vitis nesbittiana,FCSc_mean_class,HP,HP,TRUE,sdm-dependent
