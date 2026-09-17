@@ -1,0 +1,20 @@
+taxon,reason,records_published,records_round2,coords_published,coords_round2,coords_change,G_published,G_round2,Gcoords_change,SRSex_published,SRSex_round2,SRSex_change,class_published,class_round2,classChanged
+Vitis cinerea var. tomentosa,no records in Sep 2026,11,0,11,NA,NA,0,NA,NA,0,NA,NA,UP,NA,TRUE
+Vitis rufotomentosa,SRSex only,2,42,0,20,20,2,2,0,100,5,-95,LP,UP,TRUE
+Vitis x doaniana,SRSex only,106,118,50,53,3,55,55,0,100,87.3,-12.7,LP,LP,FALSE
+Vitis x champinii,SRSex only,126,192,33,38,5,56,56,0,80,41.18,-38.82,LP,HP,TRUE
+Vitis popenoei,SRSex only,227,203,123,120,-3,4,3,0,1.79,1.5,-0.29,UP,UP,FALSE
+Vitis x novae-angliae,SRSex only,277,300,81,86,5,2,2,0,0.73,0.67,-0.06,UP,UP,FALSE
+Vitis lincecumii,SRSex only,168,332,71,88,17,3,10,0,1.82,3.11,1.29,UP,UP,FALSE
+Vitis cinerea var. cinerea,SRSex only,619,611,181,181,0,13,13,0,2.15,2.17,0.02,UP,UP,FALSE
+Vitis baileyana,SRSex only,531,654,105,153,48,3,5,0,0.57,0.77,0.2,UP,UP,FALSE
+Vitis acerifolia,SRSex only,855,852,391,389,-2,176,176,0,25.92,26.04,0.12,HP,HP,FALSE
+Vitis shuttleworthii,SRSex only,973,937,660,660,0,8,8,0,0.83,0.86,0.03,UP,UP,FALSE
+Vitis simpsonii,SRSex only,913,1008,392,448,56,9,9,0,1,0.9,-0.1,UP,UP,FALSE
+Vitis berlandieri,SRSex only,736,1357,359,626,267,163,207,0,28.45,18,-10.45,HP,UP,TRUE
+Vitis aestivalis var. bicolor,SRSex only,1412,1421,555,557,2,6,6,0,0.43,0.42,-0.01,UP,UP,FALSE
+Vitis tiliifolia,SRSex and G coordinate pairs,3912,3996,2389,2591,202,31,32,3,0.8,0.81,0.01,UP,UP,FALSE
+Vitis cinerea,SRSex only,5341,4459,2364,1967,-397,333,287,0,5.91,6,0.09,UP,UP,FALSE
+Vitis labrusca,SRSex only,5345,5235,2222,2150,-72,464,464,0,9.51,9.73,0.22,UP,UP,FALSE
+Vitis vulpina,SRSex and G coordinate pairs,7588,7765,2460,2478,18,89,114,1,1.19,1.49,0.3,UP,UP,FALSE
+Vitis aestivalis,SRSex only,12877,12556,6565,6506,-59,160,151,0,1.02,0.98,-0.04,UP,UP,FALSE
