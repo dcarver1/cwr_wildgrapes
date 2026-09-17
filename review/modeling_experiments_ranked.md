@@ -27,7 +27,7 @@ the large species where an effect is expected.
 | 11 | **Correlation pruning over all selected predictors** (not only the top 5) and index by name | `variableSelection.R` | Predictor sets for most species; effect on scores usually small | medium | Variable selection currently keeps 24-25 of 25, so the practical change is which one or two drop |
 | 12 | **Threshold edge case** (median exactly 0 becomes NA) | `generateThresholdModel.R` | Cells at the edge of the projection; tiny | one line | Fold into 3 |
 | 13 | **Consistent record sets for SRSex and the in situ metrics** (pre- vs post-FNA / dedup) | driver | Ex situ vs in situ halves of FCSc computed over different denominators | small | Definition decision; state it in methods |
-| 14 | **Living specimens as germplasm** (GBIF LIVING_SPECIMEN -> G) | `process_gbif_082026.R` | SRSex up for garden-popular taxa; decision, not a fix | one line | Partner decision (brief section 6) |
+| 14 | **Confirmed, not a change: GBIF LIVING_SPECIMEN records are germplasm (G)** | `process_gbif_082026.R`, unchanged since the published run | none | none | The only open question is whether to narrow it (e.g. exclude display / arboretum publishers); the current rule stands unless the partners want that (2026-09-17) |
 
 Suggested order of experiments: 1, 3 and 5 are one-line, deterministic and
 independent, so run them as separate run versions on the four reference
