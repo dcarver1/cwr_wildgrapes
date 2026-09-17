@@ -1,6 +1,11 @@
 
 
-checksOnLatLong <- function(data){
+# exemptTaxa: taxa whose records are kept regardless of country. The published
+# dataset kept Vitis tiliifolia and V. popenoei records from Central America and
+# the Caribbean (run_all072025.R swapped in a pre-filter July 2025 version of
+# those two species; 1,624 + 9 records). Passing them here reproduces that
+# intent from the current data instead of from an old file.
+checksOnLatLong <- function(data, exemptTaxa = NULL){
   # convert datatypes. 
   df1 <- data  |> 
     dplyr::mutate(
@@ -20,7 +25,7 @@ checksOnLatLong <- function(data){
   
   # Export the localities that are not in the countries of interest 
   df2 <- df1 |>
-    dplyr::filter(iso3 %in% c("USA","CAN","MEX",NA))
+    dplyr::filter(iso3 %in% c("USA","CAN","MEX",NA) | taxon %in% exemptTaxa)
   
   export1 <- df1[!df1$index %in% df2$index, ]
   

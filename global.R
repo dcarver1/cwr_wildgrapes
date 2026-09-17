@@ -42,7 +42,7 @@ bufferDist <- 50000
 # 3. Source Helper Functions
 source("R2/helperFunctions.R")
 sourceFiles(gapAnalysisOnly = FALSE)
-source("temp/clearNewErrors.R")
+source("preprocessing/functions/clearNewErrors.R") # tracked copy (was temp/, gitignored)
 
 # 4. Load Heavy Static Geospatial Assets
 message("Loading static geospatial assets...")

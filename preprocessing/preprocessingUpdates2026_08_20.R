@@ -206,7 +206,10 @@ if (enforceBoundingBox) {
 
 # Quality Checks on Spatial Coordinates (Lat/Long Bounding Box)
 source("preprocessing/functions/checksOnLatLong.R")
-d3 <- checksOnLatLong(df2)
+# tiliifolia / popenoei keep their Central American and Caribbean records, as
+# the published dataset did (see checksOnLatLong.R); every other taxon is
+# limited to USA / CAN / MEX / blank as before.
+d3 <- checksOnLatLong(df2, exemptTaxa = c("Vitis tiliifolia", "Vitis popenoei"))
 valLatLon <- d3$validLatLon
 
 # Records with no coordinates are kept (they count toward totals and feed the
@@ -269,6 +272,17 @@ d11 <- d11 |>
 
 # Update database source tag for Vitis novogranatensis
 d11[d11$taxon == "Vitis novogranatensis", "databaseSource"] <- "Personal Communication with Jun Wen"
+
+# One-off removals from the summary-map review that fed the published run
+# (run_all072025.R applied them from temp/clearNewErrors.R; the function now
+# lives in preprocessing/functions/ so the model data carries them). Needs the
+# `index` column assigned above. Removes: cinerea lat 0 (13), palmata lat 0 or
+# 26.7333 (8), riparia lat 0 (6), shuttleworthii lon > -28 (5), vulpina lon 0
+# (86), one labrusca record; flips the latitude sign of one peninsularis record.
+source("preprocessing/functions/clearNewErrors.R")
+nBefore <- nrow(d11)
+d11 <- clearNewErrors(data = d11)
+message(nBefore - nrow(d11), " records removed by clearNewErrors()")
 
 # -------------------------------------------------------------------------
 # Step 6: Export Final Clean Dataset
