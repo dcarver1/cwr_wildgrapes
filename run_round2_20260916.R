@@ -97,9 +97,28 @@ r2 <- s2$taxon[!s2$taxon %in% dontRun]
 r3 <- speciesToRun
 # adding some text for git 
 #
+# Step timers (logging only, no method change; 2026-09-17). Per species:
+# seconds per step, total, and the R process peak memory (gc "max used", which
+# excludes forked VSURF workers). Written to results/timing.csv and appended to
+# data/Vitis/timing_<runVersion>.csv.
+timerStart <- function() { tPrev <<- Sys.time(); tSpecies <<- tPrev; stepTimes <<- list(); invisible(gc(reset = TRUE)) }
+markStep <- function(name) { now <- Sys.time(); stepTimes[[name]] <<- as.numeric(difftime(now, tPrev, units = "secs")); tPrev <<- now }
+writeTiming <- function(j, allPaths, branch) {
+  g <- gc(); peakMB <- sum(g[, 6])
+  df <- data.frame(taxon = j, runVersion = runVersion, branch = branch,
+                   step = c(names(stepTimes), "total"),
+                   seconds = round(c(unlist(stepTimes), as.numeric(difftime(Sys.time(), tSpecies, units = "secs"))), 1),
+                   peakMB = round(peakMB), finished = format(Sys.time(), "%Y-%m-%dT%H:%M:%S"))
+  write_csv(df, file.path(allPaths$results, "timing.csv"))
+  logPath <- paste0("data/Vitis/timing_", runVersion, ".csv")
+  write_csv(df, logPath, append = file.exists(logPath))
+  message(j, ": ", branch, " ", round(df$seconds[df$step == "total"]), " s, peak ", round(peakMB), " MB")
+}
+
 # 6. Main Modeling Loop
 for (j in r3) {
   set.seed(1234)
+  timerStart()
   modelInvalid <- FALSE # set TRUE only by the validity gate when bufferOnInvalidModel is on
   print(paste("Processing:", j))
 
@@ -268,10 +287,13 @@ for (j in r3) {
       erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
       message("Failed to render no-records summary for ", j)
     }
+    markStep("noRecords_render")
+    writeTiming(j, allPaths, "noRecords")
     next # SKIP TO THE NEXT SPECIES
   }
 
   # --- 3. Proceed with standard analysis ---
+  markStep("points_fna")
   natArea <- write_GPKG(
     path = allPaths$natAreaPath,
     overwrite = overwrite,
@@ -291,6 +313,7 @@ for (j in r3) {
     )
   )
 
+  markStep("natArea_modelData")
   if (nrow(sp1) >= 8) {
     print("Modeling")
 
@@ -349,12 +372,14 @@ for (j in r3) {
       )
     )
 
+    markStep("variableSelection")
     sdm_result <- write_RDS(
       path = allPaths$sdmResults,
       overwrite = overwrite,
       function1 = runMaxnet(selectVars = v_data, rasterData = rasterInputs)
     )
 
+    markStep("maxnet")
     if (!is.null(sdm_result)) {
       print("conservation metrics")
 
@@ -521,6 +546,7 @@ for (j in r3) {
         )
       )
 
+      markStep("rasters_metrics")
       export1 <- paste0(j, "_Summary_fnaFilter")
       # if (!file.exists(export1)) {
         render_result <- try(
@@ -538,6 +564,8 @@ for (j in r3) {
           message("Failed to render 1km summary for ", j)
         }
       # }
+      markStep("render")
+      writeTiming(j, allPaths, "sdm")
     }
   }
 
@@ -712,6 +740,8 @@ for (j in r3) {
         message("Failed to render 1km summary (buffer version) for ", j)
       }
     # }
+    markStep("buffer_metrics_render")
+    writeTiming(j, allPaths, if (modelInvalid) "buffer_invalidModel" else "buffer_lt8")
   }
 }
 
