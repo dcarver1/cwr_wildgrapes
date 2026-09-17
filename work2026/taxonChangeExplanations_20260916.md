@@ -6,6 +6,8 @@ every record (source + source ID) between `model_data20251216.csv` and
 `work2026/taxonChangeFlows_20260916.csv`. Counts are model-data rows after all
 filters; "coords" = rows with coordinates. Taxa not listed did not change.
 
+Baseline here is the December 2025 model data. Against the published input file the picture is the same except for tiliifolia and popenoei, whose Central American records the publication kept by hand and round 2 keeps by rule; see notes section 11.
+
 Five mechanisms account for everything:
 
 * **A. Segregate recovered.** Records recorded under a project name that the

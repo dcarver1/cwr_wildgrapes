@@ -359,6 +359,53 @@ threshold.
 
 `excludedByConcept_08202026.csv` is empty, as predicted in section 6.
 
+## 11. The publication input dataset, and the round-2 blend (2026-09-17)
+
+`data/datasetsForPublication/allSpeciesOccurrences.csv` (112,983 rows) is
+what `run08282025_1k` was scored from. Record-level tracing shows it is the
+December 2025 model data (built before the 2025-12-16 driver additions) plus
+two hand steps in `run_all072025.R`:
+
+1. *V. tiliifolia* and *V. popenoei* were swapped for their rows in
+   `allEvaluated_data_removedDups_072025.csv`, a July 2025 file taken
+   **before** the country filter. Net: +1,624 tiliifolia and +9 popenoei
+   records from Central America and the Caribbean (CRI 174, NIC 143, SLV 122,
+   COL 105, CUB 99 ...), which the December pipeline's USA/CAN/MEX filter had
+   removed; 14 Mexican tiliifolia records were lost in the swap.
+2. `clearNewErrors()` (was `temp/clearNewErrors.R`): one-off removals from
+   the summary-map review: vulpina longitude 0 (86), palmata (8), riparia
+   latitude 0 (6), shuttleworthii longitude > -28 (5), one labrusca record;
+   one peninsularis latitude sign flip.
+
+Both are now in the tracked preprocessing (`checksOnLatLong(exemptTaxa =
+c("Vitis tiliifolia", "Vitis popenoei"))` and
+`preprocessing/functions/clearNewErrors.R`, applied at the end of the driver),
+so the round-2 file reproduces their intent from the current GBIF parse rather
+than from an old file. The two 2025-12-16 additions the publication file
+lacks (removal of the 82.2 N and -177.3 E outliers, novogranatensis source
+relabel) are kept; both outliers were removed by the FNA step before
+modelling anyway.
+
+Attribution of every record that differs between the publication file and
+`model_data20260820_taxonomyOnly.csv` (`work2026/compareToPublication_20260917.R`,
+outputs `publication_vs_round2_byTaxon.csv` and `_records.csv`; share copy
+in `temp/`): 3,674 differing records. 3,358 are GBIF taxonomy (parser,
+synonym-cell, homonym and forma-autonym rules; 49 munsoniana rows named
+"Muscadinia munsoniana" are in this group though the script tags them
+"other"). 296 are the country exemption: round 2 has 231 more Central
+American tiliifolia records than the July file and lacks 65 that the sheet
+now excludes (61 "Vitis caribaea DC.", 4 arachnoidea). 15 are artefacts of
+the July swap (the 14 Mexican tiliifolia and 1 popenoei record it dropped,
+now back; 1 pre-dedup UC Davis tiliifolia row, now gone). 4 are the
+2025-12-16 driver items. Nothing is unexplained.
+
+Per taxon the publication-to-round-2 change equals the taxonomy change
+already documented, except tiliifolia (+84 = +231 exemption, -87 taxonomy,
+-65 exclusions, +14 swap artefacts... net) and popenoei (-24 = -22 Muscadinia
+popenoei on no list, -1, -1). SRSex against the published baseline
+(`temp/srsEx_published_vs_sep2026.csv`): 19 scores change, the same four
+class changes.
+
 ## Files
 
 * `work2026/compareCounts_20260916.R`: section 10 tables; also writes the share copy `temp/speciesCounts_dec2025_vs_sep2026.csv`

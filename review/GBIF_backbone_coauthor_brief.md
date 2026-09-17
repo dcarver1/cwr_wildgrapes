@@ -301,6 +301,21 @@ rupestris f. rupestris") to its species in code, so *rupestris* keeps its 20
 accessions. Variety and subspecies autonyms ("Vitis riparia subsp. riparia",
 417 records) stay on the decision list in section 4.5.
 
+## 8b. Against the published input file (2026-09-17)
+
+The dataset the published scores were computed from
+(`allSpeciesOccurrences.csv`) differs from the December model data by two hand
+steps: Central American and Caribbean records kept for *V. tiliifolia* and
+*V. popenoei*, and a set of one-off coordinate removals from the map review.
+Both are now built into the preprocessing, so the round-2 file carries them.
+Every record that differs between the published file and the round-2 file is
+accounted for: 3,358 by the GBIF taxonomy fix, 296 by the tiliifolia /
+popenoei country exemption applied to the current download, 15 by artefacts
+of the old file swap, 4 by later driver edits. Per-taxon table:
+`temp/publication_vs_round2_byTaxon.csv`. The SRSex class changes against the
+published baseline are the same three (rufotomentosa, x champinii,
+berlandieri) plus *cinerea* var. *tomentosa* unscored.
+
 ## 9. What changed from the earlier brief, and why
 
 | Earlier claim | Status | Evidence |

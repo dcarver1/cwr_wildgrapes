@@ -10,13 +10,13 @@ Vitis cinerea,GBIF,5060,4165,-895
 Vitis cinerea,Huerta-Acosta publication,91,90,-1
 Vitis cinerea var. cinerea,GBIF,616,608,-8
 Vitis cinerea var. tomentosa,GBIF,11,0,-11
-Vitis labrusca,GBIF,4891,4777,-114
+Vitis labrusca,GBIF,4891,4776,-115
 Vitis labrusca,genesys,384,383,-1
 Vitis lincecumii,GBIF,165,329,164
 Vitis martineziana,GBIF,0,2,2
 Vitis munsoniana,GBIF,22,265,243
-Vitis palmata,GBIF,1060,1053,-7
-Vitis popenoei,GBIF,211,189,-22
+Vitis palmata,GBIF,1060,1052,-8
+Vitis popenoei,GBIF,211,198,-13
 Vitis riparia,GBIF,17128,17104,-24
 Vitis riparia,USDA_NPGS_GRINGlobal,164,163,-1
 Vitis riparia,wiews,34,33,-1
@@ -25,7 +25,8 @@ Vitis rufotomentosa,GBIF,0,40,40
 Vitis rupestris,GBIF,1086,1085,-1
 Vitis shuttleworthii,GBIF,970,929,-41
 Vitis simpsonii,GBIF,904,999,95
-Vitis tiliifolia,GBIF,2261,2174,-87
+Vitis tiliifolia,GBIF,2261,3949,1688
+Vitis tiliifolia,wiews,5,6,1
 Vitis vulpina,GBIF,7579,7649,70
 Vitis vulpina,genesys,6,23,17
 Vitis vulpina,wiews,9,11,2

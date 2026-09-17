@@ -8,15 +8,15 @@ Vitis vulpina,TRUE,SRSex and G coordinate pairs,1.17,1.49,0.32,UP,UP,FALSE,89,11
 Vitis cinerea,TRUE,SRSex and G coordinate pairs,5.91,6,0.09,UP,UP,FALSE,333,286,-47,131,130,-1,2233,1823,-410,2364,1953,-411
 Vitis x doaniana,TRUE,SRSex only,100,87.3,-12.7,LP,LP,FALSE,55,55,0,29,29,0,21,24,3,50,53,3
 Vitis lincecumii,TRUE,SRSex only,1.82,3.11,1.29,UP,UP,FALSE,3,10,7,0,0,0,71,88,17,71,88,17
-Vitis labrusca,TRUE,SRSex only,9.5,9.73,0.23,UP,UP,FALSE,464,464,0,31,31,0,2192,2115,-77,2223,2146,-77
+Vitis tiliifolia,TRUE,SRSex only,1.33,0.81,-0.52,UP,UP,FALSE,30,32,2,10,10,0,1365,2568,1203,1375,2578,1203
+Vitis labrusca,TRUE,SRSex only,9.5,9.74,0.24,UP,UP,FALSE,464,464,0,31,31,0,2192,2114,-78,2223,2145,-78
 Vitis baileyana,TRUE,SRSex only,0.57,0.77,0.2,UP,UP,FALSE,3,5,2,0,0,0,105,152,47,105,152,47
-Vitis popenoei,TRUE,SRSex only,1.41,1.57,0.16,UP,UP,FALSE,3,3,0,1,1,0,114,111,-3,115,112,-3
 Vitis acerifolia,TRUE,SRSex only,25.92,26.04,0.12,HP,HP,FALSE,176,176,0,63,63,0,328,326,-2,391,389,-2
 Vitis simpsonii,TRUE,SRSex only,1,0.9,-0.1,UP,UP,FALSE,9,9,0,0,0,0,392,448,56,392,448,56
+Vitis popenoei,TRUE,SRSex only,1.41,1.5,0.09,UP,UP,FALSE,3,3,0,1,1,0,114,119,5,115,120,5
 Vitis x novae-angliae,TRUE,SRSex only,0.73,0.67,-0.06,UP,UP,FALSE,2,2,0,0,0,0,81,86,5,81,86,5
-Vitis tiliifolia,TRUE,SRSex only,1.33,1.38,0.05,UP,UP,FALSE,30,30,0,10,10,0,1365,1342,-23,1375,1352,-23
 Vitis aestivalis,TRUE,SRSex only,1.02,0.98,-0.04,UP,UP,FALSE,160,151,-9,6,6,0,6559,6440,-119,6565,6446,-119
-Vitis palmata,TRUE,SRSex only,4.18,4.21,0.03,UP,UP,FALSE,44,44,0,0,0,0,245,238,-7,245,238,-7
+Vitis palmata,TRUE,SRSex only,4.18,4.21,0.03,UP,UP,FALSE,44,44,0,0,0,0,245,237,-8,245,237,-8
 Vitis shuttleworthii,TRUE,SRSex only,0.83,0.86,0.03,UP,UP,FALSE,8,8,0,0,0,0,665,660,-5,665,660,-5
 Vitis cinerea var. cinerea,TRUE,SRSex only,2.15,2.17,0.02,UP,UP,FALSE,13,13,0,0,0,0,181,181,0,181,181,0
 Vitis aestivalis var. bicolor,TRUE,SRSex only,0.43,0.42,-0.01,UP,UP,FALSE,6,6,0,0,0,0,555,557,2,555,557,2

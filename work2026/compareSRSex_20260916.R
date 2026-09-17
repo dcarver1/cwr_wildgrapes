@@ -39,10 +39,15 @@ runSRS <- function(path, label) {
 }
 
 taxonomyOnly <- exists("taxonomyOnly") && taxonomyOnly
+# baseline: "dec2025" (model_data20251216.csv) or "publication"
+# (data/datasetsForPublication/allSpeciesOccurrences.csv, the file the paper's
+# run08282025_1k was scored from; its SRSex equals sheet 6 except blancoi)
+baseline <- if (exists("baseline")) baseline else "dec2025"
+oldFile <- if (baseline == "publication") "data/datasetsForPublication/allSpeciesOccurrences.csv" else "data/processed_occurrence/model_data20251216.csv"
 newFile <- if (taxonomyOnly) "data/processed_occurrence/model_data20260820_taxonomyOnly.csv" else "data/processed_occurrence/model_data20260820.csv"
-tag <- if (taxonomyOnly) "" else "_allChanges"
-cat("comparing against:", newFile, "\n")
-old <- runSRS("data/processed_occurrence/model_data20251216.csv", "dec2025")
+tag <- paste0(if (baseline == "publication") "_vsPublication" else "", if (taxonomyOnly) "" else "_allChanges")
+cat("baseline:", oldFile, "\ncomparing against:", newFile, "\n")
+old <- runSRS(oldFile, "dec2025")
 new <- runSRS(newFile, "sep2026")
 
 # stored values from the last model run, for validation of the December reproduction
@@ -85,8 +90,6 @@ cmp <- full_join(
          storedRun, SRS_stored, dec2025_matches_storedRun, NTOTAL_dec2025, NTOTAL_sep2026) |>
   arrange(desc(classChanged), desc(abs(SRSex_change)), taxon)
 
-write_csv(cmp, paste0("temp/srsEx_dec2025_vs_sep2026", tag, ".csv"))
-write_csv(cmp, paste0("work2026/srsEx_comparison_20260916", if (taxonomyOnly) "_taxonomyOnly" else "", ".csv"))
 
 # rerun candidates: SRSex changed, or georeferenced G records changed
 rerun <- cmp |>
@@ -106,8 +109,6 @@ rerun <- cmp |>
          NHcoords_dec2025, NHcoords_sep2026, NHcoords_change,
          coords_dec2025, coords_sep2026, coords_change) |>
   arrange(desc(rerunCandidate), desc(classChanged), desc(abs(NGcoords_change)), desc(abs(SRSex_change)), taxon)
-write_csv(rerun, paste0("temp/rerunCandidates_dec2025_vs_sep2026", tag, ".csv"))
-write_csv(rerun, paste0("work2026/rerunCandidates_20260916", if (taxonomyOnly) "_taxonomyOnly" else "", ".csv"))
 cat("\n=== rerun candidates ===\n")
 print(as.data.frame(rerun |> filter(rerunCandidate) |> select(taxon, reason, SRSex_dec2025, SRSex_sep2026, class_dec2025, class_sep2026, NG_change, NGcoords_dec2025, NGcoords_sep2026, NGcoords_change, coords_change)))
 cat("\nrerun candidates:", sum(rerun$rerunCandidate), " of", nrow(rerun), "\n")
@@ -119,3 +120,12 @@ print(as.data.frame(cmp |> filter(classChanged) |> select(taxon, SRSex_dec2025, 
 cat("\n=== December reproduction vs stored run ===\n")
 print(as.data.frame(cmp |> select(taxon, storedRun, SRS_stored, SRSex_dec2025, dec2025_matches_storedRun) |> filter(!dec2025_matches_storedRun)))
 cat("\nscores changed:", sum(cmp$scoreChanged), " classes changed:", sum(cmp$classChanged), " of", nrow(cmp), "\n")
+
+# ---- write outputs last: the relabel for the publication baseline must come after the printouts above ----
+# with the publication baseline, label the baseline columns "published" (after
+# both tables are built, since the build references the dec2025 names)
+if (baseline == "publication") { names(cmp) <- sub("dec2025", "published", names(cmp)); names(rerun) <- sub("dec2025", "published", names(rerun)) }
+write_csv(cmp, paste0("temp/srsEx_", if (baseline == "publication") "published" else "dec2025", "_vs_sep2026", sub("_vsPublication", "", tag), ".csv"))
+write_csv(cmp, paste0("work2026/srsEx_comparison_20260916", if (baseline == "publication") "_vsPublication" else "", if (taxonomyOnly) "_taxonomyOnly" else "", ".csv"))
+write_csv(rerun, paste0("temp/rerunCandidates_", if (baseline == "publication") "published" else "dec2025", "_vs_sep2026", sub("_vsPublication", "", tag), ".csv"))
+write_csv(rerun, paste0("work2026/rerunCandidates_20260916", if (baseline == "publication") "_vsPublication" else "", if (taxonomyOnly) "_taxonomyOnly" else "", ".csv"))

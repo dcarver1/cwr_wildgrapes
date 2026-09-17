@@ -8,7 +8,7 @@ suppressPackageStartupMessages({library(dplyr); library(readr); library(sf); lib
 options(width = 220)
 old <- if (exists("oldRun")) oldRun else "run08282025_1k"
 new <- if (exists("newRun")) newRun else "run09162026_1k"
-species <- basename(dirname(list.dirs("data/Vitis", recursive = FALSE) |> (\(d) file.path(d, new))() |> Filter(f = dir.exists)))
+species <- basename(dirname(list.dirs("data/Vitis", recursive = FALSE) |> (\(d) file.path(d, new))() |> Filter(f = dir.exists))); species <- species[species != "speciesSummaryHTML"]
 cat("species with", new, ":", paste(species, collapse = ", "), "\n\n")
 
 readOne <- function(sp, run) {
