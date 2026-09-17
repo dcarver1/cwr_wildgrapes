@@ -7,6 +7,7 @@ output:
 date: "Report generated on `r Sys.Date()`"
 params:
   counts: NA
+  conservation: NA
 ---
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -74,6 +75,12 @@ DT::datatable(c1,
 
 The table below displays all conservation gap analysis scores, providing a comparison of the *ex situ* and *in situ* conservation scores.
 ```{r echo=FALSE, message=FALSE, warning=FALSE,fig.align='right',out.width="100%"}
+# Since 2026-09-17 the driver passes the table (built from srs_exsitu(),
+# fcs_exsitu(noModel = TRUE), fcs_insitu(noModel = TRUE), fcs_combine()); the
+# two hard-coded blocks below are kept only as a fallback for old calls.
+if (is.data.frame(params$conservation)) {
+  conservation_data <- params$conservation
+} else {
 if(species == "Vitis novogranatensis"){
   conservation_data <- data.frame(
   Taxon = species,
@@ -110,6 +117,7 @@ if(species == "Vitis rufotomentosa"){
   `Combined Conservation Priority` = "UP",
   check.names = FALSE
 )}
+}
 
 #visualize
 DT::datatable(conservation_data,

@@ -12,6 +12,9 @@
 #   * post-run summaries (all-species) switched off for the test
 #   * modelDataSummary.csv is written (the copy built it but never saved it,
 #     and grabData() reads it from disk)
+#   * species universe = sheet concepts flagged "Y" for the gap analysis, so a
+#     concept with zero records is still processed: zero counts row, gap files
+#     from the noModel conventions, no-records summary document (2026-09-17)
 #   * FNA step forced (overwrite = TRUE): the copy skipped it; see note at the call
 #   * RNGkind("L'Ecuyer-CMRG") + varaibleSelection() on a FORK cluster with 8
 #     cores (R2/modeling/variableSelection.R defaults, 2026-09-17): variable
@@ -31,7 +34,7 @@ runVersion <- "run09162026_1k"
 #   Rscript -e 'speciesToRun <- "Vitis monticola"; overwrite <- TRUE; source("run_round2_20260916.R")'
 if (!exists("overwrite")) overwrite <- FALSE
 dontRun <- c()
-if (!exists("speciesToRun")) speciesToRun <- c("Vitis nesbittiana", "Vitis biformis", "Vitis monticola")
+# (default speciesToRun = gapSpecies, set after the sheet is read below)
 
 # 3. Load Clean Data
 allDataPath <- "data/processed_occurrence/model_data20260820_taxonomyOnly.csv"
@@ -39,7 +42,16 @@ if (!file.exists(allDataPath)) {
   stop("Model data not found: run preprocessing/preprocessingUpdates2026_08_20.R with enforceBoundingBox <- FALSE first.")
 }
 speciesData <- read_csv(allDataPath)
-species <- sort(unique(speciesData$taxon))
+# Species universe = every concept flagged for the gap analysis in the taxonomy
+# sheet, not just the taxa present in the data: a concept with zero records
+# (e.g. Vitis cinerea var. tomentosa after the taxonomy fix) still gets a
+# counts table, zero-score gap files and the no-records summary document.
+gapSpecies <- read_csv("data/New World Vitis.csv", col_types = cols(.default = "c"), show_col_types = FALSE) |>
+  dplyr::filter(`Include in gap analysis?` == "Y") |>
+  dplyr::pull(`Scientific Name`) |>
+  sort()
+species <- sort(unique(c(speciesData$taxon, gapSpecies)))
+if (!exists("speciesToRun")) speciesToRun <- gapSpecies
 
 # 4. Directory Setup
 dir1 <- "data/Vitis"
@@ -128,7 +140,10 @@ for (j in r3) {
   c1 <- write_CSV(
     path = allPaths$countsPaths,
     overwrite = overwrite,
-    function1 = generateCounts(speciesData = sd1)
+    function1 = if (nrow(sd1) > 0) generateCounts(speciesData = sd1) else
+      data.frame(species = j, totalRecords = 0L, hasLat = 0L, hasLong = 0L, totalUseful = 0L,
+                 totalGRecords = 0L, totalGUseful = 0L, totalHRecords = 0L, totalHUseful = 0L,
+                 numberOfUniqueSources = 0L)
   )
 
   srsex <- write_CSV(
@@ -193,6 +208,34 @@ for (j in r3) {
       counts <- c1 # fallback to the one we just generated
     }
 
+    # Gap-analysis files for a taxon with no usable coordinates, using the
+    # existing functions' noModel conventions (GRS/ERS unavailable, FCS = SRS/3,
+    # in situ scores 0). This replaces the hand-coded rows for rufotomentosa and
+    # novogranatensis in compileConservationData.R / summaryDocForNoRecords.Rmd
+    # and lets summaryTable() pick the taxon up like any other.
+    srsexNR <- write_CSV(path = allPaths$srsExPath, overwrite = TRUE, function1 = srs_exsitu(sp_counts = counts))
+    fcsexNR <- write_CSV(path = allPaths$fcsexPath, overwrite = TRUE,
+                         function1 = fcs_exsitu(srsex = srsexNR, grsex = NULL, ersex = NULL, noModel = TRUE, gPoints = counts$totalGUseful))
+    srsinNR <- data.frame(ID = j, SRS = 0)
+    fcsinNR <- write_CSV(path = allPaths$fcsinPath, overwrite = TRUE,
+                         function1 = fcs_insitu(srsin = srsinNR, grsin = NULL, ersin = NULL, noModel = TRUE))
+    fcscNR  <- write_CSV(path = allPaths$fcsCombinedPath, overwrite = TRUE, function1 = fcs_combine(fcsin = fcsinNR, fcsex = fcsexNR))
+    conservationNR <- data.frame(
+      Taxon = j,
+      `Ex situ Sampling Representativeness Score` = round(fcsexNR$SRS, 1),
+      `Ex situ Geographic Representativeness Score` = fcsexNR$GRS,
+      `Ex situ Ecological Representativeness Score` = fcsexNR$ERS,
+      `Ex situ Final Conservation Score` = round(fcsexNR$FCS, 1),
+      `Ex situ Conservation Priority` = fcsexNR$FCS_Score,
+      `In situ Sampling Representativeness Score` = fcsinNR$SRS,
+      `In situ Geographic Representativeness Score` = fcsinNR$GRS,
+      `In situ Ecological Representativeness Score` = fcsinNR$ERS,
+      `In situ Final Conservation Score` = round(fcsinNR$FCS, 1),
+      `In situ Conservation Priority` = fcsinNR$FCS_Score,
+      `Final Conservation Score Mean` = round(fcscNR$FCSc_mean, 1),
+      `Combined Conservation Priority` = fcscNR$FCSc_mean_class,
+      check.names = FALSE)
+
     htmlExport <- paste0(
       "data/Vitis/speciesSummaryHTML/",
       runVersion,
@@ -201,16 +244,20 @@ for (j in r3) {
       "_Summary_fnaFilter.html"
     )
 
-    # if (!file.exists(htmlExport)) {
+    render_result_nr <- try(
       rmarkdown::render(
         input = "R2/summarize/summaryDocForNoRecords.Rmd",
         output_format = "html_document",
         output_dir = paste0("data/Vitis/speciesSummaryHTML/", runVersion, "/"),
         output_file = paste0(j, "_Summary_fnaFilter"),
-        params = list(counts = counts),
+        params = list(counts = counts, conservation = conservationNR),
         envir = new.env(parent = globalenv())
       )
-    # }
+    )
+    if (inherits(render_result_nr, "try-error")) {
+      erroredSpecies$noHTML <- c(erroredSpecies$noHTML, j)
+      message("Failed to render no-records summary for ", j)
+    }
     next # SKIP TO THE NEXT SPECIES
   }
 
