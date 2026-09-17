@@ -46,7 +46,7 @@ input records (affects counts and points before either).
 |---|---|---|
 | 1 thinning | M | Running as `run09172026_exp_thin` in the experiments worktree (rufotomentosa, x doaniana, x champinii, popenoei, monticola) |
 | 2 validity -> buffer | M | Built into the driver behind `bufferOnInvalidModel` (default FALSE); not enabled |
-| 3 ERS distinct ecoregions | G | Confirmed as a defect: both functions count zonal-table rows = polygon parts; to be fixed and tested (see "How ERS counts" below) |
+| 3 ERS distinct ecoregions | G | **Resolved 2026-09-17: not a defect in this repo.** The TNC layer (`tnc_terr_ecoregions.gpkg`) stores 814 features for 814 distinct `ECO_ID_U`, each a single MULTIPOLYGON, so a zonal row is one ecoregion. Recomputed on all 38 published folders: polygon-row and distinct-ID counts are identical for every species, both ERS in situ (38/38 equal the published values) and ERS ex situ (21/21 with a G buffer; the other 17 have no georeferenced G and are 0). The July 2026 "fixed" column (rupestris 100 -> 68.2) came from cropping the full ecoregion layer to the raster's rectangular extent, which adds ecoregions outside the natural area to the denominator, not from de-duplicating parts. Tables: `work2026/ers_parts_vs_distinct_published_20260917.csv`, `_round2_`. The evaluation's section 4.2(a) applied to the GapAnalysis package's layer handling, not to this data |
 | 4 FNA Mexico | P/M | Future enhancement, not for the paper edits |
 | 5 background points | M | Kept: the rule is min(natural-area km2, 10,000); every published species has a natural area above 9,400 km2, so all get 9,400-10,000 points and the rule is effectively constant. The lead author's intent (do not over-sample small ranges) stands; nothing to change |
 | 6 WDPA STATUS | G | Moot for the study area: the raster in use (`wdpa_1.gpkg` -> `wdpa_1km_all_.tif`, 89,259 polygons after the marine filter) has 611 Proposed / 8 Adopted / 3 Not Reported polygons worldwide and **none in USA, CAN or MEX**. North America holds only Designated (6,177), Inscribed (20) and Established (1). The only status-type question left is the 50 Biosphere Reserves in North America (MAB), which some CWR studies exclude |
@@ -59,7 +59,7 @@ input records (affects counts and points before either).
 | 13 record sets ex vs in situ | G | Explanation below; definition decision |
 | 14 living specimens = G | G | Existing behaviour; no change |
 
-### How ERS counts ecoregions (item 3)
+### How ERS counts ecoregions (item 3) -- mechanism as written; see the status row: with this layer a row is one ecoregion, so no score changes
 
 `nat_area_shp()` selects, from the TNC ecoregion layer, every polygon whose
 `ECO_ID_U` is intersected by a species point, **without dissolving**; the TNC

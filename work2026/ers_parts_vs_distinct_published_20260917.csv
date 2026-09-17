@@ -1,0 +1,39 @@
+taxon,polygons,ecoregions,parts_inSDM,ids_inSDM,ERSin_published,ERSin_parts,ERSin_distinct,ERSex_published,ERSex_parts,ERSex_distinct,dIn,dEx
+Vitis acerifolia,8,8,7,7,71.4,71.4,71.4,57.1,57.1,57.1,0,0
+Vitis aestivalis,39,39,31,31,96.8,96.8,96.8,0,0,0,0,0
+Vitis aestivalis var. aestivalis,26,26,26,26,92.3,92.3,92.3,0,NA,NA,0,NA
+Vitis aestivalis var. bicolor,15,15,14,14,92.9,92.9,92.9,0,NA,NA,0,NA
+Vitis arizonica,17,17,15,15,93.3,93.3,93.3,66.7,66.7,66.7,0,0
+Vitis baileyana,10,10,10,10,90,90,90,0,NA,NA,0,NA
+Vitis berlandieri,8,8,7,7,71.4,71.4,71.4,57.1,57.1,57.1,0,0
+Vitis biformis,5,5,5,5,100,100,100,20,20,20,0,0
+Vitis blancoi,9,9,9,9,100,100,100,0,NA,NA,0,NA
+Vitis bloodworthiana,7,7,7,7,100,100,100,85.7,85.7,85.7,0,0
+Vitis bourgaeana,28,28,26,26,96.2,96.2,96.2,0,NA,NA,0,NA
+Vitis californica,10,10,10,10,90,90,90,50,50,50,0,0
+Vitis cinerea,31,31,27,27,88.9,88.9,88.9,18.5,18.5,18.5,0,0
+Vitis cinerea var. cinerea,17,17,16,16,93.8,93.8,93.8,0,NA,NA,0,NA
+Vitis cinerea var. tomentosa,3,3,3,3,100,100,100,0,NA,NA,0,NA
+Vitis girdiana,7,7,7,7,100,100,100,85.7,85.7,85.7,0,0
+Vitis jaegeriana,2,2,2,2,100,100,100,0,NA,NA,0,NA
+Vitis labrusca,21,21,15,15,100,100,100,20,20,20,0,0
+Vitis lincecumii,8,8,7,7,100,100,100,0,NA,NA,0,NA
+Vitis martineziana,2,2,2,2,100,100,100,0,NA,NA,0,NA
+Vitis monticola,5,5,4,4,100,100,100,75,75,75,0,0
+Vitis munsoniana,1,1,1,1,100,100,100,0,NA,NA,0,NA
+Vitis mustangensis,10,10,6,6,100,100,100,83.3,83.3,83.3,0,0
+Vitis nesbittiana,4,4,4,4,100,100,100,75,75,75,0,0
+Vitis palmata,16,16,15,15,100,100,100,0,NA,NA,0,NA
+Vitis peninsularis,5,5,5,5,100,100,100,0,NA,NA,0,NA
+Vitis popenoei,11,11,11,11,100,100,100,36.4,36.4,36.4,0,0
+Vitis riparia,47,47,29,29,89.7,89.7,89.7,17.2,17.2,17.2,0,0
+Vitis rotundifolia,27,27,18,18,94.4,94.4,94.4,33.3,33.3,33.3,0,0
+Vitis rubriflora,1,1,1,1,100,100,100,0,NA,NA,0,NA
+Vitis rupestris,13,13,11,11,100,100,100,45.5,45.5,45.5,0,0
+Vitis shuttleworthii,3,3,2,2,100,100,100,0,NA,NA,0,NA
+Vitis simpsonii,12,12,11,11,90.9,90.9,90.9,0,NA,NA,0,NA
+Vitis tiliifolia,80,80,71,71,97.2,97.2,97.2,11.3,11.3,11.3,0,0
+Vitis vulpina,39,39,32,32,96.9,96.9,96.9,15.6,15.6,15.6,0,0
+Vitis x champinii,3,3,3,3,66.7,66.7,66.7,100,100,100,0,0
+Vitis x doaniana,4,4,4,4,100,100,100,100,100,100,0,0
+Vitis x novae-angliae,6,6,6,6,100,100,100,0,NA,NA,0,NA

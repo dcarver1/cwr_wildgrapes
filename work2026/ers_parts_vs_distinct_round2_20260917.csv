@@ -1,0 +1,8 @@
+taxon,natAreaPolygons,distinctEcoregions,ecoParts_inSDM,ecoIDs_inSDM,ERSin_parts,ERSin_distinct,ERSex_parts,ERSex_distinct
+Vitis nesbittiana,4,4,4,4,100,100,75,75
+Vitis biformis,5,5,5,5,100,100,20,20
+Vitis monticola,5,5,3,3,100,100,100,100
+Vitis rufotomentosa,6,6,6,6,100,100,NA,NA
+Vitis x doaniana,4,4,4,4,100,100,100,100
+Vitis x champinii,3,3,3,3,66.7,66.7,100,100
+Vitis popenoei,11,11,11,11,100,100,36.4,36.4
