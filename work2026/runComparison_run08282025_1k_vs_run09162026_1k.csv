@@ -1,44 +1,20 @@
 taxon,metric,run08282025_1k,run09162026_1k,match,kind
-speciesSummaryHTML,spatialPts,NA,NA,TRUE,deterministic
-speciesSummaryHTML,spatialG,NA,NA,TRUE,deterministic
-speciesSummaryHTML,statesInPts,NA,NA,TRUE,deterministic
-speciesSummaryHTML,natAreaFeatures,NA,NA,TRUE,deterministic
-speciesSummaryHTML,natAreaEco,NA,NA,TRUE,deterministic
-speciesSummaryHTML,nVarsSelected,NA,NA,TRUE,sdm-dependent
-speciesSummaryHTML,varsSelected,NA,NA,TRUE,sdm-dependent
-speciesSummaryHTML,thresholdCells,NA,NA,TRUE,sdm-dependent
-speciesSummaryHTML,AUCtest,NA,NA,TRUE,sdm-dependent
-speciesSummaryHTML,threshold,NA,NA,TRUE,sdm-dependent
-speciesSummaryHTML,NTOTAL,NA,NA,TRUE,deterministic
-speciesSummaryHTML,NCOORDS,NA,NA,TRUE,deterministic
-speciesSummaryHTML,NG,NA,NA,TRUE,deterministic
-speciesSummaryHTML,NH,NA,NA,TRUE,deterministic
-speciesSummaryHTML,presenceRows,NA,NA,TRUE,deterministic
-speciesSummaryHTML,backgroundRows,NA,NA,TRUE,sdm-dependent
-speciesSummaryHTML,SRSex,NA,NA,TRUE,deterministic
-speciesSummaryHTML,GRSex,NA,NA,TRUE,sdm-dependent
-speciesSummaryHTML,ERSex,NA,NA,TRUE,sdm-dependent
-speciesSummaryHTML,SRSin,NA,NA,TRUE,sdm-dependent
-speciesSummaryHTML,GRSin,NA,NA,TRUE,sdm-dependent
-speciesSummaryHTML,ERSin,NA,NA,TRUE,sdm-dependent
-speciesSummaryHTML,FCSc_mean,NA,NA,TRUE,sdm-dependent
-speciesSummaryHTML,FCSc_mean_class,NA,NA,TRUE,sdm-dependent
+Vitis biformis,NTOTAL,81,81,TRUE,deterministic
+Vitis biformis,NCOORDS,34,34,TRUE,deterministic
+Vitis biformis,NG,14,14,TRUE,deterministic
+Vitis biformis,NH,67,67,TRUE,deterministic
 Vitis biformis,spatialPts,24,24,TRUE,deterministic
 Vitis biformis,spatialG,2,2,TRUE,deterministic
 Vitis biformis,statesInPts,6,6,TRUE,deterministic
 Vitis biformis,natAreaFeatures,5,5,TRUE,deterministic
 Vitis biformis,natAreaEco,5,5,TRUE,deterministic
+Vitis biformis,presenceRows,24,24,TRUE,deterministic
+Vitis biformis,backgroundRows,9989,9993,FALSE,sdm-dependent
 Vitis biformis,nVarsSelected,24,24,TRUE,sdm-dependent
 Vitis biformis,varsSelected,bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,TRUE,sdm-dependent
 Vitis biformis,thresholdCells,77107,76054,FALSE,sdm-dependent
 Vitis biformis,AUCtest,0.941644633611509,0.949127367970585,FALSE,sdm-dependent
 Vitis biformis,threshold,0.297833333333333,0.301,FALSE,sdm-dependent
-Vitis biformis,NTOTAL,81,81,TRUE,deterministic
-Vitis biformis,NCOORDS,34,34,TRUE,deterministic
-Vitis biformis,NG,14,14,TRUE,deterministic
-Vitis biformis,NH,67,67,TRUE,deterministic
-Vitis biformis,presenceRows,24,24,TRUE,deterministic
-Vitis biformis,backgroundRows,9989,9993,FALSE,sdm-dependent
 Vitis biformis,SRSex,20.8955223880597,20.8955223880597,TRUE,deterministic
 Vitis biformis,GRSex,2.44707539404875,1.87093052853781,FALSE,sdm-dependent
 Vitis biformis,ERSex,20,20,TRUE,sdm-dependent
@@ -47,22 +23,46 @@ Vitis biformis,GRSin,11.1839741205927,11.4843268444473,FALSE,sdm-dependent
 Vitis biformis,ERSin,100,100,TRUE,sdm-dependent
 Vitis biformis,FCSc_mean,27.2695801656017,27.295764880809,FALSE,sdm-dependent
 Vitis biformis,FCSc_mean_class,HP,HP,TRUE,sdm-dependent
+Vitis cinerea var. tomentosa,NTOTAL,11,0,FALSE,deterministic
+Vitis cinerea var. tomentosa,NCOORDS,11,0,FALSE,deterministic
+Vitis cinerea var. tomentosa,NG,0,0,TRUE,deterministic
+Vitis cinerea var. tomentosa,NH,11,0,FALSE,deterministic
+Vitis cinerea var. tomentosa,spatialPts,9,NA,FALSE,deterministic
+Vitis cinerea var. tomentosa,spatialG,0,NA,FALSE,deterministic
+Vitis cinerea var. tomentosa,statesInPts,2,NA,FALSE,deterministic
+Vitis cinerea var. tomentosa,natAreaFeatures,3,NA,FALSE,deterministic
+Vitis cinerea var. tomentosa,natAreaEco,3,NA,FALSE,deterministic
+Vitis cinerea var. tomentosa,presenceRows,9,NA,FALSE,deterministic
+Vitis cinerea var. tomentosa,backgroundRows,9998,NA,FALSE,sdm-dependent
+Vitis cinerea var. tomentosa,nVarsSelected,24,NA,FALSE,sdm-dependent
+Vitis cinerea var. tomentosa,varsSelected,bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,NA,FALSE,sdm-dependent
+Vitis cinerea var. tomentosa,thresholdCells,183695,NA,FALSE,sdm-dependent
+Vitis cinerea var. tomentosa,AUCtest,0.761383261175257,NA,FALSE,sdm-dependent
+Vitis cinerea var. tomentosa,threshold,0.562666666666667,NA,FALSE,sdm-dependent
+Vitis cinerea var. tomentosa,SRSex,0,0,TRUE,deterministic
+Vitis cinerea var. tomentosa,GRSex,0,NA,FALSE,sdm-dependent
+Vitis cinerea var. tomentosa,ERSex,0,NA,FALSE,sdm-dependent
+Vitis cinerea var. tomentosa,SRSin,20,NA,FALSE,sdm-dependent
+Vitis cinerea var. tomentosa,GRSin,12.059189639134,NA,FALSE,sdm-dependent
+Vitis cinerea var. tomentosa,ERSin,100,NA,FALSE,sdm-dependent
+Vitis cinerea var. tomentosa,FCSc_mean,22.0098649398557,0,FALSE,sdm-dependent
+Vitis cinerea var. tomentosa,FCSc_mean_class,UP,UP,TRUE,sdm-dependent
+Vitis monticola,NTOTAL,1107,1107,TRUE,deterministic
+Vitis monticola,NCOORDS,469,469,TRUE,deterministic
+Vitis monticola,NG,60,60,TRUE,deterministic
+Vitis monticola,NH,1047,1047,TRUE,deterministic
 Vitis monticola,spatialPts,405,405,TRUE,deterministic
 Vitis monticola,spatialG,10,10,TRUE,deterministic
 Vitis monticola,statesInPts,1,1,TRUE,deterministic
 Vitis monticola,natAreaFeatures,5,5,TRUE,deterministic
 Vitis monticola,natAreaEco,5,5,TRUE,deterministic
+Vitis monticola,presenceRows,421,405,FALSE,deterministic
+Vitis monticola,backgroundRows,9992,9998,FALSE,sdm-dependent
 Vitis monticola,nVarsSelected,24,25,FALSE,sdm-dependent
 Vitis monticola,varsSelected,bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,aspect|bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,FALSE,sdm-dependent
 Vitis monticola,thresholdCells,95639,72598,FALSE,sdm-dependent
 Vitis monticola,AUCtest,0.981117316976429,0.987162822773041,FALSE,sdm-dependent
 Vitis monticola,threshold,0.1513,0.1708,FALSE,sdm-dependent
-Vitis monticola,NTOTAL,1107,1107,TRUE,deterministic
-Vitis monticola,NCOORDS,469,469,TRUE,deterministic
-Vitis monticola,NG,60,60,TRUE,deterministic
-Vitis monticola,NH,1047,1047,TRUE,deterministic
-Vitis monticola,presenceRows,421,405,FALSE,deterministic
-Vitis monticola,backgroundRows,9992,9998,FALSE,sdm-dependent
 Vitis monticola,SRSex,5.73065902578797,5.73065902578797,TRUE,deterministic
 Vitis monticola,GRSex,47.8646392831349,53.0305697352219,FALSE,sdm-dependent
 Vitis monticola,ERSex,75,100,FALSE,sdm-dependent
@@ -71,22 +71,22 @@ Vitis monticola,GRSin,2.07300618382973,1.95466531820999,FALSE,sdm-dependent
 Vitis monticola,ERSin,100,100,TRUE,sdm-dependent
 Vitis monticola,FCSc_mean,42.4210287521762,47.4697430302973,FALSE,sdm-dependent
 Vitis monticola,FCSc_mean_class,HP,HP,TRUE,sdm-dependent
+Vitis nesbittiana,NTOTAL,106,106,TRUE,deterministic
+Vitis nesbittiana,NCOORDS,59,59,TRUE,deterministic
+Vitis nesbittiana,NG,10,10,TRUE,deterministic
+Vitis nesbittiana,NH,96,96,TRUE,deterministic
 Vitis nesbittiana,spatialPts,29,29,TRUE,deterministic
 Vitis nesbittiana,spatialG,1,1,TRUE,deterministic
 Vitis nesbittiana,statesInPts,6,6,TRUE,deterministic
 Vitis nesbittiana,natAreaFeatures,4,4,TRUE,deterministic
 Vitis nesbittiana,natAreaEco,4,4,TRUE,deterministic
+Vitis nesbittiana,presenceRows,29,29,TRUE,deterministic
+Vitis nesbittiana,backgroundRows,9947,9949,FALSE,sdm-dependent
 Vitis nesbittiana,nVarsSelected,24,24,TRUE,sdm-dependent
 Vitis nesbittiana,varsSelected,bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,TRUE,sdm-dependent
 Vitis nesbittiana,thresholdCells,13604,12381,FALSE,sdm-dependent
 Vitis nesbittiana,AUCtest,0.944474894094269,0.938937690135834,FALSE,sdm-dependent
 Vitis nesbittiana,threshold,0.1578,0.1817,FALSE,sdm-dependent
-Vitis nesbittiana,NTOTAL,106,106,TRUE,deterministic
-Vitis nesbittiana,NCOORDS,59,59,TRUE,deterministic
-Vitis nesbittiana,NG,10,10,TRUE,deterministic
-Vitis nesbittiana,NH,96,96,TRUE,deterministic
-Vitis nesbittiana,presenceRows,29,29,TRUE,deterministic
-Vitis nesbittiana,backgroundRows,9947,9949,FALSE,sdm-dependent
 Vitis nesbittiana,SRSex,10.4166666666667,10.4166666666667,TRUE,deterministic
 Vitis nesbittiana,GRSex,26.1973817879549,28.756303846048,FALSE,sdm-dependent
 Vitis nesbittiana,ERSex,75,75,TRUE,sdm-dependent
@@ -95,3 +95,99 @@ Vitis nesbittiana,GRSin,9.87188290678994,9.83013847737035,FALSE,sdm-dependent
 Vitis nesbittiana,ERSin,100,100,TRUE,sdm-dependent
 Vitis nesbittiana,FCSc_mean,38.1963731756199,39.1857033501993,FALSE,sdm-dependent
 Vitis nesbittiana,FCSc_mean_class,HP,HP,TRUE,sdm-dependent
+Vitis popenoei,NTOTAL,227,203,FALSE,deterministic
+Vitis popenoei,NCOORDS,123,120,FALSE,deterministic
+Vitis popenoei,NG,4,3,FALSE,deterministic
+Vitis popenoei,NH,223,200,FALSE,deterministic
+Vitis popenoei,spatialPts,100,98,FALSE,deterministic
+Vitis popenoei,spatialG,1,1,TRUE,deterministic
+Vitis popenoei,statesInPts,12,12,TRUE,deterministic
+Vitis popenoei,natAreaFeatures,11,11,TRUE,deterministic
+Vitis popenoei,natAreaEco,11,11,TRUE,deterministic
+Vitis popenoei,presenceRows,100,98,FALSE,deterministic
+Vitis popenoei,backgroundRows,9962,9965,FALSE,sdm-dependent
+Vitis popenoei,nVarsSelected,25,25,TRUE,sdm-dependent
+Vitis popenoei,varsSelected,aspect|bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,aspect|bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,TRUE,sdm-dependent
+Vitis popenoei,thresholdCells,50159,65397,FALSE,sdm-dependent
+Vitis popenoei,AUCtest,0.94763866911266,0.947537155810274,FALSE,sdm-dependent
+Vitis popenoei,threshold,0.2493,0.1893,FALSE,sdm-dependent
+Vitis popenoei,SRSex,1.79372197309417,1.5,FALSE,deterministic
+Vitis popenoei,GRSex,9.14619452358696,7.04146173542151,FALSE,sdm-dependent
+Vitis popenoei,ERSex,36.3636363636364,36.3636363636364,TRUE,sdm-dependent
+Vitis popenoei,SRSin,20.6896551724138,20.9302325581395,FALSE,sdm-dependent
+Vitis popenoei,GRSin,11.9562211777866,15.4248458600977,FALSE,sdm-dependent
+Vitis popenoei,ERSin,100,100,TRUE,sdm-dependent
+Vitis popenoei,FCSc_mean,29.9915715350863,30.2100294195492,FALSE,sdm-dependent
+Vitis popenoei,FCSc_mean_class,HP,HP,TRUE,sdm-dependent
+Vitis rufotomentosa,NTOTAL,2,42,FALSE,deterministic
+Vitis rufotomentosa,NCOORDS,0,20,FALSE,deterministic
+Vitis rufotomentosa,NG,2,2,TRUE,deterministic
+Vitis rufotomentosa,NH,0,40,FALSE,deterministic
+Vitis rufotomentosa,spatialPts,NA,18,FALSE,deterministic
+Vitis rufotomentosa,spatialG,NA,0,FALSE,deterministic
+Vitis rufotomentosa,statesInPts,NA,4,FALSE,deterministic
+Vitis rufotomentosa,natAreaFeatures,NA,6,FALSE,deterministic
+Vitis rufotomentosa,natAreaEco,NA,6,FALSE,deterministic
+Vitis rufotomentosa,presenceRows,NA,18,FALSE,deterministic
+Vitis rufotomentosa,backgroundRows,NA,9404,FALSE,sdm-dependent
+Vitis rufotomentosa,nVarsSelected,NA,24,FALSE,sdm-dependent
+Vitis rufotomentosa,varsSelected,NA,bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,FALSE,sdm-dependent
+Vitis rufotomentosa,thresholdCells,NA,85064,FALSE,sdm-dependent
+Vitis rufotomentosa,AUCtest,NA,0.717233403295645,FALSE,sdm-dependent
+Vitis rufotomentosa,threshold,NA,0.377666666666667,FALSE,sdm-dependent
+Vitis rufotomentosa,SRSex,100,5,FALSE,deterministic
+Vitis rufotomentosa,GRSex,NA,0,FALSE,sdm-dependent
+Vitis rufotomentosa,ERSex,NA,0,FALSE,sdm-dependent
+Vitis rufotomentosa,SRSin,NA,30.7692307692308,FALSE,sdm-dependent
+Vitis rufotomentosa,GRSin,NA,6.22778915745197,FALSE,sdm-dependent
+Vitis rufotomentosa,ERSin,NA,100,FALSE,sdm-dependent
+Vitis rufotomentosa,FCSc_mean,NA,23.6661699877805,FALSE,sdm-dependent
+Vitis rufotomentosa,FCSc_mean_class,NA,UP,FALSE,sdm-dependent
+Vitis x champinii,NTOTAL,126,192,FALSE,deterministic
+Vitis x champinii,NCOORDS,33,38,FALSE,deterministic
+Vitis x champinii,NG,56,56,TRUE,deterministic
+Vitis x champinii,NH,70,136,FALSE,deterministic
+Vitis x champinii,spatialPts,19,24,FALSE,deterministic
+Vitis x champinii,spatialG,12,12,TRUE,deterministic
+Vitis x champinii,statesInPts,1,1,TRUE,deterministic
+Vitis x champinii,natAreaFeatures,3,3,TRUE,deterministic
+Vitis x champinii,natAreaEco,3,3,TRUE,deterministic
+Vitis x champinii,presenceRows,19,24,FALSE,deterministic
+Vitis x champinii,backgroundRows,9998,9998,TRUE,sdm-dependent
+Vitis x champinii,nVarsSelected,24,25,FALSE,sdm-dependent
+Vitis x champinii,varsSelected,bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,aspect|bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,FALSE,sdm-dependent
+Vitis x champinii,thresholdCells,56663,49821,FALSE,sdm-dependent
+Vitis x champinii,AUCtest,0.936400598141094,0.934135474895556,FALSE,sdm-dependent
+Vitis x champinii,threshold,0.508833333333333,0.364,FALSE,sdm-dependent
+Vitis x champinii,SRSex,80,41.1764705882353,FALSE,deterministic
+Vitis x champinii,GRSex,67.5143359955547,67.158023823681,FALSE,sdm-dependent
+Vitis x champinii,ERSex,100,100,TRUE,sdm-dependent
+Vitis x champinii,SRSin,0,0,TRUE,sdm-dependent
+Vitis x champinii,GRSin,1.16574423899372,1.30845127747792,FALSE,sdm-dependent
+Vitis x champinii,ERSin,66.6666666666667,66.6666666666667,TRUE,sdm-dependent
+Vitis x champinii,FCSc_mean,52.5577911502025,46.0516020593435,FALSE,sdm-dependent
+Vitis x champinii,FCSc_mean_class,MP,HP,FALSE,sdm-dependent
+Vitis x doaniana,NTOTAL,106,118,FALSE,deterministic
+Vitis x doaniana,NCOORDS,50,53,FALSE,deterministic
+Vitis x doaniana,NG,55,55,TRUE,deterministic
+Vitis x doaniana,NH,51,63,FALSE,deterministic
+Vitis x doaniana,spatialPts,43,46,FALSE,deterministic
+Vitis x doaniana,spatialG,28,28,TRUE,deterministic
+Vitis x doaniana,statesInPts,2,2,TRUE,deterministic
+Vitis x doaniana,natAreaFeatures,4,4,TRUE,deterministic
+Vitis x doaniana,natAreaEco,4,4,TRUE,deterministic
+Vitis x doaniana,presenceRows,43,46,FALSE,deterministic
+Vitis x doaniana,backgroundRows,9991,10000,FALSE,sdm-dependent
+Vitis x doaniana,nVarsSelected,23,24,FALSE,sdm-dependent
+Vitis x doaniana,varsSelected,bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|srad|vapr|wind,bio_1|bio_10|bio_11|bio_12|bio_13|bio_14|bio_15|bio_16|bio_17|bio_18|bio_19|bio_2|bio_3|bio_4|bio_5|bio_6|bio_7|bio_8|bio_9|elevation|slope|srad|vapr|wind,FALSE,sdm-dependent
+Vitis x doaniana,thresholdCells,92871,91051,FALSE,sdm-dependent
+Vitis x doaniana,AUCtest,0.974545233248616,0.977650638066367,FALSE,sdm-dependent
+Vitis x doaniana,threshold,0.1644,0.1448,FALSE,sdm-dependent
+Vitis x doaniana,SRSex,100,87.3015873015873,FALSE,deterministic
+Vitis x doaniana,GRSex,67.5380569225149,70.1118473587957,FALSE,sdm-dependent
+Vitis x doaniana,ERSex,100,100,TRUE,sdm-dependent
+Vitis x doaniana,SRSin,2.5,2.27272727272727,FALSE,sdm-dependent
+Vitis x doaniana,GRSin,0.963620330331984,0.911372307833668,FALSE,sdm-dependent
+Vitis x doaniana,ERSin,100,100,TRUE,sdm-dependent
+Vitis x doaniana,FCSc_mean,61.8336128754745,60.0995890401573,FALSE,sdm-dependent
+Vitis x doaniana,FCSc_mean_class,MP,MP,TRUE,sdm-dependent
