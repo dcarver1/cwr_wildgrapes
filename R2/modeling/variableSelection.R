@@ -67,7 +67,10 @@ varaibleSelection <- function(modelData, parallel, clusterType = "FORK", ncores 
   varsToRemove <- c()
   
   # loop through the top 5 predictors to identify correlated variables
-  for (i in 1:min(5, length(varNames))) {
+  # switch fullCorrPruning (set in the driver, default FALSE): TRUE tests every
+  # selected predictor, FALSE (published behaviour) only the top 5
+  nCorr <- if (exists("fullCorrPruning") && isTRUE(fullCorrPruning)) length(varNames) else min(5, length(varNames))
+  for (i in 1:nCorr) {
     currentVar <- varNames[i]
     
     # Only test correlations if the current variable hasn't already been flagged for removal

@@ -31,10 +31,19 @@ source("global.R")
 RNGkind("L'Ecuyer-CMRG")
 
 # 2. Run Parameters
-runVersion <- "run09162026_1k"
-# overwrite / speciesToRun can be preset before source()-ing this file, e.g.
+# runVersion, overwrite, speciesToRun and the method switches can be preset
+# before source()-ing this file, e.g.
 #   Rscript -e 'speciesToRun <- "Vitis monticola"; overwrite <- TRUE; source("run_round2_20260916.R")'
+if (!exists("runVersion")) runVersion <- "run09162026_1k"
 if (!exists("overwrite")) overwrite <- FALSE
+# Method switches under development; FALSE reproduces the published behaviour.
+# Give a test run its own runVersion when either is TRUE.
+#   thinOccurrences: 5 km spatial thinning of H points when a taxon has more
+#     than 50 (R2/modeling/generateModelData.R)
+#   fullCorrPruning: correlation pruning over every selected predictor, not
+#     only the top 5 (R2/modeling/variableSelection.R)
+if (!exists("thinOccurrences")) thinOccurrences <- FALSE
+if (!exists("fullCorrPruning")) fullCorrPruning <- FALSE
 # bufferOnInvalidModel = TRUE sends a species whose SDM fails the published
 # robustness rule (ATAUC > 0.7, STAUC < 0.15, ASD15 < 10, from
 # calc_sdm_metrics()) to the 50 km buffer method, as the methods text
@@ -161,7 +170,8 @@ for (j in r3) {
   if (j == "Vitis shuttleworthii"){
     sd1 <- sd1 |> 
       dplyr::filter(
-        longitude != -80.001483
+        # keep records without coordinates: a bare != drops NA rows
+        is.na(longitude) | longitude != -80.001483
       )
   }
   
@@ -270,7 +280,7 @@ for (j in r3) {
       runVersion,
       "/",
       j,
-      "_Summary_fnaFilter.html"
+      "_Summary_", runVersion, ".html"
     )
 
     render_result_nr <- try(
@@ -278,7 +288,7 @@ for (j in r3) {
         input = "R2/summarize/summaryDocForNoRecords.Rmd",
         output_format = "html_document",
         output_dir = paste0("data/Vitis/speciesSummaryHTML/", runVersion, "/"),
-        output_file = paste0(j, "_Summary_fnaFilter"),
+        output_file = paste0(j, "_Summary_", runVersion),
         params = list(counts = counts, conservation = conservationNR),
         envir = new.env(parent = globalenv())
       )
@@ -547,7 +557,7 @@ for (j in r3) {
       )
 
       markStep("rasters_metrics")
-      export1 <- paste0(j, "_Summary_fnaFilter")
+      export1 <- paste0(j, "_Summary_", runVersion)
       # if (!file.exists(export1)) {
         render_result <- try(
           rmarkdown::render(
@@ -723,7 +733,7 @@ for (j in r3) {
       )
     )
 
-    export_buf <- paste0(j, "_Summary_fnaFilter")
+    export_buf <- paste0(j, "_Summary_", runVersion)
     # if (!file.exists(paste0(p1, "/", export_buf, ".html"))) {
       render_result_buf <- try(
         rmarkdown::render(

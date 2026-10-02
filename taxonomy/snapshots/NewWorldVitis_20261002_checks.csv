@@ -1,0 +1,7 @@
+taxon,check,detail
+Vitis cinerea var. cinerea,Taxon Name differs from Scientific Name,(blank)
+Vitis tiliifolia,Taxon Name differs from Scientific Name,Vitis tiliafolia
+Vitis vulpina,semicolon or abbreviated 'V.' in a name cell,Vitis cordifolia; V. cordifolia var. sempervirens
+Vitis munsoniana,concept lists itself as an include name,Vitis munsoniana
+Vitis aestivalis var. argentifolia,name on the include list of more than one concept,Vitis aestivalis + Vitis aestivalis var. bicolor
+Vitis argentifolia,name on the include list of more than one concept,Vitis aestivalis + Vitis aestivalis var. bicolor

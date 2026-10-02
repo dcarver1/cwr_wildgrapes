@@ -37,7 +37,11 @@ generateModelData <- function(speciesPoints,natArea,bioVars,b_Number){
   }
   
   ## format species data
-  sp1 <- speciesPoints |>
+  # switch thinOccurrences (set in the driver, default FALSE): TRUE uses the
+  # thinned set built above; FALSE (published behaviour) rebuilds sp1 from
+  # speciesPoints, discarding it.
+  if (!(exists("thinOccurrences") && isTRUE(thinOccurrences))) sp1 <- speciesPoints
+  sp1 <- sp1 |>
     mutate("presence" = 1)|>
     dplyr::select(presence, type)
   # dplyr::select(presence,geometry

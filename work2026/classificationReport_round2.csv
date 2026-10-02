@@ -1,0 +1,41 @@
+taxon,anyClassChanged,records_published,records_round2,records_change,coords_change,SRSex_published,SRSex_round2,SRSex_class_published,SRSex_class_round2,FCSex_published,FCSex_round2,FCSex_class_published,FCSex_class_round2,FCSin_published,FCSin_round2,FCSin_class_published,FCSin_class_round2,FCSc_mean_published,FCSc_mean_round2,FCSc_class_published,FCSc_class_round2,modelValid_published,modelValid_round2,caveat
+Vitis berlandieri,TRUE,736,1357,621,267,28.4,18,HP,UP,46.7,23.1,HP,UP,25.8,39.1,HP,HP,36.3,31.1,HP,HP,TRUE,TRUE,
+Vitis cinerea var. tomentosa,TRUE,11,0,-11,-11,0,0,UP,UP,0,0,UP,UP,44,0,HP,UP,22,0,UP,UP,TRUE,NA,0 records until the sheet decision on its include name
+Vitis girdiana,TRUE,2518,2518,0,0,5.9,5.9,UP,UP,43.4,43.1,HP,HP,49.6,50.1,HP,MP,46.5,46.6,HP,HP,TRUE,TRUE,
+Vitis monticola,TRUE,1107,1107,0,0,5.7,5.7,UP,UP,42.9,52.9,HP,MP,42,42,HP,HP,42.4,47.5,HP,HP,TRUE,TRUE,
+Vitis novogranatensis,TRUE,1,1,0,0,0,0,UP,UP,NA,0,NA,UP,NA,0,NA,UP,NA,0,NA,UP,NA,NA,
+Vitis rotundifolia,TRUE,27551,27309,-242,-92,0.3,0.3,UP,UP,12,17,UP,UP,37.4,39.3,HP,HP,24.7,28.1,UP,HP,TRUE,TRUE,
+Vitis rufotomentosa,TRUE,2,42,40,20,100,5,LP,UP,NA,1.7,NA,UP,NA,45.7,NA,HP,NA,23.7,NA,UP,NA,FALSE,round-2 model fails robustness rule (High STAUC); in situ scores from that model
+Vitis x champinii,TRUE,126,192,66,5,80,41.2,LP,HP,82.5,69.4,LP,MP,22.6,22.7,UP,UP,52.6,46.1,MP,HP,TRUE,TRUE,
+Vitis acerifolia,FALSE,855,852,-3,-2,25.9,26,HP,HP,38.5,39.7,HP,HP,25.9,31,HP,HP,32.2,35.4,HP,HP,TRUE,TRUE,
+Vitis aestivalis,FALSE,15858,15545,-313,-59,1,1,UP,UP,0.3,0.3,UP,UP,38.1,37.1,HP,HP,19.2,18.7,UP,UP,TRUE,TRUE,counts may move again with pending sheet include names
+Vitis aestivalis var. aestivalis,FALSE,1569,1568,-1,0,1.2,1.2,UP,UP,0.4,0.4,UP,UP,38,38,HP,HP,19.2,19.2,UP,UP,TRUE,TRUE,
+Vitis aestivalis var. bicolor,FALSE,1412,1421,9,2,0.4,0.4,UP,UP,0.1,0.1,UP,UP,34.6,34.4,HP,HP,17.3,17.3,UP,UP,TRUE,TRUE,
+Vitis arizonica,FALSE,4307,4307,0,0,8.6,8.6,UP,UP,37.8,35.8,HP,HP,50.1,50.4,MP,MP,44,43.1,HP,HP,TRUE,TRUE,
+Vitis baileyana,FALSE,531,654,123,48,0.6,0.8,UP,UP,0.2,0.3,UP,UP,33,33.6,HP,HP,16.6,16.9,UP,UP,TRUE,TRUE,
+Vitis biformis,FALSE,81,81,0,0,20.9,20.9,UP,UP,14.4,14.3,UP,UP,40.1,40.3,HP,HP,27.3,27.3,HP,HP,TRUE,TRUE,
+Vitis blancoi,FALSE,190,190,0,0,2.2,2.2,UP,UP,0.7,0.7,UP,UP,48.9,48.1,HP,HP,24.8,24.4,UP,UP,TRUE,TRUE,
+Vitis bloodworthiana,FALSE,141,141,0,0,54.9,54.9,MP,MP,56.4,55.8,MP,MP,59.3,61.2,MP,MP,57.9,58.5,MP,MP,TRUE,TRUE,
+Vitis bourgaeana,FALSE,672,672,0,0,0,0,UP,UP,0,0,UP,UP,39.1,39.9,HP,HP,19.5,20,UP,UP,TRUE,TRUE,
+Vitis californica,FALSE,3220,3220,0,0,2.8,2.8,UP,UP,35.4,37.4,HP,HP,37.3,37,HP,HP,36.4,37.2,HP,HP,TRUE,TRUE,
+Vitis cinerea,FALSE,5971,5070,-901,-397,5.9,6,UP,UP,10,9.9,UP,UP,34.5,35.4,HP,HP,22.2,22.7,UP,UP,TRUE,TRUE,counts may move again with pending sheet include names
+Vitis cinerea var. cinerea,FALSE,619,611,-8,0,2.1,2.2,UP,UP,0.7,0.7,UP,UP,35.3,33.7,HP,HP,18,17.2,UP,UP,TRUE,TRUE,
+Vitis jaegeriana,FALSE,38,38,0,0,0,0,UP,UP,0,0,UP,UP,67.2,67.2,MP,MP,33.6,33.6,HP,HP,NA,NA,
+Vitis labrusca,FALSE,5345,5235,-110,-72,9.5,9.7,UP,UP,10.7,10.9,UP,UP,37.8,38,HP,HP,24.3,24.5,UP,UP,TRUE,TRUE,
+Vitis lincecumii,FALSE,168,332,164,17,1.8,3.1,UP,UP,0.6,1,UP,UP,41.9,38.1,HP,HP,21.3,19.5,UP,UP,TRUE,TRUE,
+Vitis martineziana,FALSE,12,14,2,2,0,0,UP,UP,0,0,UP,UP,38.1,38.2,HP,HP,19.1,19.1,UP,UP,TRUE,TRUE,
+Vitis munsoniana,FALSE,22,265,243,92,0,0,UP,UP,0,0,UP,UP,44.3,40.1,HP,HP,22.1,20,UP,UP,TRUE,TRUE,counts may move again with pending sheet include names
+Vitis mustangensis,FALSE,9404,9405,1,0,1.7,1.7,UP,UP,39.6,39.4,HP,HP,35.8,35.8,HP,HP,37.7,37.6,HP,HP,TRUE,TRUE,
+Vitis nesbittiana,FALSE,106,106,0,0,10.4,10.4,UP,UP,37.2,38.1,HP,HP,39.2,40.3,HP,HP,38.2,39.2,HP,HP,TRUE,TRUE,
+Vitis palmata,FALSE,1089,1089,0,0,4.2,4.2,UP,UP,1.4,1.4,UP,UP,44.5,44.7,HP,HP,23,23,UP,UP,TRUE,TRUE,
+Vitis peninsularis,FALSE,131,131,0,0,0,0,UP,UP,0,0,UP,UP,73.8,73.7,MP,MP,36.9,36.8,HP,HP,TRUE,TRUE,
+Vitis popenoei,FALSE,227,203,-24,-3,1.8,1.5,UP,UP,15.8,15,UP,UP,44.2,45.5,HP,HP,30,30.2,HP,HP,TRUE,TRUE,counts may move again with pending sheet include names
+Vitis riparia,FALSE,17545,17530,-15,-1,2.5,2.5,UP,UP,6.9,6.4,UP,UP,35.5,36.7,HP,HP,21.2,21.5,UP,UP,TRUE,TRUE,
+Vitis rubriflora,FALSE,4,4,0,0,0,0,UP,UP,0,0,UP,UP,71,71,MP,MP,35.5,35.5,HP,HP,NA,NA,
+Vitis rupestris,FALSE,1254,1254,0,0,18,18,UP,UP,28,26.3,HP,HP,41,40.8,HP,HP,34.5,33.5,HP,HP,TRUE,TRUE,
+Vitis shuttleworthii,FALSE,973,660,-313,-1,0.8,0,UP,UP,0.3,0,UP,UP,45.5,45.5,HP,HP,22.9,22.7,UP,UP,TRUE,TRUE,counts may move again with pending sheet include names
+Vitis simpsonii,FALSE,913,1008,95,56,1,0.9,UP,UP,0.3,0.3,UP,UP,39,41.5,HP,HP,19.7,20.9,UP,UP,TRUE,TRUE,
+Vitis tiliifolia,FALSE,3912,3996,84,202,0.8,0.8,UP,UP,3.9,8.3,UP,UP,52.8,53.1,MP,MP,28.4,30.7,HP,HP,TRUE,TRUE,counts may move again with pending sheet include names
+Vitis vulpina,FALSE,7588,7765,177,18,1.2,1.5,UP,UP,5.9,6.7,UP,UP,36.2,35.3,HP,HP,21.1,21,UP,UP,TRUE,TRUE,
+Vitis x doaniana,FALSE,106,118,12,3,100,87.3,LP,LP,89.2,85.8,LP,LP,34.5,34.4,HP,HP,61.8,60.1,MP,MP,TRUE,TRUE,
+Vitis x novae-angliae,FALSE,277,300,23,5,0.7,0.7,UP,UP,0.2,0.2,UP,UP,35.6,35.5,HP,HP,17.9,17.9,UP,UP,TRUE,TRUE,

@@ -623,7 +623,7 @@ if(data$NoModel == FALSE){
 # Add the GRSex maps 
 if(data$NoModel == FALSE){
   # with No G points avoid adding the point features 
-  if(exTables$`Total G with coordinates` == 0){
+  if(exTables$`Total G with coordinates` == 0 || !exists("grsexMap")){ # no G coordinates, or G buffer outside the modelled range (GRS 0): no map layer to draw
         grs_html <- HTML(
       "<div style='
         background: white; 

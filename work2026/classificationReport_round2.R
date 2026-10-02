@@ -37,7 +37,7 @@ rep <- wide |> mutate(
     records_round2 == 0 ~ "0 records until the sheet decision on its include name",
     modelValid_round2 %in% FALSE ~ paste0("round-2 model fails robustness rule (", modelReason_round2, "); in situ scores from that model"),
     taxon %in% c("Vitis munsoniana", "Vitis tiliifolia", "Vitis shuttleworthii", "Vitis popenoei", "Vitis aestivalis", "Vitis cinerea") ~ "counts may move again with pending sheet include names",
-    TRUE, ~ ""))
+    TRUE ~ ""))
 rep <- rep |> select(taxon, anyClassChanged, records_published, records_round2, records_change, coords_change,
                      SRSex_published, SRSex_round2, SRSex_class_published, SRSex_class_round2,
                      FCSex_published, FCSex_round2, FCSex_class_published, FCSex_class_round2,

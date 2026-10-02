@@ -18,6 +18,8 @@ readScores <- function(sp, run) { b <- file.path("data/Vitis", sp, run); rc <- f
          FCSc = fcc$FCSc_mean, FCSc_class = fcc$FCSc_mean_class) }
 # sampled RSS (MB) per run version from the orchestrator sampler: columns ts, run, rssMB
 samp <- if (file.exists("work2026/experiment_rss_samples.csv")) read_csv("work2026/experiment_rss_samples.csv", show_col_types = FALSE) else NULL
+# two sampler lines are garbled (overlapping writes); parse ts explicitly and drop what does not parse
+if (!is.null(samp)) samp <- samp |> mutate(ts = as.POSIXct(as.character(ts), format = "%Y-%m-%dT%H:%M:%S", tz = "UTC")) |> filter(!is.na(ts))
 out <- map_dfr(exps, function(e) {
   te <- readTiming(e); if (is.null(te)) return(NULL)
   sps <- unique(te$taxon)
