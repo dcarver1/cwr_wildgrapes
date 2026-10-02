@@ -36,14 +36,14 @@ source("preprocessing/functions/process_gbif_082026.R")
 # -------------------------------------------------------------------------
 # Step 2: Global Configuration & Variables
 # -------------------------------------------------------------------------
-date_suffix <- "08202026"
-final_date_suffix <- "20260820"
-
+# Suffix = date of the taxonomy sheet pull the run is built from
+# (data/New World Vitis.csv). 20261002: V. novomexicana added to acerifolia
+# and V. coriacea to shuttleworthii. The previous build is
+# model_data20260820_taxonomyOnly.csv.
 # Coordinate failures are handled as in the published dataset: records that
-# fail the Americas bounding box stay in the model data. The model file keeps
-# the "_taxonomyOnly" suffix it was first produced under, which is the name
-# the model driver reads.
-final_date_suffix <- paste0(final_date_suffix, "_taxonomyOnly")
+# fail the Americas bounding box stay in the model data.
+date_suffix <- "10022026"
+final_date_suffix <- "20261002"
 
 standardColumnNames <- c(
   "taxon", "originalTaxon", "genus", "species", "latitude", "longitude",

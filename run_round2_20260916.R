@@ -30,23 +30,22 @@ RNGkind("L'Ecuyer-CMRG")
 # runVersion, overwrite and speciesToRun can be preset
 # before source()-ing this file, e.g.
 #   Rscript -e 'speciesToRun <- "Vitis monticola"; overwrite <- TRUE; source("run_round2_20260916.R")'
-if (!exists("runVersion")) runVersion <- "run09162026_1k"
+if (!exists("runVersion")) runVersion <- "run10022026_1k"
 if (!exists("overwrite")) overwrite <- FALSE
-dontRun <-c(
-  "Vitis blancoi", "Vitis x champinii", "Vitis popenoei", 
-  "Vitis munsoniana", "Vitis x novae-angliae", "Vitis lincecumii", 
-  "Vitis cinerea var. cinerea", "Vitis baileyana", "Vitis bourgaeana", 
-  "Vitis acerifolia", "Vitis shuttleworthii", "Vitis simpsonii", 
-  "Vitis palmata", "Vitis monticola", "Vitis rupestris", 
-  "Vitis berlandieri", "Vitis aestivalis var. bicolor", 
-  "Vitis aestivalis var. aestivalis", "Vitis girdiana", "Vitis californica", 
-  "Vitis tiliifolia", "Vitis arizonica", "Vitis cinerea", 
-  "Vitis labrusca", "Vitis vulpina", "Vitis mustangensis", 
-  "Vitis aestivalis", "Vitis riparia", "Vitis rotundifolia")
-# (default speciesToRun = gapSpecies, set after the sheet is read below)
+# Taxa with no record changes from the taxonomy review (no rows in
+# work2026/taxaReviewAnne/taxonChangeRawData_20260924.xlsx). Their published
+# results (run08282025_1k) stand and they are not re-run by default; the
+# publication table takes them from that run (R2/summarize/aggregateRuns.R).
+# A taxon named explicitly in a preset speciesToRun is still run.
+dontRun <- c(
+  "Vitis arizonica", "Vitis biformis", "Vitis blancoi", "Vitis bloodworthiana",
+  "Vitis bourgaeana", "Vitis californica", "Vitis jaegeriana", "Vitis monticola",
+  "Vitis nesbittiana", "Vitis palmata", "Vitis peninsularis", "Vitis rubriflora",
+  "Vitis rupestris")
+# (default speciesToRun = gapSpecies minus dontRun, set after the sheet is read below)
 
 # 3. Load Clean Data
-allDataPath <- "data/processed_occurrence/model_data20260820_taxonomyOnly.csv"
+if (!exists("allDataPath")) allDataPath <- "data/processed_occurrence/model_data20261002.csv"
 if (!file.exists(allDataPath)) {
   stop("Model data not found: run preprocessing/preprocessingUpdates2026_08_20.R first.")
 }
@@ -60,7 +59,7 @@ gapSpecies <- read_csv("data/New World Vitis.csv", col_types = cols(.default = "
   dplyr::pull(`Scientific Name`) |>
   sort()
 species <- sort(unique(c(speciesData$taxon, gapSpecies)))
-if (!exists("speciesToRun")) speciesToRun <- gapSpecies
+if (!exists("speciesToRun")) speciesToRun <- setdiff(gapSpecies, dontRun)
 
 # 4. Directory Setup
 dir1 <- "data/Vitis"
