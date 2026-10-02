@@ -13,3 +13,5 @@ githubKey.pub
 archive/
 output_rasters/*
 !.gitkeep
+.Rhistory
+.RData
