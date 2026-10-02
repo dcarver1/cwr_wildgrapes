@@ -1,24 +1,37 @@
 # cwr_wildgrapes
-update on the 2020 PNAS CWR of the USA workflow for new species
 
-This is the base R workflow. See branch 'targets' for the targets based implementation of this modelling effort. 
+Conservation gap analysis for the wild grapevines (*Vitis* L.) of the Americas: occurrence data preparation, species distribution models and ex situ / in situ conservation scores. An update of the 2020 PNAS crop wild relatives of the USA workflow.
 
-As of 2023-08-16 the primary modeling methodology has been implemented and testing is occuring.  
+The `main` branch holds the method used for the published analysis, with the corrected taxonomy.
 
-## Goals 
-1. revamp the existing CWR modeling methodology update libraries
-2. replace absolute paths with a rproj file structure
-3. provide more separation of the data cleaning, modeling, and gap analysis processes.
-4. develop a more adaptive and flexible workflow that can be applied to additional species in the future
+## Running the workflow
 
-## Folder Structure
+1. **Taxonomy**: taxon concepts and synonyms are maintained in the "New World Vitis" tab of the project taxon sheet on Google Drive. Edit names there, not in the code.
+2. **Preprocessing**: `preprocessing/preprocessingUpdates2026_08_20.R` pulls the current sheet and builds the occurrence dataset used for modelling.
+3. **Modelling**: `run_round2_20260916.R` runs the models and gap analysis for each taxon.
 
-**Data**: holds inputs and outputs for the modeling effort and county level map developed. Individual species data for model runs will be store in here as well. 
+To run a single taxon:
 
+```
+Rscript -e 'speciesToRun <- "Vitis nesbittiana"; overwrite <- TRUE; source("run_round2_20260916.R")'
+```
 
-**preprocessing** : code base and some content specific input datasets for prepping species observational data from multiple primary data sources
+## Folder structure
 
-**R2** : functions and scripts to exicute the modeling process and generate the species level summary documents. 
+**data**: inputs and outputs, including the results for each taxon and run. Not stored in git.
 
+**preprocessing**: scripts and functions that prepare occurrence records from the source datasets.
 
-## Additional notes 
+**R2**: functions for modelling, gap analysis and the per-taxon summary documents.
+
+**taxonomy**: dated snapshots of the taxonomy sheet and a log of changes to it.
+
+**published**: scripts and tables from the published analysis, kept as a record.
+
+**work2026**: analysis supporting the 2026 taxonomy update, including the taxonomic review.
+
+**utilities**: helper scripts for moving outputs.
+
+## Branches
+
+`main` is the accepted workflow. `workflow-evaluation` holds exploratory method testing and is not part of the published analysis.
