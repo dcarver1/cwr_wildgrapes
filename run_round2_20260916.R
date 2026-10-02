@@ -54,6 +54,14 @@ speciesData <- read_csv(allDataPath)
 # sheet, not just the taxa present in the data: a concept with zero records
 # (e.g. Vitis cinerea var. tomentosa after the taxonomy fix) still gets a
 # counts table, zero-score gap files and the no-records summary document.
+# Check only: warn when the taxonomy sheet has been edited since the local
+# copy (and therefore the model input) was built. Sheet edits reach the models
+# through preprocessing, not through this driver.
+source("preprocessing/functions/syncTaxonomySheet.R")
+if (!exists("checkTaxonomy") || isTRUE(checkTaxonomy)) {
+  sheetState <- syncTaxonomySheet(update = FALSE)
+  if (isTRUE(sheetState$changed)) warning("The taxonomy sheet differs from data/New World Vitis.csv: re-run preprocessing before modelling so the edits reach the model input.", call. = FALSE, immediate. = TRUE)
+}
 gapSpecies <- read_csv("data/New World Vitis.csv", col_types = cols(.default = "c"), show_col_types = FALSE) |>
   dplyr::filter(`Include in gap analysis?` == "Y") |>
   dplyr::pull(`Scientific Name`) |>

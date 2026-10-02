@@ -17,6 +17,12 @@ pacman::p_load(
 # -------------------------------------------------------------------------
 # Step 1: Load Project Taxonomy Reference & Supporting Functions
 # -------------------------------------------------------------------------
+# Pull the live taxonomy sheet first: edits made there replace the local copy
+# (previous copy backed up, snapshot and change log written) and so reach the
+# model input built below. Preset syncTaxonomy <- FALSE to build from the
+# local copy as it stands.
+source("preprocessing/functions/syncTaxonomySheet.R")
+if (!exists("syncTaxonomy") || isTRUE(syncTaxonomy)) syncTaxonomySheet(update = TRUE)
 vitis2 <- read_csv("data/New World Vitis.csv") |>
   dplyr::select(
     "taxon" = "Scientific Name",
