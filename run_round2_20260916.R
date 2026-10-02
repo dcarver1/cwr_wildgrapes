@@ -1,11 +1,7 @@
 ###
 # run_round2_20260916.R
-# Round-2 model driver. A copy of run_all05082026.R with ONLY these changes
-# (decisions 2026-09-16, see review/GBIF_fix_plan_2026-09-16.md):
 #   * runVersion "run09162026_1k" (fresh folder, nothing cached)
 #   * input = data/processed_occurrence/model_data20260820_taxonomyOnly.csv
-#   * `dontRun` defined (it was undefined and errored before the loop)
-#   * hard-coded "run08282025_1k" path for topVariablesData.csv -> runVersion
 #   * set.seed(1234) at the top of every species iteration so a species'
 #     result does not depend on which species ran before it.
 #   * species vector `speciesToRun` set explicitly (test: 3 unchanged species)
@@ -36,7 +32,17 @@ RNGkind("L'Ecuyer-CMRG")
 #   Rscript -e 'speciesToRun <- "Vitis monticola"; overwrite <- TRUE; source("run_round2_20260916.R")'
 if (!exists("runVersion")) runVersion <- "run09162026_1k"
 if (!exists("overwrite")) overwrite <- FALSE
-dontRun <- c()
+dontRun <-c(
+  "Vitis blancoi", "Vitis x champinii", "Vitis popenoei", 
+  "Vitis munsoniana", "Vitis x novae-angliae", "Vitis lincecumii", 
+  "Vitis cinerea var. cinerea", "Vitis baileyana", "Vitis bourgaeana", 
+  "Vitis acerifolia", "Vitis shuttleworthii", "Vitis simpsonii", 
+  "Vitis palmata", "Vitis monticola", "Vitis rupestris", 
+  "Vitis berlandieri", "Vitis aestivalis var. bicolor", 
+  "Vitis aestivalis var. aestivalis", "Vitis girdiana", "Vitis californica", 
+  "Vitis tiliifolia", "Vitis arizonica", "Vitis cinerea", 
+  "Vitis labrusca", "Vitis vulpina", "Vitis mustangensis", 
+  "Vitis aestivalis", "Vitis riparia", "Vitis rotundifolia")
 # (default speciesToRun = gapSpecies, set after the sheet is read below)
 
 # 3. Load Clean Data
