@@ -31,33 +31,18 @@ source("global.R")
 RNGkind("L'Ecuyer-CMRG")
 
 # 2. Run Parameters
-# runVersion, overwrite, speciesToRun and the method switches can be preset
+# runVersion, overwrite and speciesToRun can be preset
 # before source()-ing this file, e.g.
 #   Rscript -e 'speciesToRun <- "Vitis monticola"; overwrite <- TRUE; source("run_round2_20260916.R")'
 if (!exists("runVersion")) runVersion <- "run09162026_1k"
 if (!exists("overwrite")) overwrite <- FALSE
-# Method switches under development; FALSE reproduces the published behaviour.
-# Give a test run its own runVersion when either is TRUE.
-#   thinOccurrences: 5 km spatial thinning of H points when a taxon has more
-#     than 50 (R2/modeling/generateModelData.R)
-#   fullCorrPruning: correlation pruning over every selected predictor, not
-#     only the top 5 (R2/modeling/variableSelection.R)
-if (!exists("thinOccurrences")) thinOccurrences <- FALSE
-if (!exists("fullCorrPruning")) fullCorrPruning <- FALSE
-# bufferOnInvalidModel = TRUE sends a species whose SDM fails the published
-# robustness rule (ATAUC > 0.7, STAUC < 0.15, ASD15 < 10, from
-# calc_sdm_metrics()) to the 50 km buffer method, as the methods text
-# describes. Built 2026-09-17, NOT enabled: partner decision pending
-# (review/modeling_future_improvements.md item 1b). Default FALSE reproduces
-# the published behaviour (the model is used regardless of the flag).
-if (!exists("bufferOnInvalidModel")) bufferOnInvalidModel <- FALSE
 dontRun <- c()
 # (default speciesToRun = gapSpecies, set after the sheet is read below)
 
 # 3. Load Clean Data
 allDataPath <- "data/processed_occurrence/model_data20260820_taxonomyOnly.csv"
 if (!file.exists(allDataPath)) {
-  stop("Model data not found: run preprocessing/preprocessingUpdates2026_08_20.R with enforceBoundingBox <- FALSE first.")
+  stop("Model data not found: run preprocessing/preprocessingUpdates2026_08_20.R first.")
 }
 speciesData <- read_csv(allDataPath)
 # Species universe = every concept flagged for the gap analysis in the taxonomy
@@ -128,7 +113,6 @@ writeTiming <- function(j, allPaths, branch) {
 for (j in r3) {
   set.seed(1234)
   timerStart()
-  modelInvalid <- FALSE # set TRUE only by the validity gate when bufferOnInvalidModel is on
   print(paste("Processing:", j))
 
   p1 <- paste0("data/Vitis/speciesSummaryHTML/", runVersion)
@@ -417,17 +401,9 @@ for (j in r3) {
         overwrite = overwrite,
         function1 = evaluateTable(sdm_result = sdm_result)
       )
-
-      # validity gate (see bufferOnInvalidModel above)
-      modelInvalid <- isTRUE(bufferOnInvalidModel) && isFALSE(aucMetrics$Valid[1])
-      if (modelInvalid) {
-        message(j, ": SDM fails the robustness rule (", aucMetrics$Reason[1],
-                "); bufferOnInvalidModel = TRUE, using the 50 km buffer method")
-        erroredSpecies$noSDM <- c(erroredSpecies$noSDM, j)
-      }
     }
 
-    if (!is.null(sdm_result) && !modelInvalid) {
+    if (!is.null(sdm_result)) {
 
       thres <- write_Rast(
         path = allPaths$thresPath,
@@ -579,9 +555,8 @@ for (j in r3) {
     }
   }
 
-  # Buffer method: fewer than eight points (published rule) OR, when the
-  # switch is on, a model that failed the robustness rule.
-  if (nrow(sp1) < 8 || modelInvalid) {
+  # Buffer method: fewer than eight points (published rule).
+  if (nrow(sp1) < 8) {
     if (nrow(sp1) < 8) erroredSpecies$lessThenEight <- c(erroredSpecies$lessThenEight, j)
     # gPoints was never defined in the published scripts (fcs_exsitu() needs it
     # in this branch): number of georeferenced G records
@@ -598,9 +573,7 @@ for (j in r3) {
     buffer_rs <- terra::rasterize(buffer, rastBuff)
     names(buffer_rs) <- "Threshold"
 
-    # overwrite when the buffer replaces a failed model, so the saved threshold
-    # raster is the buffer and not the SDM's
-    write_Rast(buffer_rs, path = allPaths$thresPath, overwrite = overwrite || modelInvalid)
+    write_Rast(buffer_rs, path = allPaths$thresPath, overwrite = overwrite)
 
     g_buffer <- write_Rast(
       path = allPaths$ga50Path,
@@ -751,7 +724,7 @@ for (j in r3) {
       }
     # }
     markStep("buffer_metrics_render")
-    writeTiming(j, allPaths, if (modelInvalid) "buffer_invalidModel" else "buffer_lt8")
+    writeTiming(j, allPaths, "buffer_lt8")
   }
 }
 

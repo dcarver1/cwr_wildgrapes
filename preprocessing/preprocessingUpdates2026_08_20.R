@@ -39,14 +39,11 @@ source("preprocessing/functions/process_gbif_082026.R")
 date_suffix <- "08202026"
 final_date_suffix <- "20260820"
 
-# enforceBoundingBox = FALSE reproduces the pre-2026 handling of coordinate
-# failures (records that fail the Americas bounding box are re-bound into the
-# model data) and skips the WIEWS sign flip, so the output differs from the
-# December 2025 model data by the taxonomy changes only. The model file then
-# gets the suffix "_taxonomyOnly". Run with:
-#   Rscript -e 'enforceBoundingBox <- FALSE; source("preprocessing/preprocessingUpdates2026_08_20.R")'
-if (!exists("enforceBoundingBox")) enforceBoundingBox <- TRUE
-if (!enforceBoundingBox) final_date_suffix <- paste0(final_date_suffix, "_taxonomyOnly")
+# Coordinate failures are handled as in the published dataset: records that
+# fail the Americas bounding box stay in the model data. The model file keeps
+# the "_taxonomyOnly" suffix it was first produced under, which is the name
+# the model driver reads.
+final_date_suffix <- paste0(final_date_suffix, "_taxonomyOnly")
 
 standardColumnNames <- c(
   "taxon", "originalTaxon", "genus", "species", "latitude", "longitude",
@@ -187,23 +184,6 @@ df2_a <- uniqueTaxon |>
 # Re-inject the novogranatensis records back in
 df2_a <- bind_rows(df2_a, novogranatensis)
 
-# Recover WIEWS records whose longitude was supplied without the minus sign
-# (decision 2026-09-16: nine V. riparia accessions at 46 N / +106.7 E, i.e.
-# Montana). The sign is flipped only when the negated value falls inside the
-# US longitude range (66 W to 180 W), so an implausible pair such as
-# 42.8 N / +46 E stays excluded by the bounding box below. Flipped records are
-# written to coordinateSignFlipped_<date>.csv. Other sources are not touched;
-# extending the rule to GBIF is a phase-2 decision (review/GBIF_fix_plan_2026-09-16.md).
-if (enforceBoundingBox) {
-  lonNum <- suppressWarnings(as.numeric(df2$longitude))
-  flipIdx <- which(df2$databaseSource == "wiews" &
-                     df2$country %in% c("United States of America", "United States") &
-                     !is.na(lonNum) & lonNum >= 66 & lonNum <= 180)
-  write_csv(df2[flipIdx, ], paste0("data/processed_occurrence/coordinateSignFlipped_", date_suffix, ".csv"))
-  df2$longitude[flipIdx] <- as.character(-lonNum[flipIdx])
-  message(length(flipIdx), " WIEWS longitude values sign-flipped")
-}
-
 # Quality Checks on Spatial Coordinates (Lat/Long Bounding Box)
 source("preprocessing/functions/checksOnLatLong.R")
 # tiliifolia / popenoei keep their Central American and Caribbean records, as
@@ -212,14 +192,9 @@ source("preprocessing/functions/checksOnLatLong.R")
 d3 <- checksOnLatLong(df2, exemptTaxa = c("Vitis tiliifolia", "Vitis popenoei"))
 valLatLon <- d3$validLatLon
 
-# Records with no coordinates are kept (they count toward totals and feed the
-# county-level products). Records that HAVE coordinates but failed the
-# Americas bounding box (validLatLon == FALSE, written to
-# excludedOnLatLonBoundingBox.csv) must NOT come back in: checksOnLatLong()
-# returns both groups together in `countycheck`, and the previous drivers
-# re-bound both. See review/WORKFLOW_EVALUATION.md section 2.2.
+# Records with no coordinates and records that failed the Americas bounding
+# box both stay in the model data, as in the published dataset.
 d3_g <- d3$countycheck |>
-  dplyr::filter(if (enforceBoundingBox) is.na(validLatLon) else TRUE) |>
   dplyr::mutate(
     county = stringr::str_remove_all(string = county, pattern = " .Co"),
     county = stringr::str_remove_all(string = county, pattern = " Co."),
