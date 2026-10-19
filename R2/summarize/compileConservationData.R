@@ -88,8 +88,9 @@ compileConservationData <- function(directory, runVersion, genus) {
     "FCSc_max_class" = "UP",
     "FCSc_mean_class" = "UP"
   )
-  tbl <- bind_rows(tbl, vr) |>
-    bind_rows(vn)
+  # only for a run that has no score files for the taxon (the published run)
+  tbl <- bind_rows(tbl, vr[!vr$ID %in% tbl$ID, ]) |>
+    bind_rows(vn[!vn$ID %in% tbl$ID, ])
 
   # issues with a lot of species records
   ## trying to split into two and display as a sub plot

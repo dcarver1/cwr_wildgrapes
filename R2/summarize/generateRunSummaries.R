@@ -10,7 +10,8 @@ generateRunSummaries <- function(
   species,
   genus,
   protectedAreas,
-  overwrite
+  overwrite,
+  wdpaVectPath = NULL
 ) {
   # storing summaries data in run folders
   dir2 <- paste0(dir1, "/", runVersion)
@@ -26,9 +27,6 @@ generateRunSummaries <- function(
   path9 <- paste0(dir2, "/ersin_speciesUsed_Richness.tif")
   path10 <- paste0(dir2, "/protectedAreaSpeciesPointRichness.csv")
   path11 <- paste0(dir2, "/protectedAreaSpeciesRasterRichness_1km.csv")
-
-  # Testing the presense of species in the summary maps
-  t1 <- read_csv(path10)
 
   # Rescale all the imagery for the 1km runs  -------------------------------
   ##   "prj_threshold.tif", "ga50_masked.tif","ers_ex_gaps.tif","ers_in_gaps.tif"
@@ -138,6 +136,8 @@ generateRunSummaries <- function(
   }
 
   # points in protected areas Richness  -------------------------------------
+  # the full WDPA vector only depends on the countries the points fall in, so
+  # the file built for another run can be passed in (wdpaVectPath)
   wdpaVectExport <- paste0(
     "data/geospatial_datasets/protectedLands/vect_",
     genus,
@@ -145,22 +145,26 @@ generateRunSummaries <- function(
     runVersion,
     ".gpkg"
   )
-  if (!file.exists(wdpaVectExport)) {
-    # this function generate the gpkg of all the wdpa files
-    wdpaVect1 <- wdpaVect(species = species, runVersion = runVersion)
-    terra::writeVector(wdpaVect, wdpaVectExport)
-  } else {
-    wdpaVect1 <- terra::vect(wdpaVectExport)
+  if (!is.null(wdpaVectPath)) {
+    wdpaVectExport <- wdpaVectPath
   }
   # not 100% what's going on here so going to read in the files directly
   wdpa1 <- terra::vect("data/geospatial_datasets/protectedLands/wdpa_1.gpkg")
 
-  if (overwrite == TRUE) {
+  if (!file.exists(path10) | isTRUE(overwrite)) {
+    # the full WDPA vector is only used by the points-in-protected-areas step
+    if (!file.exists(wdpaVectExport)) {
+      # this function generate the gpkg of all the wdpa files
+      wdpaVect1 <- wdpaVect(species = species, runVersion = runVersion)
+      terra::writeVector(wdpaVect1, wdpaVectExport)
+    } else {
+      wdpaVect1 <- terra::vect(wdpaVectExport)
+    }
     protectedAreaPoints(
-      species = s2$taxon,
+      species = species,
       runVersion = runVersion,
-      genus = "Vitis",
-      wdpaVect = wdpaVect
+      genus = genus,
+      wdpaVect = wdpaVect1
     )
 
     # read in all files
@@ -175,7 +179,7 @@ generateRunSummaries <- function(
       summarise(
         total_observation = sum(count, na.rm = TRUE),
         total_unique_taxa = length(unique(taxon)),
-        taxa_list = list(unique(taxon))
+        taxa_list = paste(sort(unique(taxon)), collapse = "; ")
       ) |>
       dplyr::select(
         WDPAID = name,
@@ -184,7 +188,7 @@ generateRunSummaries <- function(
         taxa_list
       )
     # select names and id from pro area
-    wdpaDF <- as_tibble(wdpaVect) |>
+    wdpaDF <- as_tibble(wdpaVect1) |>
       dplyr::filter(WDPAID %in% proP$WDPAID) |>
       dplyr::left_join(y = proP, by = "WDPAID")
 

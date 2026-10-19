@@ -42,14 +42,16 @@ source("preprocessing/functions/process_gbif_082026.R")
 # -------------------------------------------------------------------------
 # Step 2: Global Configuration & Variables
 # -------------------------------------------------------------------------
-# Suffix = date of the taxonomy sheet pull the run is built from
-# (data/New World Vitis.csv). 20261002: V. novomexicana added to acerifolia
-# and V. coriacea to shuttleworthii. The previous build is
-# model_data20260820_taxonomyOnly.csv.
+# Every build gets its own dated files: model_dataYYYYMMDD.csv, or
+# model_dataYYYYMMDD_HHMM.csv for a second build on the same day, so an earlier
+# input is never overwritten. The model driver reads the latest by default.
 # Coordinate failures are handled as in the published dataset: records that
 # fail the Americas bounding box stay in the model data.
-date_suffix <- "10022026"
-final_date_suffix <- "20261002"
+final_date_suffix <- format(Sys.Date(), "%Y%m%d")
+if (file.exists(paste0("data/processed_occurrence/model_data", final_date_suffix, ".csv"))) {
+  final_date_suffix <- format(Sys.time(), "%Y%m%d_%H%M")
+}
+date_suffix <- final_date_suffix
 
 standardColumnNames <- c(
   "taxon", "originalTaxon", "genus", "species", "latitude", "longitude",

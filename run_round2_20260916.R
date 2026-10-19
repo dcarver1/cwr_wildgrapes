@@ -27,28 +27,32 @@ source("global.R")
 RNGkind("L'Ecuyer-CMRG")
 
 # 2. Run Parameters
-# runVersion, overwrite and speciesToRun can be preset
+# runVersion, overwrite, speciesToRun and bufferOnInvalidModel can be preset
 # before source()-ing this file, e.g.
 #   Rscript -e 'speciesToRun <- "Vitis monticola"; overwrite <- TRUE; source("run_round2_20260916.R")'
 if (!exists("runVersion")) runVersion <- "run10022026_1k"
 if (!exists("overwrite")) overwrite <- FALSE
-# Taxa with no record changes from the taxonomy review (no rows in
-# work2026/taxaReviewAnne/taxonChangeRawData_20260924.xlsx). Their published
-# results (run08282025_1k) stand and they are not re-run by default; the
-# publication table takes them from that run (R2/summarize/aggregateRuns.R).
-# A taxon named explicitly in a preset speciesToRun is still run.
-dontRun <- c(
-  "Vitis arizonica", "Vitis biformis", "Vitis blancoi", "Vitis bloodworthiana",
-  "Vitis bourgaeana", "Vitis californica", "Vitis jaegeriana", "Vitis monticola",
-  "Vitis nesbittiana", "Vitis palmata", "Vitis peninsularis", "Vitis rubriflora",
-  "Vitis rupestris")
+# bufferOnInvalidModel = TRUE sends a taxon whose SDM fails the published
+# robustness rule (ATAUC > 0.7, STAUC < 0.15, ASD15 < 10, from
+# calc_sdm_metrics()) to the 50 km buffer method, as the methods text
+# describes. Decision 2026-10-05. Every model of the published run passes the
+# rule; with the corrected taxonomy only V. rufotomentosa fails it (High STAUC).
+if (!exists("bufferOnInvalidModel")) bufferOnInvalidModel <- TRUE
+# Taxa with no record changes from the taxonomy review keep their published
+# results and are not re-run by default (taxonomyUpdateStatus$unchanged,
+# R2/summarize/aggregateRuns.R, loaded below by global.R). A taxon named
+# explicitly in a preset speciesToRun is still run.
 # (default speciesToRun = gapSpecies minus dontRun, set after the sheet is read below)
 
 # 3. Load Clean Data
-if (!exists("allDataPath")) allDataPath <- "data/processed_occurrence/model_data20261002.csv"
+# default input = the latest dated build from preprocessing
+# (data/processed_occurrence/model_dataYYYYMMDD[_HHMM].csv)
+if (!exists("allDataPath")) allDataPath <- latestModelData()
+message("Model input: ", allDataPath)
 if (!file.exists(allDataPath)) {
   stop("Model data not found: run preprocessing/preprocessingUpdates2026_08_20.R first.")
 }
+speciesDataText <- readModelDataText(allDataPath) # for the input fingerprints only
 speciesData <- read_csv(allDataPath)
 # Species universe = every concept flagged for the gap analysis in the taxonomy
 # sheet, not just the taxa present in the data: a concept with zero records
@@ -67,6 +71,7 @@ gapSpecies <- read_csv("data/New World Vitis.csv", col_types = cols(.default = "
   dplyr::pull(`Scientific Name`) |>
   sort()
 species <- sort(unique(c(speciesData$taxon, gapSpecies)))
+dontRun <- taxonomyUpdateStatus$unchanged
 if (!exists("speciesToRun")) speciesToRun <- setdiff(gapSpecies, dontRun)
 
 # 4. Directory Setup
@@ -117,6 +122,9 @@ writeTiming <- function(j, allPaths, branch) {
                    seconds = round(c(unlist(stepTimes), as.numeric(difftime(Sys.time(), tSpecies, units = "secs"))), 1),
                    peakMB = round(peakMB), finished = format(Sys.time(), "%Y-%m-%dT%H:%M:%S"))
   write_csv(df, file.path(allPaths$results, "timing.csv"))
+  # record the input this taxon was run with, unless existing outputs were
+  # kept from an earlier input (overwrite = FALSE)
+  if (overwrite || is.null(prevFingerprint)) writeFingerprint(sd1Fingerprint, allPaths$runLevel)
   logPath <- paste0("data/Vitis/timing_", runVersion, ".csv")
   write_csv(df, logPath, append = file.exists(logPath))
   message(j, ": ", branch, " ", round(df$seconds[df$step == "total"]), " s, peak ", round(peakMB), " MB")
@@ -126,6 +134,7 @@ writeTiming <- function(j, allPaths, branch) {
 for (j in r3) {
   set.seed(1234)
   timerStart()
+  modelInvalid <- FALSE # set TRUE only by the validity gate when bufferOnInvalidModel is on
   print(paste("Processing:", j))
 
   p1 <- paste0("data/Vitis/speciesSummaryHTML/", runVersion)
@@ -136,40 +145,14 @@ for (j in r3) {
   allPaths <- definePaths(dir1 = dir1, j = j, runVersion = runVersion)
   generateFolders(allPaths)
 
-  # Species specific data subset
-  sd1 <- speciesData |> dplyr::filter(taxon == j)
-
-  if (j == "Vitis cinerea") {
-    sd1 <- speciesData |>
-      dplyr::filter(
-        taxon %in%
-          c(
-            "Vitis cinerea",
-            "Vitis cinerea var. cinerea",
-            "Vitis cinerea var. tomentosa"
-          )
-      ) |>
-      dplyr::mutate(taxon = "Vitis cinerea")
-  }
-  if (j == "Vitis aestivalis") {
-    sd1 <- speciesData |>
-      dplyr::filter(
-        taxon %in%
-          c(
-            "Vitis aestivalis",
-            "Vitis aestivalis var. aestivalis",
-            "Vitis aestivalis var. bicolor"
-          )
-      ) |>
-      dplyr::mutate(taxon = "Vitis aestivalis")
-  }
-  
-  if (j == "Vitis shuttleworthii"){
-    sd1 <- sd1 |> 
-      dplyr::filter(
-        # keep records without coordinates: a bare != drops NA rows
-        is.na(longitude) | longitude != -80.001483
-      )
+  # Species specific data subset (R2/dataProcessing/taxonRecords.R) and its
+  # fingerprint, stored with the run when the taxon finishes (writeTiming)
+  sd1 <- taxonRecords(speciesData, j)
+  sd1Fingerprint <- taxonFingerprint(taxonRecords(speciesDataText, j), j, allDataPath)
+  prevFingerprint <- readFingerprint(allPaths$runLevel)
+  if (!overwrite && !is.null(prevFingerprint) && prevFingerprint$md5 != sd1Fingerprint$md5) {
+    warning(j, ": records differ from those this run was made with (", prevFingerprint$inputFile,
+            "); outputs that already exist are kept because overwrite = FALSE", call. = FALSE, immediate. = TRUE)
   }
   
   
@@ -414,9 +397,17 @@ for (j in r3) {
         overwrite = overwrite,
         function1 = evaluateTable(sdm_result = sdm_result)
       )
+
+      # validity gate (see bufferOnInvalidModel above)
+      modelInvalid <- isTRUE(bufferOnInvalidModel) && isFALSE(aucMetrics$Valid[1])
+      if (modelInvalid) {
+        message(j, ": SDM fails the robustness rule (", aucMetrics$Reason[1],
+                "); bufferOnInvalidModel = TRUE, using the 50 km buffer method")
+        erroredSpecies$noSDM <- c(erroredSpecies$noSDM, j)
+      }
     }
 
-    if (!is.null(sdm_result)) {
+    if (!is.null(sdm_result) && !modelInvalid) {
 
       thres <- write_Rast(
         path = allPaths$thresPath,
@@ -568,8 +559,9 @@ for (j in r3) {
     }
   }
 
-  # Buffer method: fewer than eight points (published rule).
-  if (nrow(sp1) < 8) {
+  # Buffer method: fewer than eight points (published rule) OR, when the
+  # switch is on, a model that failed the robustness rule.
+  if (nrow(sp1) < 8 || modelInvalid) {
     if (nrow(sp1) < 8) erroredSpecies$lessThenEight <- c(erroredSpecies$lessThenEight, j)
     # gPoints was never defined in the published scripts (fcs_exsitu() needs it
     # in this branch): number of georeferenced G records
@@ -586,7 +578,9 @@ for (j in r3) {
     buffer_rs <- terra::rasterize(buffer, rastBuff)
     names(buffer_rs) <- "Threshold"
 
-    write_Rast(buffer_rs, path = allPaths$thresPath, overwrite = overwrite)
+    # overwrite when the buffer replaces a failed model, so the saved threshold
+    # raster is the buffer and not the SDM's
+    write_Rast(buffer_rs, path = allPaths$thresPath, overwrite = overwrite || modelInvalid)
 
     g_buffer <- write_Rast(
       path = allPaths$ga50Path,
@@ -737,7 +731,7 @@ for (j in r3) {
       }
     # }
     markStep("buffer_metrics_render")
-    writeTiming(j, allPaths, "buffer_lt8")
+    writeTiming(j, allPaths, if (modelInvalid) "buffer_invalidModel" else "buffer_lt8")
   }
 }
 

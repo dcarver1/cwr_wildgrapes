@@ -95,8 +95,9 @@ if(genus == "Daucus"){
      "FCSc_max_class"= "UP",
      "FCSc_mean_class"= "UP"
   )
-  data <- bind_rows(data, vr)|>
-    bind_rows(vn)
+  # only for a run that has no score files for the taxon (the published run)
+  data <- bind_rows(data, vr[!vr$ID %in% data$ID, ])|>
+    bind_rows(vn[!vn$ID %in% data$ID, ])
   # arrange by ID for visualization 
   data <- dplyr::arrange(data, ID)
 }

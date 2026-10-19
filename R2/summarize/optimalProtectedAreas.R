@@ -50,18 +50,19 @@ structureData <- function(df) {
     relocate(Total_Count, .after = last_col())
 }
 
-calculate_optimal_protected_areas <- function() {
+calculate_optimal_protected_areas <- function(runVersion = "run08282025_1k", dir1 = "data/Vitis") {
+  runDir <- file.path(dir1, runVersion)
   # 2. Data Loading and Preparation -------------------------------------------
   
   # Load metadata for protected areas (e.g., richness, names)
   pa_richness_summary <- read_csv(
-    "data/Vitis/run08282025_1k/protectedAreaSpeciesRichness.csv"
+    file.path(runDir, "protectedAreaSpeciesRichness.csv")
   )
   
   # Load and combine all species point data from the 'proPoints' directory.
   # read_csv() can accept a vector of file paths and will row-bind them.
   all_pa_species_long <- list.files(
-    "data/Vitis/run08282025_1k/proPoints",
+    file.path(runDir, "proPoints"),
     full.names = TRUE
   ) |>
     read_csv() |>
@@ -77,7 +78,7 @@ calculate_optimal_protected_areas <- function() {
   # Export this intermediate summary file
   write_csv(
     all_pa_species_wide,
-    "data/Vitis/run08282025_1k/pointsInProSummary.csv"
+    file.path(runDir, "pointsInProSummary.csv")
   )
   
   
@@ -203,6 +204,6 @@ calculate_optimal_protected_areas <- function() {
   
   write_csv(
     final_optimal_pa_report,
-    file = "data/Vitis/run08282025_1k/topProArea.csv"
+    file = file.path(runDir, "topProArea.csv")
   )
 }

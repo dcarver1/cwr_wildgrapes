@@ -125,7 +125,10 @@ protectedAreaPoints <- function(species, runVersion, genus, wdpaVect) {
 
       # select protected areas that intersect
       w2 <- w1[d1, ]
-      for (j in 1:nrow(w2)) {
+      # start empty for every taxon: a taxon with no point in a protected area
+      # used to be written with the rows of the taxon before it
+      results <- data.frame()
+      for (j in seq_len(nrow(w2))) {
         pro <- w2[j, ]
         # crop pro area to species extent
         p2 <- terra::crop(pro, d1)
@@ -139,11 +142,7 @@ protectedAreaPoints <- function(species, runVersion, genus, wdpaVect) {
             count = nrow(d2),
             taxon = d1$taxon[1]
           )
-          if (j == 1) {
-            results <- df
-          } else {
-            results <- bind_rows(results, df)
-          }
+          results <- bind_rows(results, df)
         }
       }
       if (nrow(results) > 0) {
@@ -170,6 +169,9 @@ pathRead <- function(species, runVersion) {
 }
 
 wdpaVect <- function(species, runVersion) {
+  # all points of the run, for the countries they fall in
+  sp <- purrr::map(.x = species, .f = pathRead, runVersion = runVersion) |>
+    bind_rows()
   iso <- as.data.frame(sp) |>
     dplyr::select(iso3) |>
     dplyr::distinct() |>

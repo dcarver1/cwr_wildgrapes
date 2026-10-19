@@ -59,27 +59,42 @@ generateSpeciesRichnessMap <- function(directory, runVersion, rasterFileName){
   print("reading in rasters")
   r1 <- map(.x = runFiles, .f = terra::rast)
   
-  # produce an extent raster template 
-  print("generating maximum extent")
-  r2 <- Reduce(terra::extend, r1)
-  
-  # extend all the raster in the stack
-  print("extenting all the objects. ")
-  r3 <- map(.x = r1, .f = terra::resample, y = r2, method = 'near') ## still nan values being applied  
-  
-  # replace the NaN values 
-  r4 <- map(.x = r3, .f = replaceNAN)
-  
-  
-  # sum all the features 
-  print("bind to single object")
-  r5 <- Reduce("+", r4)
+  # extend, replace NaN and sum, one raster at a time
+  r5 <- sumRastersOnCommonGrid(r1)
   
   output <- list(
     richnessTif = r5,
     speciesUsed = runFiles
   )
   return(output)
+}
+
+#' Sum rasters of different extents on their common grid
+#' @description Same result as extending every raster to the combined extent,
+#' replacing NaN with 0 and adding them up, but one raster is processed at a
+#' time. Holding every extended raster in memory at once (about 40 grids of
+#' the full study area, twice) used tens of GB and took the VM down on
+#' 2026-10-05.
+#' @param rasters : list of SpatRaster objects
+#' @return SpatRaster of the cell-wise sum over the combined extent
+sumRastersOnCommonGrid <- function(rasters){
+  # the combined extent, on the grid of the first raster (geometry only)
+  print("generating maximum extent")
+  template <- terra::rast(rasters[[1]])
+  for(r in rasters[-1]){
+    template <- terra::extend(template, r)
+  }
+  print("extending and summing the objects")
+  total <- NULL
+  for(r in rasters){
+    x <- terra::resample(r, template, method = 'near') |>
+      terra::classify(cbind(NA, 0))
+    total <- if(is.null(total)) x else total + x
+    # R does not see the size of the rasters terra holds, so it does not free
+    # the ones replaced above on its own; without this they pile up
+    rm(x); invisible(gc())
+  }
+  return(total)
 }
 
 generateERSRichnessMap <- function(directory, runVersion, ersMap, species, thresholdMap){
@@ -119,21 +134,8 @@ generateERSRichnessMap <- function(directory, runVersion, ersMap, species, thres
   # print("reading in rasters")
   # r1 <- map(.x = runFiles, .f = rast)
   
-  # produce an extent raster template 
-  print("generating maximum extent")
-  r2 <- Reduce(extend, maskedFeatures)
-  
-  # extend all the raster in the stack
-  print("extenting all the objects. ")
-  r3 <- map(.x = maskedFeatures, .f = terra::resample, y = r2, method = 'near') ## still nan values being applied  
-
-  # replace the NaN values 
-  r4 <- map(.x = r3, .f = replaceNAN)
-  
-  
-  # sum all the features 
-  print("bind to single object")
-  r5 <- Reduce("+", r4)
+  # extend, replace NaN and sum, one raster at a time
+  r5 <- sumRastersOnCommonGrid(maskedFeatures)
   
   output <- list(
     richnessTif = r5,
