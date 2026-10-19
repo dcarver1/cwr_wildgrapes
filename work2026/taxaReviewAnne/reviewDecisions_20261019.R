@@ -204,7 +204,8 @@ geo <- geo |> mutate(
   stateUsed = if_else(!is.na(stateFromXY), stateFromXY, vapply(stateText, textState, character(1))),
   stateSource = case_when(!is.na(stateFromXY) ~ "coordinates", !is.na(stateUsed) ~ "record's state field", TRUE ~ "none"),
   postalUsed = stateTab$postal[match(stateUsed, stateTab$name)],
-  countryUsed = coalesce(countryFromXY, stateTab$adm0_a3[match(stateUsed, stateTab$name)], iso3))
+  # match() on an NA state would hit the layer's unnamed Antarctic polygon (ATA), so guard it
+  countryUsed = coalesce(countryFromXY, if_else(is.na(stateUsed), NA_character_, stateTab$adm0_a3[match(stateUsed, stateTab$name)]), iso3))
 checkOne <- function(tx, st, po, co) {
   f <- fnaFor(tx); n <- nsFor(tx); w <- weakleyRange[[tx]]
   inF <- if (is.null(f)) NA else st %in% f

@@ -1,23 +1,23 @@
 taxon,records,withCoordinates,stateFromText,noState,outsideUSACAN,inRange,outOfRange,outOfRange_points,outOfRange_pointsReachingModel,outOfRange_textStateOnly,outOfRangeStates_points,outOfRangeStates_text,flagged,fnaFilterApplies,rangeUsed
-Vitis simpsonii,100,57,31,12,13,46,41,33,33,8,"California, District of Columbia, Louisiana","California, Tennessee",0,no,NatureServe list on the sheet
-Vitis munsoniana,243,87,108,48,48,161,34,25,25,9,"California, Texas","California, Delaware, Louisiana, Tennessee, Texas",0,no,NatureServe list on the sheet
-Vitis baileyana,126,48,63,15,16,94,16,6,6,10,"Maryland, Mississippi","District of Columbia, Mississippi, Missouri",0,no,NatureServe list on the sheet
-Vitis rufotomentosa,40,20,16,4,5,25,10,6,6,4,"Alabama, Maryland","Louisiana, Texas",4,no,Weakley (review guidance)
-Vitis berlandieri,641,271,247,123,323,305,13,2,2,11,"Missouri, Oklahoma","California, Oklahoma",0,no,NatureServe list on the sheet
-Vitis tiliifolia,456,249,38,169,453,0,3,2,2,1,Florida,Florida,0,no,NatureServe list on the sheet
-Vitis lincecumii,164,17,104,43,44,108,12,2,2,10,Kansas,"California, Illinois, Missouri",0,no,Weakley (review guidance)
-Vitis aestivalis,38,19,11,8,8,10,20,19,0,1,California,Nevada,0,yes,FNA list (driver filter)
-Vitis vulpina,187,17,66,104,105,77,5,2,0,3,"Connecticut, Québec","Minnesota, Québec",0,yes,FNA list (driver filter)
-Vitis x champinii,66,5,50,11,11,7,48,0,0,48,,California,0,yes,FNA list (driver filter)
+Vitis berlandieri,641,271,247,123,233,305,13,2,2,11,"Missouri, Oklahoma","California, Oklahoma",0,no,NatureServe list on the sheet
+Vitis tiliifolia,456,249,38,169,408,0,3,2,2,1,Florida,Florida,0,no,NatureServe list on the sheet
+Vitis simpsonii,100,57,31,12,1,46,41,33,0,8,"California, District of Columbia, Louisiana","California, Tennessee",0,yes,FNA list (driver filter)
+Vitis munsoniana,243,87,108,48,0,161,34,25,0,9,"California, Texas","California, Delaware, Louisiana, Tennessee, Texas",0,yes,FNA list (driver filter)
+Vitis aestivalis,38,19,11,8,1,10,20,19,0,1,California,Nevada,0,yes,FNA list (driver filter)
+Vitis baileyana,126,48,63,15,1,94,16,6,0,10,"Maryland, Mississippi","District of Columbia, Mississippi, Missouri",0,yes,FNA list (driver filter)
+Vitis rufotomentosa,40,20,16,4,1,25,10,6,0,4,"Alabama, Maryland","Louisiana, Texas",4,yes,Weakley (review guidance)
+Vitis vulpina,187,17,66,104,1,77,5,2,0,3,"Connecticut, Québec","Minnesota, Québec",0,yes,FNA list (driver filter)
+Vitis lincecumii,164,17,104,43,1,108,12,2,0,10,Kansas,"California, Illinois, Missouri",0,yes,Weakley (review guidance)
+Vitis x champinii,66,5,50,11,0,7,48,0,0,48,,California,0,yes,FNA list (driver filter)
 Vitis popenoei,23,3,10,10,23,0,0,0,0,0,,,0,no,NatureServe list on the sheet
-Vitis x novae-angliae,23,5,13,5,5,18,0,0,0,0,,,0,yes,FNA list (driver filter)
-Vitis x doaniana,12,3,2,7,7,5,0,0,0,0,,,0,yes,FNA list (driver filter)
+Vitis x novae-angliae,23,5,13,5,0,18,0,0,0,0,,,0,yes,FNA list (driver filter)
+Vitis x doaniana,12,3,2,7,0,5,0,0,0,0,,,0,yes,FNA list (driver filter)
 Vitis cinerea var. tomentosa,11,11,0,0,11,0,0,0,0,0,,,0,no,none
-Vitis aestivalis var. bicolor,9,2,5,2,2,6,1,0,0,1,,North Carolina,0,no,NatureServe list on the sheet
-Vitis cinerea,8,0,7,1,1,7,0,0,0,0,,,0,yes,FNA list (driver filter)
-Vitis labrusca,8,0,2,6,7,1,0,0,0,0,,,0,yes,FNA list (driver filter)
-Vitis riparia,5,1,2,2,2,3,0,0,0,0,,,0,yes,FNA list (driver filter)
-Vitis cinerea var. cinerea,2,0,0,2,2,0,0,0,0,0,,,0,no,none
+Vitis aestivalis var. bicolor,9,2,5,2,0,6,1,0,0,1,,North Carolina,0,no,NatureServe list on the sheet
+Vitis cinerea,8,0,7,1,0,7,0,0,0,0,,,0,yes,FNA list (driver filter)
+Vitis labrusca,8,0,2,6,3,1,0,0,0,0,,,0,yes,FNA list (driver filter)
+Vitis riparia,5,1,2,2,0,3,0,0,0,0,,,0,yes,FNA list (driver filter)
+Vitis cinerea var. cinerea,2,0,0,2,0,0,0,0,0,0,,,0,no,none
 Vitis martineziana,2,2,0,0,2,0,0,0,0,0,,,0,no,NatureServe list on the sheet
 Vitis mustangensis,1,0,1,0,0,1,0,0,0,0,,,0,yes,FNA list (driver filter)
-Vitis novogranatensis,1,0,0,1,1,0,0,0,0,0,,,0,no,NatureServe list on the sheet
+Vitis novogranatensis,1,0,0,1,0,0,0,0,0,0,,,0,no,NatureServe list on the sheet
