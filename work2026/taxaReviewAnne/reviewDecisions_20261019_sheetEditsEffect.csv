@@ -1,0 +1,13 @@
+taxon,recordsCurrentSheet,recordsEditedSheet,change,namesEntering,note
+Vitis tiliifolia,4009,4220,211,"Vitis acuminata Oerst. 1; Vitis arachnoidea Oerst. 6; Vitis caribaea 2; Vitis caribaea DC. 149; Vitis caribaea Hook. & Arn., 1838 53",counts are before the country step; tiliifolia keeps non-North-American records (exempt from the USA/CAN/MEX filter)
+Vitis aestivalis,12952,12990,38,Vitis araneosa J.Le Conte 12; Vitis araneosa Leconte 3; Vitis intermedia Muhl. 2; Vitis labrusca var. aestivalis (Michx.) Regel 1; Vitis smalliana 1; Vitis smalliana L.H.Bailey 19,
+Vitis popenoei,203,225,22,Muscadinia popenoei (J.L.Fennell) Weakley & Gandhi 22,
+Vitis berlandieri,1702,1716,14,Vitis cordifolia var. helleri L.H.Bailey 6; Vitis helleri (L.H.Bailey) Small 8,
+Vitis cinerea var. tomentosa,0,11,11,Vitis berlandieri var. tomentosa Planch. 11,"the V. cinerea model pools the varieties (taxonRecords), so these also reach the V. cinerea model"
+Vitis cinerea,4966,4974,8,Vitis aestivalis var. cinerea Engelm. 8,
+Vitis labrusca,6775,6783,8,Vitis blanda Raf. 1; Vitis catawba K.Koch 2; Vitis labrusca f. alba (Prince) Fernald 1; Vitis obovata Baker 1; Vitis obovata Raf. 3,
+Vitis simpsonii,1022,1027,5,Vitis austrina Small 2; Vitis sola L.H.Bailey 3,
+Vitis vulpina,8605,8610,5,Vitis pullaria J.Le Conte 5,
+Vitis baileyana,665,668,3,Vitis virginiana Munson 3,
+Vitis cinerea var. cinerea,631,633,2,Vitis canescens G.Nicholson 2,"the V. cinerea model pools the varieties (taxonRecords), so these also reach the V. cinerea model"
+Vitis riparia,20379,20381,2,Vitis vulpina var. praecox (Engelm. ex L.H.Bailey) L.H.Bailey 2,

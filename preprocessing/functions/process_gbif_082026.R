@@ -26,7 +26,8 @@
 # Hyphenated epithets (novae-angliae, izu-insularis) are supported.
 # Returns NA when the string does not start with a Vitis/Muscadinia binomial, or
 # when it is a hybrid formula ("Vitis riparia x Vitis rupestris",
-# "Vitis labrusca x vinifera"): such records belong to neither parent.
+# "Vitis labrusca x vinifera", "Vitis aestivalis Michx. x V. vulpina L."):
+# such records belong to neither parent.
 # Named hybrids ("Vitis x doaniana") are kept.
 # Homonyms (same binomial, different author, different plant: "Vitis labrusca
 # Thunb." is V. coignetiae, "Vitis vulpina Bartram" is V. labrusca) are handled
@@ -43,7 +44,12 @@ parseVitisName <- function(x) {
   )
   parsed <- m[, 2]
   remainder <- m[, 3]
-  hybridFormula <- !is.na(remainder) & stringr::str_detect(remainder, "^\\s+x\\s+")
+  # a standalone " x " anywhere after the binomial marks a formula, so that
+  # authorship or a cultivar between the parents ("Vitis aestivalis Michx. x
+  # V. vulpina L.", "Muscadinia rotundifolia cv. Yuga x Carlos") is caught as
+  # well as the bare "Vitis riparia x Vitis rupestris" (review decision
+  # 2026-10-19: 8 such records had entered aestivalis, labrusca, rotundifolia)
+  hybridFormula <- !is.na(remainder) & stringr::str_detect(remainder, "\\sx\\s")
   parsed[hybridFormula] <- NA_character_
   parsed
 }

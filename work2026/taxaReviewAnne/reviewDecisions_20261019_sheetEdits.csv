@@ -1,0 +1,25 @@
+concept,column,name,status,decisionSource,basis,alreadyOnSheet,reviewRecords,recordsNowExcluded,nowExcludedWithCoordinates
+Vitis aestivalis,Names to include in this concept (Homotypic synonyms),Vitis smalliana,add to the sheet,Removed / Disagree,Treated as a synonym by FNA and not part of the varieties that were elevated,FALSE,19,20,19
+Vitis aestivalis,Names to include in this concept (Homotypic synonyms),Vitis araneosa,add to the sheet,Removed / Disagree,V. araneosa is a synonym in FNA,FALSE,11,15,0
+Vitis aestivalis,Names to include in this concept (Homotypic synonyms),Vitis intermedia,add to the sheet,Removed / Disagree,Not a synonym of V. aestivalis in FNA but it is in World Flora Online,FALSE,2,2,0
+Vitis aestivalis,Names to include in this concept (Homotypic synonyms),Vitis labrusca var. aestivalis,add to the sheet,Removed / Disagree,Listed as synonym of V. aestivalis in FNA,FALSE,1,1,0
+Vitis berlandieri,Names to include in this concept (Homotypic synonyms),Vitis cordifolia var. helleri,add to the sheet,Removed / Disagree,This is a synonym of V. berlandieri,FALSE,6,6,2
+Vitis cinerea var. tomentosa,Names to include in this concept (Homotypic synonyms),Vitis berlandieri var. tomentosa,add to the sheet,Removed / Disagree,Homotypic synonym of V. cinerea var. tomentosa per POWO; counterpart if specimens are within geographic range,FALSE,11,11,11
+Vitis labrusca,Names to include in this concept (Homotypic synonyms),Vitis catawba,add to the sheet,Removed / Disagree,"FNA does not include it as a synonym, most other sources do. Important to check distribution",FALSE,2,2,0
+Vitis labrusca,Names to include in this concept (Homotypic synonyms),Vitis blanda,add to the sheet,Removed / Disagree,"FNA does not include it as a synonym, most other sources do. Important to check distribution",FALSE,1,1,0
+Vitis labrusca,Names to include in this concept (Homotypic synonyms),Vitis obovata,add to the sheet,Removed / Disagree,"FNA does not include it as a synonym, most other sources do. Important to check distribution",FALSE,1,4,0
+Vitis labrusca,Names to include in this concept (Homotypic synonyms),Vitis labrusca f. alba,add to the sheet,Removed / Disagree,The form may not be recognized but at the species level this is okay to include. Important to check distribution,FALSE,1,1,0
+Vitis popenoei,Names to include in this concept (Homotypic synonyms),Muscadinia popenoei,add to the sheet,Removed / Disagree,Muscadinia popenoei is a synonym of V. popenoei,FALSE,22,22,3
+Vitis riparia,Names to include in this concept (Homotypic synonyms),Vitis vulpina var. praecox,add to the sheet,Removed / Disagree,Accepted synonym of V. riparia,FALSE,2,2,0
+Vitis tiliifolia,Names to include in this concept (Homotypic synonyms),Vitis caribaea,add to the sheet,Removed / Disagree,Accepted (heterotypic) synonym of V. tiliifolia per POWO,FALSE,145,204,31
+Vitis tiliifolia,Names to include in this concept (Homotypic synonyms),Vitis arachnoidea,add to the sheet,Removed / Disagree,Accepted (heterotypic) synonym of V. tiliifolia per POWO,FALSE,6,6,0
+Vitis tiliifolia,Names to include in this concept (Homotypic synonyms),Vitis acuminata,add to the sheet,Removed / Disagree,Accepted (heterotypic) synonym of V. tiliifolia per POWO,FALSE,1,1,0
+Vitis vulpina,Names to include in this concept (Homotypic synonyms),Vitis pullaria,add to the sheet,Removed / Disagree,V. pullaria is a good synonym of V. vulpina per FNA,FALSE,5,5,0
+Vitis berlandieri,Names to include in this concept (Homotypic synonyms),Vitis helleri,add to the sheet,"Removed from V. cinerea / Agree, counterpart",Counterpart is V. berlandieri per FNA,FALSE,8,8,0
+Vitis baileyana,Names to include in this concept (Homotypic synonyms),Vitis virginiana,add to the sheet,"Removed from V. cinerea / Agree, counterpart",Counterpart is V. baileyana,FALSE,3,3,0
+Vitis simpsonii,Names to include in this concept (Homotypic synonyms),Vitis austrina,add to the sheet,"Removed from V. cinerea / Agree, counterpart",Counterpart is V. simpsonii,FALSE,2,2,0
+Vitis simpsonii,Names to include in this concept (Homotypic synonyms),Vitis sola,add to the sheet,"Removed from V. cinerea / Agree, counterpart",Counterpart is V. simpsonii,FALSE,3,3,2
+Vitis cinerea,Names to include in this concept (Homotypic synonyms),Vitis aestivalis var. cinerea,add to the sheet,"Removed from V. cinerea and var. cinerea / Agree, counterpart",Counterpart is V. cinerea (both rows),FALSE,8,8,0
+Vitis cinerea var. cinerea,Names to include in this concept (Homotypic synonyms),Vitis canescens,add to the sheet,"Removed from V. cinerea / Agree, counterpart",Counterpart is V. cinerea var. cinerea,FALSE,2,2,0
+Vitis acerifolia,Names to include in this concept (Homotypic synonyms),Vitis novomexicana,on the sheet already,Removed / Disagree (applied 2026-10-05),Included as synonym of V. acerifolia per FNA,TRUE,3,0,0
+Vitis shuttleworthii,Names to include in this concept (Homotypic synonyms),Vitis coriacea,on the sheet already,"Removed / Disagree, include record (applied 2026-10-05)","Per FNA, V. coriacea is a synonym of V. shuttleworthii",TRUE,36,0,0

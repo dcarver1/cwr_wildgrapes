@@ -1,0 +1,47 @@
+species,change,decisionClass,effect,records
+Vitis acerifolia,Removed,Disagree,should return,3
+Vitis aestivalis,Removed,Agree,stays out,17
+Vitis aestivalis,Removed,Disagree,should return,33
+Vitis aestivalis,Removed,Unclear,open,87
+Vitis aestivalis,Removed,n/a (paired: see the addition),record moved; decided on the addition row,190
+Vitis aestivalis,Added,Disagree,should leave,6
+Vitis aestivalis var. aestivalis,Removed,Agree,stays out,1
+Vitis aestivalis var. bicolor,Added,Unclear,open,9
+Vitis baileyana,Added,Agree,stays in,123
+Vitis berlandieri,Removed,Disagree,should return,6
+Vitis berlandieri,Added,Agree,stays in,627
+Vitis cinerea,Removed,Agree,stays out of this concept; add to the counterpart named in the comment,37
+Vitis cinerea,Removed,n/a (paired: see the addition),record moved; decided on the addition row,845
+Vitis cinerea var. cinerea,Removed,Agree,stays out of this concept; add to the counterpart named in the comment,8
+Vitis cinerea var. tomentosa,Removed,Disagree,should return,11
+Vitis girdiana,Removed,Disagree,should return,1
+Vitis labrusca,Removed,Agree,stays out,106
+Vitis labrusca,Removed,Disagree,should return,5
+Vitis labrusca,Added,Disagree,should leave,1
+Vitis lincecumii,Added,Agree,stays in,164
+Vitis martineziana,Added,Review,open,2
+Vitis munsoniana,Added,Agree,stays in,243
+Vitis mustangensis,Added,Agree,stays in,1
+Vitis novogranatensis,Removed,Unclear,open,1
+Vitis novogranatensis,Added,Unclear,open,1
+Vitis popenoei,Removed,Disagree,should return,22
+Vitis popenoei,Added,Agree,stays in,1
+Vitis riparia,Removed,Agree,stays out,10
+Vitis riparia,Removed,Disagree,should return,3
+Vitis riparia,Removed,Unclear,open,6
+Vitis riparia,Added,Agree,stays in,3
+Vitis rotundifolia,Removed,n/a (paired: see the addition),record moved; decided on the addition row,243
+Vitis rotundifolia,Added,Disagree,should leave,1
+Vitis rufotomentosa,Added,Agree,stays in,30
+Vitis rufotomentosa,Added,Agree with concerns,stays in,9
+Vitis rufotomentosa,Added,Unclear,open,1
+Vitis shuttleworthii,Removed,Disagree,should return,36
+Vitis simpsonii,Added,Agree,stays in,95
+Vitis tiliifolia,Removed,Disagree,should return,152
+Vitis tiliifolia,Removed,Unclear,open,1
+Vitis tiliifolia,Added,Agree,stays in,245
+Vitis vulpina,Removed,Disagree,should return,5
+Vitis vulpina,Added,Agree,stays in,182
+Vitis x champinii,Added,Agree,stays in,66
+Vitis x doaniana,Added,Agree,stays in,12
+Vitis x novae-angliae,Added,Agree,stays in,23
