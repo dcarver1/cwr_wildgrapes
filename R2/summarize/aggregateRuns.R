@@ -7,92 +7,90 @@
 # combined table to the publication folder.
 #
 #   unchanged : no record changes from the taxonomy review -> published run
-#   updated   : taxonomy changes approved and re-run        -> update run
+#   updated   : taxonomy changes approved and run           -> the run named for
+#               the taxon in taxonomyUpdateStatus$updatedRun
 #   pending   : taxonomy changes still under review         -> published run,
 #               flagged so the row is not mistaken for a final value
 #
-# Move a taxon from pending to updated by adding it to taxonomyUpdateStatus$updated once its
-# review is complete and it has been run under `updateRun`.
+# Move a taxon from pending to updated by adding it to the run list in
+# taxonomyUpdateStatus once its review is complete and it has been run there.
 #
 #   source("global.R"); aggregateRuns()
 # (global.R sources every file under R2/, so this file must only define functions)
 ###
 # Taxonomy-update status of each taxon; the single list used by the model
-# driver (dontRun), aggregateRuns() and taxaNeedingRerun().
-#   unchanged   : no record changes from the taxonomy review (no rows in
-#                 work2026/taxaReviewAnne/taxonChangeRawData_20260924.xlsx), or
-#                 only changes that are not taxonomic. Published results stand.
-#   updated     : stable on the review input already received (Anne,
-#                 taxonChangeRawData_20260924.xlsx): every record reassigned
-#                 between project concepts carries her decision, and the only
-#                 unreviewed rows are a handful (<= 10) of records under dropped
-#                 or added synonyms. Either re-run under the update run after a
-#                 sheet edit (updated) or, when no edit was needed, the round-2
-#                 draft run stands (updatedFromDraft; its records are
-#                 fingerprint-identical to the current dataset).
-#   provisional : records identical to the round-2 draft run (fingerprint check,
-#                 taxaNeedingRerun()) but some of its record changes are still
-#                 unreviewed; the draft-run result is reported with that caveat
-#                 until the review closes (decision 2026-10-11)
-#   every other gap taxon is pending
+# driver (dontRun), aggregateRuns(), buildAggregateRun() and taxaNeedingRerun().
+#   unchanged : no record changes from the taxonomy review (no rows in the
+#               reviewer's workbook, work2026/taxaReviewAnne/
+#               taxonChangeRawData_20260924v2.xlsx), or only changes that are
+#               not taxonomic. Published results stand.
+#   updated   : records changed with the review and the result comes from the
+#               run named in updatedRun. The review closed on 2026-10-19 (every
+#               row of the v2 workbook carries a decision; the rows marked
+#               Unclear/Review were settled by project decisions the same day,
+#               reviewDecisions_20261019.md). A taxon was re-run only when its
+#               record fingerprint changed or a state range list was added
+#               (rerunGroups(), work2026/rerun/rerunGroups_20261019.csv);
+#               otherwise the earlier run whose records are fingerprint-identical
+#               to the current dataset stands.
+#   every other gap taxon is pending (none as of 2026-10-20)
 #   The WFO / NatureServe check (work2026/backboneAgreement/) is evidence for
 #   the review, not a route into any class.
-taxonomyUpdateStatus <- list(
-  unchanged = c(
-    "Vitis arizonica", "Vitis biformis", "Vitis blancoi", "Vitis bloodworthiana",
-    "Vitis bourgaeana", "Vitis californica", "Vitis jaegeriana", "Vitis monticola",
-    "Vitis nesbittiana", "Vitis palmata", "Vitis peninsularis", "Vitis rubriflora",
-    "Vitis rupestris",
-    # decision 2026-10-05: record differences that are not taxonomic do not
-    # change a published result. Both taxa appear only on the 'Not taxonomy'
-    # tab of nameApprovalChecklist_20261002.xlsx (one driver one-off record each).
-    "Vitis girdiana", "Vitis novogranatensis"),
-  # review complete as of 2026-10-02 (work2026/taxaReviewAnne/)
-  updated = c("Vitis acerifolia", "Vitis baileyana", "Vitis lincecumii", "Vitis shuttleworthii"),
-  # decision 2026-10-11: review input already covers every reassignment and the
-  # unreviewed residue is <= 10 records, so the draft run stands as updated.
-  # berlandieri: 627 of 627 records from V. cinerea agreed, 6 V. cordifolia var.
-  # helleri records dropped unreviewed; var. aestivalis: 1 dropped unreviewed;
-  # var. cinerea: 8 dropped unreviewed; mustangensis: 1 added unreviewed.
-  updatedFromDraft = c(
-    "Vitis aestivalis var. aestivalis", "Vitis berlandieri", "Vitis cinerea var. cinerea",
-    "Vitis mustangensis"),
-  # draft-run results stand provisionally (2026-10-11); pending = popenoei,
-  # rufotomentosa, cinerea var. tomentosa
-  provisional = c(
-    "Vitis aestivalis", "Vitis aestivalis var. bicolor", "Vitis cinerea", "Vitis labrusca",
-    "Vitis martineziana", "Vitis munsoniana", "Vitis riparia", "Vitis rotundifolia",
-    "Vitis simpsonii", "Vitis tiliifolia", "Vitis vulpina", "Vitis x champinii",
-    "Vitis x doaniana", "Vitis x novae-angliae"))
+taxonomyUpdateStatus <- local({
+  updatedByRun <- list(
+    # re-run 2026-10-19/20 on model_data20261019_2303.csv: 12 taxa whose records
+    # changed with the final sheet edits (group A) and the 5 elevated taxa that
+    # received a state range list (group B: baileyana, lincecumii, munsoniana,
+    # rufotomentosa, simpsonii)
+    run10192026_1k = c(
+      "Vitis aestivalis", "Vitis aestivalis var. bicolor", "Vitis baileyana", "Vitis berlandieri",
+      "Vitis cinerea", "Vitis cinerea var. cinerea", "Vitis cinerea var. tomentosa", "Vitis labrusca",
+      "Vitis lincecumii", "Vitis munsoniana", "Vitis popenoei", "Vitis riparia", "Vitis rotundifolia",
+      "Vitis rufotomentosa", "Vitis simpsonii", "Vitis tiliifolia", "Vitis vulpina"),
+    # re-run 2026-10-02 after the first sheet edits; records unchanged since
+    run10022026_1k = c("Vitis acerifolia", "Vitis shuttleworthii"),
+    # round-2 draft run (2026-09-16) stands: records fingerprint-identical to
+    # the current dataset, every record change reviewed
+    run09162026_1k = c(
+      "Vitis aestivalis var. aestivalis", "Vitis martineziana", "Vitis mustangensis",
+      "Vitis x champinii", "Vitis x doaniana", "Vitis x novae-angliae"))
+  updatedRun <- unlist(lapply(names(updatedByRun), function(r) stats::setNames(rep(r, length(updatedByRun[[r]])), updatedByRun[[r]])))
+  list(
+    unchanged = c(
+      "Vitis arizonica", "Vitis biformis", "Vitis blancoi", "Vitis bloodworthiana",
+      "Vitis bourgaeana", "Vitis californica", "Vitis jaegeriana", "Vitis monticola",
+      "Vitis nesbittiana", "Vitis palmata", "Vitis peninsularis", "Vitis rubriflora",
+      "Vitis rupestris",
+      # decision 2026-10-05: record differences that are not taxonomic do not
+      # change a published result. Both taxa appear only on the 'Not taxonomy'
+      # tab of nameApprovalChecklist_20261002.xlsx (one driver one-off record each).
+      "Vitis girdiana", "Vitis novogranatensis"),
+    updated = names(updatedRun),
+    # named character vector: taxon -> run its result comes from
+    updatedRun = updatedRun)
+})
 
 aggregateRuns <- function(publishedRun = "run08282025_1k",
-                          updateRun = "run10022026_1k",
-                          draftRun = "run09162026_1k",
                           outDir = "data/datasetsForPublication",
                           # the published table of record (sheet 6 of the publication dataset)
                           publishedTable = "data/datasetsForPublication/gapAnalysisSummary-sheet6.csv",
                           unchangedTaxa = taxonomyUpdateStatus$unchanged,
-                          updatedTaxa = taxonomyUpdateStatus$updated,
-                          draftUpdatedTaxa = taxonomyUpdateStatus$updatedFromDraft,
-                          provisionalTaxa = taxonomyUpdateStatus$provisional) {
+                          updatedRun = taxonomyUpdateStatus$updatedRun) {
   gapSpecies <- readr::read_csv("data/New World Vitis.csv", col_types = readr::cols(.default = "c"), show_col_types = FALSE) |>
     dplyr::filter(`Include in gap analysis?` == "Y") |> dplyr::pull(`Scientific Name`) |> sort()
 
   sources <- dplyr::tibble(taxon = gapSpecies) |>
-    dplyr::mutate(status = dplyr::case_when(taxon %in% c(updatedTaxa, draftUpdatedTaxa) ~ "updated",
+    dplyr::mutate(status = dplyr::case_when(taxon %in% names(updatedRun) ~ "updated",
                                             taxon %in% unchangedTaxa ~ "unchanged",
-                                            taxon %in% provisionalTaxa ~ "provisional",
                                             TRUE ~ "pending"),
-                  sourceRun = dplyr::case_when(taxon %in% updatedTaxa ~ updateRun,
-                                               taxon %in% draftUpdatedTaxa | status == "provisional" ~ draftRun,
-                                               TRUE ~ publishedRun),
+                  sourceRun = ifelse(status == "updated", unname(updatedRun[taxon]), publishedRun),
                   hasRun = file.exists(file.path("data/Vitis", taxon, sourceRun, "gap_analysis/fcs_combined.csv")),
                   # the published run holds counts but no scores for the two taxa
                   # without usable coordinates (novogranatensis, rufotomentosa)
                   hasCounts = file.exists(file.path("data/Vitis", taxon, sourceRun, "occurances/counts.csv")))
 
-  missingUpdate <- dplyr::filter(sources, status %in% c("updated", "provisional"), !hasRun, !taxon %in% c("Vitis cinerea var. tomentosa"))
-  if (nrow(missingUpdate) > 0) stop("Listed as updated/provisional but not run under its source run: ", paste(missingUpdate$taxon, collapse = ", "))
+  missingUpdate <- dplyr::filter(sources, status == "updated", !hasRun)
+  if (nrow(missingUpdate) > 0) stop("Listed as updated but not run under its source run: ", paste(missingUpdate$taxon, collapse = ", "))
 
   # summaryTable() returns the counts with empty scores when a run has no score
   # files, which is how those taxa appear in the published table (sheet 6)

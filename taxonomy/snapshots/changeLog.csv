@@ -1,3 +1,19 @@
 pulled,taxon,column,old,new
 20261005_1828,Vitis acerifolia,Names to include in this concept (Homotypic synonyms),Vitis longii,"Vitis longii, Vitis novomexicana"
 20261005_1828,Vitis shuttleworthii,Names to include in this concept (Homotypic synonyms),Vitis candicans var. coriacea,"Vitis candicans var. coriacea, Vitis coriacea"
+20261019_2049,Vitis aestivalis,Names to include in this concept (Homotypic synonyms),"Vitis aestivalis var. aestivalis, Vitis aestivalis var. bicolor, Vitis aestivalis var. argentifolia, Vitis argentifolia","Vitis aestivalis var. aestivalis, Vitis aestivalis var. bicolor, Vitis smalliana, Vitis araneosa, Vitis intermedia, Vitis labrusca var. aestivalis, Vitis aestivalis var. argentifolia, Vitis argentifolia"
+20261019_2049,Vitis aestivalis var. bicolor,Names to include in this concept (Homotypic synonyms),"Vitis aestivalis var. argentifolia, Vitis argentifolia",Vitis bicolor
+20261019_2049,Vitis baileyana,Names to include in this concept (Homotypic synonyms),Vitis cinerea var. baileyana,"Vitis cinerea var. baileyana, Vitis virginiana"
+20261019_2049,Vitis berlandieri,Names to include in this concept (Homotypic synonyms),Vitis cinerea var. helleri,"Vitis cinerea var. helleri, 
+Vitis cordifolia var. helleri, Vitis helleri"
+20261019_2049,Vitis cinerea,Names to include in this concept (Homotypic synonyms),"Vitis cinerea var. cinerea, Vitis cinerea var. tomentosa","Vitis cinerea var. cinerea, Vitis cinerea var. tomentosa, Vitis aestivalis var. cinerea"
+20261019_2049,Vitis cinerea var. cinerea,Names to include in this concept (Homotypic synonyms),,Vitis canescens
+20261019_2049,Vitis cinerea var. tomentosa,Names to include in this concept (Homotypic synonyms),,Vitis berlandieri var. tomentosa
+20261019_2049,Vitis labrusca,Names to include in this concept (Homotypic synonyms),,"Vitis catawba, Vitis blanda, Vitis obovata, Vitis labrusca f. alba"
+20261019_2049,Vitis popenoei,Names to include in this concept (Homotypic synonyms),,Muscadinia popenoei
+20261019_2049,Vitis riparia,Names to include in this concept (Homotypic synonyms),"Vitis riparia var. syrticola, Vitis riparia var. praecox, Vitis cordifolia var. riparia, Vitis vulpina subsp. riparia, Vitis vulpina var. syrticola","Vitis riparia var. syrticola, Vitis riparia var. praecox, Vitis cordifolia var. riparia, Vitis vulpina subsp. riparia, Vitis vulpina var. syrticola, Vitis vulpina var. praecox"
+20261019_2049,Vitis simpsonii,Names to include in this concept (Homotypic synonyms),Vitis cinerea var. floridana,"Vitis cinerea var. floridana, Vitis austrina, Vitis sola"
+20261019_2049,Vitis tiliifolia,Names to include in this concept (Homotypic synonyms),,"Vitis caribaea, Vitis arachnoidea, Vitis acuminata"
+20261019_2049,Vitis vulpina,Names to include in this concept (Homotypic synonyms),Vitis cordifolia; V. cordifolia var. sempervirens,"Vitis cordifolia; V. cordifolia var. sempervirens, Vitis pullaria"
+20261019_2049,Vitis labrusca,Names to exclude from this concept,,Vitis obovata Baker
+20261019_2303,Vitis aestivalis var. bicolor,Names to include in this concept (Homotypic synonyms),Vitis bicolor,"Vitis aestivalis var. argentifolia, Vitis bicolor"

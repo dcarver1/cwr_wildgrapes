@@ -82,12 +82,11 @@ latestModelData <- function(dir = "data/processed_occurrence") {
 # Compare each taxon's current run with the current model input.
 # The run a taxon is compared with follows its taxonomy-update status
 # (taxonomyUpdateStatus, R2/summarize/aggregateRuns.R):
-#   updated   -> the update run
+#   updated   -> the run named for the taxon in status$updatedRun
 #   unchanged -> the published run
 #   pending   -> the round-2 draft run (run09162026_1k), which every taxon has
 taxaNeedingRerun <- function(modelDataPath = latestModelData(),
                              publishedRun = "run08282025_1k",
-                             updateRun = "run10022026_1k",
                              draftRun = "run09162026_1k",
                              status = taxonomyUpdateStatus,
                              outPath = NULL) {
@@ -96,7 +95,7 @@ taxaNeedingRerun <- function(modelDataPath = latestModelData(),
     dplyr::filter(`Include in gap analysis?` == "Y") |> dplyr::pull(`Scientific Name`) |> sort()
   out <- purrr::map_dfr(gapSpecies, function(j) {
     st <- dplyr::case_when(j %in% status$updated ~ "updated", j %in% status$unchanged ~ "unchanged", TRUE ~ "pending")
-    run <- switch(st, updated = updateRun, unchanged = publishedRun, pending = draftRun)
+    run <- switch(st, updated = unname(status$updatedRun[[j]]), unchanged = publishedRun, pending = draftRun)
     now <- taxonFingerprint(taxonRecords(speciesData, j), j, modelDataPath)
     was <- readFingerprint(file.path("data/Vitis", j, run))
     if (is.null(was)) was <- data.frame(inputFile = NA, records = NA, withCoordinates = NA, G = NA, md5 = NA)

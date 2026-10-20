@@ -20,7 +20,6 @@
 ###
 buildAggregateRun <- function(aggregateRun = "runAggregate2026_1k",
                               publishedRun = "run08282025_1k",
-                              updateRun = "run10022026_1k",
                               status = taxonomyUpdateStatus,
                               dir1 = "data/Vitis") {
   gapSpecies <- readr::read_csv("data/New World Vitis.csv", col_types = readr::cols(.default = "c"), show_col_types = FALSE) |>
@@ -40,7 +39,7 @@ buildAggregateRun <- function(aggregateRun = "runAggregate2026_1k",
 
   out <- purrr::map_dfr(gapSpecies, function(j) {
     st <- dplyr::case_when(j %in% status$updated ~ "updated", j %in% status$unchanged ~ "unchanged", TRUE ~ "pending")
-    run <- if (st == "updated") updateRun else publishedRun
+    run <- if (st == "updated") unname(status$updatedRun[[j]]) else publishedRun
     src <- file.path(dir1, j, run); dst <- file.path(dir1, j, aggregateRun)
     if (!dir.exists(src)) stop(j, ": no folder for its source run ", run)
     marker <- file.path(dst, "aggregateSource.csv")
