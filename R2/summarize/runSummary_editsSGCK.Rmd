@@ -11,6 +11,8 @@ params:
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 pacman::p_load("leaflet","data.table", "tidyr", "dplyr","plotly","DT")
+# terra prints a text progress bar for resample/crop; knitr would capture it as document output
+terra::terraOptions(progress = 0)
 
 ### function for control number of character after the decimal place 
 sigfig <- function(vec, n=3){ 
