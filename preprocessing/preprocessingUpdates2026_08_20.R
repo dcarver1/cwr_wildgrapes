@@ -267,6 +267,15 @@ nBefore <- nrow(d11)
 d11 <- clearNewErrors(data = d11)
 message(nBefore - nrow(d11), " records removed by clearNewErrors()")
 
+# Record removals requested in the 2026 taxonomic review (one rule per
+# request, documented in reviewRemovals.R). The removed records are kept
+# beside the model input for the record.
+source("preprocessing/functions/reviewRemovals.R")
+rr <- applyReviewRemovals(data = d11)
+d11 <- rr$data
+write_csv(x = rr$removed, file = paste0("data/processed_occurrence/removedByReview_", final_date_suffix, ".csv"))
+message(nrow(rr$removed), " records removed at the reviewer's request (removedByReview_", final_date_suffix, ".csv)")
+
 # -------------------------------------------------------------------------
 # Step 6: Export Final Clean Dataset
 # -------------------------------------------------------------------------
