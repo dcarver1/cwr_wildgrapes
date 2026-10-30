@@ -46,7 +46,13 @@ taxonomyUpdateStatus <- local({
       "Vitis aestivalis", "Vitis aestivalis var. bicolor", "Vitis baileyana", "Vitis berlandieri",
       "Vitis cinerea", "Vitis cinerea var. cinerea", "Vitis cinerea var. tomentosa", "Vitis labrusca",
       "Vitis lincecumii", "Vitis munsoniana", "Vitis popenoei", "Vitis riparia", "Vitis rotundifolia",
-      "Vitis rufotomentosa", "Vitis simpsonii", "Vitis tiliifolia", "Vitis vulpina"),
+      "Vitis rufotomentosa", "Vitis simpsonii", "Vitis vulpina"),
+    # re-run 2026-10-22 on model_data20261022.csv after the reviewer asked for the
+    # California and Florida records of V. tiliifolia to be removed (it does not
+    # occur in the contiguous US; preprocessing/functions/reviewRemovals.R). Its
+    # 2026-10-19 run is superseded; every other taxon is fingerprint-identical
+    # between the two input files.
+    run10222026_1k = "Vitis tiliifolia",
     # re-run 2026-10-02 after the first sheet edits; records unchanged since
     run10022026_1k = c("Vitis acerifolia", "Vitis shuttleworthii"),
     # round-2 draft run (2026-09-16) stands: records fingerprint-identical to

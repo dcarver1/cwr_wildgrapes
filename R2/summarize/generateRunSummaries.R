@@ -24,7 +24,8 @@ generateRunSummaries <- function(
   path6 <- paste0(dir2, "/ersexRichness.tif")
   path7 <- paste0(dir2, "/ersex_speciesUsed_Richness.csv")
   path8 <- paste0(dir2, "/ersinRichness.tif")
-  path9 <- paste0(dir2, "/ersin_speciesUsed_Richness.tif")
+  # species list of the in situ ERS richness map; a csv (it was written with a .tif name until Oct 2026)
+  path9 <- paste0(dir2, "/ersin_speciesUsed_Richness.csv")
   path10 <- paste0(dir2, "/protectedAreaSpeciesPointRichness.csv")
   path11 <- paste0(dir2, "/protectedAreaSpeciesRasterRichness_1km.csv")
 

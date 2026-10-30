@@ -1,5 +1,10 @@
 # Datasets for the figures, 2026 taxonomy update (built 20 Oct 2026)
 
+> Superseded on 29 Oct 2026 by `data/datasetsForPublication_20261029/` (README_datasetsForPublication_20261029.md):
+> V. tiliifolia re-run without its California and Florida records, and sheets 8 and 10 of this build were found to
+> rest on per-taxon protected-area point files dated 5 Oct 2026 for 11 of the re-run taxa. The scripts named below
+> were renamed to `compileFigureData.R` and `protectedAreaRichness.R` when they were parameterised by build date.
+
 Folder: `data/datasetsForPublication_20261020/` (zip of the same name). Every file keeps the name it had in the
 published dataset (`data/datasetsForPublication/`, built from run `run08282025_1k`) so the figure scripts can be
 pointed at this folder in place of the old one. Built by `work2026/figureData/compileFigureData_20261020.R` and

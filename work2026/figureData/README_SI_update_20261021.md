@@ -1,5 +1,7 @@
 # Supplementary information, 2026 taxonomy update: what changed on each page (21 Oct 2026)
 
+> Superseded on 29 Oct 2026 by `data/SI_update_20261029/` (README_SI_update_20261029.md). Built by the script now named `packagePublicationUpdate.R`.
+
 Folder `data/SI_update_20261021/`: one workbook per supplementary page, a single sheet each, ready to drop into the
 Google Sheet that holds the SI. The values come from the rebuilt publication dataset of 20 Oct 2026
 (`data/datasetsForPublication_20261020/`, built from the aggregate run `runAggregate2026_1k`); this folder only

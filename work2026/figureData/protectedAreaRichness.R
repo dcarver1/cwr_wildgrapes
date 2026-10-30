@@ -4,7 +4,7 @@
 # made it with protectedAreaRichness() (R2/summarize/richnessPerProtectedArea.R) when that
 # function still wrote its result; the current version returns nothing, so the same steps
 # are repeated here without changing R2/.
-#   Rscript work2026/figureData/protectedAreaRichness_20261020.R [runVersion]
+#   Rscript work2026/figureData/protectedAreaRichness.R [runVersion]
 suppressPackageStartupMessages({library(dplyr); library(sf); library(terra); library(readr)})
 run <- commandArgs(trailingOnly = TRUE)[1]; if (is.na(run)) run <- "runAggregate2026_1k"
 r1 <- rast(file.path("data/Vitis", run, "speciesrichness_1km.tif"))

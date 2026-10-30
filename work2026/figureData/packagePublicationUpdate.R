@@ -1,17 +1,24 @@
-# Repackage the rebuilt publication datasets (data/datasetsForPublication_20261020/, built by
-# compileFigureData_20261020.R) into the two things the co-authors need:
+# Repackage the rebuilt publication datasets (data/datasetsForPublication_<build>/, built by
+# compileFigureData.R) into the two things the co-authors need:
 #
-#   data/SI_update_20261021/        one xlsx per supplementary page (sheets 1-11), single sheet each, so a
-#                                   page can be dropped into the Google Sheet that holds the SI; plus a
-#                                   README listing, per page, whether it changed and why.
-#   data/figureMaterial_20261021/   the all-taxa layers and tables the figures are drawn from (richness and
-#                                   gap rasters with their species lists, protected-area tables, box-plot
-#                                   data, the two rendered summary documents).
+#   data/SI_update_<stamp>/        one xlsx per supplementary page (sheets 1-11), single sheet each, so a
+#                                  page can be dropped into the Google Sheet that holds the SI; plus a
+#                                  README listing, per page, whether it changed and why (written by hand,
+#                                  tracked copy in work2026/figureData/).
+#   data/figureMaterial_<stamp>/   the all-taxa layers and tables the figures are drawn from (richness and
+#                                  gap rasters with their species lists, protected-area tables, box-plot
+#                                  data, the two rendered summary documents).
 #
-#   Rscript work2026/figureData/packagePublicationUpdate_20261021.R
+#   Rscript work2026/figureData/packagePublicationUpdate.R [stamp] [build]
+#     stamp: date of this package (default today); build: date of the datasetsForPublication folder it
+#     re-cuts (default stamp). Packages so far: 20261021 from build 20261020; 20261029 from build 20261029.
 suppressPackageStartupMessages({library(dplyr); library(readr); library(openxlsx)})
-src <- "data/datasetsForPublication_20261020"
-si <- "data/SI_update_20261021"; fig <- "data/figureMaterial_20261021"
+args <- commandArgs(trailingOnly = TRUE)
+stamp <- if (length(args) >= 1 && nzchar(args[1])) args[1] else format(Sys.Date(), "%Y%m%d")
+build <- if (length(args) >= 2 && nzchar(args[2])) args[2] else stamp
+src <- paste0("data/datasetsForPublication_", build)
+si <- paste0("data/SI_update_", stamp); fig <- paste0("data/figureMaterial_", stamp)
+cat("package", stamp, "from", src, "->", si, "and", fig, "\n")
 dir.create(si, showWarnings = FALSE); dir.create(fig, showWarnings = FALSE)
 
 # published page -> source csv in the rebuilt folder
@@ -46,12 +53,13 @@ for (f in c("gapAnalysisSummary-sources.csv", "SDM_testConditions.csv")) file.co
 figFiles <- c("speciesrichness_1km.tif", "speciesUsed_speciesrichness.csv",
               "ga50_speciesrichness_1km.tif", "ga50speciesUsed_speciesrichness.csv",
               "ersexRichness.tif", "ersex_speciesUsed_Richness.csv",
-              "ersinRichness.tif", "ersin_speciesUsed_Richness.tif",
+              "ersinRichness.tif", "ersin_speciesUsed_Richness.csv",
               "grsEX_map.tif", "grsIn_map.tif",
               "pointsInProtectedAreasUpdate.csv", "rastInProtectedAreasUpdate.csv",
               "environementalDataForBoxPlots.csv", "aggregateSources.csv",
               "runAggregate2026_1k_Summary.html", "runAggregate2026_1k_boxPlotSummary.html")
 for (f in figFiles) { stopifnot(file.exists(file.path(src, f))); file.copy(file.path(src, f), fig, overwrite = TRUE, copy.date = TRUE) }
-# the species list with the .tif name is a csv (published quirk): give the copy the right extension as well
-file.copy(file.path(src, "ersin_speciesUsed_Richness.tif"), file.path(fig, "ersin_speciesUsed_Richness.csv"), overwrite = TRUE)
+unlink(file.path(fig, "ersin_speciesUsed_Richness.tif"))   # misnamed copy of the csv in packages before 30 Oct 2026
+# the build README describes every file of the figure material as well
+file.copy(file.path(src, "README.md"), file.path(fig, "README.md"), overwrite = TRUE)
 cat("figure material:", length(list.files(fig)), "files\n")

@@ -6,21 +6,29 @@
 # are hard-coded to run08282025_1k. Every taxon's files are read from
 # data/Vitis/<taxon>/runAggregate2026_1k, the folder buildAggregateRun() fills from the run
 # each taxon's result comes from (taxonomyUpdateStatus, R2/summarize/aggregateRuns.R).
-# Output: data/datasetsForPublication_20261020/ with the published file names.
+# Output: data/datasetsForPublication_<stamp>/ with the published file names.
 #
-#   Rscript work2026/figureData/compileFigureData_20261020.R tables
+#   Rscript work2026/figureData/compileFigureData.R tables [stamp]
 #       sheets 1-7, SDM test conditions, box-plot data, sheet 11 (method table, unchanged)
-#   Rscript work2026/figureData/compileFigureData_20261020.R summaries
-#       sheets 8-10, the protected-area "Update" tables, the richness and gap rasters, the
-#       summary documents. Needs generateRunSummaries() to have run on runAggregate2026_1k.
-#   Rscript work2026/figureData/compileFigureData_20261020.R update
+#   Rscript work2026/figureData/compileFigureData.R summaries [stamp]
+#       sheets 8-10, the richness and gap rasters, the summary documents. Needs
+#       work2026/figureData/rebuildAggregateSummaries.R to have run on runAggregate2026_1k.
+#   Rscript work2026/figureData/compileFigureData.R update [stamp]
 #       the two protected-area "Update" tables (points and raster maximum per WDPA polygon)
+#
+# stamp (YYYYMMDD, default today) names the output folder and selects the combined table
+# aggregateRuns() wrote that day. Builds so far: 20261020 (after the review closed),
+# 20261029 (V. tiliifolia re-run without its California and Florida records).
 suppressPackageStartupMessages({library(dplyr); library(readr); library(purrr); library(terra)})
-part <- commandArgs(trailingOnly = TRUE)[1]
+args <- commandArgs(trailingOnly = TRUE)
+part <- args[1]
+stamp <- if (length(args) >= 2 && nzchar(args[2])) args[2] else format(Sys.Date(), "%Y%m%d")
 run <- "runAggregate2026_1k"
-out <- "data/datasetsForPublication_20261020"
+out <- paste0("data/datasetsForPublication_", stamp)
 pubDir <- "data/datasetsForPublication"
-modelData <- "data/processed_occurrence/model_data20261019_2303.csv"
+# the occurrence dataset the aggregate run was built from: the newest model_data file
+modelData <- sort(list.files("data/processed_occurrence", pattern = "^model_data\\d{8}(_\\d{4})?\\.csv$", full.names = TRUE), decreasing = TRUE)[1]
+cat("build", stamp, "from", run, "and", modelData, "->", out, "\n")
 dir.create(out, showWarnings = FALSE)
 gapSpecies <- read_csv("data/New World Vitis.csv", col_types = cols(.default = "c"), show_col_types = FALSE) |>
   filter(`Include in gap analysis?` == "Y") |> pull(`Scientific Name`) |> sort()
@@ -57,8 +65,8 @@ if (part == "tables") {
     cat("  ", f, ":", nrow(rd(file.path(out, f))), "rows,", n_distinct(rd(file.path(out, f))$taxon), "taxa\n")
 
   cat("sheet 6: gap analysis summary (combined table from aggregateRuns(), with status and source run)\n")
-  cp(file.path(pubDir, "gapAnalysisSummary_combined_20261020.csv"), "gapAnalysisSummary-sheet6.csv")
-  cp(file.path(pubDir, "gapAnalysisSummary_sources_20261020.csv"), "gapAnalysisSummary-sources.csv")
+  cp(file.path(pubDir, paste0("gapAnalysisSummary_combined_", stamp, ".csv")), "gapAnalysisSummary-sheet6.csv")
+  cp(file.path(pubDir, paste0("gapAnalysisSummary_sources_", stamp, ".csv")), "gapAnalysisSummary-sources.csv")
 
   cat("sheet 7: ex situ collections by database source and institution\n")
   g <- read_csv(modelData, col_types = cols(.default = "c"), show_col_types = FALSE, progress = FALSE) |> filter(type == "G")
@@ -78,9 +86,16 @@ if (part == "summaries") {
   cp(file.path(agg, "protectedAreaSpeciesRasterRichness_1km.csv"), "predictedInProtectedAreas-sheet9.csv")
   cp(file.path(agg, "topProArea.csv"), "optimalProtectedAreas-sheet10.csv")
   cat("richness and gap layers\n")
+  # grsEX_map.tif / grsIn_map.tif: written by the summary document, kept in the aggregate
+  # folder by rebuildAggregateSummaries.R
   for (f in c("speciesrichness_1km.tif", "speciesUsed_speciesrichness.csv", "ga50_speciesrichness_1km.tif",
               "ga50speciesUsed_speciesrichness.csv", "ersexRichness.tif", "ersex_speciesUsed_Richness.csv",
-              "ersinRichness.tif", "ersin_speciesUsed_Richness.tif", "aggregateSources.csv")) cp(file.path(agg, f), f)
+              "ersinRichness.tif", "grsEX_map.tif", "grsIn_map.tif", "aggregateSources.csv")) cp(file.path(agg, f), f)
+  # the in situ ERS species list is a csv; runs before Oct 2026 wrote it with a .tif name (the published
+  # dataset carries that name) and it is delivered under its right name from this build on
+  ersinList <- file.path(agg, c("ersin_speciesUsed_Richness.csv", "ersin_speciesUsed_Richness.tif"))
+  cp(ersinList[file.exists(ersinList)][1], "ersin_speciesUsed_Richness.csv")
+  unlink(file.path(out, "ersin_speciesUsed_Richness.tif"))
   cp(paste0("data/Vitis/summaryTable_", run, ".csv"), paste0("summaryTable_", run, ".csv"))
   cp(paste0("data/Vitis/", run, "_Summary.html"), paste0(run, "_Summary.html"))
   bp <- paste0("data/Vitis/", run, "_boxPlotSummary.html"); if (file.exists(bp)) cp(bp, basename(bp))
