@@ -1,0 +1,42 @@
+taxon,filtered,nsRange,points,outside,detail
+Vitis tiliifolia,FALSE,"Central America to South America according to Wen et al. 2018 (Colombia, Ecuador, Venezuela) and in the Caribbean",1788,1089,MEX Veracruz=290; MEX Chiapas=175; MEX Michoacán=99; MEX Oaxaca=67; MEX Querétaro=53; MEX Puebla=52; MEX Jalisco=43; MEX Quintana Roo=43; MEX México=37; MEX Morelos=26; MEX San Luis Potosí=25; MEX Guerrero=23; MEX Tabasco=21; MEX Campeche=19; MEX Colima=19; MEX Hidalgo=17; MEX Nayarit=15; MEX Tamaulipas=14; MEX Guanajuato=12; MEX Sinaloa=12; MEX Yucatán=10; MEX Nuevo León=4; MEX Veracruz de ignacio de la llave=4; MEX Zacatecas=3; MEX Baja California Sur=2; MEX Durango=2; MEX Chihuahua=1; MEX Quintana roo=1
+Vitis cinerea,TRUE,"United States (NNR): AL (SNR), AR (SNR), DC (S1), FL (SNR), GA (SNR), IA (S3), IL (SNR), IN (SNR), KS (S3), KY (S4), LA (SNR), MD (S4), MO (SNR), MS (SNR), NE (S1), NM (SNR), NY (SNR), OH (SNR), OK (SNR), SC (SNR), TN (SNR), TX (SNR), WI (SNR), WV (SNR) Mexico?",1266,33,USA North Carolina=17; USA Virginia=11; USA Pennsylvania=5
+Vitis aestivalis var. bicolor,FALSE,"Canada (NNR): ON (SNR)
+ United States (N4): AL (SNR), CT (SNR), GA (SNR), IL (SNR), IN (SNR), KY (S5), MA (SNR), MD (SNR), ME (S2), MI (SNR), MN (SNR), NH (SNR), NJ (S3), NY (SNR), OH (SNR), PA (SNR), RI (SNR), SC (SNR), TN (SNR), VA (S5), VT (SNR), WI (SNR), WV (S4)",467,19,USA North Carolina=10; USA Iowa=3; USA Arkansas=1; USA District of Columbia=1; USA Kansas=1; USA Missouri=1; USA Oklahoma=1; USA Texas=1
+Vitis x novae-angliae,TRUE,"Canada (NNA): ON (SNA); United States (NNR): CT (SU), MA (SNA), ME (SNA), NH (SNA), NJ (SNA), NY (SNA), RI (SNR), VT (SNA)",69,12,USA Pennsylvania=12
+Vitis riparia,TRUE,"Canada (N5): BC (SNA), MB (S3), NB (S4), NS (SNA), ON (S5), PE (SNA), QC (S4), SK (SNA); United States (N5): AL (SNR), AR (SNR), CO (SNR), CT (SNR), DC (SNR), GA (SNR), IA (S5), IL (SNR), IN (S5), KS (S5), KY (S5), LA (SNR), MA (SNR), MD (SNR), ME (SNR), MI (SNR), MN (SNR), MO (SNR), MS (SNR), MT (S3), NC (SNR), ND (SNR), NE (SNR), NH (SNR), NJ (S3), NM (SNR), NY (S5), OH (SNR), OK (SNR), OR (SNA), PA (S5), RI (SNR), SC (SNR), SD (SNR), TN (SNR), TX (SNR), VA (S5), VT (SNR), WI (SNR), WV (S5), WY (S3)",11853,7,USA Washington=7
+Vitis aestivalis,TRUE,"Canada (N4): ON (S4); United States (N5): AL (SNR), AR (SNR), CT (SNR), DC (SNR), DE (S5), FL (S5), GA (SNR), IA (S2), IL (SNR), IN (SNR), KS (SNR), KY (SNR), LA (SNR), MA (SNR), MD (SNR), ME (S2), MI (SNR), MN (S2), MO (SNR), MS (SNR), NC (S5), NH (SNR), NJ (SNR), NY (S5), OH (SNR), OK (SNR), PA (SNR), RI (SNR), SC (SNR), TN (SNR), TX (SNR), VA (S5), VT (SNR), WI (SNR), WV (S4)",4824,3,USA Nebraska=3
+Vitis aestivalis var. aestivalis,FALSE,"United States (N5): AL (SNR), AR (SNR), CT (SNR), DC (SNR), DE (S4), FL (SNR), GA (SNR), IA (SNR), IL (SNR), IN (SNR), KS (S1), KY (S5), LA (SNR), MA (SNR), MD (SNR), MO (SNR), MS (SNR), NC (SNR), NJ (S4), NY (SNR), OH (SNR), OK (SNR), PA (SNR), RI (SNR), SC (S5), TN (SNR), TX (SNR), VA (S5), WV (SNR)",339,3,USA Wisconsin=2; USA Maine=1
+Vitis labrusca,TRUE,"Canada (N1): NB (SNA), NS (SNA), ON (S1); United States (N5): AL (SNR), AR (SNR), CT (SNR), DC (SNR), DE (S4), FL (SNR), GA (SNR), IL (SNA), IN (SNR), KY (S2), MA (SNR), MD (SNR), ME (SNR), MI (SNR), MO (SNR), MS (SNR), NC (S4), NH (SNR), NJ (S5), NY (S5), OH (S3), PA (S5), RI (SNR), SC (S4), TN (SNR), UT (SNR), VA (S5), VT (SNR), WV (S5)",1755,3,USA Wisconsin=3
+Vitis rufotomentosa,TRUE,"United States (NNR): FL (SNR), NC (SNR)",17,3,USA Maryland=3
+Vitis berlandieri,FALSE,"United States (NNR): NM (SNR), TX (SNR)   MEXICO",515,2,USA Oklahoma=2
+Vitis martineziana,FALSE,Mexico (Chiapas),13,1,MEX Jalisco=1
+Vitis acerifolia,TRUE,"United States (NNR): CO (SNR), KS (S2), NM (SNR), OK (SNR), TX (S3)",327,0,
+Vitis arizonica,TRUE,"United States (NNR): AZ (SNR), CO (SNR), NM (SNR), NV (S3), TX (SNR), UT (S1)  MEXICO",2425,0,
+Vitis baileyana,TRUE,"United States (NNR): AL (SNR), AR (SNR), GA (SNR), IN (SNR), KY (S4), NC (SNR), OH (SNR), PA (S1), SC (S4), TN (SNR), VA (S4), WV (SH)",133,0,
+Vitis biformis,FALSE,Mexico,24,0,
+Vitis blancoi,FALSE,Mexico,31,0,
+Vitis bloodworthiana,FALSE,Mexico,63,0,
+Vitis bourgaeana,FALSE,Mexico,305,0,
+Vitis californica,TRUE,"United States (N4): CA (SNR), OR (SNR)",1845,0,
+Vitis girdiana,TRUE,"United States (NNR): AZ (SNR), CA (SNR), NV (SNR), UT (SNR)  MEXICO",1539,0,
+Vitis jaegeriana,FALSE,Mexico,7,0,
+Vitis lincecumii,TRUE,"United States (NNR): AR (S1), LA (SNR), OK (SNR), TX (SNR)",75,0,
+Vitis monticola,TRUE,United States (N4): TX (S4),405,0,
+Vitis munsoniana,TRUE,"United States (NNR): AL (S1), FL (SNR), GA (S2)",68,0,
+Vitis mustangensis,TRUE,"United States (N4): AL (S1), LA (SNR), MS (SNR), OK (S2), TX (SNR)",8088,0,
+Vitis nesbittiana,FALSE,Mexico,29,0,
+Vitis novogranatensis,FALSE,Colombia,0,0,no points
+Vitis palmata,TRUE,"United States (N4): AL (SNR), AR (SNR), FL (SNR), GA (SH), IA (SNR), IL (SNR), IN (S3), KY (S5), LA (SNR), MO (SNR), MS (SNR), NJ (SNR), NY (SNA), OK (SNR), TN (SNR), TX (SNR), VA (SNR)",191,0,
+Vitis peninsularis,FALSE,Mexico,68,0,
+Vitis popenoei,FALSE,"Mexico, Belize, Guatemala",100,0,
+Vitis rotundifolia,TRUE,"United States (N5): AL (SNR), AR (SNR), DE (S4), FL (SNR), GA (S5), IN (SNR), KY (SNR), LA (SNR), MD (S4), MO (SNR), MS (SNR), NC (S5), OK (SNR), SC (SNR), TN (SNR), TX (SNR), VA (S5), WV (S1)",22064,0,
+Vitis rubriflora,FALSE,Mexico (Jalisco),3,0,
+Vitis rupestris,TRUE,"United States (N3): AR (S1), CA (SNA), DC (S1), IN (S1), KY (S2), MD (S1), MO (S3), OK (S2), PA (S1), TN (S1), TX (S1), VA (S1), WV (S2)",203,0,
+Vitis shuttleworthii,TRUE,"United States (N4): AL (SNA), FL (S4)",625,0,
+Vitis simpsonii,TRUE,"United States (NNR): AL (SNR), AR (SNR), FL (S5), GA (SNR), MS (SNR), NC (SNR), SC (SNR), VA (SU)",339,0,
+Vitis vulpina,TRUE,"Canada (N1): ON (S1); United States (N5): AL (SNR), AR (SNR), DC (SNR), DE (S4), FL (SNR), GA (SNR), IA (SU), IL (SNR), IN (SNR), KS (S3), KY (S5), LA (SNR), MA (SNR), MD (SNR), MI (S1), MN (SNR), MO (SNR), MS (SNR), NC (SNR), NE (S1), NJ (S4), NM (SNR), NY (S1), OH (SNR), OK (SNR), PA (S5), SC (S4), SD (SNR), TN (SNR), TX (SNR), VA (S5), WV (S5)",1970,0,
+Vitis x champinii,TRUE,United States (NNA): TX (SNA),24,0,
+Vitis x doaniana,TRUE,"United States (NNA): OK (SNA), TX (SNA)",46,0,
+Vitis cinerea var. cinerea,FALSE,NA,163,NA,NatureServe gives no range
+Vitis cinerea var. tomentosa,FALSE,NA,9,NA,NatureServe gives no range

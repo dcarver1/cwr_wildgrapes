@@ -1,0 +1,1176 @@
+taxon,iso3,state,county,yearRecorded,databaseSource,institutionCode,sourceUniqueID,type,latitude,longitude
+Vitis aestivalis,USA,Nebraska,NA,2022,GBIF,NA,q-10614286121,H,40.824717,-96.577158
+Vitis aestivalis,USA,Nebraska,NA,2022,GBIF,NA,o-1014309455,H,40.806913,-96.642851
+Vitis aestivalis,USA,Nebraska,NA,1974,GBIF,KU,b281a893-2520-49ac-8087-9e969169c8f0,H,40.229914,-95.507709
+Vitis aestivalis var. aestivalis,USA,Wisconsin,NA,1958,GBIF,WIS,53719e3c-bbd9-4385-8508-fc37c451def3,H,42.514823,-90.299242
+Vitis aestivalis var. aestivalis,USA,Maine,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/128099713,H,43.984898,-70.447528
+Vitis aestivalis var. aestivalis,USA,Wisconsin,NA,1913,GBIF,WIS,3a53d5fa-21d5-472d-a184-ffc772ad386f,H,42.50835,-89.03178
+Vitis aestivalis var. bicolor,USA,North Carolina,NA,1968,GBIF,USCH,70d3024d-524c-422f-8a81-20f2c41960c5,H,35.769847,-82.182969
+Vitis aestivalis var. bicolor,USA,North Carolina,NA,1981,GBIF,AUA,f98f0ce2-9617-41f9-a2a0-b2a6fb118dbe,H,36.206276,-81.163386
+Vitis aestivalis var. bicolor,USA,North Carolina,NA,1980,GBIF,AUA,002a0c9c-ea1e-440a-b60b-551e21b7810e,H,36.434425,-81.500521
+Vitis aestivalis var. bicolor,USA,North Carolina,NA,1905,GBIF,AUA,0b786b6a-93b3-44bb-a182-22ef92149cda,H,35.085118,-83.182151
+Vitis aestivalis var. bicolor,USA,North Carolina,NA,1981,GBIF,AUA,c5de7a32-62d7-4525-a4a8-ca0f234d7888,H,35.39559,-81.92685
+Vitis aestivalis var. bicolor,USA,North Carolina,NA,1905,GBIF,AUA,bc905fc4-13bd-4cc0-87a2-d5792fd167f6,H,35.04446,-83.161757
+Vitis aestivalis var. bicolor,USA,North Carolina,NA,1981,GBIF,AUA,dc84672b-e145-4fd5-b200-451c33dfeb3b,H,35.287424,-83.140812
+Vitis aestivalis var. bicolor,USA,District of Columbia,NA,1888,GBIF,MARY,8c8f2b99-fbb0-44bf-9039-b00ce59f8b2c,H,38.960972,-77.061128
+Vitis aestivalis var. bicolor,USA,Iowa,NA,1963,GBIF,WIS,3f3bd153-1332-46d2-9292-c8eaf739a270,H,42.680958,-90.841966
+Vitis aestivalis var. bicolor,USA,North Carolina,NA,1968,GBIF,GA,9f048b48-d58c-4b14-a296-bfc3a321fb66,H,35.756787,-82.182896
+Vitis aestivalis var. bicolor,USA,Missouri,NA,1988,GBIF,ASU,7a558f29-1efa-41ba-81b8-2fcf53edc842,H,36.68638,-93.60527
+Vitis aestivalis var. bicolor,USA,North Carolina,NA,1968,GBIF,BAYLU,24387f39-18d6-4bf8-a315-1305f75ae798,H,35.75939,-82.1817
+Vitis aestivalis var. bicolor,USA,North Carolina,NA,1972,GBIF,WCUH,a92f5fb4-06b8-4427-8e84-a7966ec71bfe,H,35.030925,-83.579883
+Vitis aestivalis var. bicolor,USA,Texas,NA,1890,GBIF,NY,6a5a7fa8-cea0-4054-bf44-ae55307bb520,H,33.755659,-96.536658
+Vitis aestivalis var. bicolor,USA,Oklahoma,NA,1913,GBIF,NY,0737cff9-c7a5-4595-85a1-c22834231214,H,36.761761,-95.208497
+Vitis aestivalis var. bicolor,USA,Arkansas,NA,NA,GBIF,NY,8217848f-1bb2-4ced-a284-6d88730f95e8,H,35.359049,-94.382069
+Vitis aestivalis var. bicolor,USA,Kansas,NA,1896,GBIF,NY,7b9e9b19-e900-4122-baa2-ef9ba5edbefb,H,37.169306,-94.846269
+Vitis aestivalis var. bicolor,USA,Iowa,NA,1927,GBIF,BDI,aa4511db-d86b-4882-b937-1e555d1277fc,H,43.044428,-91.178186
+Vitis aestivalis var. bicolor,USA,Iowa,NA,1920,GBIF,SAU,d0b22bff-a311-4776-88ce-69257f6612ba,H,43.007774,-91.174219
+Vitis berlandieri,USA,Oklahoma,NA,1935,GBIF,NY,97c6cf77-e076-4d97-8c08-9009226d3e3f,H,34.50481,-96.9414
+Vitis berlandieri,USA,Oklahoma,NA,1988,GBIF,USCH,80872580-d00a-4487-8d2a-2407135a71ad,H,35.246436,-96.577597
+Vitis cinerea,USA,Virginia,NA,1967,GBIF,NCU,6fba5934-8f0d-4886-b6fb-3f826dfc5b63,H,36.699351,-78.211698
+Vitis cinerea,USA,Pennsylvania,NA,2020,GBIF,iNaturalist,https://www.inaturalist.org/observations/48601324,H,40.919715,-77.037889
+Vitis cinerea,USA,North Carolina,NA,2020,GBIF,iNaturalist,https://www.inaturalist.org/observations/49083541,H,35.82173,-81.187912
+Vitis cinerea,USA,Pennsylvania,NA,2020,GBIF,iNaturalist,https://www.inaturalist.org/observations/56353159,H,41.058316,-75.305343
+Vitis cinerea,USA,Pennsylvania,NA,2020,GBIF,iNaturalist,https://www.inaturalist.org/observations/57139491,H,40.396956,-79.728938
+Vitis cinerea,USA,Virginia,NA,2018,GBIF,iNaturalist,https://www.inaturalist.org/observations/12929237,H,38.83252,-77.070555
+Vitis cinerea,USA,Virginia,NA,2020,GBIF,iNaturalist,https://www.inaturalist.org/observations/62679459,H,37.100668,-77.980277
+Vitis cinerea,USA,Pennsylvania,NA,2012,GBIF,iNaturalist,https://www.inaturalist.org/observations/69229739,H,39.902217,-79.745877
+Vitis cinerea,USA,Virginia,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/136452538,H,38.971518,-77.416182
+Vitis cinerea,USA,Virginia,NA,2020,GBIF,iNaturalist,https://www.inaturalist.org/observations/60515963,H,36.721328,-76.23832
+Vitis cinerea,USA,Virginia,NA,2019,GBIF,iNaturalist,https://www.inaturalist.org/observations/32985675,H,36.579706,-77.151882
+Vitis cinerea,USA,North Carolina,NA,2020,GBIF,iNaturalist,https://www.inaturalist.org/observations/49527944,H,35.804295,-79.013436
+Vitis cinerea,USA,North Carolina,NA,2020,GBIF,iNaturalist,https://www.inaturalist.org/observations/49833384,H,35.790942,-82.548332
+Vitis cinerea,USA,North Carolina,NA,2023,GBIF,iNaturalist,https://www.inaturalist.org/observations/184279803,H,35.483563,-83.36453
+Vitis cinerea,USA,Virginia,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/220415774,H,38.997095,-77.250953
+Vitis cinerea,USA,North Carolina,NA,2014,GBIF,UAM,https://arctos.database.museum/guid/UAM:Herb:255038,H,35.963889,-77.831667
+Vitis cinerea,USA,North Carolina,NA,1970,GBIF,GA,a8d87c81-de92-41cc-afd0-c15e8a93f076,H,36.169608,-75.755185
+Vitis cinerea,USA,North Carolina,NA,2014,GBIF,US,http://n2t.net/ark:/65665/36ca4be87-1921-4c95-b17c-283746659266,H,35.5987,-78.1315
+Vitis cinerea,USA,Virginia,NA,2014,GBIF,US,http://n2t.net/ark:/65665/397c331c4-14a4-4412-9717-8032de11651b,H,36.6646,-81.1955
+Vitis cinerea,USA,North Carolina,NA,2014,GBIF,US,http://n2t.net/ark:/65665/3444af03a-bb29-48ad-8b6f-1b93a4347965,H,35.9639,-77.8317
+Vitis cinerea,USA,North Carolina,NA,1970,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p02788359,H,36.10139,-75.71202
+Vitis cinerea,USA,Virginia,NA,2015,GBIF,NY,a949ab64-3924-43f2-b918-ca09e0c9c6c5,H,37.8958,-75.3683
+Vitis cinerea,USA,Pennsylvania,NA,2007,GBIF,CM,302EFD3D-57C5-48DD-ADBE-86B94474DEBE,H,39.7925,-80.338333
+Vitis cinerea,USA,North Carolina,NA,2011,GBIF,NCSC,e6a565b8-f474-44d6-8694-f56960962db6,H,34.968306,-77.87288
+Vitis cinerea,USA,North Carolina,NA,NA,GBIF,NCSC,5eb1aa9b-6e64-49ac-90fa-e63b411ca0b5,H,36.0894,-79.123316
+Vitis cinerea,USA,North Carolina,NA,NA,GBIF,NCSC,0d7f86ba-f7d9-41dc-9e12-b50015d041ea,H,35.806411,-78.668393
+Vitis cinerea,USA,North Carolina,NA,NA,GBIF,NCSC,b4add68e-d2b6-4bd5-9359-f1c1f7e09989,H,36.060806,-78.885344
+Vitis cinerea,USA,Virginia,NA,2008,GBIF,EKY,47784df0-74b7-413e-ae49-116bf9a38b48,H,37.301306,-82.310556
+Vitis cinerea,USA,Virginia,NA,2008,GBIF,EKY,4d58b49c-5f51-420c-9587-cc32e87c1535,H,37.294775,-82.325753
+Vitis cinerea,USA,North Carolina,NA,1967,GBIF,UNCC,40f8e5fa-1bb6-4f20-ac7b-5abcd1ac9506,H,35.972354,-81.108692
+Vitis cinerea,USA,North Carolina,NA,1966,GBIF,FLD,8b5ff62a-201c-4e5a-8380-bee629711f17,H,36.197331,-78.885672
+Vitis cinerea,USA,North Carolina,NA,1970,GBIF,ODU,59e35f4a-4c82-41c1-8020-4c4f1b0344c8,H,35.584545,-75.462618
+Vitis cinerea,USA,North Carolina,NA,2016,GBIF,CAU,381535e8-e658-4e3f-980d-77d6b6de25b9,H,35.404303,-78.7635
+Vitis labrusca,USA,Wisconsin,NA,2024,GBIF,NA,o-1023362236,H,44.6854,-88.058049
+Vitis labrusca,USA,Wisconsin,NA,2024,GBIF,NA,o-1023839536,H,43.274104,-87.952476
+Vitis labrusca,USA,Wisconsin,NA,1977,GBIF,WIS,860ca306-02ab-49da-945f-baa2c4f92f7a,H,45.240528,-86.983326
+Vitis martineziana,MEX,Jalisco,NA,2024,GBIF,US,http://n2t.net/ark:/65665/351675d91-4bc4-438c-83c9-50ae81dfa931,H,19.5133,-105.037
+Vitis riparia,USA,Washington,NA,2003,GBIF,CPNWH,cbc965a5-f5c2-4a7f-bf12-5fb987c57c12,H,47.503333,-122.296667
+Vitis riparia,USA,Washington,NA,1996,GBIF,CPNWH,2abb58e4-3b52-4c56-9209-c8212beb3c0d,H,48.591111,-123.033056
+Vitis riparia,USA,Washington,NA,2005,GBIF,CPNWH,033b84f6-5e1d-4044-a0a6-834088817c07,H,48.965,-119.441667
+Vitis riparia,USA,Washington,NA,2005,GBIF,CPNWH,ff981666-5e47-4a21-9f88-55a7c1c99b05,H,48.75,-119.658333
+Vitis riparia,USA,Washington,NA,2002,GBIF,CPNWH,9d6c15b1-fd1b-40e0-ae37-ad0b7b448dc2,H,47.648333,-122.348333
+Vitis riparia,USA,Washington,NA,2005,GBIF,CPNWH,0dc5ca78-36e7-402f-863b-54c3ff0f2d20,H,48.75,-119.6583
+Vitis riparia,USA,Washington,NA,2005,GBIF,CPNWH,a28e506e-a09d-4030-81f5-cb69a70a48b1,H,48.751667,-119.661667
+Vitis rufotomentosa,USA,Maryland,NA,2023,GBIF,NCU,3af8d8b9-470f-41bd-be23-c8ef6ad2c40a,H,38.73147,-75.74672
+Vitis rufotomentosa,USA,Maryland,NA,2023,GBIF,NCU,ff3657bb-5e2a-4dc0-9829-4291e8ce404e,H,38.35351,-75.41104
+Vitis rufotomentosa,USA,Maryland,NA,2023,GBIF,NCU,c6375f82-b567-4f84-a89f-a4753765fc8a,H,38.731471,-75.746721
+Vitis tiliifolia,MEX,México,NA,NA,Huerta-Acosta publication,HAP,RV-109,G,18.9853,-99.3386
+Vitis tiliifolia,MEX,México,NA,NA,Huerta-Acosta publication,HAP,RV-110,G,18.9836,-99.3376
+Vitis tiliifolia,MEX,México,NA,NA,Huerta-Acosta publication,HAP,RV-114,G,19.0266,-99.9922
+Vitis tiliifolia,MEX,Puebla,NA,NA,Huerta-Acosta publication,HAP,RV-44,G,19.9125,-97.6108
+Vitis tiliifolia,MEX,Veracruz,NA,NA,Huerta-Acosta publication,HAP,RV-79,G,19.1735,-96.9627
+Vitis tiliifolia,MEX,Veracruz,NA,NA,Huerta-Acosta publication,HAP,RV-80,G,18.848,-97.1633
+Vitis tiliifolia,MEX,Veracruz,NA,NA,Huerta-Acosta publication,HAP,RV-89,G,18.7988,-97.0697
+Vitis tiliifolia,MEX,Veracruz,NA,NA,Huerta-Acosta publication,HAP,DVIT2252.10,G,19.7689,-96.4305
+Vitis tiliifolia,MEX,Querétaro,NA,2021,wiews,MEX121,NA,G,21.466067,-99.179133
+Vitis tiliifolia,MEX,Puebla,NA,2013,bg_survey,"BUAP, Puebla",NA,G,20.188499,-97.409777
+Vitis tiliifolia,MEX,Quintana Roo,NA,1989,GBIF,Bioversity,f3288c6c-6375-4a7e-b0fb-d8b94b75a8aa,H,18,-89.066667
+Vitis tiliifolia,MEX,Colima,NA,1988,GBIF,Bioversity,63c9a69c-be8e-45ca-806f-b16f1d7d14b6,H,19.45,-103.683333
+Vitis tiliifolia,MEX,Colima,NA,1991,GBIF,Bioversity,34ea368c-8e9d-427a-98f8-d1bda184f073,H,19.45,-103.7
+Vitis tiliifolia,MEX,Chiapas,NA,2007,GBIF,Bioversity,f25e3e51-b2f2-4577-9b0d-7c880b3eb42e,H,16.898611,-93.131944
+Vitis tiliifolia,MEX,Chiapas,NA,2005,GBIF,Bioversity,b56fc0bc-56b0-4641-bc7c-32e270402f19,H,15.8125,-93.074167
+Vitis tiliifolia,MEX,Michoacán,NA,1997,GBIF,Bioversity,9ff7b3cb-0740-4b6d-8eee-9c3ca9cee44c,H,19.365278,-102.363889
+Vitis tiliifolia,MEX,Colima,NA,1991,GBIF,Bioversity,42499fbe-2e43-4afd-a401-9886fe9f4c2f,H,19.45,-103.691667
+Vitis tiliifolia,MEX,Colima,NA,1991,GBIF,Bioversity,d6059777-8c0e-4121-ab18-18b4ef247de2,H,19.451667,-103.696667
+Vitis tiliifolia,MEX,Chiapas,NA,1983,GBIF,TEX,247454cffc7b4d10d556b9eaf584b040,H,16.8724277,-92.4768771
+Vitis tiliifolia,MEX,Michoacán,NA,1979,GBIF,TEX,ccf4ce0facc6a67b469663e0117a196d,H,19.464883,-101.948733
+Vitis tiliifolia,MEX,Chiapas,NA,1965,GBIF,LL,1be3516a6ec21a04628b446241d697fb,H,16.4326445,-92.4003741
+Vitis tiliifolia,MEX,Guerrero,NA,1994,GBIF,TEX,64d56dd850e4a374c3aab400e1389c27,H,17.598056,-99.100556
+Vitis tiliifolia,MEX,Quintana Roo,NA,1984,GBIF,TEX,a78a2f78e268d77e53a63c75085cd3f9,H,18.0959017,-89.0528957
+Vitis tiliifolia,MEX,Oaxaca,NA,1996,GBIF,TEX,eeed43ded379a1953fa5de7dc2314c1a,H,17.27,-97.56
+Vitis tiliifolia,MEX,Querétaro,NA,1986,GBIF,TEX,f8210789cb0739998302ace8022be067,H,21.2837547,-99.2141731
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,LL,fcee9e95c8f3cf071199082facdb5984,H,19.623889,-96.941111
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,LL,0fc79b98a96fd2c3aa501d9ebdb89bc9,H,19.5482971,-96.9206296
+Vitis tiliifolia,MEX,Jalisco,NA,1995,GBIF,TEX,2cccfd6343183963748d657eb4bf3c9a,H,20.353428,-103.486919
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,LL,9a625514b88ea732ed67dc11dda3af04,H,19.6508953,-96.9072706
+Vitis tiliifolia,MEX,Michoacán,NA,1979,GBIF,TEX,7eed60e71ac2f7561f0fe7215fa11947,H,19.3976363,-101.6500687
+Vitis tiliifolia,MEX,Michoacán,NA,1980,GBIF,TEX,ea01db7d48b805e982657ff47c2cd9aa,H,18.818556,-103.056136
+Vitis tiliifolia,MEX,Chiapas,NA,1945,GBIF,LL,16395609ffe59a2dd8998f1880b99347,H,16.2893963,-92.0645957
+Vitis tiliifolia,MEX,Jalisco,NA,1994,GBIF,TEX,255811a557a307303abff1ed2848b098,H,20.11875,-103.3292017
+Vitis tiliifolia,MEX,Veracruz,NA,2016,GBIF,INECOL,03c5ff46eb3a858227c3337995ee50ce,H,19.504639,-96.963278
+Vitis tiliifolia,MEX,Veracruz,NA,2010,GBIF,INECOL,0d501d2ae9bb218d9878aad0f88b761c,H,22.111389,-97.773611
+Vitis tiliifolia,MEX,Jalisco,NA,1990,GBIF,INECOL,1d795b0397f859d429f67602ae30d234,H,19.7,-103.45
+Vitis tiliifolia,MEX,Veracruz,NA,NA,GBIF,INECOL,1ea50bb7ca9ac07fc6dd5676f73422e8,H,19.540652,-96.927763
+Vitis tiliifolia,MEX,Veracruz,NA,1988,GBIF,INECOL,2e3b8d8a9e9e98166b4af07143a8036f,H,19.708976,-97.141934
+Vitis tiliifolia,MEX,Veracruz,NA,1979,GBIF,INECOL,6ede982da6c53b5a049e97e6854de30d,H,19.416667,-96.8
+Vitis tiliifolia,MEX,Veracruz,NA,1968,GBIF,INECOL,961330f6669bcb1abe0f58f5d7162a2e,H,17.75741,-94.761881
+Vitis tiliifolia,MEX,Veracruz,NA,1984,GBIF,INECOL,e8b5004299b0ea001537eada4fc8bfcb,H,19.084842,-96.116912
+Vitis tiliifolia,MEX,Veracruz,NA,1992,GBIF,INECOL,f754003ce3c7b2b449e1fa65088b6d4f,H,19.925633,-96.858595
+Vitis tiliifolia,MEX,Veracruz,NA,1979,GBIF,INECOL,7931382421b7806488376bd3a5258971,H,21.2,-97.916667
+Vitis tiliifolia,MEX,Veracruz,NA,1988,GBIF,INECOL,aa1d6647b45b75acc80ffa98122daad1,H,19.65,-96.933333
+Vitis tiliifolia,MEX,Veracruz,NA,2016,GBIF,INECOL,bb4caf0bf069fd8b5c510617a90dd735,H,18.8175,-97.144111
+Vitis tiliifolia,MEX,Veracruz,NA,NA,GBIF,GH,f857c325cf27c1c816b7a4c3623fe144,H,19.216667,-96.883333
+Vitis tiliifolia,MEX,Veracruz,NA,2010,GBIF,INECOL,0e6bbd59de16cc7bac825e7176974ddd,H,22.118056,-97.775
+Vitis tiliifolia,MEX,Veracruz,NA,2004,GBIF,INECOL,0f2fdd43894ef10cbd03566e692f26b4,H,19.5525,-96.94
+Vitis tiliifolia,MEX,Veracruz,NA,1996,GBIF,INECOL,2361b43937965307f02561482e8666fb,H,19.217335,-96.165802
+Vitis tiliifolia,MEX,Veracruz,NA,2001,GBIF,INECOL,2df934178f79d71e57207ab9f6fe9c75,H,19.33705,-97.091099
+Vitis tiliifolia,MEX,Veracruz,NA,1980,GBIF,INECOL,4a69baa5a2074caef989b4e248b9e4a1,H,19.098451,-97.031375
+Vitis tiliifolia,MEX,Jalisco,NA,1994,GBIF,INECOL,54898ac7bec29b533e35725f828292dd,H,20.104779,-103.262063
+Vitis tiliifolia,MEX,Veracruz,NA,1984,GBIF,INECOL,5f8da1827de76ff35b1e45877455675f,H,17.264444,-94.532778
+Vitis tiliifolia,MEX,Veracruz,NA,1990,GBIF,INECOL,b4ef52efbb71caca7b36fa2447131f07,H,18.7,-97.25
+Vitis tiliifolia,MEX,Tabasco,NA,1986,GBIF,INECOL,b639588b350b2504aa54f4f83d83b71b,H,18.166667,-93.9
+Vitis tiliifolia,MEX,Jalisco,NA,1988,GBIF,INECOL,e28547509e05b4c38f9f780f025ca373,H,19.366667,-103.016667
+Vitis tiliifolia,MEX,Veracruz,NA,1866,GBIF,GH,ee6559debb7e46cff733a47d4e08e65f,H,18.891795,-96.931928
+Vitis tiliifolia,MEX,Veracruz,NA,1980,GBIF,INECOL,217e06f678903bb77c266dd460514973,H,20.95,-97.416667
+Vitis tiliifolia,MEX,San Luis Potosí,NA,1992,GBIF,INECOL,2e6d40fc05aee52104c18dfa6f109168,H,21.63075,-99.222261
+Vitis tiliifolia,MEX,Durango,NA,1987,GBIF,INECOL,39a3450d6bb6551d484c990044dea856,H,23.655,-105.778333
+Vitis tiliifolia,MEX,Veracruz,NA,1984,GBIF,INECOL,6385b90912f66590d4bbfa8e35b88f7d,H,18.316667,-95.816667
+Vitis tiliifolia,MEX,Veracruz,NA,1967,GBIF,INECOL,668271bdc2709b30ed51d5a88ccf6d01,H,18.898739,-97.038875
+Vitis tiliifolia,MEX,Veracruz,NA,1998,GBIF,INECOL,cdf321eeca6a4314c81a48b87e5f18e4,H,19.533333,-96.483333
+Vitis tiliifolia,MEX,Querétaro,NA,1988,GBIF,INECOL,e764fab7071588dd53a985b56280daac,H,21.249722,-99.61
+Vitis tiliifolia,MEX,Chiapas,NA,2010,GBIF,INECOL,f469c7ad9279abecc6bf3e4d9375f131,H,16.133333,-92.097222
+Vitis tiliifolia,MEX,Veracruz,NA,1981,GBIF,INECOL,f523d381b860ae230773567c937df336,H,19.1,-97.016667
+Vitis tiliifolia,MEX,Veracruz,NA,1986,GBIF,INECOL,0d3db4bbe806c99e21c64202042901d1,H,20.4,-97.441667
+Vitis tiliifolia,MEX,Veracruz,NA,1988,GBIF,INECOL,141e27eed378956096886eefe1a60c7a,H,18.414888,-95.093206
+Vitis tiliifolia,MEX,Veracruz,NA,1995,GBIF,INECOL,1737ed62bdb5411340f6dcdd1ff033df,H,19.59065,-96.381085
+Vitis tiliifolia,MEX,Chiapas,NA,1994,GBIF,INECOL,1e37cef04c39766b7494dba871825fc2,H,16.503611,-92.423889
+Vitis tiliifolia,MEX,Chiapas,NA,1986,GBIF,INECOL,20cd34506ad3a1d005a63011bae33ca9,H,15.046165,-92.217103
+Vitis tiliifolia,MEX,Yucatán,NA,1983,GBIF,INECOL,369aaf4aa9ad4a6fc78546080bc59a1b,H,21.250578,-87.740344
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,INECOL,4a2da25235af41b4f888fa67874b5382,H,18.822631,-97.162767
+Vitis tiliifolia,MEX,Veracruz,NA,1982,GBIF,INECOL,5af934178fe30a415eb67dfab4f388cf,H,18.835131,-97.151933
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,INECOL,b849ee69823367caed93ecea7e322e48,H,19.650924,-96.907485
+Vitis tiliifolia,MEX,Guanajuato,NA,1991,GBIF,INECOL,d0817d2d505029f8d8d884a14709d670,H,21.255908,-99.977056
+Vitis tiliifolia,MEX,Michoacán,NA,1989,GBIF,INECOL,e24b5c0f1df7cdd896769e1af517c7d9,H,19.650639,-101.150352
+Vitis tiliifolia,MEX,Guanajuato,NA,1989,GBIF,INECOL,f9d989778a852bf87d080eee028e4b42,H,21.311671,-100.202558
+Vitis tiliifolia,MEX,Veracruz,NA,1983,GBIF,INECOL,017e8f5d50eb43ed3bab6469b085399d,H,18.420154,-95.113834
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,1c6974734758f4be4cc986b048dd4955,H,19.612037,-96.949708
+Vitis tiliifolia,MEX,Veracruz,NA,1967,GBIF,INECOL,385adc60820ebbd5f9ecd9bded2b5c66,H,18.867629,-97.083598
+Vitis tiliifolia,MEX,Veracruz,NA,1970,GBIF,INECOL,721634bc237c0fd5615c80263f8e3c48,H,18.45,-95.083333
+Vitis tiliifolia,MEX,Chiapas,NA,1991,GBIF,INECOL,85ae88d4e7b7da8c48bdcf3eea687b9d,H,16.753575,-93.116845
+Vitis tiliifolia,MEX,Veracruz,NA,1974,GBIF,INECOL,c5e8a43cccb04b537059da4334a2ad18,H,17.255492,-94.617433
+Vitis tiliifolia,MEX,Chiapas,NA,1985,GBIF,INECOL,20c8b93a28ef5a1db9d9b78264bd2abb,H,15.016667,-92.366667
+Vitis tiliifolia,MEX,Veracruz,NA,2007,GBIF,INECOL,788c06a4ceb850bab7d793addfdd9957,H,19.372327,-96.97693
+Vitis tiliifolia,MEX,Veracruz,NA,1989,GBIF,INECOL,a12d085e4c5ea4faa9223c532e61d7bd,H,19.664812,-97.161935
+Vitis tiliifolia,MEX,Veracruz,NA,1990,GBIF,INECOL,d721e4075545832d86b80d4458b869c9,H,19.50732,-96.996098
+Vitis tiliifolia,MEX,Quintana Roo,NA,1983,GBIF,INECOL,29a555a671d9070c99944c4b9eef2c13,H,18.505556,-88.506389
+Vitis tiliifolia,MEX,Querétaro,NA,1990,GBIF,INECOL,4164b0bc253543002acffd7fd2927213,H,21.190717,-99.123003
+Vitis tiliifolia,MEX,Jalisco,NA,1992,GBIF,INECOL,588d56a980082dc7bed46849e115b6c0,H,20.696944,-102.331944
+Vitis tiliifolia,MEX,Chiapas,NA,2000,GBIF,INECOL,77155a1bf18195b76a9bf026cefeb4db,H,16.943009,-93.225181
+Vitis tiliifolia,MEX,Veracruz,NA,1986,GBIF,INECOL,7df9ded8cc917d6b85d129c240a72913,H,20.388665,-97.213604
+Vitis tiliifolia,MEX,Colima,NA,1991,GBIF,INECOL,7e2fdf2a640c20570824c577290b64ac,H,19.438333,-103.676667
+Vitis tiliifolia,MEX,Michoacán,NA,1986,GBIF,INECOL,84f7724b2c4b846babaa3b0be9f77741,H,19.433985,-100.350335
+Vitis tiliifolia,MEX,Veracruz,NA,2010,GBIF,INECOL,fa6dcad67df380327450281685a2fac6,H,22.159167,-97.789444
+Vitis tiliifolia,MEX,Veracruz,NA,1973,GBIF,INECOL,25edea94df72abd048fdf77dd0705546,H,19.401215,-96.65109
+Vitis tiliifolia,MEX,Veracruz,NA,1968,GBIF,INECOL,27c5c3a5578aef394456478693c0a041,H,20.254506,-96.799428
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,7ef12d620f4e41e6c175ab2d1131eb6b,H,18.27294,-94.88494
+Vitis tiliifolia,MEX,Chiapas,NA,1982,GBIF,INECOL,d789027cafa4cc1d1926745aae553799,H,15.65,-92.683333
+Vitis tiliifolia,MEX,Oaxaca,NA,1982,GBIF,INECOL,ddef7eebb0a31e9f70c6ace8473aabd6,H,17.266667,-98
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,INECOL,130ab3fd98d8943e86db3a19138d099a,H,19.548707,-96.920818
+Vitis tiliifolia,MEX,Veracruz,NA,1984,GBIF,INECOL,56f4b23ed9bb7b6aa80735e73c0f9e03,H,18.283333,-96.216667
+Vitis tiliifolia,MEX,Tabasco,NA,1990,GBIF,INECOL,5b2e1120df9f4d14d72b154577f057ff,H,17.367433,-91.376809
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,INECOL,d9a2908c5db91b358f62cf204a6df418,H,19.62537,-96.941652
+Vitis tiliifolia,MEX,Quintana Roo,NA,1981,GBIF,INECOL,eb003504fb33beed44d6423812cd3c15,H,18.67598,-88.402857
+Vitis tiliifolia,MEX,Veracruz,NA,1962,GBIF,INECOL,191985e38d849fee9550a59314105b2c,H,18.355989,-96.259413
+Vitis tiliifolia,MEX,Querétaro,NA,1990,GBIF,INECOL,30575bd5646fe218893c93cf3b10a069,H,21.544803,-99.180367
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,3cfd19cd69b9eeb07546a8ba9dbf01b2,H,18.550703,-95.11689
+Vitis tiliifolia,MEX,Veracruz,NA,1987,GBIF,INECOL,4d79a9aedf9decc7a260d47170e0431a,H,19.533985,-96.933596
+Vitis tiliifolia,MEX,Querétaro,NA,1991,GBIF,INECOL,966ffa35160c06af8ea6cbec3022e6e0,H,21.174722,-99.082778
+Vitis tiliifolia,MEX,Veracruz,NA,1974,GBIF,INECOL,d736b9db59e292b19cc5137929ab8b21,H,17.25327,-94.612988
+Vitis tiliifolia,MEX,Veracruz,NA,1924,GBIF,INECOL,e44f9db3088b90d2010a8bc2416daa58,H,18.850408,-97.103877
+Vitis tiliifolia,MEX,Guerrero,NA,1982,GBIF,INECOL,26eee69dbfb66bc330296486d2f7f3c1,H,17.573817,-101.178833
+Vitis tiliifolia,MEX,Quintana Roo,NA,1981,GBIF,INECOL,61ccaa123457f341e470b65fbb343b91,H,19.5,-88.166667
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,93057e5d492bd6a381ee7aa046d5dad3,H,18.426821,-95.094945
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,9b2610a0b962fd598de141d34416bfef,H,18.484722,-95.073055
+Vitis tiliifolia,MEX,Chiapas,NA,1982,GBIF,INECOL,dec98dacf8a57bd8e6014b7aa45259f4,H,15.716407,-92.794337
+Vitis tiliifolia,MEX,Nayarit,NA,2009,GBIF,INECOL,e42caebe3fca830ac9c5c1485496dcd9,H,21.477778,-104.998611
+Vitis tiliifolia,MEX,Querétaro,NA,1987,GBIF,INECOL,fedb6a6c797164d4c86462c348b3d5ac,H,21.121192,-99.490992
+Vitis tiliifolia,MEX,Guanajuato,NA,1989,GBIF,INECOL,1163eb735e16f33f2d96a4490ed7b252,H,21.207222,-99.891111
+Vitis tiliifolia,MEX,Veracruz,NA,1987,GBIF,INECOL,1da5009168d98ef07ad0035ebdb5a21d,H,19.513709,-96.943874
+Vitis tiliifolia,MEX,Veracruz,NA,1967,GBIF,INECOL,59d98a4fc0ee67d695ac7163bcafb21a,H,18.942348,-96.916928
+Vitis tiliifolia,MEX,Chiapas,NA,1992,GBIF,INECOL,69876dbcb90f05f31efae97129523177,H,16.120831,-90.926798
+Vitis tiliifolia,MEX,Veracruz,NA,2003,GBIF,INECOL,8a62b66d17b058e0a917cb94b771597b,H,18.177111,-94.798827
+Vitis tiliifolia,MEX,Veracruz,NA,2010,GBIF,INECOL,9fc9c29e3e78da36cf5cf871b54b47eb,H,18.109722,-94.359444
+Vitis tiliifolia,MEX,Veracruz,NA,1986,GBIF,INECOL,b1cb2ff3a92ef281220d9c3b373724a2,H,20.179508,-97.578889
+Vitis tiliifolia,MEX,Veracruz,NA,1980,GBIF,INECOL,d02ac20d84b2da0b1da8cc0a1c9dc6d7,H,19.401667,-96.996667
+Vitis tiliifolia,MEX,Quintana Roo,NA,1983,GBIF,INECOL,d6725dc4d2db80b56abc548fb93db378,H,21.100585,-87.486727
+Vitis tiliifolia,MEX,Chiapas,NA,1992,GBIF,INECOL,fa6f13c7eafe44934df6735691dd885a,H,16.102499,-90.960132
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,23a268fc1a13821e8b93c0c3610ce470,H,19.133333,-97.066667
+Vitis tiliifolia,MEX,Oaxaca,NA,1993,GBIF,INECOL,41a791c4675e4b7f1d3766a84fa5ca59,H,17.766667,-96.033333
+Vitis tiliifolia,MEX,Veracruz de ignacio de la llave,NA,1992,GBIF,INECOL,51dc1aa04b4242862579741a4cce2cb4,H,19.60065,-96.373584
+Vitis tiliifolia,MEX,Veracruz,NA,1988,GBIF,INECOL,9c7f0be7eeb81a65a6e77b76ecff8e46,H,19.702588,-97.104156
+Vitis tiliifolia,MEX,Veracruz,NA,2012,GBIF,INECOL,d66cf44cbbb19e479402dddee0e0caae,H,18.652194,-97.0085
+Vitis tiliifolia,MEX,Veracruz,NA,1988,GBIF,INECOL,ee3b72e2111af8ae8661ef0d0a3577d6,H,19.607316,-96.39414
+Vitis tiliifolia,MEX,Guanajuato,NA,1991,GBIF,INECOL,f3862650ee5185b9c14e07a3d1389371,H,21.263056,-99.896389
+Vitis tiliifolia,MEX,Veracruz,NA,1968,GBIF,INECOL,38963126cf2bb5334a5f952bb951aa13,H,18.85,-97.1
+Vitis tiliifolia,MEX,Veracruz,NA,2016,GBIF,INECOL,6c93e97000357d778dbb3b237fd4479a,H,19.322607,-97.041931
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,769eaf6b79144278a58ece340e9a0e50,H,19.120117,-97.142489
+Vitis tiliifolia,MEX,Veracruz,NA,1983,GBIF,INECOL,92267927a2519af19a8640e7226d0fa6,H,19.266667,-96.7
+Vitis tiliifolia,MEX,Veracruz de ignacio de la llave,NA,1965,GBIF,INECOL,d10189847b935cc325c473ede941d4a4,H,18.643476,-95.095778
+Vitis tiliifolia,MEX,Tamaulipas,NA,1980,GBIF,INECOL,6d6a3c3dfc114cffbccb7b36ffa750da,H,23.733333,-99.133333
+Vitis tiliifolia,MEX,Guanajuato,NA,1990,GBIF,INECOL,8689b29c97c8038940e897c25f874c98,H,21.266667,-99.718333
+Vitis tiliifolia,MEX,Chiapas,NA,1999,GBIF,INECOL,bce7fb6fc15257d14206a644704e7b2e,H,16.901624,-90.9693
+Vitis tiliifolia,MEX,Querétaro,NA,1988,GBIF,INECOL,c53b46aba44cb7a7e6ac34a0a80d12f8,H,21.263333,-99.196944
+Vitis tiliifolia,MEX,Chiapas,NA,1999,GBIF,INECOL,30d3ec06c7b46c8456be16d93459c6fd,H,17.75908,-91.883487
+Vitis tiliifolia,MEX,Michoacán,NA,2002,GBIF,INECOL,6c29532ba73aa70ab5d328f3fe6f0431,H,19.410556,-101.765833
+Vitis tiliifolia,MEX,Veracruz,NA,1974,GBIF,INECOL,6ef6154489bbb2df9beb0ba1c20e9219,H,17.257714,-94.578265
+Vitis tiliifolia,MEX,Chiapas,NA,1985,GBIF,INECOL,870320da0da23761b3ea89b3e3baa53e,H,14.885618,-92.353494
+Vitis tiliifolia,MEX,Veracruz,NA,1979,GBIF,INECOL,87a07e5db2170060b850be2b3b811cbd,H,19.37566,-96.80526
+Vitis tiliifolia,MEX,Yucatán,NA,1981,GBIF,INECOL,cfa7217735304ed8e10ddb4aedeb2835,H,20.493391,-88.916758
+Vitis tiliifolia,MEX,Veracruz,NA,1986,GBIF,INECOL,093a532370ea2a00baf520b7cd5a71ac,H,18.589313,-95.076611
+Vitis tiliifolia,MEX,Veracruz,NA,1984,GBIF,INECOL,28fb8c0f4cc69eac463455e129370d69,H,19.511764,-96.946374
+Vitis tiliifolia,MEX,Michoacán,NA,2004,GBIF,INECOL,2f70d9d4fa683517ec0499f9e111ecc1,H,19.886389,-101.425833
+Vitis tiliifolia,MEX,Veracruz,NA,1974,GBIF,INECOL,2fbe3424e16e78b53081271737a3688b,H,18.392222,-95.188889
+Vitis tiliifolia,MEX,Querétaro,NA,1988,GBIF,INECOL,6eb48836546f63456929a00e53fcc423,H,21.253897,-99.705325
+Vitis tiliifolia,MEX,San Luis Potosí,NA,NA,GBIF,INECOL,7c79783a700193b07e5365a513b5e72a,H,21.666419,-99.2138
+Vitis tiliifolia,MEX,Michoacán,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/142967383,H,19.424486,-102.071454
+Vitis tiliifolia,MEX,Chiapas,NA,2015,GBIF,iNaturalist,https://www.inaturalist.org/observations/99223190,H,17.485097,-92.047848
+Vitis tiliifolia,MEX,Guanajuato,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/131269587,H,20.056542,-101.313178
+Vitis tiliifolia,MEX,Michoacán,NA,2021,GBIF,iNaturalist,https://www.inaturalist.org/observations/76686564,H,19.590513,-101.288628
+Vitis tiliifolia,MEX,Michoacán,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/124811499,H,19.484125,-101.359558
+Vitis tiliifolia,MEX,México,NA,2020,GBIF,iNaturalist,https://www.inaturalist.org/observations/66271167,H,18.88568,-99.475455
+Vitis tiliifolia,MEX,Veracruz,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/127211918,H,19.078465,-96.137133
+Vitis tiliifolia,MEX,Michoacán,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/219112011,H,19.4854,-101.376261
+Vitis tiliifolia,MEX,Jalisco,NA,2018,GBIF,iNaturalist,https://www.inaturalist.org/observations/22457522,H,19.644186,-103.621019
+Vitis tiliifolia,MEX,Michoacán,NA,2019,GBIF,iNaturalist,https://www.inaturalist.org/observations/23717288,H,19.634285,-101.220995
+Vitis tiliifolia,MEX,Sinaloa,NA,2023,GBIF,iNaturalist,https://www.inaturalist.org/observations/180825196,H,23.568034,-105.847746
+Vitis tiliifolia,MEX,Quintana Roo,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/149520042,H,20.711412,-87.138189
+Vitis tiliifolia,MEX,Michoacán,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/231895831,H,19.696687,-101.195039
+Vitis tiliifolia,MEX,Oaxaca,NA,2020,GBIF,iNaturalist,https://www.inaturalist.org/observations/61839797,H,17.046725,-97.620699
+Vitis tiliifolia,MEX,Michoacán,NA,2025,GBIF,iNaturalist,https://www.inaturalist.org/observations/274155951,H,19.649958,-101.251188
+Vitis tiliifolia,MEX,Chiapas,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/226541470,H,16.303384,-93.707117
+Vitis tiliifolia,MEX,Chiapas,NA,2017,GBIF,iNaturalist,https://www.inaturalist.org/observations/8540574,H,16.781972,-94.031507
+Vitis tiliifolia,MEX,Michoacán,NA,2019,GBIF,iNaturalist,https://www.inaturalist.org/observations/23266589,H,19.660529,-101.130053
+Vitis tiliifolia,MEX,Michoacán,NA,2012,GBIF,iNaturalist,https://www.inaturalist.org/observations/68562404,H,19.572113,-101.132887
+Vitis tiliifolia,MEX,Michoacán,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/114820333,H,19.555314,-101.260775
+Vitis tiliifolia,MEX,Michoacán,NA,2017,GBIF,iNaturalist,http://conabio.inaturalist.org/observations/6729729,H,19.639496,-101.257489
+Vitis tiliifolia,MEX,Michoacán,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/219626398,H,19.522778,-101.637489
+Vitis tiliifolia,MEX,Michoacán,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/210520240,H,19.638489,-101.109541
+Vitis tiliifolia,MEX,Chiapas,NA,2025,GBIF,iNaturalist,https://www.inaturalist.org/observations/271338666,H,15.304512,-92.645891
+Vitis tiliifolia,MEX,Tabasco,NA,2023,GBIF,iNaturalist,https://www.inaturalist.org/observations/194830254,H,17.999027,-93.401772
+Vitis tiliifolia,MEX,Puebla,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/127860606,H,20.411663,-97.858955
+Vitis tiliifolia,MEX,Chiapas,NA,2018,GBIF,iNaturalist,https://www.inaturalist.org/observations/10102988,H,16.878988,-93.456354
+Vitis tiliifolia,MEX,Chiapas,NA,2011,GBIF,iNaturalist,https://www.inaturalist.org/observations/288807298,H,16.254758,-90.861258
+Vitis tiliifolia,MEX,Michoacán,NA,2019,GBIF,iNaturalist,https://www.inaturalist.org/observations/23964637,H,19.645032,-101.275487
+Vitis tiliifolia,MEX,Michoacán,NA,2025,GBIF,iNaturalist,https://www.inaturalist.org/observations/257853848,H,19.371626,-102.046026
+Vitis tiliifolia,MEX,Quintana Roo,NA,2019,GBIF,iNaturalist,https://www.inaturalist.org/observations/37184409,H,20.86941,-87.088828
+Vitis tiliifolia,MEX,Chiapas,NA,2018,GBIF,iNaturalist,https://www.inaturalist.org/observations/16374338,H,16.812356,-93.100046
+Vitis tiliifolia,MEX,Veracruz,NA,2015,GBIF,iNaturalist,http://conabio.inaturalist.org/observations/1935803,H,19.280606,-96.448741
+Vitis tiliifolia,MEX,Puebla,NA,2019,GBIF,iNaturalist,https://www.inaturalist.org/observations/43663680,H,20.271216,-97.934442
+Vitis tiliifolia,MEX,Sinaloa,NA,2018,GBIF,iNaturalist,https://www.inaturalist.org/observations/15662597,H,23.580579,-105.857552
+Vitis tiliifolia,MEX,México,NA,2025,GBIF,iNaturalist,https://www.inaturalist.org/observations/273157651,H,19.250425,-100.025395
+Vitis tiliifolia,MEX,Morelos,NA,2019,GBIF,iNaturalist,https://www.inaturalist.org/observations/22268271,H,18.892696,-99.140523
+Vitis tiliifolia,MEX,Michoacán,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/211803588,H,19.638628,-101.109731
+Vitis tiliifolia,MEX,Michoacán,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/132771241,H,19.684079,-101.146782
+Vitis tiliifolia,MEX,Chiapas,NA,2016,GBIF,iNaturalist,https://www.inaturalist.org/observations/179465824,H,17.483939,-92.045821
+Vitis tiliifolia,MEX,Chiapas,NA,2021,GBIF,iNaturalist,https://www.inaturalist.org/observations/73133556,H,16.863395,-90.983217
+Vitis tiliifolia,MEX,Oaxaca,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/142268924,H,17.182878,-95.967728
+Vitis tiliifolia,MEX,Michoacán,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/114461291,H,19.630052,-101.258972
+Vitis tiliifolia,MEX,Michoacán,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/211345476,H,19.659053,-100.909095
+Vitis tiliifolia,MEX,Michoacán,NA,2020,GBIF,iNaturalist,https://www.inaturalist.org/observations/40421100,H,19.482604,-101.362086
+Vitis tiliifolia,MEX,Veracruz,NA,2023,GBIF,iNaturalist,https://www.inaturalist.org/observations/161289886,H,18.586311,-95.073803
+Vitis tiliifolia,MEX,Chiapas,NA,2017,GBIF,iNaturalist,https://www.inaturalist.org/observations/8077754,H,16.10103,-91.69054
+Vitis tiliifolia,MEX,Michoacán,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/128388927,H,19.486721,-101.832046
+Vitis tiliifolia,MEX,Michoacán,NA,2020,GBIF,iNaturalist,https://www.inaturalist.org/observations/65364971,H,19.490928,-101.3592
+Vitis tiliifolia,MEX,Jalisco,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/118989602,H,20.334188,-103.303609
+Vitis tiliifolia,MEX,Puebla,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/139364743,H,18.909809,-98.313691
+Vitis tiliifolia,MEX,Michoacán,NA,2023,GBIF,iNaturalist,https://www.inaturalist.org/observations/150958110,H,19.390593,-102.008061
+Vitis tiliifolia,MEX,Morelos,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/123829888,H,18.466647,-99.325864
+Vitis tiliifolia,MEX,Michoacán,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/126252353,H,19.484083,-101.359557
+Vitis tiliifolia,MEX,Guanajuato,NA,2023,GBIF,iNaturalist,https://www.inaturalist.org/observations/170742544,H,21.320552,-100.094365
+Vitis tiliifolia,MEX,Veracruz,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/151976715,H,18.365482,-95.023928
+Vitis tiliifolia,MEX,Veracruz,NA,2013,GBIF,iNaturalist,http://www.inaturalist.org/observations/1507605,H,19.512414,-96.943062
+Vitis tiliifolia,MEX,México,NA,2023,GBIF,iNaturalist,https://www.inaturalist.org/observations/167785504,H,19.182099,-100.128383
+Vitis tiliifolia,MEX,Michoacán,NA,2021,GBIF,iNaturalist,https://www.inaturalist.org/observations/77234790,H,19.621134,-101.211014
+Vitis tiliifolia,MEX,Chiapas,NA,2020,GBIF,iNaturalist,https://www.inaturalist.org/observations/42119017,H,15.232245,-92.483226
+Vitis tiliifolia,MEX,Veracruz,NA,2020,GBIF,iNaturalist,https://www.inaturalist.org/observations/55219562,H,19.490746,-96.94809
+Vitis tiliifolia,MEX,Chiapas,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/256775916,H,17.485492,-92.045625
+Vitis tiliifolia,MEX,Michoacán,NA,2019,GBIF,iNaturalist,https://www.inaturalist.org/observations/31456804,H,19.655651,-101.228963
+Vitis tiliifolia,MEX,Michoacán,NA,2014,GBIF,iNaturalist,http://www.inaturalist.org/observations/662685,H,19.020577,-102.260742
+Vitis tiliifolia,MEX,Veracruz,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/128098856,H,19.172121,-97.057028
+Vitis tiliifolia,MEX,Michoacán,NA,2021,GBIF,iNaturalist,https://www.inaturalist.org/observations/76241620,H,19.637775,-101.129925
+Vitis tiliifolia,MEX,Chiapas,NA,2020,GBIF,iNaturalist,https://www.inaturalist.org/observations/54413410,H,16.725894,-93.100252
+Vitis tiliifolia,MEX,Veracruz,NA,2020,GBIF,iNaturalist,https://www.inaturalist.org/observations/44398141,H,18.794358,-97.169554
+Vitis tiliifolia,MEX,Michoacán,NA,2023,GBIF,iNaturalist,https://www.inaturalist.org/observations/173830739,H,19.595455,-101.247995
+Vitis tiliifolia,MEX,Sinaloa,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/235979186,H,23.562469,-105.847558
+Vitis tiliifolia,MEX,Tabasco,NA,2025,GBIF,iNaturalist,https://www.inaturalist.org/observations/258109457,H,17.469662,-91.430503
+Vitis tiliifolia,MEX,Chiapas,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/227034050,H,15.197709,-92.475439
+Vitis tiliifolia,MEX,Michoacán,NA,2021,GBIF,iNaturalist,https://www.inaturalist.org/observations/77179348,H,19.621382,-101.211197
+Vitis tiliifolia,MEX,Chiapas,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/133148900,H,15.982337,-93.458979
+Vitis tiliifolia,MEX,Chiapas,NA,2021,GBIF,iNaturalist,https://www.inaturalist.org/observations/98430634,H,16.827871,-93.107031
+Vitis tiliifolia,MEX,Veracruz,NA,2017,GBIF,iNaturalist,https://www.inaturalist.org/observations/7939459,H,18.596513,-95.420728
+Vitis tiliifolia,MEX,Michoacán,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/241595239,H,19.587002,-101.189779
+Vitis tiliifolia,MEX,Quintana Roo,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/149390052,H,20.712015,-87.138459
+Vitis tiliifolia,MEX,Chiapas,NA,2023,GBIF,iNaturalist,https://www.inaturalist.org/observations/148785900,H,16.86316,-93.406302
+Vitis tiliifolia,MEX,Chiapas,NA,2025,GBIF,iNaturalist,https://www.inaturalist.org/observations/263755273,H,15.099368,-92.301026
+Vitis tiliifolia,MEX,Chiapas,NA,2011,GBIF,iNaturalist,https://www.inaturalist.org/observations/288807299,H,16.254511,-90.860829
+Vitis tiliifolia,MEX,Puebla,NA,2023,GBIF,iNaturalist,https://www.inaturalist.org/observations/197046180,H,18.851666,-98.614412
+Vitis tiliifolia,MEX,Michoacán,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/212470462,H,19.638897,-101.11042
+Vitis tiliifolia,MEX,Chiapas,NA,2011,GBIF,iNaturalist,https://www.inaturalist.org/observations/288807297,H,16.25484,-90.862546
+Vitis tiliifolia,MEX,Puebla,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/210462039,H,18.950124,-98.390685
+Vitis tiliifolia,MEX,Oaxaca,NA,2023,GBIF,iNaturalist,https://www.inaturalist.org/observations/175476289,H,16.889417,-94.677823
+Vitis tiliifolia,MEX,México,NA,2020,GBIF,iNaturalist,https://www.inaturalist.org/observations/43114763,H,19.186983,-100.178887
+Vitis tiliifolia,MEX,Michoacán,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/212470800,H,19.63885,-101.110334
+Vitis tiliifolia,MEX,Puebla,NA,2023,GBIF,iNaturalist,https://www.inaturalist.org/observations/159362822,H,18.910859,-98.31402
+Vitis tiliifolia,MEX,Michoacán,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/231090830,H,19.684238,-101.166713
+Vitis tiliifolia,MEX,Michoacán,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/256114958,H,19.604766,-101.12231
+Vitis tiliifolia,MEX,Michoacán,NA,2021,GBIF,iNaturalist,https://www.inaturalist.org/observations/71309233,H,19.63782,-101.129925
+Vitis tiliifolia,MEX,Michoacán,NA,2017,GBIF,iNaturalist,https://www.inaturalist.org/observations/6001209,H,19.656597,-101.225234
+Vitis tiliifolia,MEX,Michoacán,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/131943266,H,19.614198,-101.573369
+Vitis tiliifolia,MEX,México,NA,2023,GBIF,iNaturalist,https://www.inaturalist.org/observations/187086192,H,19.251861,-100.014728
+Vitis tiliifolia,MEX,Jalisco,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/142486330,H,20.327831,-103.222858
+Vitis tiliifolia,MEX,Veracruz,NA,2023,GBIF,iNaturalist,https://www.inaturalist.org/observations/183018382,H,19.521737,-96.94239
+Vitis tiliifolia,MEX,Quintana Roo,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/149611585,H,20.71103,-87.137387
+Vitis tiliifolia,MEX,Michoacán,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/114801817,H,19.597975,-101.253811
+Vitis tiliifolia,MEX,Puebla,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/124832437,H,18.910815,-98.316599
+Vitis tiliifolia,MEX,Michoacán,NA,2021,GBIF,iNaturalist,https://www.inaturalist.org/observations/76241823,H,19.642468,-101.133964
+Vitis tiliifolia,MEX,Tabasco,NA,2013,GBIF,iNaturalist,https://www.inaturalist.org/observations/30873173,H,18.104722,-94.039224
+Vitis tiliifolia,MEX,Chiapas,NA,2018,GBIF,iNaturalist,https://www.inaturalist.org/observations/15367329,H,16.816417,-93.092078
+Vitis tiliifolia,MEX,Michoacán,NA,2021,GBIF,iNaturalist,https://www.inaturalist.org/observations/70774820,H,19.637945,-101.130008
+Vitis tiliifolia,MEX,Chiapas,NA,2017,GBIF,iNaturalist,http://conabio.inaturalist.org/observations/4964391,H,17.171215,-92.34166
+Vitis tiliifolia,MEX,Michoacán,NA,2024,GBIF,iNaturalist,https://www.inaturalist.org/observations/211895315,H,19.642506,-101.110969
+Vitis tiliifolia,MEX,México,NA,2018,GBIF,iNaturalist,https://www.inaturalist.org/observations/46663680,H,18.953221,-99.503422
+Vitis tiliifolia,MEX,Chiapas,NA,2025,GBIF,iNaturalist,https://www.inaturalist.org/observations/259213173,H,15.118591,-92.404731
+Vitis tiliifolia,MEX,Querétaro,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/195859085,H,21.26167,-99.172783
+Vitis tiliifolia,MEX,Michoacán,NA,2022,GBIF,iNaturalist,https://www.inaturalist.org/observations/132266911,H,19.698126,-101.138822
+Vitis tiliifolia,MEX,Campeche,NA,2002,GBIF,MBM,5599357,H,18.477222,-89.188056
+Vitis tiliifolia,MEX,Chiapas,NA,1991,GBIF,MO,urn:catalog:MO:Tropicos:101827667,H,16.89,-92.37
+Vitis tiliifolia,MEX,Quintana Roo,NA,1983,GBIF,MO,urn:catalog:MO:Tropicos:101957456,H,19.49,-88.01
+Vitis tiliifolia,MEX,Oaxaca,NA,1972,GBIF,MO,urn:catalog:MO:Tropicos:981104,H,16.68,-94.07
+Vitis tiliifolia,MEX,Veracruz,NA,2008,GBIF,MO,urn:catalog:MO:Tropicos:100396705,H,19.25,-96.883333
+Vitis tiliifolia,MEX,Oaxaca,NA,1993,GBIF,MO,urn:catalog:MO:Tropicos:103552087,H,17.083333,-96.633333
+Vitis tiliifolia,MEX,Chiapas,NA,1991,GBIF,MO,urn:catalog:MO:Tropicos:101676750,H,16.873611,-92.355556000000007
+Vitis tiliifolia,MEX,Nayarit,NA,1989,GBIF,MO,urn:catalog:MO:Tropicos:101827680,H,21.466667,-105
+Vitis tiliifolia,MEX,Michoacán,NA,2017,GBIF,MO,urn:catalog:MO:Tropicos:103718508,H,19.645636,-101.098842
+Vitis tiliifolia,MEX,Chiapas,NA,2003,GBIF,MO,urn:catalog:MO:Tropicos:2714291,H,16.95638,-91.25361
+Vitis tiliifolia,MEX,Chiapas,NA,1987,GBIF,MO,urn:catalog:MO:Tropicos:1849205,H,15.73,-91.98
+Vitis tiliifolia,MEX,Chiapas,NA,2002,GBIF,MO,urn:catalog:MO:Tropicos:2385470,H,16.2425,-93.59222
+Vitis tiliifolia,MEX,Oaxaca,NA,1996,GBIF,MO,urn:catalog:MO:Tropicos:102123602,H,17.459894,-97.920075
+Vitis tiliifolia,MEX,Michoacán,NA,2016,GBIF,MO,urn:catalog:MO:Tropicos:103001417,H,19.593917,-101.086889
+Vitis tiliifolia,MEX,Chiapas,NA,2003,GBIF,MO,urn:catalog:MO:Tropicos:103119746,H,17.038056,-91.257778
+Vitis tiliifolia,MEX,Oaxaca,NA,2014,GBIF,MO,urn:catalog:MO:Tropicos:102999892,H,16.714194,-94.755861
+Vitis tiliifolia,MEX,Chiapas,NA,2005,GBIF,MO,urn:catalog:MO:Tropicos:3208875,H,15.81222,-93.07416
+Vitis tiliifolia,MEX,Quintana Roo,NA,1985,GBIF,MO,urn:catalog:MO:Tropicos:101827560,H,19.38,-88.14
+Vitis tiliifolia,MEX,Nayarit,NA,1989,GBIF,MO,urn:catalog:MO:Tropicos:177756,H,21.483333,-105
+Vitis tiliifolia,MEX,Michoacán,NA,1994,GBIF,MO,urn:catalog:MO:Tropicos:1799736,H,19.629722,-101.449444
+Vitis tiliifolia,MEX,Veracruz,NA,1980,GBIF,MO,urn:catalog:MO:Tropicos:981120,H,20.73,-97.51
+Vitis tiliifolia,MEX,Quintana Roo,NA,2004,GBIF,MO,urn:catalog:MO:Tropicos:102482760,H,20.645833,-87.631389
+Vitis tiliifolia,MEX,Michoacán,NA,1984,GBIF,MO,urn:catalog:MO:Tropicos:102050235,H,19.488611,-100.495
+Vitis tiliifolia,MEX,Chiapas,NA,1974,GBIF,MO,urn:catalog:MO:Tropicos:3199410,H,16.093055,-91.636667
+Vitis tiliifolia,MEX,Chiapas,NA,1987,GBIF,MO,urn:catalog:MO:Tropicos:101457178,H,16.88,-93.26
+Vitis tiliifolia,MEX,Veracruz,NA,1960,GBIF,MO,urn:catalog:MO:Tropicos:101827672,H,19.1,-97.03
+Vitis tiliifolia,MEX,Chiapas,NA,1988,GBIF,MO,urn:catalog:MO:Tropicos:1411155,H,16.96,-92.61
+Vitis tiliifolia,MEX,Nayarit,NA,1989,GBIF,MO,urn:catalog:MO:Tropicos:101827759,H,22.21,-104.65
+Vitis tiliifolia,MEX,Chiapas,NA,1977,GBIF,MO,urn:catalog:MO:Tropicos:101942896,H,15.97,-91.91
+Vitis tiliifolia,MEX,Veracruz,NA,1984,GBIF,MO,urn:catalog:MO:Tropicos:981073,H,18.28,-96.21
+Vitis tiliifolia,MEX,Chiapas,NA,1977,GBIF,MO,urn:catalog:MO:Tropicos:1411552,H,15.32,-92.64
+Vitis tiliifolia,MEX,Chiapas,NA,1973,GBIF,MO,urn:catalog:MO:Tropicos:3204163,H,17.21,-92.36
+Vitis tiliifolia,MEX,Veracruz,NA,1984,GBIF,MO,urn:catalog:MO:Tropicos:101676763,H,19.09,-96.11
+Vitis tiliifolia,MEX,Chiapas,NA,1986,GBIF,MO,urn:catalog:MO:Tropicos:101882764,H,16.66,-90.81
+Vitis tiliifolia,MEX,Puebla,NA,2008,GBIF,MO,urn:catalog:MO:Tropicos:102657556,H,20.043889,-97.305556
+Vitis tiliifolia,MEX,Chiapas,NA,2007,GBIF,MO,urn:catalog:MO:Tropicos:100282519,H,16.89875,-93.132083
+Vitis tiliifolia,MEX,Chiapas,NA,2010,GBIF,MO,urn:catalog:MO:Tropicos:100458514,H,16.795333,-93.184555
+Vitis tiliifolia,MEX,Colima,NA,1991,GBIF,MO,urn:catalog:MO:Tropicos:102123685,H,19.4525,-103.7
+Vitis tiliifolia,MEX,Chiapas,NA,1983,GBIF,MO,urn:catalog:MO:Tropicos:1849857,H,17.16,-92.33
+Vitis tiliifolia,MEX,Oaxaca,NA,1988,GBIF,MO,urn:catalog:MO:Tropicos:2446631,H,16.188889,-96.975
+Vitis tiliifolia,MEX,Hidalgo,NA,1939,GBIF,MO,urn:catalog:MO:Tropicos:1411554,H,21.01,-99.18
+Vitis tiliifolia,MEX,Hidalgo,NA,1971,GBIF,MO,urn:catalog:MO:Tropicos:1411653,H,21.14,-98.96
+Vitis tiliifolia,MEX,Chiapas,NA,1981,GBIF,MO,urn:catalog:MO:Tropicos:1849176,H,17.176945,-92.409167
+Vitis tiliifolia,MEX,Quintana Roo,NA,1980,GBIF,MO,urn:catalog:MO:Tropicos:101957466,H,18.36,-89.01
+Vitis tiliifolia,MEX,San Luis Potosí,NA,1940,GBIF,MO,urn:catalog:MO:Tropicos:1411574,H,21.91,-98.95
+Vitis tiliifolia,MEX,Chiapas,NA,1971,GBIF,MO,urn:catalog:MO:Tropicos:1411655,H,16.42,-94.04
+Vitis tiliifolia,MEX,Chiapas,NA,2002,GBIF,MO,urn:catalog:MO:Tropicos:2386130,H,16.31138,-93.76805
+Vitis tiliifolia,MEX,Quintana Roo,NA,1980,GBIF,MO,urn:catalog:MO:Tropicos:101827697,H,18.34,-89.01
+Vitis tiliifolia,MEX,Chiapas,NA,1986,GBIF,MO,urn:catalog:MO:Tropicos:101882768,H,16.75,-92.61666
+Vitis tiliifolia,MEX,Chiapas,NA,2015,GBIF,MO,urn:catalog:MO:Tropicos:102999920,H,17.122722,-93.210444
+Vitis tiliifolia,MEX,Oaxaca,NA,1986,GBIF,MO,urn:catalog:MO:Tropicos:1411659,H,17.56,-96.54
+Vitis tiliifolia,MEX,Oaxaca,NA,1983,GBIF,MO,urn:catalog:MO:Tropicos:102050194,H,17.323611,-96.456111
+Vitis tiliifolia,MEX,Quintana Roo,NA,1985,GBIF,MO,urn:catalog:MO:Tropicos:102123832,H,19.48333,-88.11666
+Vitis tiliifolia,MEX,Colima,NA,1991,GBIF,MO,urn:catalog:MO:Tropicos:101827952,H,19.44,-103.71
+Vitis tiliifolia,MEX,Quintana Roo,NA,1983,GBIF,MO,urn:catalog:MO:Tropicos:101957462,H,18.04,-88.8
+Vitis tiliifolia,MEX,Michoacán,NA,2011,GBIF,MO,urn:catalog:MO:Tropicos:102803939,H,19.583056,-101.129167
+Vitis tiliifolia,MEX,Quintana Roo,NA,1933,GBIF,MO,urn:catalog:MO:Tropicos:2129920,H,18.48944,-88.39666
+Vitis tiliifolia,MEX,Veracruz,NA,2012,GBIF,MO,urn:catalog:MO:Tropicos:102919687,H,18.6522,-97.0085
+Vitis tiliifolia,MEX,San Luis Potosí,NA,1937,GBIF,MO,urn:catalog:MO:Tropicos:1411645,H,21.27,-98.8
+Vitis tiliifolia,MEX,México,NA,1973,GBIF,MO,urn:catalog:MO:Tropicos:2131519,H,18.963611,-100.084722
+Vitis tiliifolia,MEX,Veracruz,NA,1977,GBIF,MO,urn:catalog:MO:Tropicos:981065,H,18.83,-97.14
+Vitis tiliifolia,MEX,Nayarit,NA,1989,GBIF,MO,urn:catalog:MO:Tropicos:1411748,H,22.166667,-104.733333
+Vitis tiliifolia,MEX,Chiapas,NA,1983,GBIF,MO,urn:catalog:MO:Tropicos:101957633,H,16.87,-92.47
+Vitis tiliifolia,MEX,Veracruz,NA,2010,GBIF,MO,urn:catalog:MO:Tropicos:102879503,H,18.10976,-94.35947
+Vitis tiliifolia,MEX,Nayarit,NA,1989,GBIF,MO,urn:catalog:MO:Tropicos:1411660,H,21.5,-104.983333
+Vitis tiliifolia,MEX,Oaxaca,NA,1984,GBIF,MO,urn:catalog:MO:Tropicos:2125036,H,16.93333,-94.68333
+Vitis tiliifolia,MEX,Tamaulipas,NA,1948,GBIF,MO,urn:catalog:MO:Tropicos:1411634,H,24,-99.5
+Vitis tiliifolia,MEX,Tabasco,NA,1980,GBIF,MO,urn:catalog:MO:Tropicos:101957465,H,18.31,-93.1
+Vitis tiliifolia,MEX,Michoacán,NA,1941,GBIF,MO,urn:catalog:MO:Tropicos:1411577,H,19.121667,-102.337778
+Vitis tiliifolia,MEX,Oaxaca,NA,1971,GBIF,MO,urn:catalog:MO:Tropicos:101676758,H,18.09,-96.43
+Vitis tiliifolia,MEX,Quintana Roo,NA,1980,GBIF,MO,urn:catalog:MO:Tropicos:101957459,H,18.38,-89.01
+Vitis tiliifolia,MEX,Veracruz,NA,1974,GBIF,MO,urn:catalog:MO:Tropicos:101676751,H,17.26,-94.61
+Vitis tiliifolia,MEX,Oaxaca,NA,1996,GBIF,MO,urn:catalog:MO:Tropicos:102123997,H,17.459722,-97.920278
+Vitis tiliifolia,MEX,Puebla,NA,2008,GBIF,MO,urn:catalog:MO:Tropicos:102664852,H,20.008056,-97.3275
+Vitis tiliifolia,MEX,Michoacán,NA,2016,GBIF,MO,urn:catalog:MO:Tropicos:102999274,H,19.642806,-101.105278
+Vitis tiliifolia,MEX,Veracruz,NA,2008,GBIF,MO,urn:catalog:MO:Tropicos:100408117,H,19.274722,-96.843333
+Vitis tiliifolia,MEX,Michoacán,NA,2010,GBIF,MO,urn:catalog:MO:Tropicos:100380207,H,19.553889,-101.370556
+Vitis tiliifolia,MEX,Morelos,NA,1978,GBIF,MO,urn:catalog:MO:Tropicos:981119,H,18.97,-98.92
+Vitis tiliifolia,MEX,Oaxaca,NA,1982,GBIF,MO,urn:catalog:MO:Tropicos:101810572,H,16.6,-96.89
+Vitis tiliifolia,MEX,México,NA,2011,GBIF,MO,urn:catalog:MO:Tropicos:102901093,H,18.938297,-99.798922
+Vitis tiliifolia,MEX,Guerrero,NA,1982,GBIF,MO,urn:catalog:MO:Tropicos:102050288,H,17.556389,-99.684722
+Vitis tiliifolia,MEX,Oaxaca,NA,1984,GBIF,IBUNAM,8db0cef577e28a56cab4fdb8609975db,H,16.933,-94.683
+Vitis tiliifolia,MEX,Oaxaca,NA,1988,GBIF,IBUNAM,b2e3e6d77080d3d7292c5f083d0f9352,H,16.15,-97.017
+Vitis tiliifolia,MEX,Quintana Roo,NA,2004,GBIF,IBUNAM,23f76d6fbb94155ee2c68b5d7e19fe33,H,20.64583,-87.6314
+Vitis tiliifolia,MEX,Michoacán,NA,2010,GBIF,IBUNAM,2876952ba78f462f206be48d84385243,H,19.55389,-101.37056
+Vitis tiliifolia,MEX,Oaxaca,NA,2008,GBIF,IBUNAM,1075f7216fbab6498591cb9214288a09,H,16.93444,-97.64389
+Vitis tiliifolia,MEX,Veracruz,NA,1987,GBIF,IBUNAM,499e55339661509cbb9d2f817f5b2c13,H,19.533,-96.933
+Vitis tiliifolia,MEX,Michoacán,NA,2016,GBIF,IBUNAM,49a393c595d6e18beba285d0924f4055,H,19.59392,-101.087
+Vitis tiliifolia,MEX,Campeche,NA,2002,GBIF,IBUNAM,b5cbf307bd998884f30bd582eb127f58,H,18.47722,-89.18806
+Vitis tiliifolia,MEX,Veracruz,NA,2010,GBIF,IBUNAM,034a61d9e1338d6c93993935e67bfc92,H,18.10922,-94.3592
+Vitis tiliifolia,MEX,Veracruz,NA,2001,GBIF,IBUNAM,341cadbfbd2ef7b631f6982c1ce69b89,H,19.33556,-97.09444
+Vitis tiliifolia,MEX,Puebla,NA,2007,GBIF,IBUNAM,869891ae69f228c36c7b10312e4f19ba,H,20.03056,-97.30222
+Vitis tiliifolia,MEX,Puebla,NA,2008,GBIF,IBUNAM,b4ad24fc32bbdde82b603545163464e7,H,20.04389,-97.30556
+Vitis tiliifolia,MEX,Puebla,NA,1962,GBIF,IBUNAM,c156dfffee1cc8718a0527523d0628ac,H,20.279722,-97.960556
+Vitis tiliifolia,MEX,Oaxaca,NA,1996,GBIF,IBUNAM,22e2ce10e612cd4483cd7c132b08cecf,H,17.45,-97.93333
+Vitis tiliifolia,MEX,Chiapas,NA,2015,GBIF,IBUNAM,292386fc8d6dc5b11ce46b1291cc0565,H,17.18122,-93.0961
+Vitis tiliifolia,MEX,México,NA,2011,GBIF,IBUNAM,9be2fd01cb849b966a46465122002f92,H,18.91611,-99.7956
+Vitis tiliifolia,MEX,Quintana Roo,NA,1981,GBIF,IBUNAM,b6fec7f170860f90c9bcbeeeffc11c22,H,19.5,-88.167
+Vitis tiliifolia,MEX,Puebla,NA,1991,GBIF,IBUNAM,5bcba543204882cf462e0ba80df27b1b,H,19.966667,-97.733333
+Vitis tiliifolia,MEX,Veracruz,NA,1980,GBIF,IBUNAM,c47d4faf9be0ba93282289db12713d50,H,20.95,-97.417
+Vitis tiliifolia,MEX,Guerrero,NA,1994,GBIF,IBUNAM,be46a7bc2e222c06d766b124f35f2ccb,H,17.59808,-99.10061
+Vitis tiliifolia,MEX,Puebla,NA,2007,GBIF,IBUNAM,2c1aaf4494fe49bcecb70977437a5f5c,H,19.99667,-97.32333
+Vitis tiliifolia,MEX,Oaxaca,NA,2006,GBIF,IBUNAM,14b338e2fdeff22bcaf0d80bdbb71507,H,17.11067,-96.6366
+Vitis tiliifolia,MEX,Chiapas,NA,2004,GBIF,IBUNAM,74d4a423f285a04e27bb66ccbfcf0d36,H,16.80667,-90.89917
+Vitis tiliifolia,MEX,Guerrero,NA,1968,GBIF,IBUNAM,b536d9debaf4f44b48a684f42564a45c,H,17.25556,-99.483
+Vitis tiliifolia,MEX,Campeche,NA,2015,GBIF,IBUNAM,23ba28515e91a9889a0a9966795b44eb,H,18.66111,-92.1989
+Vitis tiliifolia,MEX,Tamaulipas,NA,1990,GBIF,IBUNAM,1184bd2dae5c659237f3ade999e3b3c5,H,24.158333,-99.475
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,IBUNAM,14fa0c046aaecdd66c90d12cb2f3c2b0,H,19.117,-97.183
+Vitis tiliifolia,MEX,Tamaulipas,NA,1983,GBIF,IBUNAM,8622e4665a90588bcdf493e8ff5bc57b,H,24.075,-99.475
+Vitis tiliifolia,MEX,Puebla,NA,2008,GBIF,IBUNAM,9c66a8900e8e0925430b699c0a38a8bd,H,20.00806,-97.30583
+Vitis tiliifolia,MEX,San Luis Potosí,NA,1996,GBIF,IBUNAM,df8648e43a867baa57aa16d990e001ce,H,22.64667,-100.33028
+Vitis tiliifolia,MEX,Tamaulipas,NA,1982,GBIF,IBUNAM,2876ab5b9546b679e711cb0d280a10b2,H,23.508333,-99.491667
+Vitis tiliifolia,MEX,Veracruz,NA,2000,GBIF,IBUNAM,5523211cbfe4c2beb7ebeb6e643912a1,H,18.65,-97
+Vitis tiliifolia,MEX,Colima,NA,1991,GBIF,IBUNAM,b8da81c94b42534a4dc0290dc02f60c1,H,19.45611,-103.96861
+Vitis tiliifolia,MEX,Puebla,NA,2008,GBIF,IBUNAM,bbc471d3a8a2e1d1c2e9a70637fc0593,H,20.23167,-97.8972
+Vitis tiliifolia,MEX,Chiapas,NA,1984,GBIF,IBUNAM,d579a87bce4569ac2d45158f9924dd75,H,17.182063,-92.350745
+Vitis tiliifolia,MEX,Michoacán,NA,1980,GBIF,IBUNAM,2c8505fa6e50e17f3969d83fae432d69,H,19.4,-100.317
+Vitis tiliifolia,MEX,Oaxaca,NA,2014,GBIF,IBUNAM,125cd4d43387df9cbd6f37f3fdc279af,H,16.71419,-94.7559
+Vitis tiliifolia,MEX,Veracruz,NA,1980,GBIF,IBUNAM,258d8d401e1032f14abd05908bb4a18f,H,21.2,-98.383
+Vitis tiliifolia,MEX,Veracruz,NA,2010,GBIF,IBUNAM,58f6d0981b1861a9a47e586f671c53e0,H,18.353,-95.165
+Vitis tiliifolia,MEX,Veracruz,NA,2008,GBIF,IBUNAM,36f81ac3e410c9dd369ddde21a107a96,H,19.27444,-96.84333
+Vitis tiliifolia,MEX,Oaxaca,NA,1991,GBIF,IBUNAM,73a293fd119c9499511189c17a4160cf,H,17.25,-96.03333
+Vitis tiliifolia,MEX,Guerrero,NA,1998,GBIF,IBUNAM,85050c85e83e26a4b5e757e5769e822a,H,18.55722,-99.65972
+Vitis tiliifolia,MEX,Puebla,NA,1962,GBIF,IBUNAM,cedcdc0f2c0c7a7b5136b37564785a81,H,20.236389,-97.9725
+Vitis tiliifolia,MEX,Veracruz,NA,2007,GBIF,IBUNAM,b0d84dc87a15eb244da8b9b4e5e3bb00,H,19.36972,-96.9731
+Vitis tiliifolia,MEX,Michoacán,NA,2011,GBIF,IBUNAM,f8d9059038f89592a57e146fa1bcd878,H,19.58306,-101.12917
+Vitis tiliifolia,MEX,Chiapas,NA,2004,GBIF,IBUNAM,13af2330171bdef442e14ca283bac97f,H,16.26139,-93.64528
+Vitis tiliifolia,MEX,Veracruz,NA,1974,GBIF,IBUNAM,600895b507f82baab54b3827732f4eec,H,17.267,-94.617
+Vitis tiliifolia,MEX,Michoacán,NA,2016,GBIF,IBUNAM,6fc4692092f0ba4b325031615c4f52f0,H,19.64281,-101.105
+Vitis tiliifolia,MEX,Chiapas,NA,1999,GBIF,IBUNAM,b19583ab8d9448793b87f674377d2a6c,H,16.90097,-90.96939
+Vitis tiliifolia,MEX,Morelos,NA,1995,GBIF,IBUNAM,418bd1737c6bffd6a9941ba65db1fac7,H,18.44194,-98.97278
+Vitis tiliifolia,MEX,Veracruz,NA,1967,GBIF,IBUNAM,2710e685ee0b9bc77470d65ca5cbc8d3,H,18.917,-97.017
+Vitis tiliifolia,MEX,Michoacán,NA,2012,GBIF,IBUNAM,3ca63176f57233c215bd03f12b9a76a1,H,19.58694,-101.106
+Vitis tiliifolia,MEX,Chiapas,NA,2003,GBIF,IBUNAM,73a20594a290d5bfd470a395fe22abd9,H,16.95639,-91.25361
+Vitis tiliifolia,MEX,Chiapas,NA,1985,GBIF,IBUNAM,d6301e9182b54203ec782a667a764e38,H,17.59167,-93.2
+Vitis tiliifolia,MEX,Oaxaca,NA,2001,GBIF,IBUNAM,dfe1a66047968dba5897507d94b4dffd,H,17.76139,-96.0533
+Vitis tiliifolia,MEX,San Luis Potosí,NA,2013,GBIF,IBUNAM,0f61ea2efc763bb9b795baa8bbbb68ff,H,22.54611,-100.45139
+Vitis tiliifolia,MEX,Tamaulipas,NA,1985,GBIF,IBUNAM,03ae92924946b69ea84038079788baae,H,23.708333,-99.241667
+Vitis tiliifolia,MEX,Colima,NA,1991,GBIF,IBUNAM,24f4564bc4ff69c85238291e302b5a82,H,19.45,-103.692
+Vitis tiliifolia,MEX,Chiapas,NA,1997,GBIF,IBUNAM,378dfca44c40e1229705446758738c36,H,16.983,-91.6
+Vitis tiliifolia,MEX,Chiapas,NA,2002,GBIF,IBUNAM,d30c1b8ca3794a508fc615dc953098ac,H,16.94889,-91.25583
+Vitis tiliifolia,MEX,Chiapas,NA,2006,GBIF,IBUNAM,52abf4b94d411726242b8a9710b0a2f6,H,16.099,-91.679
+Vitis tiliifolia,MEX,Campeche,NA,1995,GBIF,IBUNAM,642a30e4464be9e1ceba0943f1fba999,H,18.73333,-90.72083
+Vitis tiliifolia,MEX,Veracruz,NA,1983,GBIF,IBUNAM,80957a9788aeface07d396212d256e97,H,19.267,-96.7
+Vitis tiliifolia,MEX,Quintana Roo,NA,1992,GBIF,IBUNAM,a99146c0ca06fe9fe80376a7ba619284,H,17.89722,-88.87833
+Vitis tiliifolia,MEX,Chiapas,NA,2002,GBIF,IBUNAM,bd9f165dd8aad8909287146d22c17140,H,16.99917,-91.29667
+Vitis tiliifolia,MEX,Veracruz,NA,1987,GBIF,IBUNAM,fe67f2c85fcc7ec555de6440ce1452f0,H,18.567,-95.067
+Vitis tiliifolia,MEX,Veracruz,NA,1984,GBIF,IBUNAM,f32a5e805d61e7f32863bb0171e131c5,H,19.5,-96.933
+Vitis tiliifolia,MEX,Veracruz,NA,2010,GBIF,IBUNAM,2cc0f991ab506af98d9820fe6f54ef59,H,18.10976,-94.3595
+Vitis tiliifolia,MEX,Colima,NA,2001,GBIF,IBUNAM,788052e4f33d63f9c9ff34bc5bd9f327,H,19.47306,-103.67889
+Vitis tiliifolia,MEX,Veracruz,NA,1990,GBIF,IBUNAM,c672bc443b776e72ea0815c629df5671,H,19.5,-96.983
+Vitis tiliifolia,MEX,Chiapas,NA,2002,GBIF,IBUNAM,a38a2fa5745edd330d40a5cd02905495,H,16.98111,-91.26611
+Vitis tiliifolia,MEX,Oaxaca,NA,1997,GBIF,IBUNAM,b4f7dbd9b9ca9de57eeab9a1c307ca52,H,17.29933,-98.11619
+Vitis tiliifolia,MEX,Veracruz,NA,1979,GBIF,IBUNAM,dc8fe3aaef900655aa040598f8e6c9d9,H,21.2,-97.917
+Vitis tiliifolia,MEX,Puebla,NA,1962,GBIF,IBUNAM,246e06f2d2d515646a656a028348ef8d,H,20.296944,-97.979167
+Vitis tiliifolia,MEX,Veracruz,NA,1988,GBIF,IBUNAM,395cf37c24867590cd37c1fe9c40faa3,H,19.7,-97.133
+Vitis tiliifolia,MEX,Chiapas,NA,2005,GBIF,IBUNAM,4a4b208217dacd84442ba86b2e509fbd,H,15.81239,-93.07417
+Vitis tiliifolia,MEX,Michoacán,NA,2011,GBIF,IBUNAM,4b72cf3bf570437ca2303b8b065ef2ea,H,19.421,-100.374
+Vitis tiliifolia,MEX,Oaxaca,NA,1999,GBIF,IBUNAM,7fee0c0342248aacf65233cc568b795b,H,17.51333,-96.32472
+Vitis tiliifolia,MEX,Chiapas,NA,2003,GBIF,IBUNAM,858f069733188aa3e7f216ae47b12072,H,17.03806,-91.25778
+Vitis tiliifolia,MEX,Chiapas,NA,1994,GBIF,IBUNAM,8cf7342ccad1115ceefd3670b7e48471,H,16.50361,-92.42389
+Vitis tiliifolia,MEX,Chiapas,NA,2002,GBIF,IBUNAM,c0ff9ee2a2e9e2e634cdb774a3970875,H,16.31139,-93.76806
+Vitis tiliifolia,MEX,Chiapas,NA,1991,GBIF,IBUNAM,106058c06685606c77650c8bfd7f33e4,H,17.017,-93.783
+Vitis tiliifolia,MEX,México,NA,1988,GBIF,IBUNAM,3d6197ac10e4d85685a1b44887e20a53,H,18.983,-99.317
+Vitis tiliifolia,MEX,Veracruz,NA,1988,GBIF,IBUNAM,49615e1e2dc61073ea2758a6319cfc47,H,19.683,-97.133
+Vitis tiliifolia,MEX,Chiapas,NA,2002,GBIF,IBUNAM,97009e27da93ebfef4bbd7ce1ee978e4,H,16.75444,-91.13194
+Vitis tiliifolia,MEX,Oaxaca,NA,1987,GBIF,IBUNAM,353d6d03f8e8ad92c0616c4d9000fd1d,H,17.616667,-96.35
+Vitis tiliifolia,MEX,Chiapas,NA,2015,GBIF,IBUNAM,93c987d2d016e96ad0d432b3f05b3794,H,17.12272,-93.2104
+Vitis tiliifolia,MEX,Puebla,NA,1962,GBIF,IBUNAM,a42891872de47136caefe2c4ee939663,H,20.466944,-97.713056
+Vitis tiliifolia,MEX,Chiapas,NA,2010,GBIF,IBUNAM,a83e51d39c58a475ff37e0719bce9725,H,16.79533,-93.1846
+Vitis tiliifolia,MEX,Morelos,NA,2010,GBIF,IBUNAM,b0b1a6058eba1512fad77a4128bb3dcf,H,18.9825,-99.22083
+Vitis tiliifolia,MEX,Veracruz,NA,1971,GBIF,IBUNAM,80ed825649a20e3251050504664d3a28,H,19.4,-96.983
+Vitis tiliifolia,MEX,Chiapas,NA,1987,GBIF,IBUNAM,b1bf95d1c9b8d2b48c8a0ffdd7c7a826,H,16.883,-93.267
+Vitis tiliifolia,MEX,Chiapas,NA,1992,GBIF,IBUNAM,f32cf7e6e9cd23a667ec1b42cebdb947,H,16.11778,-90.9275
+Vitis tiliifolia,MEX,Morelos,NA,2014,GBIF,IBUNAM,4d015fe4e6bf3f5167fbd2c62a9152d6,H,18.46317,-99.2753
+Vitis tiliifolia,MEX,Campeche,NA,1997,GBIF,IBUNAM,46c0cce80d05c5a1da9b768b488835ce,H,17.9861,-89.3956
+Vitis tiliifolia,MEX,Chiapas,NA,2007,GBIF,IBUNAM,db60b30d72eab54579477445676e1ff2,H,16.89875,-93.1321
+Vitis tiliifolia,MEX,Guerrero,NA,1994,GBIF,IBUNAM,f46dbd44b8e4b96c25786d2d965f857e,H,17.8625,-99.75333
+Vitis tiliifolia,MEX,Morelos,NA,2013,GBIF,IBUNAM,9252d8223943d088e36612153e00f396,H,18.49917,-99.3311
+Vitis tiliifolia,MEX,Querétaro,NA,2003,GBIF,IBUNAM,d053f796f302d25d8d7b73af1f5b4cd1,H,21.26583,-99.10861
+Vitis tiliifolia,MEX,Veracruz,NA,1987,GBIF,IBUNAM,d98c15271afd046b3a9f09e38f46a633,H,19.51306,-96.94361
+Vitis tiliifolia,MEX,Chiapas,NA,1992,GBIF,IBUNAM,1e1e8f31112ef3b76714efb7f037dba6,H,16.017,-92.017
+Vitis tiliifolia,MEX,Veracruz,NA,1988,GBIF,IBUNAM,2e04a15e9175ffec41337af81a28b8c3,H,19.65,-96.933
+Vitis tiliifolia,MEX,Chiapas,NA,1995,GBIF,IBUNAM,a107b8fc2d9fe1623c20bb15a0389ec8,H,16.733,-91.083
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,IBUNAM,ae2c7318f2e264463a38842b1ce42b43,H,18.917,-96.767
+Vitis tiliifolia,MEX,Chiapas,NA,2003,GBIF,NHMUK,0623d7b6-4c23-41fb-80a1-9b6fb8f3ac48,H,17.0381,-91.2578
+Vitis tiliifolia,MEX,Chiapas,NA,2022,GBIF,US,http://n2t.net/ark:/65665/325adaeb4-513a-45e0-8f77-6522f4a8acc9,H,17.2361,-92.0599
+Vitis tiliifolia,MEX,Hidalgo,NA,2024,GBIF,US,http://n2t.net/ark:/65665/360818c33-b1e2-4553-b9c9-c133229e154e,H,20.9567,-99.2149
+Vitis tiliifolia,MEX,Puebla,NA,2022,GBIF,US,http://n2t.net/ark:/65665/34a729251-609e-44e7-a3ea-fef840fb32aa,H,20.2056,-98.0342
+Vitis tiliifolia,MEX,Chiapas,NA,1992,GBIF,US,http://n2t.net/ark:/65665/3284dddf4-0a3a-474b-90b0-8a66e80a4a10,H,16.12,-90.92
+Vitis tiliifolia,MEX,Chiapas,NA,2006,GBIF,US,http://n2t.net/ark:/65665/3396cd729-9998-488f-ad28-4af73d99d142,H,16.0993,-91.6794
+Vitis tiliifolia,MEX,San Luis Potosí,NA,2024,GBIF,US,http://n2t.net/ark:/65665/3de17c0c6-dfaa-4ebc-afec-699238c6bd16,H,22.0997,-99.1541
+Vitis tiliifolia,MEX,San Luis Potosí,NA,2024,GBIF,US,http://n2t.net/ark:/65665/3a24ca0a1-20cc-48fc-845e-5dc7222a7029,H,21.8918,-99.5802
+Vitis tiliifolia,MEX,Baja California Sur,NA,1959,GBIF,US,http://n2t.net/ark:/65665/3948717a7-b43b-40f8-b8ba-9d030ea32e50,H,23.55,-109.97
+Vitis tiliifolia,MEX,Puebla,NA,2022,GBIF,US,http://n2t.net/ark:/65665/349e56a2c-e80a-4fdb-a948-115c5f52e2a1,H,20.5497,-97.7111
+Vitis tiliifolia,MEX,Nayarit,NA,2024,GBIF,US,http://n2t.net/ark:/65665/36661fe88-35b3-4181-b69c-e8b7b77ffedc,H,21.5725,-104.988
+Vitis tiliifolia,MEX,Puebla,NA,2015,GBIF,US,http://n2t.net/ark:/65665/3f6114468-187b-4004-944b-39fab1a2a8a2,H,20.2475,-97.8254
+Vitis tiliifolia,MEX,Veracruz,NA,2022,GBIF,US,http://n2t.net/ark:/65665/306e56d1b-5eb7-48cf-87de-3afd4247434c,H,18.4893,-95.1704
+Vitis tiliifolia,MEX,Puebla,NA,2022,GBIF,US,http://n2t.net/ark:/65665/326ae358d-a526-4b9b-84ea-0ad706808f93,H,20.203,-98.033
+Vitis tiliifolia,MEX,Oaxaca,NA,2006,GBIF,US,http://n2t.net/ark:/65665/36993b1f8-4384-4e45-a18a-294754d34687,H,17.1106,-96.6366
+Vitis tiliifolia,MEX,Michoacán,NA,2024,GBIF,US,http://n2t.net/ark:/65665/384fa6ce2-249e-4225-8c09-1010e4cc397a,H,19.7462,-100.337
+Vitis tiliifolia,MEX,Oaxaca,NA,2022,GBIF,US,http://n2t.net/ark:/65665/3bccc3d12-be0a-4a58-bcff-64bf1bf85854,H,15.9747,-96.4886
+Vitis tiliifolia,MEX,Veracruz,NA,2022,GBIF,US,http://n2t.net/ark:/65665/3bbef9e52-cf7b-42be-840f-6c3aca3f278f,H,21.1739,-97.9425
+Vitis tiliifolia,MEX,México,NA,2024,GBIF,US,http://n2t.net/ark:/65665/305ffe41d-1dde-4bea-b3d8-ce8d55f57e46,H,19.3547,-99.9916
+Vitis tiliifolia,MEX,Veracruz,NA,2022,GBIF,US,http://n2t.net/ark:/65665/3c57ddb8a-d230-4627-8e7e-ae961bc74552,H,21.1731,-97.9411
+Vitis tiliifolia,MEX,Baja California Sur,NA,1959,GBIF,NA,UCJEPS:UC:UC1195145,H,23.55,-109.966667
+Vitis tiliifolia,MEX,Puebla,NA,2015,GBIF,US,http://n2t.net/ark:/65665/3a6b7d8bb-b68a-478c-8c66-01213c0e98e4,H,19.9484,-97.5487
+Vitis tiliifolia,MEX,Chiapas,NA,2022,GBIF,US,http://n2t.net/ark:/65665/3f6bc7ff6-08a6-4cf0-bfc5-3d4655dc92a0,H,17.2454,-92.1024
+Vitis tiliifolia,MEX,Puebla,NA,2015,GBIF,US,http://n2t.net/ark:/65665/3fe2702a8-33b2-4a7a-ac95-8e926ff575e6,H,20.0327,-97.4328
+Vitis tiliifolia,MEX,Sinaloa,NA,2024,GBIF,US,http://n2t.net/ark:/65665/36ca2672c-c605-46ec-a736-b90320f06f33,H,22.5812,-105.599
+Vitis tiliifolia,MEX,Michoacán,NA,2024,GBIF,US,http://n2t.net/ark:/65665/379ab9fb2-9e05-4b8b-8dfa-709c0fb1bea2,H,19.3689,-100.317
+Vitis tiliifolia,MEX,Oaxaca,NA,2022,GBIF,US,http://n2t.net/ark:/65665/30200ebdc-ad6a-4f54-8824-0befb6a7739e,H,15.9872,-96.5242
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,INECOL,1a23c75fe0f29bd69230303281f60bae,H,18.821944,-97.1625
+Vitis tiliifolia,MEX,Chiapas,NA,1992,GBIF,INECOL,7d3b577a0156221aae56ae75ff2efe64,H,16.101667,-90.96
+Vitis tiliifolia,MEX,Veracruz,NA,1990,GBIF,INECOL,c2340a962afb5550f450489d251f799b,H,19.506667,-96.995833
+Vitis tiliifolia,MEX,Veracruz,NA,1988,GBIF,INECOL,de879bea2509ecd5c3678e9fba543f36,H,19.59,-96.380833
+Vitis tiliifolia,MEX,Veracruz,NA,1963,GBIF,INECOL,c8250276119cce32efe8d243ebe02325,H,19.890288,-96.754275
+Vitis tiliifolia,MEX,Guanajuato,NA,1991,GBIF,INECOL,09f6717f63b931b314cbe405429f1748,H,21.255344,-99.976725
+Vitis tiliifolia,MEX,Veracruz,NA,1987,GBIF,INECOL,1f7d2fcde52033bd7bf5c007470cdc5c,H,19.513056,-96.943611
+Vitis tiliifolia,MEX,Veracruz,NA,1984,GBIF,INECOL,2a57d70d730700ae29b92fb3bffca4d8,H,18.466667,-95.166667
+Vitis tiliifolia,MEX,Veracruz,NA,1857,GBIF,NO DISPONIBLE,317b1394a15f9fd1f5b023c27eca6ef7,H,18.849722,-97.103611
+Vitis tiliifolia,MEX,Veracruz,NA,2003,GBIF,INECOL,6af896aa98b8bbdd13d7e90ad5bccea4,H,18.176389,-94.798611
+Vitis tiliifolia,MEX,Jalisco,NA,1994,GBIF,INECOL,3aaca643c83fbe7c4d12f74c7bc13e1d,H,20.104167,-103.261667
+Vitis tiliifolia,MEX,Tabasco,NA,1982,GBIF,INECOL,90e4a020c5e4bc4753d4e8985f5b2c3d,H,18.05,-93.783333
+Vitis tiliifolia,MEX,Veracruz,NA,1974,GBIF,INECOL,acafd3cfb54ce1181df25059121f8b51,H,17.256944,-94.578055
+Vitis tiliifolia,MEX,Guanajuato,NA,1989,GBIF,INECOL,e51449245329e642bcecb909294c7e29,H,21.311111,-100.202222
+Vitis tiliifolia,MEX,Querétaro,NA,1988,GBIF,INECOL,f1bc2c96122a214dcc10c10eabbe0191,H,21.248611,-99.095
+Vitis tiliifolia,MEX,Chiapas,NA,1991,GBIF,INECOL,d4c68ea47ac6a0deb05f7b0ee03b68fe,H,16.752778,-93.116667
+Vitis tiliifolia,MEX,Querétaro,NA,1990,GBIF,INECOL,33a7df1454c31fa71bcd6f9e8bf17c7f,H,21.546219,-99.178355
+Vitis tiliifolia,MEX,Tabasco,NA,1990,GBIF,INECOL,3929fd81f1d6c3bf610f728e9fbe76b8,H,17.366667,-91.376667
+Vitis tiliifolia,MEX,Veracruz,NA,1986,GBIF,INECOL,3d6680eb5b1b976ce5ec29c7ff4c7924,H,20.388056,-97.213333
+Vitis tiliifolia,MEX,Jalisco,NA,1995,GBIF,INECOL,fcd2b93435ebf7bfb8b8410376a93dd4,H,20.353056,-103.487222
+Vitis tiliifolia,MEX,Yucatán,NA,1981,GBIF,INECOL,2c4a8ff2d983469121138beb1e942b25,H,20.492778,-88.916667
+Vitis tiliifolia,MEX,Veracruz,NA,1967,GBIF,INECOL,e7f99e35105e02a164bec6dad37dcf44,H,18.866944,-97.083333
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,ee29e28b9edf19c7b21fe47b7c36fd55,H,18.916667,-96.766667
+Vitis tiliifolia,MEX,Veracruz,NA,1992,GBIF,INECOL,317824b2a4dbf4a57b80b7c35817a364,H,19.925,-96.858333
+Vitis tiliifolia,MEX,Veracruz,NA,2015,GBIF,INECOL,8ab3eb6a5ec51e59c42bc5bf763880a7,H,20.078056,-96.640833
+Vitis tiliifolia,MEX,Veracruz,NA,1983,GBIF,INECOL,ae3793a251b3c0dfe721e448daf6a325,H,19.3,-96.7
+Vitis tiliifolia,MEX,Veracruz,NA,1974,GBIF,INECOL,b1cdfec4959d1a2c9194bd27a8d19c7d,H,17.2525,-94.612778
+Vitis tiliifolia,MEX,Veracruz,NA,1967,GBIF,INECOL,f338672eb50d010644f53d2a93bda87f,H,18.941667,-96.916667
+Vitis tiliifolia,MEX,Veracruz,NA,1984,GBIF,INECOL,478a92efc464ec760021461eb5803f78,H,19.511111,-96.946111
+Vitis tiliifolia,MEX,Veracruz,NA,1962,GBIF,INECOL,5fb1cfb1a64b004d8786488fcdcf94b5,H,18.355278,-96.259167
+Vitis tiliifolia,MEX,Chiapas,NA,1985,GBIF,INECOL,d9426386677189bbc989fa3d24b62885,H,14.884722,-92.353333
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,INECOL,ec844fb98373e4382e430f182ff0cdb4,H,19.548056,-96.920555
+Vitis tiliifolia,MEX,Chiapas,NA,1999,GBIF,INECOL,f1174e2f419b51944fb78e2801a76907,H,17.758333,-91.883333
+Vitis tiliifolia,MEX,Veracruz,NA,2000,GBIF,INECOL,30127251f53868f90b56f8888ea89c0f,H,18.256944,-94.859444
+Vitis tiliifolia,MEX,Veracruz,NA,1986,GBIF,INECOL,4e7d77b30935195af57937929071d2d8,H,18.588611,-95.076389
+Vitis tiliifolia,MEX,Veracruz,NA,1986,GBIF,INECOL,4e9b4b11dd9da7e2acf5e017687aaa9d,H,18.589167,-95.088055
+Vitis tiliifolia,MEX,Veracruz,NA,1974,GBIF,INECOL,4f9709ade469e4c4f27f99b65c2e8f61,H,17.254722,-94.617222
+Vitis tiliifolia,MEX,Chiapas,NA,1999,GBIF,INECOL,5230a1799f43ab44fe075ba957562060,H,16.900833,-90.969167
+Vitis tiliifolia,MEX,Veracruz,NA,1981,GBIF,INECOL,b4afae05dbbc8f553847c62e2ab267ea,H,18.029905,-95.394592
+Vitis tiliifolia,MEX,Veracruz,NA,1979,GBIF,INECOL,df5da09672efad45648d04f9be3b500d,H,19.375,-96.805
+Vitis tiliifolia,MEX,Veracruz,NA,1987,GBIF,INECOL,75020a2d4d989283495b543dac0cfee9,H,19.533333,-96.933333
+Vitis tiliifolia,MEX,Veracruz,NA,1986,GBIF,INECOL,11d718333964c8c53899f45371917330,H,20.178889,-97.578611
+Vitis tiliifolia,MEX,Veracruz,NA,1982,GBIF,INECOL,1a2a387338e887d22033a3e65399bc04,H,18.834444,-97.151667
+Vitis tiliifolia,MEX,Veracruz,NA,1984,GBIF,INECOL,1dbbc122a40dd2909987b1e1486bda8e,H,19.084167,-96.116667
+Vitis tiliifolia,MEX,Veracruz,NA,2003,GBIF,INECOL,28badfff152737828a3648068f166165,H,18.261667,-94.908611
+Vitis tiliifolia,MEX,Veracruz,NA,1989,GBIF,INECOL,4fff2861b0e0101d01a5153f9b29a451,H,19.664167,-97.161667
+Vitis tiliifolia,MEX,Veracruz,NA,1839,GBIF,INECOL,84518d4828bd1f300130aff3fa9cde89,H,19.54,-96.9275
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,INECOL,93feae7cc5eb8e724a69541c723c2ba6,H,19.650278,-96.907222
+Vitis tiliifolia,MEX,Chiapas,NA,1954,GBIF,INECOL,d2db41711fa3e28f1f588807c9fdfcc7,H,16.086389,-93.755
+Vitis tiliifolia,MEX,Chiapas,NA,1986,GBIF,INECOL,1561b7e584322c9d244c43a681081772,H,15.045278,-92.216944
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,5a05b2e60ad26cfb75d4607860ca2cfd,H,18.426111,-95.094722
+Vitis tiliifolia,MEX,Veracruz,NA,1981,GBIF,INECOL,69ad99173d9c400e0089b1ab04c6df88,H,19.097778,-97.031111
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,5bccd66f1deedf7a8cf696566312bef1,H,19.611389,-96.949444
+Vitis tiliifolia,MEX,Veracruz,NA,1986,GBIF,INECOL,767ae3ba0559d33f3dfda61338b937ea,H,18.339167,-94.89
+Vitis tiliifolia,MEX,Veracruz,NA,1996,GBIF,INECOL,bad819de3fdc900232e39610834ef272,H,19.216667,-96.165555
+Vitis tiliifolia,MEX,Chiapas,NA,1983,GBIF,INECOL,eb08fed628508ba5efeff18584e6bd27,H,16.871667,-92.476944
+Vitis tiliifolia,MEX,Yucatán,NA,1983,GBIF,INECOL,53ff5eb694debe7f0f42d4ab85952e2e,H,21.25,-87.740278
+Vitis tiliifolia,MEX,Chiapas,NA,1982,GBIF,INECOL,611aadf69309aff37ce1f54a4545dbe2,H,15.715556,-92.794167
+Vitis tiliifolia,MEX,Michoacán,NA,1989,GBIF,INECOL,9169d0a610d1d3c0beb242a20239cd74,H,19.65,-101.15
+Vitis tiliifolia,MEX,Veracruz,NA,1971,GBIF,INECOL,b850918ffcbee5028783c71a03518e01,H,18.770278,-95.760555
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,INECOL,968684a8899e74c3f4966b6b93781613,H,19.624722,-96.941389
+Vitis tiliifolia,MEX,Veracruz de ignacio de la llave,NA,1965,GBIF,INECOL,c72639b41538614b4b7f7cfcde4d1e19,H,18.642778,-95.095555
+Vitis tiliifolia,MEX,Veracruz,NA,2016,GBIF,INECOL,fb97e9e87b5222658bfd7d27251c3df3,H,19.321944,-97.041667
+Vitis tiliifolia,MEX,Chiapas,NA,2000,GBIF,INECOL,285fa09e911fd19d3001231b0de3004a,H,16.942222,-93.225
+Vitis tiliifolia,MEX,Veracruz,NA,1988,GBIF,INECOL,5bd43832606f59a389f8f94dc605e6e3,H,19.7,-97.141667
+Vitis tiliifolia,MEX,Veracruz,NA,1988,GBIF,INECOL,c60ac72e7bb590e22ec06995ba3535a0,H,18.414178,-95.092983
+Vitis tiliifolia,MEX,Veracruz,NA,2001,GBIF,INECOL,fad8947175db42b5b4ae5c4e0e7703cc,H,19.336389,-97.090833
+Vitis tiliifolia,MEX,Michoacán,NA,1986,GBIF,INECOL,14788173875f4c9c1ba0a06057a93643,H,19.433333,-100.35
+Vitis tiliifolia,MEX,Quintana Roo,NA,1983,GBIF,INECOL,7007b834aa98e66c4c56ff3aaff0c496,H,21.1,-87.486667
+Vitis tiliifolia,MEX,Veracruz,NA,1973,GBIF,INECOL,b61f935bd47a68511fcb7a01fc6cabd1,H,19.400556,-96.650833
+Vitis tiliifolia,MEX,Veracruz,NA,1988,GBIF,INECOL,b62041b54ec34ef5bae9eca543b49fef,H,19.606667,-96.393889
+Vitis tiliifolia,MEX,Veracruz,NA,2007,GBIF,INECOL,d54f3ff395ec3ee69cdca59291071d76,H,19.371667,-96.976667
+Vitis tiliifolia,MEX,Querétaro,NA,1989,GBIF,INECOL,f9b6ef32733d84e3db44b01ba28e1b63,H,21.125278,-99.496944
+Vitis tiliifolia,MEX,Veracruz,NA,1967,GBIF,INECOL,4e1afa3117dd508846845b4d86eb36c7,H,18.898056,-97.038611
+Vitis tiliifolia,MEX,Chiapas,NA,1983,GBIF,INECOL,9630da2c5d85f62118d30fda23cd3739,H,16.902222,-93.592778
+Vitis tiliifolia,MEX,Veracruz,NA,1983,GBIF,INECOL,5afb97069b57a38143e16094b9739d56,H,18.419444,-95.113611
+Vitis tiliifolia,MEX,Chiapas,NA,1992,GBIF,INECOL,955cf3bebc7fbc9e8b87c67066f32b9a,H,16.12,-90.926667
+Vitis tiliifolia,MEX,Chiapas,NA,1986,GBIF,INECOL,9bda9f373fd7d9517ea4b4bde6e75d48,H,14.908333,-92.17
+Vitis tiliifolia,MEX,Quintana Roo,NA,1983,GBIF,INECOL,bc8836cb4a3bd15cb89d3b5a30ed7cbe,H,17.966667,-88.833333
+Vitis tiliifolia,MEX,Michoacán,NA,1987,GBIF,INECOL,cf70a9f3c3494c3fe526d31b55dadf42,H,19.636258,-101.283064
+Vitis tiliifolia,MEX,Quintana Roo,NA,1981,GBIF,INECOL,f3966c9975cdc7dc44b7e4bf3fdb401d,H,18.675278,-88.402778
+Vitis tiliifolia,MEX,Veracruz,NA,1968,GBIF,INECOL,5f2054defa15c51e7d158e8effea488c,H,20.253889,-96.799167
+Vitis tiliifolia,MEX,Veracruz,NA,1968,GBIF,INECOL,f9245c89ea8c71765ef1d2bae04de306,H,17.756667,-94.761667
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,556c43f3118f61a5c4a86cb4c866eaa7,H,19.119444,-97.142222
+Vitis tiliifolia,MEX,Veracruz de ignacio de la llave,NA,1992,GBIF,INECOL,854b56a5cf7fe05ea93f553f325964aa,H,19.6,-96.373333
+Vitis tiliifolia,MEX,Guanajuato,NA,1989,GBIF,INECOL,b0fb959749a542c2175aa7836780b129,H,21.373289,-100.040719
+Vitis tiliifolia,MEX,Querétaro,NA,1988,GBIF,INECOL,151fd45f10a8d27ffead1dd98068915a,H,21.253333,-99.705
+Vitis tiliifolia,MEX,Veracruz,NA,1988,GBIF,INECOL,825bff272f76d4cf1937d7e0a6c8bf58,H,19.701944,-97.103889
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,d38edfcd5ac9ac31125a7bcaa2df0748,H,18.272222,-94.884722
+Vitis tiliifolia,MEX,Veracruz,NA,1981,GBIF,INECOL,3021fa1396e2b4983a8794f1158526c0,H,19.091667,-97.025
+Vitis tiliifolia,MEX,Veracruz,NA,1988,GBIF,INECOL,c3f95583f09b75e817dc6d09fab422b0,H,19.708333,-97.141667
+Vitis tiliifolia,MEX,Veracruz,NA,1987,GBIF,INECOL,6e58195a044d1dd8dbf7f8ef15dd6a5f,H,18.585,-95.07
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,057434a9322e0391fcf9e0c662c105a8,H,18.91,-96.775
+Vitis tiliifolia,MEX,Michoacán,NA,1989,GBIF,INECOL,2188b3d4bed340a3ba70c85f9e03f3f0,H,19.651113,-101.151118
+Vitis tiliifolia,MEX,Colima,NA,1993,GBIF,INECOL,3016619476afd649c8a2afef2755fc58,H,19.333333,-104.118333
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,4ed342a463a55bce6b949a495dbcfe4e,H,19.141667,-97.075
+Vitis tiliifolia,MEX,Veracruz,NA,1983,GBIF,INECOL,969e146f7a33b202a227420b5d20c805,H,19.21,-96.998333
+Vitis tiliifolia,MEX,Veracruz,NA,1987,GBIF,INECOL,f7e7e92bb600e3e85e50cc98c4664f6c,H,18.448333,-95.211667
+Vitis tiliifolia,MEX,Veracruz,NA,1979,GBIF,INECOL,c97eefd2886e082d8fdae5985162e15c,H,21.156667,-97.923333
+Vitis tiliifolia,MEX,Oaxaca,NA,1964,GBIF,INECOL,14248a2b5f0d76283e2a0876e338209a,H,16.6875,-96.013333
+Vitis tiliifolia,MEX,Jalisco,NA,1988,GBIF,INECOL,b256363b34e607b333707fccb2501ff3,H,19.389112,-103.08107
+Vitis tiliifolia,MEX,Michoacán,NA,1984,GBIF,INECOL,242c4f0635a12c5af0ecb3e592b6ebb8,H,19.806667,-102.701667
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,8424728db6b279478113f432c2e798af,H,20.183333,-97.588333
+Vitis tiliifolia,MEX,Guanajuato,NA,1987,GBIF,INECOL,7d5ca6f4f2ae632dd92a2bf1b821e7b3,H,21.258333,-99.726667
+Vitis tiliifolia,MEX,Veracruz,NA,1986,GBIF,INECOL,b7f1804e48ba2c3ff490e2c4a59a809f,H,20.396944,-97.441667
+Vitis tiliifolia,MEX,Oaxaca,NA,1984,GBIF,INECOL,bc9592f02ac05a43ab6052bd70e2b722,H,16.908333,-94.683333
+Vitis tiliifolia,MEX,Veracruz,NA,1988,GBIF,INECOL,8199757062aaa40e4b98cd75ca83c425,H,19.65,-96.946667
+Vitis tiliifolia,MEX,Jalisco,NA,1988,GBIF,INECOL,ba601b70f69a4461ed37b3e01d8cf921,H,19.601667,-104.436667
+Vitis tiliifolia,MEX,Oaxaca,NA,1997,GBIF,INECOL,3be152973e2953f22cf7ca4c691f2701,H,17.299333,-98.116194
+Vitis tiliifolia,MEX,Veracruz,NA,1983,GBIF,INECOL,6a0d4d0e818a11ebced86de77df92461,H,19.280353,-96.739117
+Vitis tiliifolia,MEX,Jalisco,NA,1988,GBIF,INECOL,e4f41bc1fab561ed944620dee254978e,H,19.44,-102.63
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,bed7b3d851061934192dd542e0b02aab,H,18.558333,-95.208333
+Vitis tiliifolia,MEX,Sinaloa,NA,1988,GBIF,INECOL,f8cd4be316cc13f7f92f1a4a8034bdbd,H,23.561667,-105.838333
+Vitis tiliifolia,MEX,Querétaro,NA,1986,GBIF,INECOL,8e0040457ae35313e212b25795b5a13c,H,21.398333,-99.329167
+Vitis tiliifolia,MEX,Veracruz,NA,NA,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169850,H,18.85047,-97.10364
+Vitis tiliifolia,MEX,Michoacán,NA,1939,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169892,H,19.52152,-100.4073
+Vitis tiliifolia,MEX,Oaxaca,NA,1840,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169919,H,17.2912,-95.97623
+Vitis tiliifolia,MEX,Veracruz,NA,1866,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169991,H,18.88389,-96.92378
+Vitis tiliifolia,MEX,Campeche,NA,1998,GBIF,USF,53781CCC-2190-4E47-8B65-E32473CFDAFC,H,20.4567,-90.0333
+Vitis tiliifolia,MEX,Veracruz,NA,1980,GBIF,USF,F6E7E3E9-F7CD-4725-A55B-EE1F039B060C,H,20.7333,-97.5167
+Vitis tiliifolia,MEX,Veracruz,NA,1980,GBIF,USF,6012B82F-3E24-4FFB-A439-9BA28C574957,H,21.2,-98.3833
+Vitis tiliifolia,MEX,Veracruz,NA,1865,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169924,H,18.86087,-97.06329
+Vitis tiliifolia,MEX,Veracruz,NA,1984,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p02788337,H,19.09167,-96.11667
+Vitis tiliifolia,MEX,Veracruz,NA,1840,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169960,H,19.54259,-96.91374
+Vitis tiliifolia,MEX,Puebla,NA,1911,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169951,H,19.06662,-98.2436
+Vitis tiliifolia,MEX,Morelos,NA,1865,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169958,H,18.92421,-99.22157
+Vitis tiliifolia,MEX,Puebla,NA,1911,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169950,H,19.0666,-98.2436
+Vitis tiliifolia,MEX,México,NA,1932,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169925,H,19.10534,-99.58821
+Vitis tiliifolia,MEX,Veracruz,NA,1858,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169992,H,21.35106,-98.22677
+Vitis tiliifolia,MEX,Puebla,NA,1912,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169953,H,19.00214,-98.28175
+Vitis tiliifolia,MEX,Morelos,NA,1866,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169962,H,18.78722,-99.29944
+Vitis tiliifolia,MEX,Guerrero,NA,NA,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169957,H,18.55655,-99.60512
+Vitis tiliifolia,MEX,Veracruz,NA,1866,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169963,H,19.17377,-96.13422
+Vitis tiliifolia,MEX,Michoacán,NA,1984,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169921,H,19.88001,-101.77375
+Vitis tiliifolia,MEX,Nuevo León,NA,1948,GBIF,MeiseBG,http://www.botanicalcollections.be/specimen/BR0000034965856,H,24,-100
+Vitis tiliifolia,MEX,Oaxaca,NA,1937,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169949,H,17.30167,-94.99778
+Vitis tiliifolia,MEX,Nuevo León,NA,1948,GBIF,MNHN,http://coldb.mnhn.fr/catalognumber/mnhn/p/p03169954,H,25.66453,-100.14162
+Vitis tiliifolia,MEX,Nayarit,NA,1959,GBIF,MICH,b1ab2fb6-25c9-4f9c-87f6-7bf922dd161e,H,21.3013,-104.9009
+Vitis tiliifolia,MEX,Jalisco,NA,1959,GBIF,MICH,e90bd468-c31f-468b-9eb1-5229539beaf8,H,19.30855,-103.15441
+Vitis tiliifolia,MEX,Puebla,NA,2008,GBIF,K,http://specimens.kew.org/herbarium/K004491155,H,20.043889,-97.305555
+Vitis tiliifolia,MEX,Veracruz,NA,2013,GBIF,K,http://specimens.kew.org/herbarium/K000341932,H,18.722778,-97.063889
+Vitis tiliifolia,MEX,Michoacán,NA,2012,GBIF,K,http://specimens.kew.org/herbarium/K004491154,H,19.586944,-101.105833
+Vitis tiliifolia,MEX,Oaxaca,NA,1993,GBIF,PRC,199a57fb-ae64-4f91-bc89-9f33e981e3e6,H,17.08333,-96.63333
+Vitis tiliifolia,MEX,Oaxaca,NA,2012,GBIF,PRC,364379c2-9da8-4e58-b1e6-d14f857af6f9,H,17.08597,-96.58019
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,PRC,8ab2a412-dbf1-4fad-aeeb-e8e646a28c96,H,19.62389,-96.94111
+Vitis tiliifolia,MEX,Michoacán,NA,1939,GBIF,PRC,bf2f1b3e-3fe3-4cbf-bf89-ef804f13e544,H,19.535,-100.406
+Vitis tiliifolia,MEX,Veracruz,NA,1987,GBIF,PRC,472c1789-6a59-4a29-8e69-441ec60e0e30,H,19.53333,-96.93333
+Vitis tiliifolia,MEX,Oaxaca,NA,1988,GBIF,PRC,a8bf06fe-230d-4cc1-a1a2-6752ed43e0cc,H,16.15,-97.01667
+Vitis tiliifolia,MEX,Oaxaca,NA,1998,GBIF,PRC,77199b41-738d-46e0-9f2f-f1c6be41bcb8,H,17.2948,-98.03058
+Vitis tiliifolia,MEX,Oaxaca,NA,2002,GBIF,PRC,cc5784b2-16cd-4ab4-a52f-544e3f0698de,H,18.16197,-96.85219
+Vitis tiliifolia,MEX,Guerrero,NA,1994,GBIF,PRC,e9df58c3-4538-4835-8812-b154e2eb4ffe,H,17.59806,-99.10056
+Vitis tiliifolia,MEX,Oaxaca,NA,1993,GBIF,PRC,3ad0b272-9765-4e8a-8b91-ed937fb8a707,H,16.49167,-97.41333
+Vitis tiliifolia,MEX,Oaxaca,NA,2005,GBIF,PRC,78cfb615-6f0b-4e22-b527-9123081d0a37,H,16.92011,-97.62533
+Vitis tiliifolia,MEX,Jalisco,NA,1974,GBIF,PRC,bcb2f3e8-0c49-4d5a-b8d0-a378bb196488,H,19.46667,-103.26667
+Vitis tiliifolia,MEX,Veracruz,NA,1980,GBIF,PRC,92c3feaa-2cf8-44ea-a429-a00c96066ff7,H,21.2,-98.38333
+Vitis tiliifolia,MEX,Puebla,NA,2008,GBIF,K,http://specimens.kew.org/herbarium/K004491156,H,20.008055,-97.3275
+Vitis tiliifolia,MEX,Quintana Roo,NA,1989,GBIF,NY,d5e27ac6-d4c0-4141-b86d-7c4844623be1,H,18,-89.07
+Vitis tiliifolia,MEX,Jalisco,NA,1886,GBIF,NY,c1d45a25-5675-474b-b05f-2821cca879bc,H,20.77947,-103.399981
+Vitis tiliifolia,MEX,Veracruz,NA,1980,GBIF,ASU,ad5ba7b9-8a5e-441f-b33a-9086f79b6035,H,19.333333,-96.433333
+Vitis tiliifolia,MEX,México,NA,1933,GBIF,ASU,a0d8577c-1072-4590-a030-62f5b0102df6,H,19.033333,-100.05
+Vitis tiliifolia,MEX,México,NA,1935,GBIF,GBH,urn:catalog:MO:Tropicos:3618423,H,18.8833,-100.1
+Vitis tiliifolia,MEX,México,NA,1933,GBIF,GBH,urn:catalog:MO:Tropicos:3613935,H,18.866667,-100.466667
+Vitis tiliifolia,MEX,Guerrero,NA,2017,GBIF,MEXU,urn:catalog:MO:Tropicos:101146014,H,16.79851,-98.70757
+Vitis tiliifolia,MEX,Veracruz,NA,1983,GBIF,UMO,urn:catalog:MO:Tropicos:1683287,H,18.8,-97.09
+Vitis tiliifolia,MEX,Colima,NA,1991,GBIF,UCR,UCR-BPS-79753,H,19.45167,-103.69667
+Vitis tiliifolia,MEX,Colima,NA,1991,GBIF,UCR,UCR-BPS-79785,H,19.45,-103.69167
+Vitis tiliifolia,MEX,Colima,NA,1988,GBIF,UCR,UCR-BPS-60458,H,19.45,-103.68333
+Vitis tiliifolia,MEX,Chiapas,NA,1991,GBIF,CAS,urn:catalog:CAS:BOT-BC:566976,H,16.716667,-93.1
+Vitis tiliifolia,MEX,Chiapas,NA,1992,GBIF,CAS,urn:catalog:CAS:BOT-BC:566979,H,16.116667,-90.916667
+Vitis tiliifolia,MEX,Chiapas,NA,1987,GBIF,CAS,urn:catalog:CAS:BOT-BC:568617,H,16.883333,-93.266667
+Vitis tiliifolia,MEX,Hidalgo,NA,1978,GBIF,ASU,57f8aeab-76fe-4b95-b32a-0b866b0d1383,H,20.216667,-98.566667
+Vitis tiliifolia,MEX,Tamaulipas,NA,1990,GBIF,ASU,53cf4612-7b4f-41e9-bcf1-5a24e9f4dfd3,H,24.011004,-99.464732
+Vitis tiliifolia,MEX,Tamaulipas,NA,1982,GBIF,ASU,826a3999-a09e-4241-a5fe-b3b6a22f10fa,H,23.537034,-99.341104
+Vitis tiliifolia,MEX,Tamaulipas,NA,1983,GBIF,ASU,14960133-0819-43bb-b19a-4c2657b8c671,H,24.083333,-99.116667
+Vitis tiliifolia,MEX,Michoacán,NA,1997,GBIF,UCR,UCR-BPS-140920,H,19.36528,-102.36389
+Vitis tiliifolia,MEX,Oaxaca,NA,2001,GBIF,PRC,db247c04-6b3a-4ae5-8755-24f641b925e3,H,18.14961,-96.85283
+Vitis tiliifolia,MEX,Michoacán,NA,2024,GBIF,US,http://n2t.net/ark:/65665/38a45f092-90fc-4d61-b39a-c45ddc31441e,H,19.7371,-100.33
+Vitis tiliifolia,MEX,Veracruz,NA,2022,GBIF,US,http://n2t.net/ark:/65665/3b0311b6d-0d98-4c8a-b344-fb920b850ed3,H,21.1679,-97.9816
+Vitis tiliifolia,MEX,Oaxaca,NA,1996,GBIF,UnB,https://specieslink.net/guid/224/218720,H,17.45,-97.933333
+Vitis tiliifolia,MEX,Chiapas,NA,1965,GBIF,LL,08fda9131d79ae94d76c16ec6ae5abbf,H,16.8285419,-92.4538264
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,LL,94570a69080095ddbb5d1f0569b7c1b6,H,18.8225914,-97.162836
+Vitis tiliifolia,MEX,Chiapas,NA,1964,GBIF,LL,505c2e362c6367cd3a4ce4293cd0449d,H,16.4785517,-90.5504663
+Vitis tiliifolia,MEX,Veracruz,NA,1972,GBIF,TEX,abe9d741148164e311bb96b798cd2312,H,19.1006397,-97.0150523
+Vitis tiliifolia,MEX,Veracruz,NA,1980,GBIF,TEX,26fb9f1e33f6b9e5f2bb5b6a09adb3f7,H,21.2,-98.383333
+Vitis tiliifolia,MEX,Jalisco,NA,1974,GBIF,TEX,bce83559a49f31250bb4decff8384be7,H,19.466667,-103.266667
+Vitis tiliifolia,MEX,Michoacán,NA,1939,GBIF,LL,079a686d92313065830af91fc33baf2e,H,19.4876863,-100.3639658
+Vitis tiliifolia,MEX,Guerrero,NA,1973,GBIF,TEX,1926a2592399e4b2378f7d37fc0ea59d,H,18.329775,-100.889136
+Vitis tiliifolia,MEX,Chiapas,NA,1968,GBIF,LL,fd25d21482b4daeeea10ae13f1b2f2d6,H,17.1202877,-93.6419244
+Vitis tiliifolia,MEX,Chiapas,NA,1987,GBIF,CM,41DDA361-1376-400B-98A1-ED5325C48D77,H,15.733333,-91.983333
+Vitis tiliifolia,MEX,Michoacán,NA,1981,GBIF,DES,37ec85ce-8d22-4a31-9209-8d14efe983ac,H,19.24575,-101.459138
+Vitis tiliifolia,MEX,México,NA,1933,GBIF,DES,a6e44012-fabc-44c1-ad62-c2c446826cca,H,18.901662,-100.120039
+Vitis tiliifolia,MEX,México,NA,1933,GBIF,DES,4ae69196-5675-44e4-881b-5c4a8a77b56c,H,18.909214,-100.445079
+Vitis tiliifolia,MEX,Quintana Roo,NA,1981,GBIF,CICY,61422f783bf1401a30ed12ea4a78aec5,H,18.676944,-88.391944
+Vitis tiliifolia,MEX,Quintana Roo,NA,1985,GBIF,CICY,f891534d630770c95067fa75492a7499,H,19.416667,-88.15
+Vitis tiliifolia,MEX,Campeche,NA,1984,GBIF,CICY,06d4b0842718e7e2e3c3411e6948487a,H,18.75,-90.416667
+Vitis tiliifolia,MEX,Quintana Roo,NA,1992,GBIF,CICY,0b519ddb3c0ed5404c20e436bb0784c8,H,17.897222,-88.878333
+Vitis tiliifolia,MEX,Yucatán,NA,2007,GBIF,CICY,d6c09093f6e905d51f2def634bef5f8d,H,20.414167,-88.839444
+Vitis tiliifolia,MEX,Chiapas,NA,2002,GBIF,CICY,aeccc29830c10a1f42b3f408062f1df8,H,16.999167,-91.296667
+Vitis tiliifolia,MEX,Veracruz,NA,2001,GBIF,CICY,af4fea134730f669865a05027983ec97,H,19.335556,-97.094444
+Vitis tiliifolia,MEX,Quintana roo,NA,1992,GBIF,CICY,3158326830590d6114fc5bddf5e74ed0,H,20.573611,-87.133333
+Vitis tiliifolia,MEX,Quintana Roo,NA,1983,GBIF,CICY,03ad843c7933bf48960c4ef54ac6329c,H,18.338889000000002,-88.602778
+Vitis tiliifolia,MEX,Quintana Roo,NA,2001,GBIF,CICY,e2d7aca6dc266eb03c1fc8ed08aef69a,H,19.406111,-88.11
+Vitis tiliifolia,MEX,Campeche,NA,2001,GBIF,CICY,822d15305df0dcfc8ba7303f73b1a12f,H,18.85,-90.75
+Vitis tiliifolia,MEX,Quintana Roo,NA,1980,GBIF,CICY,ade39ff8956a3447a0c799b773453156,H,18.35,-89.018056
+Vitis tiliifolia,MEX,Campeche,NA,1984,GBIF,CICY,74a33b9ebed5fd594fb31c78fb0b87c6,H,18.583333,-90.25
+Vitis tiliifolia,MEX,Oaxaca,NA,1996,GBIF,CICY,6ac1a6de50bdcec6fef5becdc296c5dd,H,17.483333,-97.816667
+Vitis tiliifolia,MEX,Quintana Roo,NA,1981,GBIF,CICY,f58985afea7945f2e4659ed7b1bfc6f4,H,19.469444,-88.058333
+Vitis tiliifolia,MEX,Veracruz,NA,2000,GBIF,CICY,426a2afa10c30736a1eda241d76d6da5,H,18.8,-96.933333
+Vitis tiliifolia,MEX,Quintana Roo,NA,1983,GBIF,CICY,c9d047197279184224641c1117c1169b,H,18.383333,-88.55
+Vitis tiliifolia,MEX,Campeche,NA,1984,GBIF,CICY,2c73ddee6e85b25eed0f59a8261f476e,H,19.283333,-90.566667
+Vitis tiliifolia,MEX,Yucatán,NA,1984,GBIF,CICY,286a5924357e73e7e36f1f6e09f6e794,H,20.8625,-87.648611
+Vitis tiliifolia,MEX,Jalisco,NA,1998,GBIF,INECOL,a6e34d5c57914228bf74ecaa7ff2f861,H,20.841667,-104.765833
+Vitis tiliifolia,MEX,Michoacán,NA,2010,GBIF,INECOL,e2f9401203563e3638a3058911c5f77c,H,19.657778,-101.223611
+Vitis tiliifolia,MEX,Chiapas,NA,2003,GBIF,INECOL,adbec0699ee96ed903fd743f3e18833f,H,16.956389,-91.253611
+Vitis tiliifolia,MEX,Puebla,NA,2007,GBIF,INECOL,4556f92ff4e5e3652f0db3a891c40778,H,20.030556,-97.302222
+Vitis tiliifolia,MEX,Puebla,NA,2008,GBIF,INECOL,895c5971750e47f742907183545a7437,H,20.008056,-97.305833
+Vitis tiliifolia,MEX,Campeche,NA,2002,GBIF,INECOL,728ac7bc7c6d1be097f7e85fed8c65d0,H,18.477222,-89.188055
+Vitis tiliifolia,MEX,Michoacán,NA,2004,GBIF,INECOL,a0d12e035324e894344d021b9905612f,H,19.895,-101.439444
+Vitis tiliifolia,MEX,Guerrero,NA,1968,GBIF,INECOL,cd6e9d2ceae1a7a47f5f19c5d61b1e93,H,17.255556,-99.483333
+Vitis tiliifolia,MEX,Puebla,NA,2007,GBIF,INECOL,d4b94d24a3c7338e25ca56914f834a62,H,19.996667,-97.323333
+Vitis tiliifolia,MEX,San Luis Potosí,NA,NA,GBIF,INECOL,a3024f06a72a977b22e85bc1f084e5df,H,21.2825,-99.031111
+Vitis tiliifolia,MEX,Tamaulipas,NA,NA,GBIF,IEA-UAT,129a4947674c66c05abf75187b0dc060,H,23.075,-99.225
+Vitis tiliifolia,MEX,México,NA,NA,GBIF,NA,d62b7073fb508646f9f2299a65fdd5c4,H,19.102219,-100.027778
+Vitis tiliifolia,MEX,Querétaro,NA,NA,GBIF,INECOL,df66846bba2213d8909c4caaf2672a6d,H,21.211111,-99.582222
+Vitis tiliifolia,MEX,Querétaro,NA,NA,GBIF,INECOL,d2c66837a90f99f04945bb87ae89fb83,H,21.554167,-99.172222
+Vitis tiliifolia,MEX,Oaxaca,NA,NA,GBIF,NA,a03b9f2c1b4c418f7fb78a2c72f3365f,H,17.704167,-96.530278
+Vitis tiliifolia,MEX,México,NA,NA,GBIF,NA,cd5962cc757b5cd9a2cb632f2ea9f85f,H,19.128058,-99.9325
+Vitis tiliifolia,MEX,Michoacán,NA,NA,GBIF,CIIDIR-IPN,50713e8f686171e931e2454ecf98f1dd,H,19.336944,-102.363056
+Vitis tiliifolia,MEX,México,NA,NA,GBIF,NA,cb9c01759cd8fa68635fb32d19869fc2,H,19.095114,-99.975658
+Vitis tiliifolia,MEX,Tamaulipas,NA,NA,GBIF,NA,5f7d946d730c20ceccc6c68770da0755,H,23.103611,-99.1925
+Vitis tiliifolia,MEX,San Luis Potosí,NA,NA,GBIF,INECOL,2a805fad2c15630394fbfdfc22438004,H,21.309167,-99.095
+Vitis tiliifolia,MEX,México,NA,NA,GBIF,NA,89f29da66fd6927d2bc626737df628ac,H,19.041669,-100.210828
+Vitis tiliifolia,MEX,Querétaro,NA,NA,GBIF,INECOL,77e7282163d9c4172271068034ea8c7e,H,21.143889,-99.620833
+Vitis tiliifolia,MEX,México,NA,NA,GBIF,NA,37163df3a433c3f72aee141de1c792f4,H,19.073369,-99.940447
+Vitis tiliifolia,MEX,Oaxaca,NA,NA,GBIF,CIIDIR-IPN,482be238a996f4b811c5a6ce5a656161,H,15.950558,-96.403328
+Vitis tiliifolia,MEX,México,NA,NA,GBIF,NA,d9715145d1106a8dbe21ae0ca50fa318,H,19.055747,-100.045497
+Vitis tiliifolia,MEX,Hidalgo,NA,NA,GBIF,INECOL,b2cd0d49511ca4a5ba2fd13a46a35c8a,H,21.256639,-99.043583
+Vitis tiliifolia,MEX,México,NA,NA,GBIF,NA,807a7a7dd7bb0c6cb215ffc35a8d2ade,H,19.078589,-99.904956
+Vitis tiliifolia,MEX,México,NA,NA,GBIF,NA,56d46682bdc514f7b80a920af6f22cf1,H,19.085828,-99.939169
+Vitis tiliifolia,MEX,Michoacán,NA,NA,GBIF,DERN-IMECBIO-CUCSUR-UDG,a3ce3e32836096e0dbaf8da7fd660bd2,H,18.692833,-103.423278
+Vitis tiliifolia,MEX,San Luis Potosí,NA,NA,GBIF,INECOL,821ddf77dc7948008f465db7d5fb6259,H,21.563333,-99.172222
+Vitis tiliifolia,MEX,Tamaulipas,NA,NA,GBIF,IEA-UAT,c6b3e5a9f10f46ad2afd9af47655c5c7,H,23.191667,-99.275
+Vitis tiliifolia,MEX,México,NA,NA,GBIF,NA,4e5128ab108e7a7a2b4583e7f10c893b,H,19.056108,-100.008058
+Vitis tiliifolia,MEX,Querétaro,NA,NA,GBIF,INECOL,a38a02ff3f6ee0307160d1f1236255ff,H,21.231944,-99.137778
+Vitis tiliifolia,MEX,Chiapas,NA,NA,GBIF,FMNH,676cd580c666a30e2e416e71213d663a,H,16.110667,-91.716389
+Vitis tiliifolia,MEX,México,NA,NA,GBIF,FESI-UNAM,8dc25e398a036cfea8db96480bc9cefb,H,18.718333,-99.775
+Vitis tiliifolia,MEX,México,NA,NA,GBIF,NA,bfebc0fa1b353c4c0fa0edde2f325346,H,19.043086,-99.909169
+Vitis tiliifolia,MEX,Nayarit,NA,NA,GBIF,UAN,74f1cd31f230cdba2460b295d984c89e,H,21.459167,-105.029444
+Vitis tiliifolia,MEX,México,NA,NA,GBIF,NA,33d968b3b04e9a9e4b334f033357c4d3,H,19.081911,-99.954439
+Vitis tiliifolia,MEX,México,NA,NA,GBIF,NA,ec8c467b064ea61de208c4ee6afb7043,H,19.098328,-99.914439
+Vitis tiliifolia,MEX,México,NA,NA,GBIF,NA,57861f0ad6fb2ee44ccdf1e86101c03e,H,19.036939,-99.968889
+Vitis tiliifolia,MEX,Chiapas,NA,1967,GBIF,ENCB-IPN,4903a33fb92e03a31445f3f427eec16a,H,16.734722,-93.030278
+Vitis tiliifolia,MEX,Veracruz,NA,1990,GBIF,ENCB-IPN,628f435160aca8f33de39b2da80b7f3c,H,19.483611,-96.966944
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,ENCB-IPN,df916ccaf85910ecbb9725ff9e5c3a12,H,19.548333,-96.915833
+Vitis tiliifolia,MEX,Veracruz,NA,1981,GBIF,ENCB-IPN,8bd6c224cd06e1beab9a8fc48f04587d,H,19.076944,-97.031667
+Vitis tiliifolia,MEX,Veracruz,NA,1970,GBIF,ENCB-IPN,46ab8668bac065cc676d35123834b789,H,18.424167,-95.108056
+Vitis tiliifolia,MEX,Guerrero,NA,1970,GBIF,ENCB-IPN,3dc69d3e34002035ebd21e2a27dbc04c,H,17.534167,-101.048611
+Vitis tiliifolia,MEX,Hidalgo,NA,1969,GBIF,ENCB-IPN,15100c99b296ea0cbbbe3acb0381618a,H,20.889444,-99.111667
+Vitis tiliifolia,MEX,Hidalgo,NA,1978,GBIF,ENCB-IPN,e7d07354a9af3c2875f91e62f3fbc5b3,H,20.216111,-98.560833
+Vitis tiliifolia,MEX,Jalisco,NA,1968,GBIF,ENCB-IPN,d540ea6d2abf8acac1e2c1a5338f689d,H,19.566111,-103.631111
+Vitis tiliifolia,MEX,Oaxaca,NA,1982,GBIF,ENCB-IPN,ea96e4fe533f15b5c86692eac8aa5d38,H,17.293889,-98.152778
+Vitis tiliifolia,MEX,Puebla,NA,1975,GBIF,ENCB-IPN,bed111274ee48da5fc618867ba6edd54,H,20.107222,-97.943333
+Vitis tiliifolia,MEX,Veracruz,NA,1983,GBIF,ENCB-IPN,7257e4a1f4dea9a9f06817d66de794a5,H,19.220278,-96.954722
+Vitis tiliifolia,MEX,Veracruz,NA,1968,GBIF,ENCB-IPN,31f61e2d8975ccb5973f4aa0d6683153,H,18.879722,-97.080556
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,ENCB-IPN,0a7d39b4256f169ce7cacd3ed4f84c93,H,18.836111,-97.133889
+Vitis tiliifolia,MEX,Hidalgo,NA,1964,GBIF,ENCB-IPN,542dcb301f78ad7740e30b6f24b2da3d,H,20.369167,-98.244167
+Vitis tiliifolia,MEX,Nayarit,NA,1989,GBIF,ENCB-IPN,b6028930b3611af42c32a738e0e5acb2,H,21.466667,-104.919444
+Vitis tiliifolia,MEX,Chiapas,NA,1983,GBIF,ENCB-IPN,97bcd6fde15a5031446e786ca90a9d18,H,16.543889,-93.472778
+Vitis tiliifolia,MEX,Morelos,NA,NA,GBIF,ENCB-IPN,1c7e8341dbd884b38f2b636eac621fac,H,19.085278,-99.231944
+Vitis tiliifolia,MEX,Veracruz,NA,1965,GBIF,ENCB-IPN,500598963030821332e052a0d8ea851c,H,18.435,-94.938611
+Vitis tiliifolia,MEX,Hidalgo,NA,1981,GBIF,ENCB-IPN,8cd94c8c54ceffea02c84d84af835116,H,20.721111,-98.7
+Vitis tiliifolia,MEX,Tabasco,NA,1980,GBIF,ENCB-IPN,e30d868743fedf1e5185b0f694e3250c,H,18.4125,-93.19
+Vitis tiliifolia,MEX,Tabasco,NA,1983,GBIF,ENCB-IPN,7d2dcf341b873c3a0978c64a4d643cc9,H,18.048889,-93.5875
+Vitis tiliifolia,MEX,Veracruz,NA,1974,GBIF,ENCB-IPN,91de11a8f616de2fdb0c649bb7c341db,H,19.646944,-96.934722
+Vitis tiliifolia,MEX,Veracruz,NA,1974,GBIF,ENCB-IPN,baf7ef3ddadb2297c1a49406e7b3fc9b,H,18.564167,-95.105
+Vitis tiliifolia,MEX,Nuevo León,NA,1964,GBIF,ENCB-IPN,76e9b102dc3045c6cea04b4db2fbafc4,H,25.048889,-99.813611
+Vitis tiliifolia,MEX,Chiapas,NA,1985,GBIF,ENCB-IPN,29285184af88f861e4af279782a53492,H,17.586111,-93.209167
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,ENCB-IPN,d33504bb8a9447650163016292ecb434,H,19.648889,-96.906111
+Vitis tiliifolia,MEX,Oaxaca,NA,1966,GBIF,ENCB-IPN,d7a202cfceba65b2d1cee901ee24cdcb,H,17.130556,-96.596944
+Vitis tiliifolia,MEX,Veracruz,NA,1983,GBIF,ENCB-IPN,2ac658f0a93fe87e63d1ac43ee2c3a91,H,20.950556,-97.4525
+Vitis tiliifolia,MEX,Veracruz,NA,1971,GBIF,ENCB-IPN,33e8483359b94a76eef5ddd09d1bb635,H,18.4625,-95.22
+Vitis tiliifolia,MEX,Chiapas,NA,1986,GBIF,ENCB-IPN,533d95d8ab6cad2c5ea104450f941a98,H,14.997778,-92.166944
+Vitis tiliifolia,MEX,Nayarit,NA,1989,GBIF,ENCB-IPN,273cf4ae9efcae585b8eb2bd1eeec3d1,H,21.493056,-104.967222
+Vitis tiliifolia,MEX,Puebla,NA,1964,GBIF,ENCB-IPN,8b8598ec140e2596cfdc4809673ec03e,H,20.2925,-97.975833
+Vitis tiliifolia,MEX,Hidalgo,NA,1964,GBIF,ENCB-IPN,484bd23a3a470254af89b2365818cf8c,H,20.786944,-98.676944
+Vitis tiliifolia,MEX,Chiapas,NA,1987,GBIF,ENCB-IPN,a0a369829a67324c01528989185295d9,H,16.870833,-93.206944
+Vitis tiliifolia,MEX,Yucatán,NA,1979,GBIF,ENCB-IPN,22bded05b9da2c8ee4e2032648995eac,H,20.539444,-88.747778
+Vitis tiliifolia,MEX,Michoacán,NA,1984,GBIF,ENCB-IPN,c2267994ac89269c6a3d273edb2c8fe0,H,19.467222,-100.483889
+Vitis tiliifolia,MEX,Chiapas,NA,1983,GBIF,ENCB-IPN,3f3b8afef97419b71f6dc208eff49b57,H,17.229167,-92.348056
+Vitis tiliifolia,MEX,Veracruz,NA,1977,GBIF,ENCB-IPN,861160656951e13dd8a4b0c79e01967f,H,20.074167,-97.098333
+Vitis tiliifolia,MEX,Tabasco,NA,1982,GBIF,ENCB-IPN,272f27bd2e87852cad8c3d6db2648250,H,17.818889,-91.509167
+Vitis tiliifolia,MEX,Veracruz,NA,1984,GBIF,ENCB-IPN,47f9ca9b7545cee0a3df7e1cedc833f1,H,18.361111,-95.787778
+Vitis tiliifolia,MEX,Chiapas,NA,1968,GBIF,ENCB-IPN,9591a1f77eea0ece867e993f95ae69d2,H,17.303889,-93.388889
+Vitis tiliifolia,MEX,Oaxaca,NA,1982,GBIF,ENCB-IPN,43aa8c8d46bdd4e3bff49bd1583a8b89,H,17.329444,-96.481667
+Vitis tiliifolia,MEX,Michoacán,NA,1979,GBIF,ENCB-IPN,e5309b2761f731d6130bfeb83b4753f7,H,19.046389,-102.194722
+Vitis tiliifolia,MEX,Michoacán,NA,1950,GBIF,ENCB-IPN,ae366ee2a941448dde38d1ccbfe3ab90,H,19.070556,-101.773611
+Vitis tiliifolia,MEX,Veracruz,NA,1983,GBIF,ENCB-IPN,7806b6be14d7c1514d1d01f8e59a4b7b,H,19.311944,-96.703611
+Vitis tiliifolia,MEX,Chiapas,NA,1985,GBIF,ENCB-IPN,0457e4b52d91c540a098854fecabad23,H,15.020556,-92.393889
+Vitis tiliifolia,MEX,Veracruz,NA,1971,GBIF,ENCB-IPN,d9dc192ccdb8098184cc64566627591c,H,19.301944,-96.354722
+Vitis tiliifolia,MEX,Veracruz,NA,1992,GBIF,ENCB-IPN,89c6195bf2bd74e72c4db7c8d64e10ee,H,19.611389,-96.393889
+Vitis tiliifolia,MEX,Veracruz,NA,1973,GBIF,ENCB-IPN,88cbdb9801317c138a2dde1a7b575113,H,19.530556,-96.911111
+Vitis tiliifolia,MEX,Veracruz,NA,1974,GBIF,ENCB-IPN,3e4be6d850b4fb5ba69b5673b30a9ea4,H,18.415278,-95.214444
+Vitis tiliifolia,MEX,Puebla,NA,1976,GBIF,ENCB-IPN,e9cfee5aac0b23d73dae746c1228e90d,H,18.7025,-97.778333
+Vitis tiliifolia,MEX,Veracruz,NA,1972,GBIF,ENCB-IPN,2c7a35ebb2993ccc555c8ebdb3b55f46,H,19.080278,-97.058889
+Vitis tiliifolia,MEX,Oaxaca,NA,1950,GBIF,ENCB-IPN,9dbfc9ce178bdd6ff853cdcba78fe2fb,H,17.1475,-96.002222
+Vitis tiliifolia,MEX,Tabasco,NA,1986,GBIF,ENCB-IPN,b94c640fac1c013110d8ff02ea62a120,H,17.999722,-93.513333
+Vitis tiliifolia,MEX,Puebla,NA,1975,GBIF,ENCB-IPN,95cb5a8d5ef937dde508530e2f9b4285,H,20.309722,-98.170833
+Vitis tiliifolia,MEX,Veracruz,NA,1986,GBIF,ENCB-IPN,0ef066562d34439ea9786150a52d16a1,H,18.578056,-95.071667
+Vitis tiliifolia,MEX,Oaxaca,NA,1978,GBIF,ENCB-IPN,db41de54aa65346f40a69a23eb302676,H,16.513333,-94.512778
+Vitis tiliifolia,MEX,Veracruz,NA,1967,GBIF,ENCB-IPN,17500c73c9702de57e027e3bb9ee77dd,H,18.884167,-97.118333
+Vitis tiliifolia,MEX,Michoacán,NA,1960,GBIF,ENCB-IPN,10ee49a81dfe3216f3a07452590d56d9,H,19.564167,-100.3325
+Vitis tiliifolia,MEX,Morelos,NA,1955,GBIF,ENCB-IPN,fc0e6b3791aabaf5161fa3b90abf5650,H,18.984167,-99.093056
+Vitis tiliifolia,MEX,México,NA,1973,GBIF,ENCB-IPN,8b767747e3a0dd1eea540ee703a9aefe,H,18.940556,-100.047222
+Vitis tiliifolia,MEX,San Luis Potosí,NA,1957,GBIF,ENCB-IPN,9906330c38f68f7b58af128e0e92eb66,H,22.076667,-100.475
+Vitis tiliifolia,MEX,Veracruz,NA,1970,GBIF,ENCB-IPN,9b32ca0980295382e6906fea3a40a519,H,19.786111,-97.214167
+Vitis tiliifolia,MEX,Hidalgo,NA,NA,GBIF,ENCB-IPN,483e2e7ab6936fc51880d865c34555e9,H,21.017778,-99.167222
+Vitis tiliifolia,MEX,Veracruz,NA,1977,GBIF,ENCB-IPN,d19f447380af4e45eaeafcb5ef80d908,H,18.633056,-96.733611
+Vitis tiliifolia,MEX,Hidalgo,NA,1981,GBIF,ENCB-IPN,5056c7a8901cb34111910ea2741f9ca7,H,20.696667,-98.670278
+Vitis tiliifolia,MEX,Veracruz,NA,1968,GBIF,ENCB-IPN,b4561b73b19fbab4ef1e8b8ab40665c1,H,20.234167,-96.790833
+Vitis tiliifolia,MEX,Chiapas,NA,1965,GBIF,ENCB-IPN,b565588a1c59efe531442c6b825baa5d,H,17.552222,-93.148889
+Vitis tiliifolia,MEX,Nayarit,NA,1989,GBIF,ENCB-IPN,5a528ba67956e07dca45860103d27612,H,22.216667,-104.583333
+Vitis tiliifolia,MEX,Morelos,NA,1978,GBIF,ENCB-IPN,4961c5134f3994137a22b74a3f1081aa,H,18.842222,-98.949444
+Vitis tiliifolia,MEX,Tabasco,NA,1997,GBIF,ENCB-IPN,e5d55fd25ac587a20cbbaed0b3e36865,H,18.373056,-92.6825
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,ENCB-IPN,4a7fbd4a229be9a2c0e109b9034acd72,H,19.602778,-96.923056
+Vitis tiliifolia,MEX,Michoacán,NA,1960,GBIF,ENCB-IPN,0d8e207f25f5afa57e9afcafb77e855c,H,19.682778,-100.839167
+Vitis tiliifolia,MEX,Veracruz,NA,1986,GBIF,ENCB-IPN,4e563bbc6cc1b3747dcdb4741c5ccac5,H,18.583333,-95.1
+Vitis tiliifolia,MEX,Veracruz,NA,1983,GBIF,ENCB-IPN,b55d28e006b0ea4e3161badaf5ad342c,H,19.283056,-96.713333
+Vitis tiliifolia,MEX,Guanajuato,NA,1987,GBIF,ENCB-IPN,0c5f3da4d031385d4d743be5582c5829,H,21.419722,-99.979444
+Vitis tiliifolia,MEX,San Luis Potosí,NA,1955,GBIF,ENCB-IPN,0fe4af5fdfb6e30df6a258a6f4da5a7f,H,22.549167,-100.443056
+Vitis tiliifolia,MEX,Veracruz,NA,1996,GBIF,ENCB-IPN,0b9c9b0d83d802a1bf232d0c09b814aa,H,19.188333,-96.14
+Vitis tiliifolia,MEX,Oaxaca,NA,1983,GBIF,ENCB-IPN,e67f4bed05c0bd0f0cd5264ea54825ed,H,17.344167,-96.518056
+Vitis tiliifolia,MEX,Nayarit,NA,1989,GBIF,ENCB-IPN,e0324684a525bbfef8311706a0a717d4,H,22.225278,-104.583333
+Vitis tiliifolia,MEX,Hidalgo,NA,1964,GBIF,ENCB-IPN,cca6f54d2d78c4614f99074f319c29b1,H,20.237222,-98.561944
+Vitis tiliifolia,MEX,Nayarit,NA,1989,GBIF,ENCB-IPN,20ad093e7229eef090377643b13e39c1,H,21.5,-104.966667
+Vitis tiliifolia,MEX,Chiapas,NA,1986,GBIF,ENCB-IPN,1f9b4b4a41741adaadf676ad81a7b8dd,H,14.967778,-92.186111
+Vitis tiliifolia,MEX,San Luis Potosí,NA,1954,GBIF,ENCB-IPN,699aaf50c18a9cf5645f59109e0dfe75,H,22.101667,-100.713056
+Vitis tiliifolia,MEX,Michoacán,NA,1986,GBIF,ENCB-IPN,b7e8b8e47a75e1c5dc2e92ce8af2ad99,H,19.413333,-100.353889
+Vitis tiliifolia,MEX,San Luis Potosí,NA,1956,GBIF,ENCB-IPN,03d4fc9d7050534474af60f362c82f65,H,21.624444,-99.533889
+Vitis tiliifolia,MEX,Veracruz,NA,1979,GBIF,ENCB-IPN,6d993ba39859506d24078cb0af52d092,H,21.166667,-97.915278
+Vitis tiliifolia,MEX,Guerrero,NA,1982,GBIF,ENCB-IPN,d83f00727abf47e0743ffcdc99bec0ae,H,17.503056,-99.665556
+Vitis tiliifolia,MEX,Oaxaca,NA,1971,GBIF,ENCB-IPN,3cc2c5a28d22536b4c2f6a58ace26f73,H,18.0875,-96.415833
+Vitis tiliifolia,MEX,Veracruz,NA,2002,GBIF,IBUNAM,cc6a66ee55fc66dfaec4a174aee99f82,H,19.875,-96.76667
+Vitis tiliifolia,MEX,Chiapas,NA,2002,GBIF,IBUNAM,173c57afa3d96c3e048e651e01baaaa5,H,16.98139,-91.24972
+Vitis tiliifolia,MEX,Querétaro,NA,1991,GBIF,INECOL,6b1e26883c034311dd0cba0ff8586e80,H,20.915278,-99.564444
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,91bfb4c088784119f4eb06b22e71806a,H,18.408333,-95.066667
+Vitis tiliifolia,MEX,Michoacán,NA,1986,GBIF,INECOL,9eb9f30c3b6aae84a40eb365a582b1a1,H,19.433333,-100.358333
+Vitis tiliifolia,MEX,Guerrero,NA,1994,GBIF,INECOL,0c3da00e9b91af5a644e444d4de7f20d,H,17.598611,-99.176667
+Vitis tiliifolia,MEX,Michoacán,NA,1998,GBIF,INECOL,ec9aee8cc8a289687be8437545edff28,H,19.336667,-102.363333
+Vitis tiliifolia,MEX,Jalisco,NA,1992,GBIF,INECOL,54743e42930c03adcb4b41aa4a428d5c,H,20.80369,-102.559841
+Vitis tiliifolia,MEX,Querétaro,NA,1968,GBIF,INECOL,f1e26a5b80fb13b116e318a9fc435451,H,21.333333,-99.4
+Vitis tiliifolia,MEX,Veracruz,NA,2003,GBIF,INECOL,e6ac7e7477ab49ee33e5efe86229cf7e,H,18.262385,-94.908829
+Vitis tiliifolia,MEX,Veracruz,NA,1971,GBIF,INECOL,f7b2c6d3088c92bc87fbf09d4dfe9cd0,H,18.770969,-95.760792
+Vitis tiliifolia,MEX,Veracruz,NA,1986,GBIF,INECOL,5a4a27cd3021db5ccc1acfefb28f8522,H,18.589868,-95.088278
+Vitis tiliifolia,MEX,Veracruz,NA,1984,GBIF,INECOL,b80d09b0734ed5aae29357b6d30f9cbe,H,18.467374,-95.16689
+Vitis tiliifolia,MEX,Chiapas,NA,1954,GBIF,INECOL,ba2568044ff8e7e4edaa8fc4801921b6,H,16.08722,-93.755191
+Vitis tiliifolia,MEX,Veracruz,NA,1986,GBIF,INECOL,3bcad799e1d03ed47a18a9940f5f5d8c,H,18.339881,-94.890218
+Vitis tiliifolia,MEX,Chiapas,NA,1983,GBIF,INECOL,3ffd78dcd148fa95e823a205439faa9a,H,16.872458,-92.47711
+Vitis tiliifolia,MEX,Jalisco,NA,1995,GBIF,INECOL,81c02053e39d0587706d5b27066e505d,H,20.353655,-103.487624
+Vitis tiliifolia,MEX,Quintana Roo,NA,2004,GBIF,INECOL,85ec4e57b1da993c4327fb61be2fcd4f,H,20.64644,-87.631452
+Vitis tiliifolia,MEX,Chiapas,NA,1983,GBIF,INECOL,9bbc07069f7f1cb37aef68decfba670a,H,16.903011,-93.592966
+Vitis tiliifolia,MEX,Oaxaca,NA,1994,GBIF,USF,5B14EA93-5DBA-49FC-AC56-77F44CEA8ED7,H,16.75,-97
+Vitis tiliifolia,MEX,Veracruz,NA,NA,GBIF,CECOY-INIFAP,b5e3f172cb4fb52b318c84c193ec855f,H,21.158333,-97.675
+Vitis tiliifolia,MEX,Veracruz,NA,1987,GBIF,CECOY-INIFAP,580cc7617ac6993c5656f49491f04388,H,18.341667,-95.108333
+Vitis tiliifolia,MEX,Puebla,NA,1962,GBIF,CECOY-INIFAP,27b06579eb978439b65e88cfea1d4f84,H,20.291667,-97.975
+Vitis tiliifolia,MEX,Puebla,NA,NA,GBIF,CECOY-INIFAP,e913327d07f89b7d18f21a27153b7aa4,H,20.391667,-97.891667
+Vitis tiliifolia,MEX,Nuevo León,NA,1964,GBIF,CECOY-INIFAP,1c19c2f3524ad6d6bfbb9fa8e186ab6d,H,25.508333,-100.175
+Vitis tiliifolia,MEX,Chiapas,NA,1965,GBIF,CECOY-INIFAP,5a0ef7ccc2aeae35a77af88d7d3fbb6d,H,17.625,-93.175
+Vitis tiliifolia,MEX,Michoacán,NA,1979,GBIF,CECOY-INIFAP,ec8e6dd67edf506bef9ad69632145474,H,19.475,-102.091667
+Vitis tiliifolia,MEX,Sinaloa,NA,2018,GBIF,CIIDIR-IPN,3323c67e9724c60cfc70cf5e93b26bde,H,23.585528,-105.862208
+Vitis tiliifolia,MEX,Sinaloa,NA,2018,GBIF,CIIDIR-IPN,62844769d840a5cad6934bc8680785f9,H,23.581944,-105.857614
+Vitis tiliifolia,MEX,Zacatecas,NA,2012,GBIF,CIIDIR-IPN,e0a1da33eb214a3403860b7aecbbb323,H,23.621667,-103.776111
+Vitis tiliifolia,MEX,Durango,NA,1987,GBIF,CIIDIR-IPN,8993ed02571b9f12df8e12f919f0a71b,H,25.192033,-106.592149
+Vitis tiliifolia,MEX,Hidalgo,NA,1992,GBIF,AUA,f14b0775-a55a-46b7-be9e-0f226594708b,H,20.941519,-99.210841
+Vitis tiliifolia,MEX,Hidalgo,NA,1991,GBIF,AUA,67528f19-f0c9-4c27-b0ef-991a4a04a52d,H,20.95453,-99.221538
+Vitis tiliifolia,MEX,Nayarit,NA,1991,GBIF,AUA,c555f707-7cd1-4ddd-9b73-ea54ad8983f8,H,21.647779,-104.866663
+Vitis tiliifolia,MEX,Hidalgo,NA,1991,GBIF,AUA,ec296431-42e8-4ded-a524-9572c8372dc2,H,21.133965,-98.974269
+Vitis tiliifolia,MEX,Veracruz,NA,1986,GBIF,AUA,149a53ad-42f6-4abd-8039-aa2282ed49cf,H,19.44124,-96.707154
+Vitis tiliifolia,MEX,Veracruz,NA,1971,GBIF,IBUNAM,58988a6857c0d698a2c1d5e42e1fa799,H,17.830283,-95.811397
+Vitis tiliifolia,MEX,Veracruz,NA,2002,GBIF,IBUNAM,c7ec00b6917fc59201b1f3aa420fa405,H,18.584987,-95.074085
+Vitis tiliifolia,MEX,Colima,NA,2001,GBIF,UACh,6c6661b4cca665b85f10651212fd9db3,H,19.473056,-103.678889
+Vitis tiliifolia,MEX,Oaxaca,NA,2000,GBIF,UACh,1fba780a6067c5b75262a6a724557992,H,17.458333,-95.374444
+Vitis tiliifolia,MEX,México,NA,1979,GBIF,UACh,b2499d19b69bc380314fd3c9fc8ee274,H,18.820833,-100.277222
+Vitis tiliifolia,MEX,Chiapas,NA,1995,GBIF,UACh,3ebcecca96a5fb8f99b249ab1c369a81,H,16.733333,-91.083333
+Vitis tiliifolia,MEX,Michoacán,NA,1979,GBIF,UACh,b3c83d75c136265c821ad1205f4e853c,H,19.412222,-101.214167
+Vitis tiliifolia,MEX,Chiapas,NA,1983,GBIF,UACh,7265be3a9e707c48684ae9b508b94734,H,17.169444,-92.366667
+Vitis tiliifolia,MEX,Chiapas,NA,1992,GBIF,UACh,7fd304e9efe6adfc40effa6ddd4bca8a,H,16.111111,-90.929722
+Vitis tiliifolia,MEX,México,NA,1973,GBIF,UACh,912c8068dade94171e7241420567ece1,H,18.996944,-100.058889
+Vitis tiliifolia,MEX,Michoacán,NA,1986,GBIF,UACh,b6e0a23ccbae6da585240c51347eb265,H,19.571123,-100.345358
+Vitis tiliifolia,MEX,Chiapas,NA,1997,GBIF,UACh,1ad7b3d796b86f8c654aa80b43f2e54e,H,16.986667,-91.602222
+Vitis tiliifolia,MEX,Chiapas,NA,2004,GBIF,UNICACH,c698bfb1f6ee09ff9de89cb8996a294b,H,16.930556,-93.223611
+Vitis tiliifolia,MEX,Chiapas,NA,2002,GBIF,UNICACH,a95eb5a4cacbe633e4a6c46152690d2c,H,15.772778,-93.09
+Vitis tiliifolia,MEX,Chiapas,NA,2014,GBIF,UNICACH,410ca74d1a0a66e1cb2eae8c5ff83cc2,H,15.113583,-92.182944
+Vitis tiliifolia,MEX,Chiapas,NA,2002,GBIF,UNICACH,c877becd53cf3ef67e71b10f4397c0eb,H,16.001111,-93.407222
+Vitis tiliifolia,MEX,Chiapas,NA,2005,GBIF,UNICACH,e873cd7d4c4ed09ee6bdda7193341fff,H,15.621222,-92.684417
+Vitis tiliifolia,MEX,Chiapas,NA,2006,GBIF,UNICACH,746ff3c8d7aace5a5721eb1f1a2a6d93,H,16.901944,-93.473611
+Vitis tiliifolia,MEX,Chiapas,NA,2003,GBIF,UNICACH,d9a970bdc6f42ae376ffdcb9378b14fc,H,16.009444,-93.378055
+Vitis tiliifolia,MEX,Chiapas,NA,2007,GBIF,UNICACH,26e9993d48c92b8e46698f63abb4e24c,H,16.785028,-94.023844
+Vitis tiliifolia,MEX,Chiapas,NA,2004,GBIF,UNICACH,6e4b504c633b5a718dc5374a0fceb086,H,16.074444,-93.450278
+Vitis tiliifolia,MEX,Chiapas,NA,2002,GBIF,UNICACH,8bdd5074e7e7a3ec1c6581ce7bae7496,H,16.058611,-93.3625
+Vitis tiliifolia,MEX,Chiapas,NA,2009,GBIF,UNICACH,c92036c8a142d7e7b87bd8ea7539af2d,H,16.974997,-93.049139
+Vitis tiliifolia,MEX,Chiapas,NA,2005,GBIF,UNICACH,40b317272674dddee01af557fe388500,H,15.812389,-93.074167
+Vitis tiliifolia,MEX,Chiapas,NA,1994,GBIF,UNICACH,fa248f345e52cc4987f42847a4e87c8e,H,16.608333,-93.558333
+Vitis tiliifolia,MEX,Chiapas,NA,2005,GBIF,UNICACH,43be64928cf5dee3a8d6b11dc65ebbfb,H,16.918306,-92.994139
+Vitis tiliifolia,MEX,Chiapas,NA,2006,GBIF,UNICACH,683880f5284a6443df67ac6090d8de9d,H,16.625,-93.575
+Vitis tiliifolia,MEX,Chiapas,NA,1987,GBIF,UNICACH,2d43505bb1aafb02099c174caca0375c,H,15.108333,-92.408333
+Vitis tiliifolia,MEX,Chiapas,NA,2004,GBIF,UNICACH,bfe28833b044232e7f1f524ad1914e58,H,15.812389,-93.049055
+Vitis tiliifolia,MEX,Chiapas,NA,2006,GBIF,UNICACH,24fb0c99795d9b5587ce84d5b778ed18,H,15.684444,-92.705555
+Vitis tiliifolia,MEX,Chiapas,NA,2009,GBIF,UNICACH,7e96d00bd4f27ead7a7cd22a56067687,H,17.040783,-93.211133
+Vitis tiliifolia,MEX,Chiapas,NA,2003,GBIF,UNICACH,8a3a2ea9e4573d42ef4dd048754b6b22,H,15.989722,-93.41
+Vitis tiliifolia,MEX,Querétaro,NA,1988,GBIF,FCN-UAQ,e69c58836e67660aaa2434802dd37e75,H,21.308611,-99.138333
+Vitis tiliifolia,MEX,Querétaro,NA,1996,GBIF,FCN-UAQ,d3830f36dc10ee3ccd62edd00b07afea,H,21.309167,-99.666667
+Vitis tiliifolia,MEX,Querétaro,NA,1989,GBIF,FCN-UAQ,b9a98f4abeadc90811f58e4d7c5eaeae,H,21.185783,-99.187811
+Vitis tiliifolia,MEX,Querétaro,NA,1990,GBIF,FCN-UAQ,685ce8f7286c55283bdda910f52b9d20,H,21.23229,-99.0935
+Vitis tiliifolia,MEX,Querétaro,NA,1987,GBIF,FCN-UAQ,b53f0e48c9b4cddfa697e275afb47f1e,H,21.12675,-99.536389
+Vitis tiliifolia,MEX,Querétaro,NA,1990,GBIF,FCN-UAQ,d014e7312b122518b8c5bc61532af0e4,H,21.188833,-99.117088999999993
+Vitis tiliifolia,MEX,Querétaro,NA,1988,GBIF,FCN-UAQ,9f5954cae380bbeb2e615003d0bd5567,H,21.245,-99.241667
+Vitis tiliifolia,MEX,Querétaro,NA,1989,GBIF,FCN-UAQ,e2d514778adcbd8e52e8d39859a84f3c,H,21.45609,-99.3289
+Vitis tiliifolia,MEX,Querétaro,NA,1991,GBIF,FCN-UAQ,14a395b49946a6a963b337bda77b4300,H,21.172222,-99.093611
+Vitis tiliifolia,MEX,Querétaro,NA,1988,GBIF,FCN-UAQ,585bd315e8e260a874228dc3322c9fbf,H,21.23932,-99.6066
+Vitis tiliifolia,MEX,Querétaro,NA,1989,GBIF,FCN-UAQ,f9807f05b41fda3c0c39e49a30e4e058,H,21.318423,-99.12216
+Vitis tiliifolia,MEX,Querétaro,NA,1989,GBIF,FCN-UAQ,d55c451c12c52f6833c18940b9377c41,H,21.276789,-99.25777
+Vitis tiliifolia,MEX,Querétaro,NA,1995,GBIF,FCN-UAQ,74b77b8b29a15f521de94a86b4f5cdc6,H,20.94969,-99.49956
+Vitis tiliifolia,MEX,San Luis Potosí,NA,1992,GBIF,FCN-UAQ,81d823fff74946f378c660c1c099d6d2,H,21.626014,-99.2208
+Vitis tiliifolia,MEX,Querétaro,NA,1988,GBIF,FCN-UAQ,b3654f051d25bf76c1803d099c3037da,H,21.47,-99.170186
+Vitis tiliifolia,MEX,Querétaro,NA,1988,GBIF,FCN-UAQ,705410e6d592e14960a7e11a4fec63ff,H,21.304167,-99.511944
+Vitis tiliifolia,MEX,Querétaro,NA,2013,GBIF,FCN-UAQ,772216c99e7ed58a364c3b2c1cd40e3d,H,20.756111,-99.822222
+Vitis tiliifolia,MEX,Querétaro,NA,1990,GBIF,FCN-UAQ,374136762d8690ef7a89ea2cbcba534c,H,21.22175,-99.08768
+Vitis tiliifolia,MEX,Querétaro,NA,1990,GBIF,FCN-UAQ,da131792ab062c034ea87318f1d79daf,H,21.153889,-99.493333
+Vitis tiliifolia,MEX,Querétaro,NA,1987,GBIF,FCN-UAQ,0f243d3b6f9d43aae835ca7cb061836c,H,21.255197,-99.117355
+Vitis tiliifolia,MEX,Querétaro,NA,1988,GBIF,FCN-UAQ,f74b2551bf8d8e8af01493da17e3852a,H,21.23432,-99.16496
+Vitis tiliifolia,MEX,San Luis Potosí,NA,1990,GBIF,FCN-UAQ,2f855327a4e6d14c3a91468c0299e300,H,21.56743,-99.15623
+Vitis tiliifolia,MEX,Querétaro,NA,1996,GBIF,FCN-UAQ,079543b49056b8f98320f9509afd628f,H,20.93781,-99.5151
+Vitis tiliifolia,MEX,Querétaro,NA,1989,GBIF,FCN-UAQ,276b2345c416d410235bfe7281506901,H,21.269444,-99.056389
+Vitis tiliifolia,MEX,San Luis Potosí,NA,1990,GBIF,FCN-UAQ,773d4bd6772fb7113cfb55d2a2646204,H,21.61065,-99.152251
+Vitis tiliifolia,MEX,Querétaro,NA,1988,GBIF,FCN-UAQ,f370296a5e7f728153157c44aace9db2,H,21.235761,-99.123519
+Vitis tiliifolia,MEX,Querétaro,NA,1997,GBIF,FCN-UAQ,215bbb7a7a999f8dbc6a2610d69c5af4,H,21.32977,-99.18262
+Vitis tiliifolia,MEX,San Luis Potosí,NA,1992,GBIF,FCN-UAQ,7ccaab17f042626ed06d267511322998,H,21.632861,-99.219855
+Vitis tiliifolia,MEX,Querétaro,NA,1989,GBIF,FCN-UAQ,decdfa248e9da5931b28843368dd6527,H,21.210833,-99.060722
+Vitis tiliifolia,MEX,San Luis Potosí,NA,1993,GBIF,FCN-UAQ,967479d66386172515ffe38f34b3db3a,H,21.655,-99.220555
+Vitis tiliifolia,MEX,Querétaro,NA,2003,GBIF,FCN-UAQ,50aab35e74eac5dcc87a225f2c8434c3,H,21.121944,-99.542778
+Vitis tiliifolia,MEX,San Luis Potosí,NA,1991,GBIF,FCN-UAQ,938bdd1fbc79fbdea80802b2a8f9e42a,H,21.452556,-99.130389
+Vitis tiliifolia,MEX,Querétaro,NA,1987,GBIF,FCN-UAQ,4ccda64b49cffeb1c86db2fcaadba2ef,H,21.134167,-99.625278
+Vitis tiliifolia,MEX,Morelos,NA,2018,GBIF,iNaturalist,https://www.inaturalist.org/observations/15541977,H,18.997868,-99.24426
+Vitis tiliifolia,MEX,Chiapas,NA,2000,GBIF,SEMAHN,1aca6d8115038fd4b408c0759a3fa72d,H,16.716111,-94.034167
+Vitis tiliifolia,MEX,Chiapas,NA,1992,GBIF,SEMAHN,7e8c3317de970418ef87b84e5a9b03da,H,16.798611,-93.272222
+Vitis tiliifolia,MEX,Chiapas,NA,1989,GBIF,SEMAHN,727c0d1e1e51f7ee3ad3793b3a1b794c,H,15.823611,-92.974444
+Vitis tiliifolia,MEX,Tabasco,NA,1997,GBIF,SEMAHN,bb1ed3fcef4adcbedd0074f2175e0341,H,17.990556,-92.928055
+Vitis tiliifolia,MEX,Chihuahua,NA,1986,GBIF,SEMAHN,07873506e6239614bc1d6245f3aaed87,H,28.754167,-105.772778
+Vitis tiliifolia,MEX,Chiapas,NA,1988,GBIF,SEMAHN,0024fc15164613e2d9f98b3a6ec4327d,H,17.010833,-92.565555
+Vitis tiliifolia,MEX,Chiapas,NA,1990,GBIF,SEMAHN,455b63fc4538c4a2943ea26e4628abb4,H,15.601111,-92.850555
+Vitis tiliifolia,MEX,Chiapas,NA,2001,GBIF,SEMAHN,854c1bf9028b5807966439461903831a,H,16.937222,-93.175278
+Vitis tiliifolia,MEX,Chiapas,NA,1991,GBIF,SEMAHN,f79b6623aaa7aec91c864bad558923ab,H,16.726944,-93.1
+Vitis tiliifolia,MEX,Chiapas,NA,1992,GBIF,SEMAHN,364c38f3d7971fb5326ed9fbd23db4c0,H,16.125,-90.925
+Vitis tiliifolia,MEX,Chiapas,NA,1994,GBIF,SEMAHN,4aa638881db090073cc6821cf2c5bdac,H,16.605278,-93.560555
+Vitis tiliifolia,MEX,Oaxaca,NA,2001,GBIF,SEMAHN,165334d27bff6b0ff9fbe38481a63dbd,H,16.578611,-94.188889
+Vitis tiliifolia,MEX,Chiapas,NA,1950,GBIF,SEMAHN,6998aac9d34a542c216db6a43bc69855,H,16.8,-93.171389
+Vitis tiliifolia,MEX,Quintana Roo,NA,1992,GBIF,ECOSUR,179353992234950bfeef49f2981910e0,H,18.291667,-88.658333
+Vitis tiliifolia,MEX,Quintana Roo,NA,1991,GBIF,ECOSUR,2a1e2dd2ea0ca4e05108bc90b4f66b50,H,19.4006511,-88.1329058
+Vitis tiliifolia,MEX,Quintana Roo,NA,1980,GBIF,ECOSUR,d0d8f0d44e4c9f1ab43e3142b760b0ac,H,18.3723676,-89.0118044
+Vitis tiliifolia,MEX,Campeche,NA,1980,GBIF,ECOSUR,688df2acbde4399cd1ad899c370f96f1,H,18.368855,-89.15343
+Vitis tiliifolia,MEX,Quintana Roo,NA,1981,GBIF,ECOSUR,b51f26f8c8665ebd82d346a3accbba79,H,19.408333,-88.075
+Vitis tiliifolia,MEX,Quintana Roo,NA,1989,GBIF,ECOSUR,dab80319d7b65d9adb239bee57f1c0d4,H,18.425,-88.791667
+Vitis tiliifolia,MEX,Quintana Roo,NA,1994,GBIF,ECOSUR,b72b2b8b91833a86f6f696703f61f39f,H,20.508333,-87.708333
+Vitis tiliifolia,MEX,Jalisco,NA,1996,GBIF,DERN-IMECBIO-CUCSUR-UDG,34c558a7152b34b7e822118d45440a67,H,19.588611,-104.267222
+Vitis tiliifolia,MEX,Jalisco,NA,1986,GBIF,DERN-IMECBIO-CUCSUR-UDG,de7c193f9dc05c19c98ca776b16bed18,H,19.591667,-104.275
+Vitis tiliifolia,MEX,Jalisco,NA,1988,GBIF,DERN-IMECBIO-CUCSUR-UDG,a36fdd51a60ee1be0fbd6d28cb200463,H,19.552778,-104.238889
+Vitis tiliifolia,MEX,Jalisco,NA,1986,GBIF,DERN-IMECBIO-CUCSUR-UDG,e4c06e230639279a7cfb66cfb45da0ef,H,19.575,-104.275
+Vitis tiliifolia,MEX,Jalisco,NA,1986,GBIF,WIS,82edeab030440627fdb38ca11e27312d,H,19.475,-104.175
+Vitis tiliifolia,MEX,Jalisco,NA,1987,GBIF,DERN-IMECBIO-CUCSUR-UDG,9906a17f10173bc8f99e2176e4a3bda0,H,19.420833,-103.875
+Vitis tiliifolia,MEX,Jalisco,NA,1992,GBIF,DERN-IMECBIO-CUCSUR-UDG,e72bd64fdf8c52a00e6f99391085bd30,H,19.587778,-104.282778
+Vitis tiliifolia,MEX,Jalisco,NA,1986,GBIF,DERN-IMECBIO-CUCSUR-UDG,4f986c058182fc45b275be87f75be1a4,H,19.558333,-104.241667
+Vitis tiliifolia,MEX,Colima,NA,1991,GBIF,DERN-IMECBIO-CUCSUR-UDG,0c34a41868b3fe7d723bc124e8cdb8c9,H,19.456111,-103.968611
+Vitis tiliifolia,MEX,Jalisco,NA,1979,GBIF,WIS,8c433748f5ac3ecd565991fd48dda143,H,19.5875,-104.263889
+Vitis tiliifolia,MEX,Jalisco,NA,1994,GBIF,DERN-IMECBIO-CUCSUR-UDG,953f0e86414f6e3c3126fa0082ed73b4,H,19.854444,-104.4675
+Vitis tiliifolia,MEX,Jalisco,NA,1991,GBIF,DERN-IMECBIO-CUCSUR-UDG,07867997d56c26fca20418d03938697b,H,19.461667,-103.963611
+Vitis tiliifolia,MEX,Jalisco,NA,1988,GBIF,DERN-IMECBIO-CUCSUR-UDG,96d4d5997b37885867e83084e2798e01,H,19.585833,-104.27
+Vitis tiliifolia,MEX,Jalisco,NA,1996,GBIF,DERN-IMECBIO-CUCSUR-UDG,fa3cd80a89602a509cda424ce5ce852f,H,19.6,-104.325
+Vitis tiliifolia,MEX,Jalisco,NA,1993,GBIF,DERN-IMECBIO-CUCSUR-UDG,eec397de85d882e0018ef6166a5bf7f4,H,19.449167,-103.95
+Vitis tiliifolia,MEX,Jalisco,NA,1978,GBIF,WIS,386d6afc5bda65f45a079e3e0995b6fa,H,19.625,-104.441667
+Vitis tiliifolia,MEX,Jalisco,NA,1992,GBIF,DERN-IMECBIO-CUCSUR-UDG,9b089e34a39e2da9ca107f8772d0cd2c,H,19.605833,-104.276944
+Vitis tiliifolia,MEX,Colima,NA,1987,GBIF,DERN-IMECBIO-CUCSUR-UDG,f7796292c628005d483c728759bfa4f7,H,19.4375,-103.958333
+Vitis tiliifolia,MEX,Jalisco,NA,1988,GBIF,DERN-IMECBIO-CUCSUR-UDG,67cff8a5cc1aeadadba61953ba1150f2,H,19.593333,-104.723056
+Vitis tiliifolia,MEX,Jalisco,NA,1991,GBIF,DERN-IMECBIO-CUCSUR-UDG,56314e949f55009369ac2502aeba1aa2,H,19.458333,-103.954167
+Vitis tiliifolia,MEX,Jalisco,NA,1990,GBIF,DERN-IMECBIO-CUCSUR-UDG,cae835243be312bfc4f30081512845b1,H,19.559722,-104.240278
+Vitis tiliifolia,MEX,Jalisco,NA,1990,GBIF,DERN-IMECBIO-CUCSUR-UDG,d4d487cfda94125c793ae08add243a82,H,19.475,-104.191667
+Vitis tiliifolia,MEX,Colima,NA,1991,GBIF,DERN-IMECBIO-CUCSUR-UDG,22a0b543ec23246e7d2bd2c3b569a2a7,H,19.437778,-103.957222
+Vitis tiliifolia,MEX,Jalisco,NA,1985,GBIF,DERN-IMECBIO-CUCSUR-UDG,e154c53b1b494734b18d44b93d3ebe3d,H,19.608333,-104.275
+Vitis tiliifolia,MEX,Colima,NA,1991,GBIF,DERN-IMECBIO-CUCSUR-UDG,a21b2baaf6591e1984696fa44032b807,H,19.375,-103.841667
+Vitis tiliifolia,MEX,Chiapas,NA,1994,GBIF,ECOSUR,2ce14e753e37367ab98243778b406055,H,16.6,-93.55
+Vitis tiliifolia,MEX,Chiapas,NA,2002,GBIF,ECOSUR,f5e895c704c6c9ebcd56da23bb317ef0,H,16.311383,-93.7681
+Vitis tiliifolia,MEX,Chiapas,NA,1990,GBIF,ECOSUR,6a902fe82632c25370e7c5e26d5ce21d,H,17.01805,-93.7842
+Vitis tiliifolia,MEX,Oaxaca,NA,2003,GBIF,IBUNAM,bd4f5df0dbe9b28a9df5b9173c85501a,H,17.495639,-97.657055
+Vitis tiliifolia,MEX,Guerrero,NA,1998,GBIF,FC-UNAM,695f5217db74c76039d84e3cfa1a9877,H,18.509722,-99.660556
+Vitis tiliifolia,MEX,Guerrero,NA,1998,GBIF,FC-UNAM,5e73d7d1de7abec3b290c79995aca0ca,H,18.513056,-99.545833
+Vitis tiliifolia,MEX,Guerrero,NA,1994,GBIF,FC-UNAM,b7c7e96e3c491e6623d2496ebb28d730,H,17.8625,-99.753333
+Vitis tiliifolia,MEX,Oaxaca,NA,1999,GBIF,SERBO,dc1254ab153d8b11847c9ce005f59086,H,17.5140534,-96.32476
+Vitis tiliifolia,MEX,Campeche,NA,1990,GBIF,CCBA-FMVZ-UADY,7047a31e62d3070c328986f3984ccc93,H,19.408333,-89.475
+Vitis tiliifolia,MEX,Yucatán,NA,1983,GBIF,CCBA-FMVZ-UADY,9b60fbb5f05f3899037846a37fcab74b,H,19.975,-88.991667
+Vitis tiliifolia,MEX,Campeche,NA,1993,GBIF,CCBA-FMVZ-UADY,52aede04a15ffc08cbd2f8e35da7b5c9,H,18.508333,-89.925
+Vitis tiliifolia,MEX,Puebla,NA,1998,GBIF,FCB-BUAP,486183db3b3488f6412d6df91057f122,H,19.941667,-97.815
+Vitis tiliifolia,MEX,Puebla,NA,1998,GBIF,FCB-BUAP,05f1de1be4c240ee11b1eb9d2a02ab93,H,19.896667,-97.626667
+Vitis tiliifolia,MEX,Puebla,NA,1998,GBIF,FCB-BUAP,36d8cf403c441e15ac9e2063324c310d,H,20.071667,-97.79
+Vitis tiliifolia,MEX,Puebla,NA,1998,GBIF,FCB-BUAP,7d92bd79501ddc6353244b5f95e5c1e0,H,20.225,-97.913333
+Vitis tiliifolia,MEX,Puebla,NA,1998,GBIF,FCB-BUAP,ab547951a6246acfbeb802da6364eb6a,H,18.7775,-98.216667
+Vitis tiliifolia,MEX,Puebla,NA,1998,GBIF,FCB-BUAP,748b3a86cf21748c6b17390f123ce1ad,H,20.238889,-97.904167
+Vitis tiliifolia,MEX,Puebla,NA,1986,GBIF,FCB-BUAP,0155cd117f33617e95969ab37431ca34,H,18.941667,-98.566667
+Vitis tiliifolia,MEX,Veracruz,NA,1976,GBIF,CIHS-UAC,20f6f74226f0ed3bc69bc0580290ac80,H,19.545833,-96.919444
+Vitis tiliifolia,MEX,Veracruz,NA,2002,GBIF,CIHS-UAC,c7c4ff059ea30b41051110c1f6453f38,H,19.873611,-96.765278
+Vitis tiliifolia,MEX,Campeche,NA,1995,GBIF,CIHS-UAC,5274e24b753e0118299c7c45e4c2eda3,H,18.772222,-90.736667
+Vitis tiliifolia,MEX,Campeche,NA,1998,GBIF,CIHS-UAC,1922e3a6399720fc5666124bb007987a,H,20.086389,-90.389444
+Vitis tiliifolia,MEX,Campeche,NA,2001,GBIF,CIHS-UAC,15fec6fdb381b2e55bfc6b2b8a43ee72,H,18.902778,-90.728333
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,CIHS-UAC,e6a31c16710e157c1d6a7e835541cc70,H,19.148889,-97.15
+Vitis tiliifolia,MEX,Chiapas,NA,1999,GBIF,CIHS-UAC,af7ed5501d3be6b01d0c2f89c1c403a5,H,17.769722,-91.875833
+Vitis tiliifolia,MEX,Veracruz,NA,2011,GBIF,INECOL,5b4ed27005a0ad169b4f84f567599113,H,21.576667,-97.365625
+Vitis tiliifolia,MEX,Veracruz,NA,2012,GBIF,INECOL,00ec8beef163f11b42173d0ba6612639,H,21.581111,-97.403194
+Vitis tiliifolia,MEX,Veracruz,NA,2010,GBIF,INECOL,9b5b1369c2c18963e1e5719ae73da793,H,22.117778,-97.775119
+Vitis tiliifolia,MEX,Veracruz,NA,2010,GBIF,INECOL,65369f601fb4a38e2e5b11d0599a32bf,H,22.170556,-97.790833
+Vitis tiliifolia,MEX,Veracruz,NA,2010,GBIF,INECOL,61fe19c48bc2ecc87e9d3ef75ddd1948,H,22.111667,-97.770589
+Vitis tiliifolia,MEX,Veracruz,NA,2001,GBIF,IIB-UV,8d0091c52197ba33431e599250f530d0,H,18.066028,-94.398639
+Vitis tiliifolia,MEX,Veracruz,NA,1992,GBIF,IIB-UV,60d1877095c0e16c1c25a57b2cb77160,H,19.641667,-96.941667
+Vitis tiliifolia,MEX,Puebla,NA,1995,GBIF,IIB-UV,183716fd1c0785504a3bad5d9dd6fe61,H,18.305556,-99
+Vitis tiliifolia,MEX,Veracruz,NA,2001,GBIF,IIB-UV,1b2fa15ca8276ec49039557c45a196be,H,18.063472,-94.38125
+Vitis tiliifolia,MEX,Veracruz,NA,1977,GBIF,IIB-UV,739c4d4c8bd88fb3363242c6ab2d7865,H,19.725,-96.825
+Vitis tiliifolia,MEX,Veracruz,NA,NA,GBIF,IGL-UNAM,387f9385f60a05d978d3be69884d09bc,H,18.575673,-95.0750116
+Vitis tiliifolia,MEX,Puebla,NA,2010,GBIF,IBUNAM,8fe6b2052c0ce3ce5ed2e3997fc3828a,H,20.08694,-97.5246
+Vitis tiliifolia,MEX,Puebla,NA,2015,GBIF,IBUNAM,72fb55e7618570ea36d515008c3ab34f,H,20.03268,-97.43277
+Vitis tiliifolia,MEX,Puebla,NA,2015,GBIF,IBUNAM,6c1f22c4f6f07e8260db113901868091,H,19.94837,-97.54871
+Vitis tiliifolia,MEX,Oaxaca,NA,2018,GBIF,IBUNAM,c6206fe111157992fd4e6aecd10a1345,H,17.695125,-97.934179
+Vitis tiliifolia,MEX,Tabasco,NA,1997,GBIF,UJAT,3f30b61677b0c952c86832e3db6bfb1f,H,17.928056,-92.990555
+Vitis tiliifolia,MEX,Chiapas,NA,2002,GBIF,UJAT,f2309f7cd5d623805e21bc9ec70a3b37,H,17.116667,-91.331667
+Vitis tiliifolia,MEX,Tabasco,NA,1998,GBIF,UJAT,1bc2985dd3004a594c412284ad315faf,H,17.426389,-91.470833
+Vitis tiliifolia,MEX,Chiapas,NA,1998,GBIF,UJAT,c0d2752e3fdbbc473b99d39267cd756c,H,17.601944,-93.356944
+Vitis tiliifolia,MEX,Tabasco,NA,1991,GBIF,UJAT,0ad409d809db428311593471bfc60956,H,17.493611,-91.449444
+Vitis tiliifolia,MEX,Tabasco,NA,1986,GBIF,UJAT,3d3ca6278cf6bdb8ba672160cf08c75b,H,18.709444,-93.119167
+Vitis tiliifolia,MEX,Veracruz,NA,1986,GBIF,UJAT,b385eeda9443818c06f07d4bbd0461c6,H,17.408333,-93.858333
+Vitis tiliifolia,MEX,Tabasco,NA,1990,GBIF,UJAT,628244d173a43f4ba0cf22961ef971a8,H,17.378333,-91.368333
+Vitis tiliifolia,MEX,Guerrero,NA,1998,GBIF,CIByC-UAEM,d5ed07fc55b4a567e529280ae27e25b9,H,18.500853,-99.151753
+Vitis tiliifolia,MEX,Morelos,NA,1998,GBIF,CIByC-UAEM,2d5b287121f7c79d02ff08f04b39c780,H,18.473558,-99.259167
+Vitis tiliifolia,MEX,Morelos,NA,2000,GBIF,CIByC-UAEM,460051d2321d5818a0dc423a22d0f7b1,H,18.949089,-99.105305
+Vitis tiliifolia,MEX,Morelos,NA,1995,GBIF,CIByC-UAEM,9c7d11a66be669c0c27d23d7b799cd06,H,18.466944,-98.983055
+Vitis tiliifolia,MEX,Morelos,NA,1994,GBIF,CIByC-UAEM,6a202aae9c68e0b78b20a86633a9a758,H,18.944306,-99.016305
+Vitis tiliifolia,MEX,Veracruz,NA,1866,GBIF,HU,777069b4e84b5e756c85890fedf02d38,H,18.891111,-96.931667
+Vitis tiliifolia,MEX,Veracruz,NA,1985,GBIF,INECOL,7d6bb9eff12d89782a30cabfc119d49c,H,18.55,-95.116667
+Vitis tiliifolia,MEX,Sinaloa,NA,1988,GBIF,FA-UAS,f522905adc87270531a7a49db701b2a3,H,23.560833,-105.835556
+Vitis tiliifolia,MEX,Sinaloa,NA,1999,GBIF,FA-UAS,56b44d49f6c10d81815bf310af4493c9,H,23.408889,-105.803611
+Vitis tiliifolia,MEX,Sinaloa,NA,1985,GBIF,FA-UAS,83d5c00163b46fc29b9fff0c2126be9c,H,23.456944,-105.829167
+Vitis tiliifolia,MEX,Sinaloa,NA,1986,GBIF,FA-UAS,5a316b9f7bb227cf2a1cc6046dfc3fde,H,23.443056,-105.851389
+Vitis tiliifolia,MEX,Sinaloa,NA,1988,GBIF,FA-UAS,e0c97682f5abd224beac64f7b12c074a,H,23.525556,-105.837222
+Vitis tiliifolia,MEX,San Luis Potosí,NA,2017,GBIF,IIZD-UASLP,c6600be23bc9af1a2861b439830af3a6,H,22.226667,-98.944444
+Vitis tiliifolia,MEX,San Luis Potosí,NA,2017,GBIF,IIZD-UASLP,185383cfa69d5259b690037f9cda64c1,H,21.873611,-100.348333
+Vitis tiliifolia,MEX,Quintana Roo,NA,1985,GBIF,CCBA-FMVZ-UADY,4767dc5934edfd9b6319305c3e3d96d6,H,21.108333,-87.491667
+Vitis tiliifolia,MEX,Yucatán,NA,1993,GBIF,CCBA-FMVZ-UADY,de5f5eee7869f837a24f25ef83cfd547,H,20.841667,-89.458333
+Vitis tiliifolia,MEX,Yucatán,NA,1983,GBIF,NA,9259b9172fecc30108ce6a3523d6dc13,H,20.175,-89.541667
+Vitis tiliifolia,MEX,Querétaro,NA,2020,GBIF,INECOL,ace55f1ae86718a96ed063e515257905,H,21.369182,-99.789561
+Vitis tiliifolia,MEX,Chiapas,NA,1988,GBIF,ENCB-IPN,27b8ae755204bf6037d30e6ff2bf49dd,H,14.991667,-92.225
+Vitis tiliifolia,MEX,Tabasco,NA,1986,GBIF,UJAT,a69e36e156fa8bece5910fbc98ccd35a,H,18.008333,-93.375
+Vitis tiliifolia,MEX,Querétaro,NA,2011,GBIF,FESI-UNAM,907e055f43f6efa9732fdce60cf8b8c4,H,21.430111,-99.721917
+Vitis tiliifolia,MEX,Morelos,NA,1995,GBIF,CIByC-UAEM,dd7bcc2b0458c928d95b107da138787c,H,18.431667,-99.061111
+Vitis tiliifolia,MEX,Morelos,NA,1996,GBIF,CIByC-UAEM,654a316504ddb4bd461cfd8c7d03e66c,H,18.406944,-99.045833
+Vitis tiliifolia,MEX,Morelos,NA,1995,GBIF,CIByC-UAEM,acb782014c354907e3c64826750e2d3c,H,18.466944,-98.983056
+Vitis tiliifolia,MEX,Morelos,NA,1995,GBIF,CIByC-UAEM,44224671d67f19148a6172cc5bca74d1,H,18.444722,-98.991111
+Vitis tiliifolia,MEX,Morelos,NA,1995,GBIF,CIByC-UAEM,e14cd1c438c55114b17652337260680d,H,18.463889000000002,-98.989444
+Vitis tiliifolia,MEX,Morelos,NA,1995,GBIF,CIByC-UAEM,806054a961b8e43f3a26f6e64938fbfb,H,18.441944,-98.972778
+Vitis tiliifolia,MEX,Guerrero,NA,1996,GBIF,CIByC-UAEM,fa9d846815edc2eba658ea04bccaf4cc,H,18.394444,-99.069444
+Vitis tiliifolia,MEX,Morelos,NA,1995,GBIF,CIByC-UAEM,6eb267a87c5d395c82a3d645c019d902,H,18.472222,-99
+Vitis tiliifolia,MEX,Guerrero,NA,1995,GBIF,CIByC-UAEM,8fe9016f55b1e3ddc8fd2ac2ebfead9a,H,18.401389000000002,-99.079167
+Vitis tiliifolia,MEX,Guerrero,NA,2013,GBIF,CIByC-UAEM,1f3a8d0c82f4d305d85934144bf9a992,H,18.485322,-99.344439
+Vitis tiliifolia,MEX,Morelos,NA,2014,GBIF,CIByC-UAEM,908ddb2a0c1ca76f99d8c9cdeb1a89db,H,18.462278,-99.273555
+Vitis tiliifolia,MEX,Morelos,NA,2013,GBIF,CIByC-UAEM,dfbe4407332ba2964165dda8dc9fe2ec,H,18.499167,-99.331083
+Vitis tiliifolia,MEX,Guerrero,NA,2013,GBIF,FC-UNAM,448cf65c5875e7feeeb0ff0146d32470,H,18.560433,-99.6544
+Vitis tiliifolia,MEX,Oaxaca,NA,2015,GBIF,UAMI,cbf6945e3a565372c9ab858c0e99c8d9,H,17.385917,-95.921889
+Vitis tiliifolia,MEX,Oaxaca,NA,2014,GBIF,UAMI,7065da6a8f3b6ed9535ef0c70edaa1f9,H,17.935861,-96.751694
+Vitis tiliifolia,MEX,Oaxaca,NA,2014,GBIF,UAMI,d0887463086c919751acd98148dabc16,H,17.945556,-96.755472
+Vitis tiliifolia,MEX,Oaxaca,NA,2014,GBIF,UAMI,0f47954d98fe7656162c6b94668a148e,H,17.141028,-96.136694
+Vitis tiliifolia,MEX,Oaxaca,NA,2014,GBIF,UAMI,e67f2f17ff7026262d14a70d1a964f92,H,17.093667,-95.944167
+Vitis tiliifolia,MEX,Veracruz,NA,1998,GBIF,INECOL,ad82019d9a9be63cbcecae08b7320800,H,19.543333,-96.438056
+Vitis tiliifolia,MEX,Michoacán,NA,NA,GBIF,CIIDIR-IPN,47e4f041a7f4f1d5af19f9ce021d57b6,H,19.3145047,-102.4112992
+Vitis tiliifolia,MEX,Michoacán,NA,NA,GBIF,CIIDIR-IPN,0d0d924ae81d6a12bb1f7fba24c3593f,H,19.348611,-102.348611
+Vitis tiliifolia,MEX,Campeche,NA,2015,GBIF,UJAT,9a65d1d2531625706e873da8f7f2db6c,H,18.661158,-92.198982
+Vitis tiliifolia,MEX,Querétaro,NA,1997,GBIF,FC-UNAM,dbc31b1793e31afd76621a55dfce31f8,H,21.206389,-99.059444
+Vitis tiliifolia,MEX,Hidalgo,NA,1997,GBIF,FC-UNAM,25ee9eddd449bcff7b3f0c5819f96866,H,21.027778,-98.630833
+Vitis tiliifolia,MEX,Chiapas,NA,2020,GBIF,IBUNAM,fd2a62a6c3471adced2098f2596394de,H,16.758608,-91.139336
+Vitis tiliifolia,MEX,Michoacán,NA,2021,GBIF,IIES-UNAM,65671cef0b44b0d886583cbf92477549,H,19.696504,-101.187918
+Vitis tiliifolia,MEX,Tabasco,NA,1997,GBIF,UJAT,59bdaf89b68bdcec3230d9bed4aab11b,H,18.374173,-92.786676
+Vitis tiliifolia,MEX,Oaxaca,NA,2022,GBIF,IBUNAM,7e9dba952b038fa3820938c43416187b,H,17.831747,-96.545805
+Vitis tiliifolia,MEX,Tamaulipas,NA,2021,GBIF,FCN-UAQ,9413f99ed32011dd8d379653b9f979cc,H,22.910772,-99.579478
+Vitis tiliifolia,MEX,San Luis Potosí,NA,2020,GBIF,FCN-UAQ,d917fd9807da0681d36a9079aa51b280,H,21.333028,-98.968694
+Vitis tiliifolia,MEX,Querétaro,NA,2020,GBIF,FCN-UAQ,49e84c6496fb343ff9bce2fc010b4da8,H,21.42556,-99.72953
+Vitis tiliifolia,MEX,San Luis Potosí,NA,2021,GBIF,FCN-UAQ,05a40be1d837469e36bc033168392f69,H,21.6,-98.94
+Vitis tiliifolia,MEX,Tamaulipas,NA,1994,GBIF,IEA-UAT,0e537059f735556aa9a2d571ae9ea549,H,23.175,-99.258333
+Vitis tiliifolia,MEX,Veracruz,NA,NA,GBIF,NA,dc5646a954ec22d136569f04d4c1c61d,H,19.12043,-97.087689
+Vitis tiliifolia,MEX,Zacatecas,NA,2017,GBIF,UAA,446,H,21.668811,-102.803834
+Vitis tiliifolia,MEX,Chiapas,NA,1941,GBIF,LL,b5a8d0d9ad5d4e27c81b5e7c90c651a1,H,15.4313725,-92.2384706
+Vitis tiliifolia,MEX,Veracruz,NA,1899,GBIF,INECOL,206410dd5585c816e60072aca06ffaae,H,19.555929,-96.968319
+Vitis tiliifolia,MEX,Veracruz,NA,NA,GBIF,GH,376b87045a2ad6748efb44bab8d27934,H,21.345562,-98.226405
+Vitis tiliifolia,MEX,Veracruz,NA,NA,GBIF,INECOL,31865f3b0d2347e01c12b9063e6f2bc2,H,17.963789,-94.881606
+Vitis tiliifolia,MEX,Veracruz,NA,1950,GBIF,IBUNAM,494605e4bb071b47b760720134c8e5b2,H,20.451944,-97.703889
+Vitis tiliifolia,MEX,Veracruz,NA,2012,GBIF,IBUNAM,26df8c2e095b35f0fd97d797e5768145,H,18.243,-95.09
+Vitis tiliifolia,MEX,Quintana Roo,NA,2022,GBIF,US,http://n2t.net/ark:/65665/3ed4e3cfe-8625-42df-a0fb-e5c5b2c131ef,H,19.8447,-88.1383
+Vitis tiliifolia,MEX,Veracruz,NA,2022,GBIF,US,http://n2t.net/ark:/65665/34d61bea9-bd42-4af9-a1b6-a061c483d793,H,19.3261,-96.7264
+Vitis tiliifolia,MEX,Veracruz,NA,1919,GBIF,NO DISPONIBLE,3907ee46694167a9dae714acead7fa5f,H,19.2,-96.675
+Vitis tiliifolia,MEX,Veracruz,NA,1858,GBIF,HU,e1b54c87b38bae98a82c76ce281694a6,H,21.345,-98.226111
+Vitis tiliifolia,MEX,Veracruz,NA,1899,GBIF,INECOL,0660e95ca7b2023971df7c5d6f249062,H,19.555278,-96.968055
+Vitis tiliifolia,MEX,Veracruz,NA,1970,GBIF,INECOL,f95d10b60aa16a0aceb067114a6a81cd,H,18.312978,-95.101151
+Vitis tiliifolia,MEX,Veracruz,NA,1884,GBIF,INECOL,9e84e796459a19d8f2279f253ffaaed3,H,17.963056,-94.881389
+Vitis tiliifolia,MEX,Veracruz,NA,1919,GBIF,NA,39030061b29d1cf6e6ae9743e307ed20,H,19.200669,-96.675257
+Vitis tiliifolia,MEX,Campeche,NA,1980,GBIF,UACh,c0ef536cfed505a6e6ae1bc3903ef4c7,H,18.628889,-90.3
+Vitis tiliifolia,MEX,Zacatecas,NA,NA,GBIF,CJBG,G00493759,H,23.95046,-102.53289
+Vitis tiliifolia,MEX,Veracruz,NA,NA,GBIF,CJBG,G00493760,H,18.83333,-97.1
+Vitis x novae-angliae,USA,Pennsylvania,NA,1902,GBIF,CM,E470A66F-0CBF-4D0D-9685-1A9F6279E767,H,40.581434,-79.570648
+Vitis x novae-angliae,USA,Pennsylvania,NA,1912,GBIF,CM,70FC73CB-44F3-40BF-9828-E3D42D8600CA,H,40.260627,-79.279478
+Vitis x novae-angliae,USA,Pennsylvania,NA,1939,GBIF,CM,3A89C33C-1EF0-47CA-8F68-65B24D258337,H,39.868906,-79.497838
+Vitis x novae-angliae,USA,Pennsylvania,NA,1942,GBIF,CM,9B150309-3B97-44AF-9F3C-324C24EEE2A1,H,40.8066,-79.96207
+Vitis x novae-angliae,USA,Pennsylvania,NA,1942,GBIF,CM,0D750136-6E0E-4989-89CF-8B1BF60400D5,H,39.870881,-79.494581
+Vitis x novae-angliae,USA,Pennsylvania,NA,1943,GBIF,CM,19F48662-62A0-4651-AD47-BB4B41005A91,H,41.87621,-79.15327
+Vitis x novae-angliae,USA,Pennsylvania,NA,1955,GBIF,PH,b6fe0c03-f6c3-45c3-a642-a20e639ad01e,H,40.905715,-77.269552
+Vitis x novae-angliae,USA,Pennsylvania,NA,1946,GBIF,PH,bbd3330f-e619-48e4-87a1-ef0649de0794,H,41.565387,-75.697883
+Vitis x novae-angliae,USA,Pennsylvania,NA,1912,GBIF,CM,55195838-1A30-4E26-9E15-6410142DBF42,H,40.53035,-79.84925
+Vitis x novae-angliae,USA,Pennsylvania,NA,1838,GBIF,CM,0471799E-5D31-4A48-839E-DE55A71E455C,H,40.626006,-75.370446
+Vitis x novae-angliae,USA,Pennsylvania,NA,1901,GBIF,CM,087B0BD2-E8B8-4D1C-B20D-1FEB39BAA862,H,40.505935,-79.91039
+Vitis x novae-angliae,USA,Pennsylvania,NA,1941,GBIF,CM,28C77A8F-83F2-445E-A387-3803DEAEF047,H,39.992631,-78.265217

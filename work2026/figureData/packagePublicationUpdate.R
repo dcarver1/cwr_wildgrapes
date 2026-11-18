@@ -1,7 +1,7 @@
 # Repackage the rebuilt publication datasets (data/datasetsForPublication_<build>/, built by
 # compileFigureData.R) into the two things the co-authors need:
 #
-#   data/SI_update_<stamp>/        one xlsx per supplementary page (sheets 1-11), single sheet each, so a
+#   data/SI_update_<stamp>/        one xlsx per supplementary page (sheets 1-12), single sheet each, so a
 #                                  page can be dropped into the Google Sheet that holds the SI; plus a
 #                                  README listing, per page, whether it changed and why (written by hand,
 #                                  tracked copy in work2026/figureData/).
@@ -11,7 +11,8 @@
 #
 #   Rscript work2026/figureData/packagePublicationUpdate.R [stamp] [build]
 #     stamp: date of this package (default today); build: date of the datasetsForPublication folder it
-#     re-cuts (default stamp). Packages so far: 20261021 from build 20261020; 20261029 from build 20261029.
+#     re-cuts (default stamp). Packages so far: 20261021 from build 20261020; 20261029 from build 20261029;
+#     20261115 from build 20261115; 20261118 from build 20261115 (12-page numbering).
 suppressPackageStartupMessages({library(dplyr); library(readr); library(openxlsx)})
 args <- commandArgs(trailingOnly = TRUE)
 stamp <- if (length(args) >= 1 && nzchar(args[1])) args[1] else format(Sys.Date(), "%Y%m%d")
@@ -22,6 +23,12 @@ cat("package", stamp, "from", src, "->", si, "and", fig, "\n")
 dir.create(si, showWarnings = FALSE); dir.create(fig, showWarnings = FALSE)
 
 # published page -> source csv in the rebuilt folder
+# Numbering follows the SI workbook the co-authors hold (12 pages), inferred from the page numbers a
+# co-author quoted on 2026-11-18: page 6 is the robustness-rule table (ATAUC, STAUC, ASD15) and the buffer-size comparison is
+# page 12. Pages 9 and 10 are the all-polygon "Update" tables the published script built last
+# (66,535 WDPA polygons; the published page 10 reaches a richness of 10, which only that table does).
+# Packages before 18 Nov 2026 used an 11-page numbering with the compact 2,879- and 7,900-row tables as
+# pages 8 and 9; those tables are now kept as helper files.
 pages <- tribble(
   ~page, ~sheetName,                ~file,
   1, "allSpeciesOccurrences",      "allSpeciesOccurrences-sheet1.csv",
@@ -29,12 +36,13 @@ pages <- tribble(
   3, "modelData",                  "modelData-sheet3.csv",
   4, "variableSelections",         "variableSelections-sheet4.csv",
   5, "modelEvaluations",           "modelEvaluations-sheet5.csv",
-  6, "gapAnalysisSummary",         "gapAnalysisSummary-sheet6.csv",
-  7, "exsituCollectionSummary",    "exsituCollectionSummary-sheet7.csv",
-  8, "pointsInProtectedAreas",     "pointsInProtectedAreas-sheet8.csv",
-  9, "predictedInProtectedAreas",  "predictedInProtectedAreas-sheet9.csv",
-  10, "optimalProtectedAreas",     "optimalProtectedAreas-sheet10.csv",
-  11, "multipleBufferSizes",       "multipleBufferSizes-sheet11.csv")
+  6, "modelEvaluations2",          "SDM_testConditions.csv",
+  7, "gapAnalysisSummary",         "gapAnalysisSummary-sheet6.csv",
+  8, "exsituCollectionSummary",    "exsituCollectionSummary-sheet7.csv",
+  9, "pointsInProtectedAreas",     "pointsInProtectedAreasUpdate.csv",
+  10, "predictedInProtectedAreas", "rastInProtectedAreasUpdate.csv",
+  11, "optimalProtectedAreas",     "optimalProtectedAreas-sheet10.csv",
+  12, "multipleBufferSizes",       "multipleBufferSizes-sheet11.csv")
 for (i in seq_len(nrow(pages))) {
   d <- read_csv(file.path(src, pages$file[i]), col_types = cols(.default = "c"), show_col_types = FALSE, progress = FALSE)
   # a few occurrence strings carry bytes that are not UTF-8 (source databases); the xlsx writer refuses them
@@ -46,8 +54,10 @@ for (i in seq_len(nrow(pages))) {
   saveWorkbook(wb, out, overwrite = TRUE)
   cat(sprintf("  sheet %2d  %-26s %7d rows x %2d cols -> %s\n", pages$page[i], pages$sheetName[i], nrow(d), ncol(d), basename(out)))
 }
-# the two helper tables that explain sheet 6
-for (f in c("gapAnalysisSummary-sources.csv", "SDM_testConditions.csv")) file.copy(file.path(src, f), si, overwrite = TRUE)
+# helper tables: status and source run per taxon (explains page 7), and the compact protected-area tables
+# (occurrence points per area, 2,879 areas; maximum predicted richness per area, 7,900 areas) that the run
+# folders write and that earlier packages shipped as pages 8 and 9
+for (f in c("gapAnalysisSummary-sources.csv", "pointsInProtectedAreas-sheet8.csv", "predictedInProtectedAreas-sheet9.csv")) file.copy(file.path(src, f), si, overwrite = TRUE)
 
 # figure material
 figFiles <- c("speciesrichness_1km.tif", "speciesUsed_speciesrichness.csv",
