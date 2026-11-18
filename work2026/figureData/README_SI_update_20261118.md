@@ -32,7 +32,7 @@ Three corrections against the 15 Nov package:
 | 7 | sheet07_gapAnalysisSummary.xlsx | Yes | One row per gap taxon, 40 rows, with `status` (15 unchanged, 25 updated) and `sourceRun`. The corrigendum table is read from this page. |
 | 8 | sheet08_exsituCollectionSummary.xlsx | Yes | 3,198 G records (published 3,168). |
 | 9 | sheet09_pointsInProtectedAreas.xlsx | Yes | 66,535 polygons: 2,887 hold occurrence points (published 2,884), 14,766 points in all (14,669); point count changes in 482 polygons; richest polygon holds 7 taxa, as published. |
-| 10 | sheet10_predictedInProtectedAreas.xlsx | Yes, widely | 66,535 polygons; the maximum predicted richness changes in 37,307 of them (13,837 up, 23,470 down) because every all-taxa raster was rebuilt from the 25 re-fitted models. Maximum stays 10 (19 polygons reach it, published 33); polygons with any predicted taxon 34,411 (published 34,237). |
+| 10 | sheet10_predictedInProtectedAreas.xlsx | Yes | 66,535 polygons; the maximum predicted richness changes in 9,539 of them (5,419 up, 4,120 down) because every all-taxa raster was rebuilt from the 25 re-fitted models (an earlier version of this note said 37,307, a count inflated by a join on the non-unique WDPA id; corrected 18 Nov). Maximum stays 10 (19 polygons reach it, published 33); polygons with any predicted taxon 34,411 (published 34,237). |
 | 11 | sheet11_optimalProtectedAreas.xlsx | Yes, replaced | Greedy selection of 16 areas per seed, 20 seeds, 38 rows. Read as a new table. |
 | 12 | sheet12_multipleBufferSizes.xlsx | No | Three distances, 38 taxa, 114 rows: the published file. |
 

@@ -1,0 +1,32 @@
+per table:
+                       rows withValue max atMax at8plus
+A_published           66535     34237  10    33     286
+B_publishedGenusLevel 66535     34141   9    32     138
+C_update20261115      66535     34411  10    19     308
+D_updateGenusLevel    66535     34326   9    19     112
+step by step (polygons whose maximum changes):
+A -> B  method only (published map, pooled species removed) 
+               changed                     up                   down 
+              18718.00                   0.00               18718.00 
+meanChangeWhereChanged 
+                 -1.13 
+A -> C  taxonomy only (15 Nov package) 
+               changed                     up                   down 
+               9539.00                5419.00                4120.00 
+meanChangeWhereChanged 
+                  0.14 
+C -> D  method on top of taxonomy 
+               changed                     up                   down 
+              19201.00                   0.00               19201.00 
+meanChangeWhereChanged 
+                 -1.16 
+A -> D  both (what the new sheet 10 shows against the published) 
+               changed                     up                   down 
+              18601.00                1390.00               17211.00 
+meanChangeWhereChanged 
+                 -1.12 
+B -> D  taxonomy only, both genus-level 
+               changed                     up                   down 
+               9711.00                5098.00                4613.00 
+meanChangeWhereChanged 
+                  0.04 

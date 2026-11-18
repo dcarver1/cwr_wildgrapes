@@ -149,3 +149,36 @@ paper's methods text has to say differently.
   recorded per taxon in the list file. Berlandieri's sentence depends on decision 2 of the note.
 - **Decisions still open.** Published values for tomentosa and acerifolia; a range list for berlandieri (FNA var.
   helleri is the ready-made option); Weakley check of the simpsonii and baileyana lists.
+
+## 2026-11-18: all-taxa products leave out the two species assessed through their varieties
+
+- **What changed.** Every product summed or selected over taxa (the predicted richness map, the GA50 and ERS gap
+  richness maps, the points- and richness-per-protected-area tables, the optimal protected-area selection) now stacks
+  one layer per taxon and leaves out V. aestivalis and V. cinerea, whose records are the pooled records of their
+  varieties (`genusLevelTaxa()` in R2/summarize/speciesRichnessMap.R, applied in generateRunSummaries() and in the
+  dataset compile script). The published run stacked the pooled species beside their varieties: its richness map had
+  38 layers (the caption said 36), and cells where a species and one of its varieties both predicted presence were
+  counted twice (3.1 million of 7.9 million cells with any richness; the maximum of 10 came only from such cells, 9
+  without them). The ERS gap richness maps were already free of the pooled species, by a file-matching accident the
+  code now states explicitly; the species lists written beside them named the pooled species anyway. Per-taxon results
+  are untouched. Decision by the core team on the Correction draft (co-author comment, 2026-11-18).
+- **Taxa touched.** None individually. All-taxa layers and tables: 37 taxa (36 SDMs, V. jaegeriana, V. rubriflora and
+  V. rufotomentosa by the 50 km buffer); V. novogranatensis has no georeferenced record and is in no map.
+- **Methods text affected.** The description of the richness and gap-richness maps and of the protected-area summaries
+  should state that species with assessed varieties are represented by the varieties only. Figure 1 caption: 37 taxa,
+  not 36 models. The published Figures 1 and 4 and SI pages 9 to 11 therefore change for this reason as well as for
+  the taxonomy.
+- **Size of the effect on SI page 10** (maximum predicted richness per WDPA polygon, 66,535 rows; script
+  `work2026/figureData/sheet10Decomposition.R`, output `sheet10Decomposition_20261118.txt`). Published to published
+  with the pooled layers removed: 18,718 polygons change, all downward, maximum 10 to 9. Published to the 15 Nov table
+  (taxonomy only): 9,539 change, 5,419 up and 4,120 down, maximum stays 10. Published to the 18 Nov table (both):
+  18,601 change, 1,390 up and 17,211 down, maximum 9 (19 polygons). Between the two genus-level tables (taxonomy
+  alone, correctly counted): 9,711 change, 5,098 up and 4,613 down. The points-per-polygon table loses 172 polygons
+  whose only records were the pooled species' own (2,887 to 2,715 polygons with points). The optimal protected-area
+  selection (greedy) changes almost entirely with either input change, 6 areas in common with the published 17.
+- **Protected-area layer.** WDPA polygons coded fully marine (MARINE = 2) are excluded and terrestrial (0) and
+  coastal (1) polygons kept, in the rasterized layer behind the in situ scores and in the polygon tables alike
+  (published preprocessing, unchanged). Coastal polygons are 2,165 of the 58,299 in the layer; 242 of them have a
+  predicted richness above 0 (maximum 9). The compact 7,900-row table shipped as "sheet 9" in packages before 18 Nov
+  came from one of the three WDPA download parts only (`wdpa_1.gpkg`) and is not a published page; the published
+  pages 9 and 10 are the all-polygon tables.

@@ -28,7 +28,10 @@ dir.create(si, showWarnings = FALSE); dir.create(fig, showWarnings = FALSE)
 # page 12. Pages 9 and 10 are the all-polygon "Update" tables the published script built last
 # (66,535 WDPA polygons; the published page 10 reaches a richness of 10, which only that table does).
 # Packages before 18 Nov 2026 used an 11-page numbering with the compact 2,879- and 7,900-row tables as
-# pages 8 and 9; those tables are now kept as helper files.
+# pages 8 and 9; those tables are now kept as helper files. Page 12 is the five-size (1, 5, 20, 50,
+# 100 km) x two-projection table of published/variableBufferAnalysis.R, rebuilt on the aggregate run
+# (variableBufferAnalysis_2026.R); packages before 18 Nov shipped the older three-size table
+# (multipleBufferSizes-sheet11.csv), which is kept as a helper file.
 pages <- tribble(
   ~page, ~sheetName,                ~file,
   1, "allSpeciesOccurrences",      "allSpeciesOccurrences-sheet1.csv",
@@ -42,7 +45,7 @@ pages <- tribble(
   9, "pointsInProtectedAreas",     "pointsInProtectedAreasUpdate.csv",
   10, "predictedInProtectedAreas", "rastInProtectedAreasUpdate.csv",
   11, "optimalProtectedAreas",     "optimalProtectedAreas-sheet10.csv",
-  12, "multipleBufferSizes",       "multipleBufferSizes-sheet11.csv")
+  12, "multipleBufferSizes",       "variable_buffer_raw_results.csv")
 for (i in seq_len(nrow(pages))) {
   d <- read_csv(file.path(src, pages$file[i]), col_types = cols(.default = "c"), show_col_types = FALSE, progress = FALSE)
   # a few occurrence strings carry bytes that are not UTF-8 (source databases); the xlsx writer refuses them
@@ -54,10 +57,11 @@ for (i in seq_len(nrow(pages))) {
   saveWorkbook(wb, out, overwrite = TRUE)
   cat(sprintf("  sheet %2d  %-26s %7d rows x %2d cols -> %s\n", pages$page[i], pages$sheetName[i], nrow(d), ncol(d), basename(out)))
 }
-# helper tables: status and source run per taxon (explains page 7), and the compact protected-area tables
-# (occurrence points per area, 2,879 areas; maximum predicted richness per area, 7,900 areas) that the run
-# folders write and that earlier packages shipped as pages 8 and 9
-for (f in c("gapAnalysisSummary-sources.csv", "pointsInProtectedAreas-sheet8.csv", "predictedInProtectedAreas-sheet9.csv")) file.copy(file.path(src, f), si, overwrite = TRUE)
+# helper tables: status and source run per taxon (explains page 7), the compact occurrence-points-per-area
+# table the run folder writes (shipped as page 8 before 18 Nov 2026), and the older three-size buffer table.
+# The compact "predicted richness per area" table (7,900 rows) is not shipped any more: it covers only one of
+# the three WDPA download parts (wdpa_1.gpkg) and was mistaken for page 10 once; it stays in the build folder.
+for (f in c("gapAnalysisSummary-sources.csv", "pointsInProtectedAreas-sheet8.csv", "multipleBufferSizes-sheet11.csv")) file.copy(file.path(src, f), si, overwrite = TRUE)
 
 # figure material
 figFiles <- c("speciesrichness_1km.tif", "speciesUsed_speciesrichness.csv",
