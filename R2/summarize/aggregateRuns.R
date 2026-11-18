@@ -43,16 +43,28 @@ taxonomyUpdateStatus <- local({
     # received a state range list (group B: baileyana, lincecumii, munsoniana,
     # rufotomentosa, simpsonii)
     run10192026_1k = c(
-      "Vitis aestivalis", "Vitis aestivalis var. bicolor", "Vitis baileyana", "Vitis berlandieri",
+      "Vitis aestivalis", "Vitis aestivalis var. bicolor", "Vitis baileyana",
       "Vitis cinerea", "Vitis cinerea var. cinerea", "Vitis cinerea var. tomentosa", "Vitis labrusca",
       "Vitis lincecumii", "Vitis munsoniana", "Vitis popenoei", "Vitis riparia", "Vitis rotundifolia",
-      "Vitis rufotomentosa", "Vitis simpsonii", "Vitis vulpina"),
+      "Vitis simpsonii", "Vitis vulpina"),
     # re-run 2026-10-22 on model_data20261022.csv after the reviewer asked for the
     # California and Florida records of V. tiliifolia to be removed (it does not
     # occur in the contiguous US; preprocessing/functions/reviewRemovals.R). Its
     # 2026-10-19 run is superseded; every other taxon is fingerprint-identical
     # between the two input files.
     run10222026_1k = "Vitis tiliifolia",
+    # re-run 2026-11-13 on model_data20261113.csv after a co-author queried two
+    # far-outlying V. berlandieri points (a Missouri Botanical Garden specimen
+    # and a Baja California collection; reviewRemovals.R rule 2). Its
+    # 2026-10-19 run is superseded; every other taxon is fingerprint-identical
+    # between the two input files.
+    run11132026_1k = "Vitis berlandieri",
+    # re-run 2026-11-15 on the same input after Maryland was added to the
+    # V. rufotomentosa state range list (co-author query of 2026-11-13: C. T.
+    # Frye's 2023 Eastern Shore collections, the records that prompted the
+    # correction, had been filtered out as outside Weakley's range). Records
+    # unchanged; the 2026-10-19 run is superseded.
+    run11152026_1k = "Vitis rufotomentosa",
     # re-run 2026-10-02 after the first sheet edits; records unchanged since
     run10022026_1k = c("Vitis acerifolia", "Vitis shuttleworthii"),
     # round-2 draft run (2026-09-16) stands: records fingerprint-identical to

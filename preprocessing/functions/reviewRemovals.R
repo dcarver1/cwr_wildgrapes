@@ -17,6 +17,21 @@
 #    duplicate of the Jacksonville collection whose state field is empty.
 #    Other US records of the taxon (Illinois, Louisiana, two with no state)
 #    are left in place pending the reviewer's answer.
+#
+# 2. Vitis berlandieri, the two far-outlying points queried by a co-author
+#    during the team review of the updated results (email of 13 Nov 2026;
+#    decision by the project lead the same day). Both were V. cinerea records
+#    in the published dataset, where the US-only FNA state list of V. cinerea
+#    kept them out of every model; the review moved them to V. berlandieri,
+#    which has no state list, so they reached the model for the first time.
+#    (a) MO 1906, Tropicos 1395342: "Missouri -- Missouri Botanical Garden",
+#        a specimen from the garden itself (cultivated), 38.61 N 90.26 W.
+#    (b) UC 1953, "Cliff, Santo Domingo River above Hamilton Ranch", Baja
+#        California, 30.77 N 115.93 W. The same collection enters twice more
+#        without coordinates (UCJEPS UC1015881, UC1053351); all three go, as
+#        the tiliifolia rule also removes the record set, not just the point.
+#    Every other Mexican record of V. berlandieri is left in place; a Mexican
+#    state range list is a separate decision for the reviewer.
 
 reviewRemovalRules <- list(
   list(
@@ -26,6 +41,14 @@ reviewRemovalRules <- list(
       d$iso3 %in% "USA" &
         (d$state %in% c("California", "Florida") |
            grepl("Jacksonville", d$localityInformation, ignore.case = TRUE))
+    }
+  ),
+  list(
+    taxon  = "Vitis berlandieri",
+    reason = "Co-author query (2026-11-13), project decision: far-outlying points removed; Missouri Botanical Garden specimen (cultivated) and the Baja California collection",
+    pick   = function(d) {
+      d$sourceUniqueID %in% "urn:catalog:MO:Tropicos:1395342" |
+        (d$iso3 %in% "MEX" & d$state %in% c("Baja California", "Baja california"))
     }
   )
 )

@@ -87,3 +87,65 @@ paper's methods text has to say differently.
   noise.
 - **Methods text affected.** The results paragraph that lists priority categories, and a sentence in the corrigendum
   stating that re-fitted models can move a score through the predicted range even when the record change is small.
+
+## 2026-11-13: two far-outlying V. berlandieri records removed at a co-author's query
+
+- **What changed.** Reviewing the updated results, a co-author asked why the geographic filter had not removed a point
+  near St. Louis and one in Baja California from V. berlandieri. Both records carried the name "Vitis berlandieri
+  Planch." and sat under V. cinerea in the published dataset, where the US-only FNA state list of V. cinerea kept every
+  Mexican cinerea record, and so these, out of the model; the review moved them to V. berlandieri, which has no state
+  list (entry of 2026-10-19 above), so they reached a model for the first time. The St. Louis record is a 1906 MO
+  specimen whose locality is "Missouri Botanical Garden", a cultivated plant; the Baja California record is a 1953 UC
+  collection from the Santo Domingo River, which also enters twice without coordinates (UCJEPS). All four records are
+  removed as the second rule of the documented preprocessing step (`preprocessing/functions/reviewRemovals.R`; removed
+  rows in `data/processed_occurrence/removedByReview_20261113.csv`), giving `model_data20261113.csv` (113,392 records;
+  every other taxon is record-for-record identical to the 22 Oct file). The taxon was re-run the same day as
+  run11132026_1k (SDM passes the robustness rule; no buffer fallback).
+- **Effect.** Records 1,371 to 1,367 (626 with coordinates). The natural area loses the two ecoregions only those points
+  reached (Ozarks; California South Coast): 21 to 19 ecoregions. Predicted range 352,132 to 251,893 km2. FCSex 23.0 to
+  26.2, FCSin 39.1 to 35.9, FCSc mean 31.1 to 31.0; combined category HP throughout. The ex situ category returns to HP,
+  as published (46.7), so the "HP to UP" ex situ change reported in the entry of 2026-10-20 no longer holds.
+- **Still open.** The same mechanism admitted about 97 other formerly-cinerea Mexican records to V. berlandieri without
+  any geographic screen (Jalisco 29, Veracruz 14, Michoacán 5, plus Chihuahua, Chiapas and others); the sheet gives the
+  Mexican range only as "MEXICO". A Mexican state list for the taxon is a question for the reviewer; if one is adopted,
+  it goes into `data/source_data/FNA_stateClassification.csv` with its source and the taxon is re-run again.
+- **Methods text affected.** Data cleaning: the sentence on reviewer-requested removals (with the tiliifolia removal of
+  2026-10-22) should name this one; the results paragraph on priority categories, where berlandieri's ex situ class is
+  now unchanged from the published table.
+
+## 2026-11-15: Maryland added to the V. rufotomentosa range list; the taxon moves to the buffer method
+
+- **What changed.** A co-author asked why V. rufotomentosa's map showed no Maryland points when a Maryland botanist's
+  collections were what prompted the correction. The records are in the dataset: six 2023 Eastern Shore sheets by
+  C. T. Frye (NCU, TAWES, MARY; Idylwild Wildlife Management Area, Chesapeake State Forest, Route 50 west of Salisbury),
+  all labelled V. rufotomentosa and recovered by the verbatim-name fix. The state range list adopted on 2026-10-19
+  (Weakley: FL, GA, SC, NC) removed them before modelling; the reviewer had noted the taxon is "perhaps more widespread"
+  and the 19 Oct message asked whether Maryland was plausible, without an answer. Maryland is now on the list
+  (`data/source_data/FNA_stateClassification.csv`, source and date recorded) and the taxon was re-run on the same input
+  (model_data20261113.csv) as run11152026_1k. Records unchanged (42; 20 with coordinates); modelled points 14 to 17
+  (Florida 12, North Carolina 2, Maryland 3 after the 1 km thinning); the natural area gains the Chesapeake Bay Lowlands.
+- **Effect.** The SDM on 17 points fails the published robustness rule (STAUC 0.22 against the 0.15 limit; ATAUC 0.78),
+  so the result comes from the 50 km buffer method the methods text describes for such cases. It is the only taxon in
+  the update on the buffer method; every model of the published run passed the rule, and so did the 14-point model of
+  19 Oct (STAUC 0.10). Scores: FCSex 1.7 (unchanged; SRSex 5, no germplasm with coordinates), FCSin 36.3 to 43.5
+  (SRSin 33 to 24, GRSin 8.8 to 7.0, ERSin 67 to 100 over 5 ecoregions), FCSc mean 19.0 to 22.6. Categories unchanged:
+  UP / HP / UP. Area 17,942 to 59,479 km2 (buffer, not predicted range).
+- **Methods text affected.** The state-list sentence (entry of 2026-10-19 above) gains Maryland for rufotomentosa with
+  its source; the sentence on the robustness rule and buffer fallback now has one taxon to name; the results paragraph
+  that says every model passed must be qualified.
+
+## 2026-11-16: evaluation of the geographic filter and of reproducibility (no method change)
+
+- **What was checked.** Why tomentosa differs from the published value with identical records (the published run was
+  unseeded; the update's driver repeats exactly, verified by a scratch re-run), why the state filter never applied to
+  berlandieri (FNA has no row for it, treating it as V. cinerea var. helleri), which 17 gap taxa run with no filter,
+  where NatureServe is a hard filter (simpsonii and baileyana only, since 19 Oct), and what NatureServe would remove
+  if applied to every taxon (86 points across 10 taxa, mostly states FNA lists and NatureServe does not). Full note
+  with tables and the check script: `work2026/geographyFilter/geographyFilterEvaluation_20261116.md`.
+- **Methods text affected.** Add to the methods: the published models were fitted without a fixed random seed, so a
+  re-fit of a taxon with unchanged input gives slightly different variable selections and surfaces; the update fixes
+  seeds and worker random streams, and its results repeat exactly. The range-filter sentence should say the lists are
+  FNA's for the taxa FNA treats and, for the five elevated taxa, Weakley, FNA at varietal rank or NatureServe as
+  recorded per taxon in the list file. Berlandieri's sentence depends on decision 2 of the note.
+- **Decisions still open.** Published values for tomentosa and acerifolia; a range list for berlandieri (FNA var.
+  helleri is the ready-made option); Weakley check of the simpsonii and baileyana lists.
