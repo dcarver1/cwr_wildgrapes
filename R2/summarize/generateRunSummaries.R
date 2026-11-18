@@ -15,6 +15,10 @@ generateRunSummaries <- function(
 ) {
   # storing summaries data in run folders
   dir2 <- paste0(dir1, "/", runVersion)
+  # the taxa of the all-taxa products: the species assessed through their varieties
+  # (V. aestivalis, V. cinerea) are left out so nothing is counted twice; see
+  # speciesWithInfraspecifics() in speciesRichnessMap.R. Per-taxon products use `species`.
+  genusTaxa <- genusLevelTaxa(species)
   # generate summary of all the models --------------------------------------
   path1 <- paste0(dir2, "/speciesrichness_1km.tif")
   path2 <- paste0(dir2, "/speciesUsed_speciesrichness.csv")
@@ -65,7 +69,8 @@ generateRunSummaries <- function(
     richness <- generateSpeciesRichnessMap(
       directory = dir1,
       runVersion = runVersion,
-      rasterFileName = "prj_threshold.tif"
+      rasterFileName = "prj_threshold.tif",
+      species = genusTaxa
     )
     terra::writeRaster(
       x = richness$richnessTif,
@@ -83,7 +88,8 @@ generateRunSummaries <- function(
     ga50Richness <- generateSpeciesRichnessMap(
       directory = dir1,
       runVersion = runVersion,
-      rasterFileName = "ga50_masked.tif"
+      rasterFileName = "ga50_masked.tif",
+      species = genusTaxa
     )
 
     # need to extend this file to matcht he extent of the richness image
@@ -103,7 +109,7 @@ generateRunSummaries <- function(
       directory = dir1,
       runVersion = runVersion,
       ersMap = "ers_ex_gaps.tif",
-      species = species,
+      species = genusTaxa,
       thresholdMap = "prj_threshold.tif"
     )
     terra::writeRaster(
@@ -123,7 +129,7 @@ generateRunSummaries <- function(
       directory = dir1,
       runVersion = runVersion,
       ersMap = "ers_in_gaps_5.tif",
-      species = species,
+      species = genusTaxa,
       thresholdMap = "prj_threshold_5.tif"
     )
     terra::writeRaster(
@@ -162,7 +168,7 @@ generateRunSummaries <- function(
       wdpaVect1 <- terra::vect(wdpaVectExport)
     }
     protectedAreaPoints(
-      species = species,
+      species = genusTaxa,
       runVersion = runVersion,
       genus = genus,
       wdpaVect = wdpaVect1
@@ -267,6 +273,8 @@ generateRunSummaries <- function(
   conservationSummary$ersExRichness <- terra::rast(path6)
   conservationSummary$ersInRichness <- terra::rast(path8)
   conservationSummary$genus <- genus
+  # how many taxa the richness map sums (the summary document states it)
+  conservationSummary$nRichnessTaxa <- nrow(read_csv(path2, show_col_types = FALSE))
   
   # run summary html
   try(

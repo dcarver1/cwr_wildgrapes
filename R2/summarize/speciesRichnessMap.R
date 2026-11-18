@@ -38,13 +38,44 @@ replaceNAN <- function(raster){
   return(raster)
 }
 
+#' Taxa that enter the genus-level (all-taxa) summaries
+#' @description A species that is also assessed through its varieties (V. aestivalis and
+#' V. cinerea: the species row pools the records of its varieties) is left out of every
+#' product summed over taxa: the richness and gap-richness maps, the protected-area tables
+#' built from them and the optimal protected-area selection. The varieties stand for it, so
+#' no area is counted twice. The per-taxon result of the species itself is unchanged.
+#' Adopted 2026-11-18 (team decision on the Correction); the published run stacked the
+#' pooled species next to their varieties (38 layers in the richness map, not 36).
+#' @param taxa : character, taxon names as the data/<genus>/<taxon> folders are named
+#' @return the taxa whose name is also the stem of a "<name> var. ..." taxon in the set
+speciesWithInfraspecifics <- function(taxa){
+  taxa <- unique(taxa)
+  taxa[vapply(taxa, function(x) any(startsWith(setdiff(taxa, x), paste0(x, " var."))), logical(1))]
+}
+
+#' @describeIn speciesWithInfraspecifics the set without those species
+genusLevelTaxa <- function(taxa){
+  setdiff(unique(taxa), speciesWithInfraspecifics(taxa))
+}
+
+#' Taxon folder of a run file
+#' @param files : paths of the form <directory>/<taxon>/<runVersion>/...
+#' @param directory : the top level directory the taxon folders sit in
+taxonFromPath <- function(files, directory){
+  rel <- sub(paste0("^", directory, "/+"), "", files)
+  vapply(strsplit(rel, "/", fixed = TRUE), `[`, character(1), 1)
+}
+
 #' Generate species richness map
 #'
 #' @param directory : the top level directy from which you want to look for files
 #' @param runVersion : the specific run version that should be used for the analysis
+#' @param rasterFileName : the per-taxon raster to stack (prj_threshold.tif, ga50_masked.tif)
+#' @param species : optional, restrict to these taxa; the species with infraspecifics are
+#' dropped in any case (see speciesWithInfraspecifics)
 #'
-#' @return : a 
-generateSpeciesRichnessMap <- function(directory, runVersion, rasterFileName){
+#' @return : list(richnessTif = cell-wise sum, speciesUsed = the files stacked)
+generateSpeciesRichnessMap <- function(directory, runVersion, rasterFileName, species = NULL){
   # plan(strategy = "multisession", workers = 12) ### have to be carefull with this because it copies all the session inform
   ### which is a lot of data to move around if this is part of the modeling environment. 
   # grab all potential options
@@ -54,6 +85,11 @@ generateSpeciesRichnessMap <- function(directory, runVersion, rasterFileName){
                 recursive = TRUE)
     # subset 
     runFiles <- allFiles[grepl(pattern = runVersion, x = allFiles)]
+    # genus-level product: one layer per taxon, the pooled species left out
+    taxa <- taxonFromPath(runFiles, directory)
+    keep <- taxa %in% genusLevelTaxa(if (is.null(species)) taxa else species)
+    if (any(!keep)) print(paste("left out of the genus-level sum:", paste(taxa[!keep], collapse = ", ")))
+    runFiles <- runFiles[keep]
     
   # combined all the raster layers 
   print("reading in rasters")
@@ -97,6 +133,13 @@ sumRastersOnCommonGrid <- function(rasters){
   return(total)
 }
 
+#' Generate an ERS gap richness map
+#' @description Sum over taxa of (ERS gap map x predicted distribution). Genus-level product:
+#' the species with infraspecifics are left out (see speciesWithInfraspecifics). Until
+#' 2026-11-18 the files were matched by grepl() on the taxon name, which found three files for
+#' "Vitis aestivalis" or "Vitis cinerea" and so skipped them silently; the species list that was
+#' written beside the map named them anyway. They are now left out explicitly and the list
+#' holds the files actually summed.
 generateERSRichnessMap <- function(directory, runVersion, ersMap, species, thresholdMap){
   # pull all the ERS gap maps 
   ersFiles <- list.files( path = directory,
@@ -112,34 +155,29 @@ generateERSRichnessMap <- function(directory, runVersion, ersMap, species, thres
                           full.names = TRUE,
                           recursive = TRUE)
   thresholdFiles <- thresholdFiles[grepl(pattern = runVersion, x = thresholdFiles)]
+  ersTaxa <- taxonFromPath(ersFiles, directory)
+  thresholdTaxa <- taxonFromPath(thresholdFiles, directory)
   
-  # loop over species and mask the ERSlayer to the distribution 
+  # loop over the genus-level taxa and mask the ERS layer to the distribution 
   maskedFeatures <- c()
-  for(i in species){
-    f1 <- ersFiles[grepl(pattern = i, x = ersFiles)]
-    if(length(f1)==1){
-      t1 <-  terra::rast(f1)
-      
-      t2 <- NA 
-      try(t2 <-  terra::rast(thresholdFiles[grepl(pattern = i, x = thresholdFiles)]))
-      if(class(t2)== "SpatRaster"){
-        t3 <- t1 * t2 
-        maskedFeatures <- c(maskedFeatures, t3)
-      }
+  used <- c()
+  for(i in genusLevelTaxa(species)){
+    f1 <- ersFiles[ersTaxa == i]
+    f2 <- thresholdFiles[thresholdTaxa == i]
+    if(length(f1) == 1 && length(f2) == 1){
+      t3 <- terra::rast(f1) * terra::rast(f2)
+      maskedFeatures <- c(maskedFeatures, t3)
+      used <- c(used, f1)
     }
   }
-  # 
-  # 
-  # # combined all the raster layers 
-  # print("reading in rasters")
-  # r1 <- map(.x = runFiles, .f = rast)
+  print(paste(length(used), "taxa in the", ersMap, "richness map"))
   
   # extend, replace NaN and sum, one raster at a time
   r5 <- sumRastersOnCommonGrid(maskedFeatures)
   
   output <- list(
     richnessTif = r5,
-    speciesUsed = ersFiles
+    speciesUsed = used
   )
   return(output)
 }

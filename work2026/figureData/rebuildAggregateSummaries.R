@@ -31,6 +31,11 @@
 # (hard-coded in runSummary_editsSGCK.Rmd). The published files are backed up before any render
 # and restored afterwards; the new maps are kept beside the other layers in data/Vitis/<run>/.
 #
+# All-taxa products leave out the species assessed through their varieties (V. aestivalis,
+# V. cinerea): genusLevelTaxa() in R2/summarize/speciesRichnessMap.R, applied inside
+# generateRunSummaries(); adopted 2026-11-18. The 18 Nov 2026 rebuild (stamp 20261118_genus) is
+# the first with that rule; the per-taxon results are those of 15 Nov.
+#
 #   Rscript work2026/figureData/rebuildAggregateSummaries.R [stamp YYYYMMDD] [steps, comma separated]
 #   e.g. Rscript work2026/figureData/rebuildAggregateSummaries.R 20261029
 #        Rscript work2026/figureData/rebuildAggregateSummaries.R 20261029 points,optimal

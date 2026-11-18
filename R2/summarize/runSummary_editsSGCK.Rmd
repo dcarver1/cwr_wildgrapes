@@ -229,7 +229,7 @@ richness1
 ```
 <br>
 
-The figure above displays the predicted taxonomic richness map for the assessed taxa, combining 36 potential distribution models. Darker colors indicate greater numbers of taxa potentially overlapping in the same areas.  
+The figure above displays the predicted taxonomic richness map for the assessed taxa, combining `r if (is.null(inputs$nRichnessTaxa)) "the" else inputs$nRichnessTaxa` potential distributions, one per taxon (species assessed through their varieties, *V. aestivalis* and *V. cinerea*, are represented by the varieties and not counted again). Darker colors indicate greater numbers of taxa potentially overlapping in the same areas.  
 
 ## Geographic *ex situ* gap richness
 

@@ -13,16 +13,23 @@
 #   Rscript work2026/figureData/compileFigureData.R summaries [stamp]
 #       sheets 8-10, the richness and gap rasters, the summary documents. Needs
 #       work2026/figureData/rebuildAggregateSummaries.R to have run on runAggregate2026_1k.
-#   Rscript work2026/figureData/compileFigureData.R update [stamp]
+#   Rscript work2026/figureData/compileFigureData.R update [stamp] [combinedStamp]
 #       the two protected-area "Update" tables (points and raster maximum per WDPA polygon)
 #
 # stamp (YYYYMMDD, default today) names the output folder and selects the combined table
-# aggregateRuns() wrote that day. Builds so far: 20261020 (after the review closed),
-# 20261029 (V. tiliifolia re-run without its California and Florida records).
+# aggregateRuns() wrote that day; combinedStamp (default stamp) names that table's date when it
+# differs from the build's. Builds so far: 20261020 (after the review closed), 20261029
+# (V. tiliifolia re-run without its California and Florida records), 20261115 (berlandieri and
+# rufotomentosa re-runs), 20261118_genus (all-taxa products without the pooled species
+# V. aestivalis and V. cinerea; per-taxon results as on 15 Nov).
+#
+# All-taxa products (richness maps, protected-area tables) leave out the species assessed through
+# their varieties: genusLevelTaxa() in R2/summarize/speciesRichnessMap.R, adopted 2026-11-18.
 suppressPackageStartupMessages({library(dplyr); library(readr); library(purrr); library(terra)})
 args <- commandArgs(trailingOnly = TRUE)
 part <- args[1]
 stamp <- if (length(args) >= 2 && nzchar(args[2])) args[2] else format(Sys.Date(), "%Y%m%d")
+combinedStamp <- if (length(args) >= 3 && nzchar(args[3])) args[3] else stamp
 run <- "runAggregate2026_1k"
 out <- paste0("data/datasetsForPublication_", stamp)
 pubDir <- "data/datasetsForPublication"
@@ -32,6 +39,8 @@ cat("build", stamp, "from", run, "and", modelData, "->", out, "\n")
 dir.create(out, showWarnings = FALSE)
 gapSpecies <- read_csv("data/New World Vitis.csv", col_types = cols(.default = "c"), show_col_types = FALSE) |>
   filter(`Include in gap analysis?` == "Y") |> pull(`Scientific Name`) |> sort()
+source("R2/summarize/speciesRichnessMap.R")   # genusLevelTaxa()
+genusTaxa <- genusLevelTaxa(gapSpecies)
 rd <- function(p) read_csv(p, show_col_types = FALSE, progress = FALSE)
 cp <- function(from, to) { stopifnot(file.exists(from)); file.copy(from, file.path(out, to), overwrite = TRUE, copy.date = TRUE); cat("  ", to, "<-", from, "\n") }
 
@@ -65,8 +74,8 @@ if (part == "tables") {
     cat("  ", f, ":", nrow(rd(file.path(out, f))), "rows,", n_distinct(rd(file.path(out, f))$taxon), "taxa\n")
 
   cat("sheet 6: gap analysis summary (combined table from aggregateRuns(), with status and source run)\n")
-  cp(file.path(pubDir, paste0("gapAnalysisSummary_combined_", stamp, ".csv")), "gapAnalysisSummary-sheet6.csv")
-  cp(file.path(pubDir, paste0("gapAnalysisSummary_sources_", stamp, ".csv")), "gapAnalysisSummary-sources.csv")
+  cp(file.path(pubDir, paste0("gapAnalysisSummary_combined_", combinedStamp, ".csv")), "gapAnalysisSummary-sheet6.csv")
+  cp(file.path(pubDir, paste0("gapAnalysisSummary_sources_", combinedStamp, ".csv")), "gapAnalysisSummary-sources.csv")
 
   cat("sheet 7: ex situ collections by database source and institution\n")
   g <- read_csv(modelData, col_types = cols(.default = "c"), show_col_types = FALSE, progress = FALSE) |> filter(type == "G")
@@ -75,7 +84,10 @@ if (part == "tables") {
               n_unique_species = n_distinct(species), .groups = "drop") |>
     write_csv(file.path(out, "exsituCollectionSummary-sheet7.csv"))
 
-  cat("sheet 11: variable buffer size method (unchanged, copied from the published folder)\n")
+  cat("buffer-size comparison: five sizes x two projections (the published SI page), plus the older three-size table\n")
+  # the published SI page is the five-size table of published/variableBufferAnalysis.R (March 2026);
+  # rebuilt on the aggregate run by work2026/figureData/variableBufferAnalysis_2026.R
+  cp(file.path("data/Vitis", run, "variable_buffer_raw_results.csv"), "variable_buffer_raw_results.csv")
   cp(file.path(pubDir, "multipleBufferSizes-sheet11.csv"), "multipleBufferSizes-sheet11.csv")
 }
 
@@ -114,7 +126,8 @@ if (part == "update") {
   cat("protected-area 'Update' tables\n")
   pts <- list.files("data/Vitis", pattern = "spatialData.gpkg", full.names = TRUE, recursive = TRUE)
   pts <- pts[grepl(paste0(run, "/occurances/spatialData.gpkg"), pts, fixed = TRUE)]
-  pts <- pts[basename(dirname(dirname(dirname(pts)))) %in% gapSpecies]
+  # genus-level table: the pooled species are left out, their varieties carry the points
+  pts <- pts[basename(dirname(dirname(dirname(pts)))) %in% genusTaxa]
   vitis <- do.call(rbind, lapply(pts, function(p) st_read(p, quiet = TRUE)[, "taxon"]))
   wdpa <- st_read("data/geospatial_datasets/protectedLands/vect_Vitis_run08282025_1k.gpkg", quiet = TRUE)
   st_crs(vitis) <- st_crs(wdpa)
